@@ -31,6 +31,22 @@
 
 ## 安装
 
+### 方式一：npm 全局安装（推荐）
+
+```bash
+npm i -g skill-forge-cli
+skill-forge ls        # 列出全部技能与说明（只读）
+skill-forge init      # 交互式挑选技能，自动探测并安装到 AI 助手技能目录
+```
+
+非交互 / 指定目录场景：
+
+```bash
+skill-forge init --target ~/.claude/skills --skills daily-report,weekly-report
+```
+
+### 方式二：手动复制
+
 将技能目录复制到你所用的 AI 助手的技能目录（支持 SKILL.md 格式、本地加载技能的助手均可）：
 
 ```bash

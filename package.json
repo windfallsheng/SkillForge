@@ -1,0 +1,34 @@
+{
+  "name": "skill-forge-cli",
+  "version": "0.1.0",
+  "description": "SkillForge (技能锻造坊) — a curated collection of AI craft skills. Install once, then pick skills interactively: daily/weekly reports, article-to-HTML, SpecCore document converters.",
+  "bin": {
+    "skill-forge": "cli.js"
+  },
+  "files": [
+    "cli.js",
+    "daily-report",
+    "weekly-report",
+    "article-to-html",
+    "spec-doc2spec",
+    "spec-spec2doc",
+    "template"
+  ],
+  "keywords": [
+    "skillforge",
+    "skills",
+    "ai-agent",
+    "claude-skills",
+    "daily-report",
+    "weekly-report",
+    "article-to-html"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/windfallsheng/SkillForge.git"
+  }
+}
