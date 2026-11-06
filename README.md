@@ -26,8 +26,8 @@
 | daily-report | 报表汇演 | [daily-report/](daily-report/) | 聚合各仓库 git 提交 + 会话口述生成日报（今日完成任务/明日计划/风险阻塞点），支持自然语言日期（今天/昨天/上周三/10月20号）、连续多日批量、纯文字/图片/文件整理、自定义模板、12 行业词条 |
 | weekly-report | 报表汇演 | [weekly-report/](weekly-report/) | 同上生成周报（本周完成任务/下周计划/风险阻塞点 + 本周概览卡），周结束日可配置（默认周五，可改周日等），支持自然语言周定位（本周/上周/10月第2周/节假日锚定） |
 | article-to-html | 文档装裱 | [article-to-html/](article-to-html/) | Word / Markdown / 纯文本 → 精美独立 HTML（思源黑体 + Roboto 商用免费字体，图表 HTML/CSS 重绘），逐章截图（Retina 2x）；现成 HTML 可直接截图或先美化 |
-| spec-doc2spec | 工程提效 | [spec-doc2spec/](spec-doc2spec/) | PRD / Word 文档导入为迭代需求切片；自动检测 SpecCore CLI，未装引导跨系统安装 |
-| spec-spec2doc | 工程提效 | [spec-spec2doc/](spec-spec2doc/) | 迭代 / Task 规格导出为 Word / PDF 文档；自动检测 SpecCore CLI，未装引导跨系统安装 |
+| spec-doc2spec | 工程提效 | [spec-doc2spec/](spec-doc2spec/) | Word / Markdown 需求文档转结构化需求切片；自动检测 Pandoc，未装引导跨系统安装 |
+| spec-spec2doc | 工程提效 | [spec-spec2doc/](spec-spec2doc/) | Markdown 规格导出为 Word / PDF 交付文档；自动检测 Pandoc，未装引导跨系统安装 |
 
 ## 安装
 
