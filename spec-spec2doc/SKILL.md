@@ -5,7 +5,7 @@ description: >
   内置 Pandoc 检测：默认先探测 pandoc 是否安装，已装直接转换，未装引导用户按系统安装
   （macOS brew / Windows winget 或官网 / Linux apt-get 等）。
   主路径 Markdown → Word（Pandoc 原生支持）；Markdown → PDF 需 LaTeX 引擎（basictex / MiKTeX / texlive），
-  未装 LaTeX 时先出 Word 并提示用 Word 另存 PDF。转换前由 AI 整理排版，再调 Pandoc 输出交付文档。
+  未装 LaTeX 时先出 Word 并提示用 Word 另存 PDF。转换前由 AI 整理排版，转换后由 AI 回验内容完整性与格式正确性（纠错补漏）。
   不处理一般性的文档格式转换（如「把这个 txt 转成 Word」），只处理「规格 → 交付文档」的转换任务。
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 disable-model-invocation: false
@@ -32,7 +32,8 @@ pandoc --version
    - **Markdown → Word**（主路径，Pandoc 原生支持）：`pandoc <输入.md> -f gfm -t docx -o <输出.docx>`
    - **Markdown → PDF**：需 LaTeX 引擎，`pandoc <输入.md> -o <输出.pdf> --pdf-engine=xelatex`；未装 LaTeX 时先出 Word，并提示用户可用 Word「另存为 PDF」（不强行要求装 LaTeX）
 2. 转换前 AI 先整理排版：统一标题层级、规整表格、处理图片引用路径，保证产出文档可直接交付
-3. 完成后向用户报告：输出路径与格式；若 PDF 走了 Word 兜底则注明
+3. Pandoc 输出后 **AI 回验（防错防漏，必做）**：核对产出文档内容完整（无章节/段落/表格遗漏）、标题层级与表格正确、无乱码与格式错乱；发现问题修正源 md 后重新转换，直到回验通过
+4. 完成后向用户报告：输出路径与格式、回验结论；若 PDF 走了 Word 兜底则注明
 
 ## ③ 安装指引（仅当检测未安装时输出给用户）
 
@@ -51,7 +52,7 @@ Pandoc 跨系统安装（开源免费，官网 https://pandoc.org/installing.htm
 
 本技能把 Markdown 规格 / 技术文档导出为 Word / PDF 交付文档（AI 排版 + Pandoc 转换）。执行前自动检测 Pandoc：已安装直接转换，未安装给出 macOS / Windows / Linux 安装指引。
 
-**使用步骤**：1. 直接说「把这份规格导出成 Word」「生成 PDF 交付文档」并给出文件路径；2. 未装 Pandoc 时按引导安装；3. AI 整理排版后由 Pandoc 输出 .docx（主路径）或 .pdf（需 LaTeX 引擎）；4. 产出可直接交付的 Word / PDF 文档。
+**使用步骤**：1. 直接说「把这份规格导出成 Word」「生成 PDF 交付文档」并给出文件路径；2. 未装 Pandoc 时按引导安装；3. AI 整理排版，Pandoc 输出 .docx（主路径）或 .pdf（需 LaTeX 引擎）；4. AI 回验内容完整与格式正确后交付 Word / PDF 文档。
 
 **支持格式**：输出 Word（.docx，主路径）/ PDF（.pdf，需 LaTeX 引擎）。
 
