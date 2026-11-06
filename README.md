@@ -34,7 +34,7 @@
 ### 方式一：npm 全局安装（推荐）
 
 ```bash
-npm i -g skill-forge-cli
+npm i -g skill-forge-hub
 skill-forge ls        # 列出全部技能与说明（只读）
 skill-forge init      # 交互式挑选技能，自动探测并安装到 AI 助手技能目录
 ```

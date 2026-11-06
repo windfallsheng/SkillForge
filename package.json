@@ -1,5 +1,5 @@
 {
-  "name": "skill-forge-cli",
+  "name": "skill-forge-hub",
   "version": "0.1.0",
   "description": "SkillForge (技能锻造坊) — a curated collection of AI craft skills. Install once, then pick skills interactively: daily/weekly reports, article-to-HTML, SpecCore document converters.",
   "bin": {
