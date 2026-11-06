@@ -2,10 +2,12 @@
 name: spec-spec2doc
 description: >
   规格转交付文档 Skill（spec2doc）。仅在用户要求把 Markdown 规格 / 技术文档导出为 Word / PDF 交付文档时使用。
-  内置 Pandoc 检测：默认先探测 pandoc 是否安装，已装直接转换，未装引导用户按系统安装
-  （macOS brew / Windows winget 或官网 / Linux apt-get 等）。
-  主路径 Markdown → Word（Pandoc 原生支持）；Markdown → PDF 需 LaTeX 引擎（basictex / MiKTeX / texlive），
-  未装 LaTeX 时先出 Word 并提示用 Word 另存 PDF。转换前由 AI 整理排版，转换后由 AI 回验内容完整性与格式正确性（纠错补漏）。
+  Pandoc 负责机械转换，AI 负责转换前排版整理与转换后回验防错（Pandoc 对复杂表格、图片路径、中文字体有局限，
+  回验发现问题修正源稿重新转换直到通过，机械产物不直接交付）。主路径 Markdown → Word（支持 --reference-doc
+  模板：默认依次探测源目录 template.docx / reference.docx，可配置 TEMPLATE_DOCX）。
+  Markdown → PDF 双路径：xelatex（需 LaTeX 引擎与 CJK 中文字体）或 Chrome headless 打印（免 LaTeX、跨系统兜底），
+  引擎可配置 PDF_ENGINE。输出目录默认与源文档同目录，可配置 OUTPUT_DIR。
+  跨系统适配 macOS / Windows / Linux（Pandoc/LaTeX 安装、中文字体探测、Chrome 路径探测）。
   不处理一般性的文档格式转换（如「把这个 txt 转成 Word」），只处理「规格 → 交付文档」的转换任务。
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 disable-model-invocation: false
@@ -13,47 +15,48 @@ disable-model-invocation: false
 
 # 规格 → 交付文档（spec2doc）
 
-将 Markdown 规格 / 技术文档转换为 Word / PDF 交付文档：AI 先整理排版（标题层级、表格、图片引用），再由 Pandoc 输出成品文档。
+将 Markdown 规格 / 技术文档转换为 Word / PDF 交付文档。分工原则：**Pandoc 负责机械转换，AI 负责排版整理与回验防错**——AI 转换前整理标题层级/表格/图片路径，转换后核对产出文档内容完整与格式正确，发现问题修正源稿重新转换，直到回验通过（机械产物不直接交付）。
 
-## ① 前置依赖检测（每次执行前必做）
+## 生成流程
 
-本技能依赖开源转换工具 **Pandoc**（Markdown 转 Word/PDF 的通用文档转换器，开源免费）。执行转换前，先探测安装状态：
+1. **依赖检测**（每次必做）→ `pandoc --version`；未安装按「安装指引」输出并停止。目标为 PDF 时另探测引擎：`xelatex --version`（LaTeX 路径）→ Chrome 路径（打印路径），细节读 `resources/pdf-path.md`
+2. **AI 排版整理** → 统一标题层级、规整表格（超宽表拆表或改列表）、检查图片引用路径、确定元信息（标题/作者）
+3. **Pandoc 输出** → Word：`pandoc <输入.md> -f gfm -t docx -o <输出.docx> [--reference-doc=<模板>] [--toc --toc-depth=3]`（模板探测与图片路径读 `resources/images-and-template.md`）；PDF：双路径命令读 `resources/pdf-path.md`
+4. **AI 回验（防错防漏，必做）** → 读 `resources/checklist.md`：反向转换比对内容完整性、图片嵌入核对、标题层级、中文显示、乱码排查
+5. **修正重转** → 发现问题修正源稿重新转换，再次回验；重转不超过 3 轮，仍不通过如实报告「哪些项无法修复 + 原因」，不交付带错文档
+6. **报告** → 输出路径与格式、回验结论、PDF 引擎与兜底说明
 
-```bash
-pandoc --version
+## ⚙️ 默认配置（用户可手动修改；临时口头要求永远优先）
+
+```yaml
+OUTPUT_DIR: auto              # 输出目录：auto = 与源 md 同目录；可写死绝对路径
+TEMPLATE_DOCX: auto           # Word 模板：auto = 依次探测 <源目录>/template.docx → reference.docx → 无则 Pandoc 默认样式；可指定模板路径
+TOC: true                     # Word/PDF 是否生成目录（--toc --toc-depth=3）
+PDF_ENGINE: auto              # PDF 引擎：auto = 探测 xelatex（有则 LaTeX 路径）→ 无则 Chrome 打印路径
 ```
 
-- **输出版本号**（如 `pandoc 3.x`）→ 已安装，进入「② 执行机制」
-- **报错或退出码非 0**（`command not found` / `'pandoc' 不是内部或外部命令` / 无法识别 cmdlet 等）→ 未安装，按「③ 安装指引」引导用户，**不执行任何转换命令**
+> 临时口头要求（仅当次生效）：说「输出到 XX」→ 当次改 OUTPUT_DIR；说「用这个模板」+ 路径 → 当次换模板；说「不要目录」→ 当次 TOC=false；说「必须用 LaTeX 出 PDF」→ 当次 PDF_ENGINE=xelatex（无引擎则引导安装）。
 
-## ② 执行机制
-
-1. 确认输入（Markdown 规格文档路径）与目标格式：
-   - **Markdown → Word**（主路径，Pandoc 原生支持）：`pandoc <输入.md> -f gfm -t docx -o <输出.docx>`
-   - **Markdown → PDF**：需 LaTeX 引擎，`pandoc <输入.md> -o <输出.pdf> --pdf-engine=xelatex`；未装 LaTeX 时先出 Word，并提示用户可用 Word「另存为 PDF」（不强行要求装 LaTeX）
-2. 转换前 AI 先整理排版：统一标题层级、规整表格、处理图片引用路径，保证产出文档可直接交付
-3. Pandoc 输出后 **AI 回验（防错防漏，必做）**：核对产出文档内容完整（无章节/段落/表格遗漏）、标题层级与表格正确、无乱码与格式错乱；发现问题修正源 md 后重新转换，直到回验通过
-4. 完成后向用户报告：输出路径与格式、回验结论；若 PDF 走了 Word 兜底则注明
-
-## ③ 安装指引（仅当检测未安装时输出给用户）
+## 安装指引（仅当检测未安装时输出给用户）
 
 Pandoc 跨系统安装（开源免费，官网 https://pandoc.org/installing.html）：
 
-1. **macOS**：`brew install pandoc`（未装 Homebrew 先装 brew，或从官网下载 .pkg 安装包双击安装）
-2. **Windows**：`winget install --id JohnMacFarlane.Pandoc`（无 winget 时从官网下载 .msi 安装包双击安装，默认选项即可）
-3. **Linux**：Debian/Ubuntu 系 `sudo apt-get install pandoc`；Fedora 系 `sudo dnf install pandoc`；Arch 系 `sudo pacman -S pandoc`
+1. **macOS**：`brew install pandoc`（未装 Homebrew 先装 brew，或从官网下载 .pkg 双击安装）
+2. **Windows**：`winget install --id JohnMacFarlane.Pandoc`（无 winget 时从官网下载 .msi 双击安装，默认选项即可）
+3. **Linux**：Debian/Ubuntu `sudo apt-get install pandoc`；Fedora `sudo dnf install pandoc`；Arch `sudo pacman -S pandoc`
 4. **验证**：`pandoc --version` 输出版本号即成功；Windows 若提示找不到命令，关闭并重新打开终端刷新 PATH
 
-安装完成后，请用户重新说一次需求，再走「② 执行机制」。
+PDF 的 LaTeX 引擎（仅当要求 LaTeX 出 PDF 时）：macOS `brew install --cask basictex`（装完 `sudo tlmgr install ctex`）；Windows `winget install MiKTeX.MiKTeX`；Linux Debian/Ubuntu `sudo apt-get install texlive-xetex texlive-lang-chinese`。免装 LaTeX 可走 Chrome 打印路径（见 resources/pdf-path.md）。
 
-## ④ 使用说明
+安装完成后，请用户重新说一次需求，再走「生成流程」。
 
-用户仅询问使用方法（「spec-spec2doc 怎么用 / 使用说明 / 使用步骤 / 能干什么」）时不启动流程，输出以下纯文字指南，不执行任何转换命令：
+## 使用说明
 
-本技能把 Markdown 规格 / 技术文档导出为 Word / PDF 交付文档（AI 排版 + Pandoc 转换）。执行前自动检测 Pandoc：已安装直接转换，未安装给出 macOS / Windows / Linux 安装指引。
+用户仅询问使用方法（「spec-spec2doc 怎么用 / 使用说明 / 使用步骤 / 能干什么」）时不启动流程，读 `resources/usage-guide.md` 将其内容原样输出（首行标题改为「spec2doc 使用指南」），不执行任何转换命令。
 
-**使用步骤**：1. 直接说「把这份规格导出成 Word」「生成 PDF 交付文档」并给出文件路径；2. 未装 Pandoc 时按引导安装；3. AI 整理排版，Pandoc 输出 .docx（主路径）或 .pdf（需 LaTeX 引擎）；4. AI 回验内容完整与格式正确后交付 Word / PDF 文档。
+## 规则速览
 
-**支持格式**：输出 Word（.docx，主路径）/ PDF（.pdf，需 LaTeX 引擎）。
-
-**触发词**：导出成 Word / 生成 PDF / 规格转文档 / 打包交付文档 / /spec2doc。
+- 机械产物不直接交付：AI 排版整理（转换前）与回验防错（转换后）缺一不可，发现问题修正源稿重转直到通过
+- Word 是主路径（Pandoc 原生）；PDF 双路径 xelatex / Chrome 打印，引擎缺失先出 Word 并提示 Word 另存 PDF
+- 图片相对路径以工作目录为基准：转换前 cd 到源 md 目录或 --resource-path 声明；EMF 源图先转 PNG
+- 模板探测链 template.docx → reference.docx → Pandoc 默认样式；目录生成 TOC 默认开启

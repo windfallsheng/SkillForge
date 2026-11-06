@@ -1,6 +1,6 @@
 {
   "name": "skill-forge-hub",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "SkillForge (技能锻造坊) — a curated collection of AI craft skills. Install once, then pick skills interactively: daily/weekly reports, article-to-HTML, SpecCore document converters.",
   "bin": {
     "skill-forge": "cli.js"
@@ -9,6 +9,7 @@
     "cli.js",
     "daily-report",
     "weekly-report",
+    "annual-report",
     "article-to-html",
     "spec-doc2spec",
     "spec-spec2doc",

@@ -18,7 +18,7 @@ const VERSION = require(path.join(PKG_DIR, "package.json")).version;
 
 // 分类映射与 README「技能分类」表一致；新增技能时请同步
 const CATEGORIES = [
-  { name: "报表汇演", en: "Reports", skills: ["daily-report", "weekly-report"] },
+  { name: "报表汇演", en: "Reports", skills: ["daily-report", "weekly-report", "annual-report"] },
   { name: "文档装裱", en: "Documents", skills: ["article-to-html"] },
   { name: "工程提效", en: "Engineering", skills: ["spec-doc2spec", "spec-spec2doc"] },
 ];
@@ -96,12 +96,28 @@ function shortDesc(desc, max = 70) {
   return first.length > max ? first.slice(0, max) + "…" : first;
 }
 
-function copyDir(src, dest) {
+// 升级时保留的用户文件：内置名单（user-config.md）+ 技能目录 .preserve 清单（每行一个文件名，# 注释）
+const BUILTIN_PRESERVE = new Set(["user-config.md"]);
+
+function loadPreserveSet(skillDir) {
+  const set = new Set(BUILTIN_PRESERVE);
+  const pf = path.join(skillDir, ".preserve");
+  if (fs.existsSync(pf)) {
+    for (const line of fs.readFileSync(pf, "utf8").split(/\r?\n/)) {
+      const t = line.trim();
+      if (t && !t.startsWith("#")) set.add(t.toLowerCase());
+    }
+  }
+  return set;
+}
+
+function copyDir(src, dest, preserve, hits) {
   fs.mkdirSync(dest, { recursive: true });
   for (const entry of fs.readdirSync(src)) {
     const s = path.join(src, entry);
     const d = path.join(dest, entry);
-    if (fs.statSync(s).isDirectory()) copyDir(s, d);
+    if (fs.statSync(s).isDirectory()) copyDir(s, d, preserve, hits);
+    else if (preserve.has(entry.toLowerCase()) && fs.existsSync(d)) hits.push(d);
     else fs.copyFileSync(s, d);
   }
 }
@@ -128,7 +144,7 @@ function cmdLs() {
   let idx = 0;
   const mapped = new Set(CATEGORIES.reduce((acc, c) => acc.concat(c.skills), []));
   for (const cat of CATEGORIES) {
-    const list = skills.filter((s) => cat.skills.includes(s.name));
+    const list = cat.skills.map((n) => skills.find((s) => s.name === n)).filter(Boolean);
     if (list.length === 0) continue;
     console.log(`【${cat.name} ${cat.en}】`);
     for (const s of list) {
@@ -165,7 +181,7 @@ async function selectSkillsInteractive(skills) {
   const mapped = new Set(CATEGORIES.reduce((acc, c) => acc.concat(c.skills), []));
   let text = "\n可选技能（编号多选，逗号分隔；a=全选；q=退出）：\n\n";
   for (const cat of CATEGORIES) {
-    const list = skills.filter((s) => cat.skills.includes(s.name));
+    const list = cat.skills.map((n) => skills.find((s) => s.name === n)).filter(Boolean);
     if (list.length === 0) continue;
     text += `【${cat.name} ${cat.en}】\n`;
     for (const s of list) {
@@ -266,8 +282,14 @@ async function cmdInit(argv) {
     const src = path.join(PKG_DIR, s.dir);
     const dest = path.join(target, s.dir);
     const existed = fs.existsSync(dest);
-    copyDir(src, dest);
-    console.log(`${existed ? "已更新" : "已安装"}：${s.name} → ${dest}`);
+    const hits = [];
+    copyDir(src, dest, loadPreserveSet(src), hits);
+    let note = existed ? "已更新" : "已安装";
+    if (hits.length > 0) {
+      const names = hits.map((h) => path.basename(h)).join("、");
+      note += `（保留你的本地修改未覆盖：${names}）`;
+    }
+    console.log(`${note}：${s.name} → ${dest}`);
   }
   console.log(`\n完成。共 ${chosen.length} 件技能。`);
 }
@@ -284,6 +306,8 @@ function printHelp() {
   skill-forge init --skills a,b       跳过选择，直接安装指定技能（适合脚本）
   skill-forge init --yes              跳过确认，直接安装
   skill-forge --version               显示版本
+
+升级保护：目标目录已存在的 user-config.md（及技能 .preserve 清单声明的文件）不会被覆盖，你的本地配置永久保留
 
 示例：
   skill-forge ls

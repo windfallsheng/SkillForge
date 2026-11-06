@@ -1,6 +1,6 @@
 ---
 name: daily-report
-description: 聚合各仓库 git 提交生成日报（默认完成任务/明日计划/风险阻塞点三段结构，中文顿号序号）。支持纯文字/图片/文件整理（无 git 也适用）、自定义模板（可永久或临时指定）。支持自然语言指定日期（今天/昨天/上周三/10月20号等）。当用户请求写日报、今日日报、昨天的日报、生成日报、/daily-report，或询问日报用法（日报怎么用/日报使用说明/日报有哪些使用方式）时使用。
+description: 生成工作日报（默认完成任务/明日计划/风险阻塞点三段结构，中文顿号序号），适配各行业（内置 12 行业职业词典，可指定角色身份）。数据来源灵活：各仓库 git 提交聚合、纯文字、图片或文件整理，无 git 也适用。支持自定义模板（可永久或临时指定）。支持自然语言指定日期（今天/昨天/上周三/10月20号等）。当用户请求写日报、今日日报、昨天的日报、生成日报、/daily-report，或询问日报用法（日报怎么用/日报使用说明/日报有哪些使用方式）时使用。
 allowed-tools: Bash, Read, Write
 disable-model-invocation: false
 ---
@@ -11,6 +11,7 @@ disable-model-invocation: false
 
 ## 生成流程
 
+0. **读用户配置**（DISK/FORMATS/DIR/OPEN_HTML/TEMPLATE/ROLE/CONFIRM、自定义模板）→ 先 Read 同目录 `user-config.md`
 1. **解析日期**（自然语言 → 目标日期 YYYY-MM-DD）→ 读 `resources/date-parsing.md`
 2. **收集数据**（git 提交 + 会话口述 + 口头补充，合并去重）→ 读 `resources/data-collection.md`
 3. **内容归类与润色**（聚合来源 / 补充任务 / 纯文字模式 / 输出格式 / 写作风格）→ 读 `resources/content-rules.md`
@@ -18,33 +19,9 @@ disable-model-invocation: false
 5. **落盘与截图**（md/txt/html/content-png + 自动打开 html）→ 读 `resources/disk-and-html.md`
 6. **使用咨询**（用户只问「日报怎么用」等用法、未要求生成）→ 读 `resources/usage-guide.md`，将其内容原样输出（首行标题改为「日报生成器使用指南」），不收集 git、不生成报告、不落盘、不开浏览器
 
-## ⚙️ 默认配置（用户可手动修改；临时口头要求永远优先）
+## ⚙️ 配置与自定义模板
 
-```yaml
-DISK: true                     # 是否落盘写文件；false = 默认只在对话输出，不写文件不开浏览器
-FORMATS: [md, txt, html, content-png] # 落盘哪些格式（数组，可删减/增，如 [md, html] / [md, txt, html]（不截图）；content-png = 内容区截图（仅今日完成任务/明日计划/风险阻塞点三张卡片，不含头部标题/复制按钮/页脚），删除该项即不截图；不影响对话中的 md 正文输出）
-DIR: auto                      # 落盘根目录：auto = 按当前系统自动选 DIR_MAC / DIR_WIN（也可直接写死某个绝对路径）
-DIR_MAC: /Users/luzhaosheng/MyWork/智慧食堂/reports    # macOS 落盘根目录（自动按目标日期建子目录；目录不存在时回退用户主目录下 reports）
-DIR_WIN: d:\Workspace_QCoder\reports                   # Windows 落盘根目录（自动按目标日期建子目录；目录/盘符不存在时回退用户主目录下 reports）
-OPEN_HTML: true                # 落盘后是否自动用浏览器打开 html（FORMATS 不含 html 时忽略）
-TEMPLATE: default              # 报告模板：default = 内置三段式（完成任务/明日计划/风险阻塞点）；custom = 使用下方「📝 自定义模板」节；口头临时指定模板仅当次生效
-ROLE: 全栈开发工程师（企业内技术开发）  # 用户默认职业角色与主要工作内容（两者并存：职业名 + 括号内工作内容，生成内容/术语/量化指标/节奏条/风险话术全部按此画像走）；用户随口描述职业时（如「我搞装修的，天天跑工地」）→ AI 提炼为规范表述（装修项目经理（负责工地现场管理、施工进度与质量巡检））更新此处；说「以 XX 的身份写」→ 当次临时换角色不改配置；说「以后默认用 XX 角色 / 我的职业是 XX / 我的主要工作是 XX」→ 永久更新此处
-CONFIRM: never                 # 落盘前确认：never = 直接生成落盘不确认（默认）；text = 纯文字整理模式先出效果确认后再落盘；always = 任何方式生成都先确认；临时说「先看看效果」当次先确认、说「不用确认」当次跳过
-```
-
-> 临时口头要求（仅对当次生效，不修改上方配置）：说「不落盘/别写文件」→ 当次 DISK=false；说「写到桌面/存到 ~/report（macOS）或 D:\report（Windows）」→ 当次改用该 DIR；说「只要 md / 只出 html / 只要内容区截图」→ 当次只落指定格式；说「这次不截图」→ 当次不生成内容区截图；说「只要截图/重新截个图」→ 当次只对现有 html 执行内容区截图（不重新收集 git、不重写 md/txt/html 内容文件）；说「别开浏览器」→ 当次 OPEN_HTML=false；说「这次按 xxx 模板来」→ 当次临时换模板（不改配置）；说「以后都用这个模板」→ 自动写入下方「📝 自定义模板」节并把 TEMPLATE 改为 custom（永久生效）；说「先看看效果/先出效果再落盘」→ 当次先出效果确认后再落盘；说「不用确认/直接落盘」→ 当次跳过确认直接落盘。
-
-## 📝 自定义模板（TEMPLATE: custom 时启用，用户可手改，适配各类岗位）
-
-把顶部 TEMPLATE 改为 custom 后，按下面结构生成报告（段名、段数、条目格式均可改）：
-
-```text
-段一：今日工作内容（每条：工作描述 - 完成情况）
-段二：存在问题与困难（只列描述）
-段三：明日工作计划（每条：计划描述 - 预计完成时间）
-```
-
-> 只写段结构与条目格式即可；未写明的细节（中文顿号序号、生成时间行、落盘行为、HTML 样式）沿用默认规范。
+**执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（DISK/FORMATS/DIR/OPEN_HTML/TEMPLATE/ROLE/CONFIRM）与自定义模板都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留。
 
 ## 规则速览
 
