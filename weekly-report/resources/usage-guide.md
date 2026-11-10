@@ -34,7 +34,7 @@
 - 说「不落盘/别写文件」时跳过确认，直接对话输出
 
 ## 自定义模板（适配各类岗位）
-- 内置模板为三段式（本周任务进度/下周计划/风险阻塞点），适合开发岗位；其他岗位可自定义模板
+- 内置模板为四段式（本周结论 + 本周任务进度/下周计划/风险阻塞点），适合开发岗位；其他岗位可自定义模板
 - 临时换模板：说「这次按 xxx 来」→ 口头描述结构（如"按四段：工作内容/存在问题/下周计划/需要支持"），当次按该结构生成，不改配置
 - 永久换模板：把顶部配置 TEMPLATE 改为 custom，并按 SKILL.md 的「📝 自定义模板」节说明修改段结构，之后默认按新模板生成
 - 说「以后都用这个模板」→ 自动把当前口述的结构写入「📝 自定义模板」节并把 TEMPLATE 改为 custom
@@ -62,7 +62,7 @@
 | DIR | 落盘根目录 | auto（按当前系统自动选 DIR_MAC / DIR_WIN，默认）；DIR_MAC = macOS 根目录（/Users/luzhaosheng/MyWork/reports）；DIR_WIN = Windows 根目录（d:\Workspace_QCoder\reports） |
 | OPEN_HTML | 落盘后是否自动打开 html | true（自动打开，默认）/ false（不打开） |
 | WEEK_END | 周结束日（当周最后一天，决定周范围与落盘目录名） | friday（默认）/ sunday / saturday 等 |
-| TEMPLATE | 报告模板 | default（内置三段式，默认）/ custom（按「📝 自定义模板」节的结构生成） |
+| TEMPLATE | 报告模板 | default（内置四段式，默认）/ custom（按「📝 自定义模板」节的结构生成） |
 | CONFIRM | 落盘前先出效果确认 | never（直接生成不确认，默认）/ text（纯文字整理模式确认）/ always（所有生成都确认） |
 - 优先级：临时口头要求（不落盘/写到桌面/只要 md/只要内容区截图/这次不截图/别开浏览器/临时换模板/临时改周结束日等）永远优先于默认配置，仅对当次生效、不改配置
 - DIR（按系统解析）指向的目录/盘符不存在时，自动回退到用户主目录下 reports（macOS=~/reports、Windows=%USERPROFILE%\reports）
