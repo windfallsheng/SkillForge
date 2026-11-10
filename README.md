@@ -12,7 +12,7 @@
 
 | 分类 | Category | 说明 | 收录技能 |
 |:---|:---|:---|:---|
-| 报表汇演 | Reports | 聚合 git 与工程数据，按周期产出报告（日报 / 周报 / 月报 / 年报） | daily-report、weekly-report、annual-report |
+| 报表汇演 | Reports | 多源数据整理（一段文字 / 文件里的描述 / 图片与素材 / 口头补充，什么材料都能成稿），按周期产出报告（日报 / 周报 / 年报） | daily-report、weekly-report、annual-report |
 | 文档装裱 | Documents | 文档转换与美化：Word / Markdown / 纯文本 → 精美 HTML + 逐章截图 | article-to-html |
 | 工程提效 | Engineering | 开发流水线技能：部署、发布、审查、测试、文档 ↔ 规格互转 | spec-doc2spec、spec-spec2doc |
 | 演示汇演 | Slides | HTML 形态、PPT 体验的魔法幻灯：播放引擎 + 多套风格 + 逐页截图 + 全屏放映 | magic-deck |
@@ -24,15 +24,15 @@
 
 | 技能 | 分类 | 目录 | 说明 |
 |:---|:---|:---|:---|
-| daily-report | 报表汇演 | [daily-report/](daily-report/) | 聚合各仓库 git 提交 + 会话口述生成日报（今日任务进度/明日计划/风险阻塞点），支持自然语言日期（今天/昨天/上周三/10月20号）、连续多日批量、纯文字/图片/文件整理、自定义模板、12 行业词条 |
-| weekly-report | 报表汇演 | [weekly-report/](weekly-report/) | 同上生成周报（本周任务进度/下周计划/风险阻塞点 + 本周概览卡），周结束日可配置（默认周五，可改周日等），支持自然语言周定位（本周/上周/10月第2周/节假日锚定） |
-| annual-report | 报表汇演 | [annual-report/](annual-report/) | 生成年度总结（五段式：年度概览/核心成果/经验成长/不足反思/新年规划），12 行业职业词典，git 全年提交聚合或纯文字/图片/文件，支持自定义模板与自然语言年度定位 |
+| daily-report | 报表汇演 | [daily-report/](daily-report/) | 多源数据生成日报（今日任务进度/明日计划/风险阻塞点）：一段文字、文件里的描述、图片或口头补充皆可成稿；支持自然语言日期（今天/昨天/上周三/10月20号）、连续多日批量、自定义模板、12 行业词条 |
+| weekly-report | 报表汇演 | [weekly-report/](weekly-report/) | 多源数据生成周报（本周结论 + 本周任务进度/下周计划/风险阻塞点 + 本周概览卡），数据来源同日报；周结束日可配置（默认周五，可改周日等），支持自然语言周定位（本周/上周/10月第2周/节假日锚定） |
+| annual-report | 报表汇演 | [annual-report/](annual-report/) | 多源数据生成年度总结（五段式：年度概览/核心成果/经验成长/不足反思/新年规划）：一段文字、文件里的描述、图片或口头补充皆可成稿；12 行业职业词典，支持自定义模板与自然语言年度定位 |
 | article-to-html | 文档装裱 | [article-to-html/](article-to-html/) | Word / Markdown / 纯文本 → 精美独立 HTML（思源黑体 + Roboto 商用免费字体，图表 HTML/CSS 重绘），逐章截图（Retina 2x）；现成 HTML 可直接截图或先美化 |
 | spec-doc2spec | 工程提效 | [spec-doc2spec/](spec-doc2spec/) | Word / Markdown 需求文档转结构化需求切片；自动检测 Pandoc，未装引导跨系统安装 |
 | spec-spec2doc | 工程提效 | [spec-spec2doc/](spec-spec2doc/) | Markdown 规格导出为 Word / PDF 交付文档；自动检测 Pandoc，未装引导跨系统安装 |
 | magic-deck | 演示汇演 | [magic-deck/](magic-deck/) | 内容 → 单文件 HTML 幻灯（16:9 舞台 + 播放引擎 + 四套风格 + 全屏放映纯净模式）：自动播放/循环/间隔、键盘热键、页内连接、逐页 PNG 截图与主体复制（不含操作元素） |
 | meta-forge | 技能自造 | [meta-forge/](meta-forge/) | 元技能：从需求出发锻造完整技能包（薄入口 + resources 拆分 + user-config），自动植入四大机制（CONFIG_VERSION 钥匙 / user-config 抽离 / reference 双轨 / 自检纪律），入仓库时自动登记 README 与 cli.js 分类表 |
-| prompt-pouch | 沟通协作 | [prompt-pouch/](prompt-pouch/) | 锦囊提示词管理台：生成并维护本地 HTML 管理页面（分组侧栏/搜索/拖拽与按钮排序/收藏/{变量}插值/一键复制），数据存 prompts.json，页面与数据分离，AI 是唯一的笔 |
+| prompt-pouch | 沟通协作 | [prompt-pouch/](prompt-pouch/) | 锦囊提示词管理台：生成并维护本地 HTML 管理页面（分组侧栏/搜索/拖拽与按钮排序/收藏/{变量}插值/一键复制），数据存 prompts.json，页面与数据分离，双笔协作（页面直写 + AI 代笔） |
 
 ## 安装
 
@@ -91,7 +91,7 @@ cp -R spec-doc2spec spec-spec2doc <你的 AI 助手技能目录>/   # 仅 SpecCo
 │   └── resources/               # 重内容按生成阶段拆分，AI 按需读取
 │       ├── usage-guide.md       # 📖 使用说明（咨询应答的原样输出源）
 │       ├── date-parsing.md      # 🗓 日期解析（自然语言优先）
-│       ├── data-collection.md   # 📥 数据收集（仓库表 / git 命令 / 行数口径）
+│       ├── data-collection.md   # 📥 数据收集（多源聚合：口述 / 文字 / 文件 / 图片）
 │       ├── content-rules.md     # ✍️ 内容规则（聚合来源 / 补充任务 / 纯文字模式 / 输出格式 / 写作风格）
 │       ├── industry-dictionary.md # 🏭 行业适配（12 行业职业词典）
 │       └── disk-and-html.md     # 💾 本地落盘 / HTML 样式 / content-png 截图规范

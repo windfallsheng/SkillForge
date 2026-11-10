@@ -234,7 +234,7 @@ li:hover .idx{ transform:scale(1.18) rotate(-4deg); font-size:14px; }
   background:
     linear-gradient(90deg,rgba(186,230,253,.7),rgba(224,254,255,.95) 30%,#fff 46%,rgba(244,255,255,1) 58%,rgba(224,254,255,.9) 72%,rgba(186,230,253,.65)),
     radial-gradient(circle 2px at 40% 50%,#fff,rgba(224,254,255,.92) 55%,rgba(125,211,252,.4) 85%,transparent);
-  filter:drop-shadow(0 0 2px rgba(186,230,253,.7)) drop-shadow(0 0 5px rgba(45,212,191,.25));
+  filter:drop-shadow(0 0 1.5px rgba(255,255,255,.9)) drop-shadow(0 0 7px rgba(255,255,255,.5)) drop-shadow(0 0 14px rgba(224,254,255,.35)) drop-shadow(0 0 22px rgba(125,211,252,.2));
 }
 
 .pbar-comet::after{
@@ -278,8 +278,8 @@ li:hover .idx{ transform:scale(1.18) rotate(-4deg); font-size:14px; }
 .pbar-track.sheen-on .pbar-comet::before{ animation:glowPulse 1.8s ease-in-out infinite; }
 @keyframes cometFade{ 0%{opacity:0;} 7%{opacity:1;} 86%{opacity:1;} 100%{opacity:0;} }
 @keyframes glowPulse{
-  0%,100%{ filter:drop-shadow(0 0 2px rgba(186,230,253,.7)) drop-shadow(0 0 5px rgba(45,212,191,.25)) drop-shadow(0 0 2px rgba(255,255,255,.35)); }
-  50%{ filter:drop-shadow(0 0 5px rgba(255,255,255,.95)) drop-shadow(0 0 10px rgba(255,255,255,.5)) drop-shadow(0 0 6px rgba(45,212,191,.45)); }
+  0%,100%{ filter:drop-shadow(0 0 1.5px rgba(255,255,255,.9)) drop-shadow(0 0 7px rgba(255,255,255,.5)) drop-shadow(0 0 14px rgba(224,254,255,.35)) drop-shadow(0 0 22px rgba(125,211,252,.2)); }
+  50%{ filter:drop-shadow(0 0 3px rgba(255,255,255,1)) drop-shadow(0 0 9px rgba(255,255,255,.65)) drop-shadow(0 0 18px rgba(255,255,255,.35)) drop-shadow(0 0 28px rgba(224,254,255,.25)) drop-shadow(0 0 10px rgba(45,212,191,.35)); }
 }
 @keyframes tailGlow{
   0%,100%{ filter:blur(1px) brightness(1); }
