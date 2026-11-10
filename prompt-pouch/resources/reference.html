@@ -131,6 +131,10 @@ main{ flex:1; min-width:0; }
 .card.dragging{ opacity:.35; cursor:grabbing; }
 .card.drop-target{ border-color:var(--gold); box-shadow:0 0 0 2px var(--gold-dim); }
 .card-top{ display:flex; align-items:center; gap:8px; }
+.usage-info{
+  margin-left:auto; flex:0 0 auto; font-size:10.5px; color:var(--muted);
+  letter-spacing:.5px; white-space:nowrap;
+}
 .card-title{
   font-size:15px; font-weight:900; letter-spacing:1px; color:var(--text);
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
@@ -164,6 +168,19 @@ main{ flex:1; min-width:0; }
 }
 .op:hover{ background:rgba(232,176,75,.25); }
 .op.star-on{ color:var(--star); border-color:rgba(245,201,92,.5); background:rgba(245,201,92,.12); }
+.gpop{
+  display:none; position:fixed; z-index:300; min-width:180px; max-width:260px;
+  background:#16191f; border:1px solid var(--border); border-radius:12px;
+  padding:8px; box-shadow:0 12px 32px rgba(0,0,0,.5);
+}
+.gpop.open{ display:block; }
+.gpop-head{ font-size:11px; color:var(--muted); letter-spacing:1px; padding:2px 8px 6px; }
+.gpop-item{
+  font-size:13px; color:var(--text); padding:7px 10px; border-radius:8px; cursor:pointer;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.gpop-item:hover{ background:rgba(232,176,75,.15); }
+.gpop-item.cur{ color:var(--muted); cursor:default; }
 .copy-feedback{
   position:absolute; right:14px; top:-10px; font-size:11px; color:var(--gold);
   background:var(--panel2); border:1px solid var(--border);
@@ -300,7 +317,8 @@ footer .sep{ opacity:.4; }
         </select>
       </div>
       <div class="sort-status" id="sortStatus">
-        <button class="btn" id="btnSortCmd" disabled>📋 复制排序指令</button>
+        <button class="btn" id="btnSortCmd" disabled>📋 复制变更指令</button>
+        <button class="btn" id="btnMarkSaved" style="display:none" title="把指令交给 AI 落盘后点此清除未保存标记">✓ 已落盘</button>
       </div>
       <div class="bk-wrap" id="bkWrap">
         <span class="cache-badge" id="cacheBadge" style="display:none">⚠️ 缓存模式：prompts.json 读取失败，当前显示上次快照</span>
@@ -312,6 +330,9 @@ footer .sep{ opacity:.4; }
     <div class="list" id="cardList"></div>
   </main>
 </div>
+
+<!-- 分组选择浮层 -->
+<div class="gpop" id="gpop"></div>
 
 <!-- 模板插值填写框 -->
 <div class="modal-mask" id="fillMask">
@@ -349,7 +370,7 @@ footer .sep{ opacity:.4; }
 
 <footer>
   <b>怎么添加 / 修改提示词？</b>对 AI 直接说：<b>「把 XX 加到锦囊的写作分组」</b> 或 <b>「修改锦囊里『日报速写』的内容」</b>，AI 写入 prompts.json，刷新本页即见。
-  <span class="sep">|</span> 排序：默认最新添加在前，可切「最近使用 / 使用频率 / 手动顺序」；拖动卡片或点 ▲▼ 自动切回手动，点 <b>📋 复制排序指令</b> 交给 AI 落盘。
+  <span class="sep">|</span> 排序：默认最新添加在前，可切「最近使用 / 使用频率 / 手动顺序」；拖动卡片或点 ▲▼ 自动切回手动、点卡片 ⇄ 移到其它分组，点 <b>📋 复制变更指令</b> 交给 AI 落盘。
   <span class="sep">|</span> 打开方式：HTTP 访问读 prompts.json（file:// 直开则回退到本地缓存快照）。
   <span class="sep">|</span> 数据安全：收藏与排序存浏览器本地（IndexedDB）刷新不丢；💾 开启自动备份后，每次变更 2 秒内写同目录 pouch-backup.json（滚动双备份，↩ 一键恢复）。
 </footer>
@@ -363,7 +384,8 @@ footer .sep{ opacity:.4; }
     query: '',
     dirty: false,
     sortMode: 'added', // 'added' 最新添加 | 'recent' 最近使用 | 'freq' 使用频率 | 'manual' 手动顺序
-    usage: {}          // id -> { lastUsed: ts, useCount: n }（复制时统计，存浏览器本地态）
+    usage: {},         // id -> { lastUsed: ts, useCount: n }（复制时统计，存浏览器本地态）
+    moves: [],         // 跨组移动待办 [{title, from, to}]（随变更指令交给 AI 落盘）
   };
 
   /* ---------- 数据加载 ---------- */
@@ -376,6 +398,7 @@ footer .sep{ opacity:.4; }
   var sortStatus = document.getElementById('sortStatus');
   var sortSel = document.getElementById('sortSel');
   var btnSortCmd = document.getElementById('btnSortCmd');
+  var btnMarkSaved = document.getElementById('btnMarkSaved');
   var bkStatus = document.getElementById('bkStatus');
   var btnBkEnable = document.getElementById('btnBkEnable');
   var btnBkRestore = document.getElementById('btnBkRestore');
@@ -449,7 +472,7 @@ footer .sep{ opacity:.4; }
       var n = state.data.prompts.filter(function(p){ return p.group === g.id; }).length;
       html += '<div class="nav-item' + (state.curGroup===g.id?' on':'') + '" data-g="' + g.id + '"><span class="icon">' + g.icon + '</span>' + g.name + '<span class="cnt">' + n + '</span></div>';
     });
-    html += '<div class="side-tip"><b>锦囊用法</b><br>· 说「把 XX 加到写作分组」→ AI 写入<br>· 顶栏切换排序：最新添加 / 最近使用 / 使用频率 / 手动<br>· 拖动卡片自动切手动 → 复制指令交给 AI<br>· 点卡片 ⭐ 收藏常用</div>';
+    html += '<div class="side-tip"><b>锦囊用法</b><br>· 说「把 XX 加到写作分组」→ AI 写入<br>· 顶栏切换排序：最新添加 / 最近使用 / 使用频率 / 手动<br>· 点 ⇄ 移组、拖动卡片自动切手动 → 复制变更指令交给 AI<br>· 点卡片 ⭐ 收藏常用 · 复制次数显示在卡片右上角</div>';
     sideNav.innerHTML = html;
     sideNav.querySelectorAll('.nav-item').forEach(function(el){
       el.addEventListener('click', function(){
@@ -478,11 +501,12 @@ footer .sep{ opacity:.4; }
       card.draggable = true;
       card.setAttribute('data-id', p.id);
       card.innerHTML =
-        '<div class="card-top"><span class="card-title"></span>' + (isTpl ? '<span class="tpl-badge">模板</span>' : '') + '<span class="gbadge">' + (g ? g.icon + ' ' + g.name : '') + '</span></div>' +
+        '<div class="card-top"><span class="card-title"></span>' + (isTpl ? '<span class="tpl-badge">模板</span>' : '') + '<span class="gbadge">' + (g ? g.icon + ' ' + g.name : '') + '</span><span class="usage-info"></span></div>' +
         '<div class="card-body"></div>' +
         '<button class="card-expand">展开 ▾</button>' +
         '<div class="card-foot"><span class="tags-wrap"></span>' +
         '<div class="card-ops">' +
+        '<button class="op op-move" title="移到其它分组">⇄</button>' +
         '<button class="op op-up" title="上移">▲</button>' +
         '<button class="op op-down" title="下移">▼</button>' +
         '<button class="op op-copy" title="复制提示词">⧉</button>' +
@@ -490,6 +514,10 @@ footer .sep{ opacity:.4; }
         '</div></div>' +
         '<div class="copy-feedback">✓ 已复制</div>';
       card.querySelector('.card-title').textContent = p.title;
+      var uu = state.usage[p.id];
+      if (uu && uu.useCount > 0){
+        card.querySelector('.usage-info').textContent = '⧉ ' + uu.useCount + ' 次 · ' + relTime(uu.lastUsed);
+      }
       card.querySelector('.card-body').textContent = p.content;
       var tw = card.querySelector('.tags-wrap');
       (p.tags || []).forEach(function(t){ tw.appendChild(Object.assign(document.createElement('span'), {className:'tag', textContent:t})); });
@@ -508,6 +536,11 @@ footer .sep{ opacity:.4; }
         persistUserState();
         scheduleBackup();
         renderNav(); render();
+      });
+      /* 移到其它分组 */
+      card.querySelector('.op-move').addEventListener('click', function(e){
+        e.stopPropagation();
+        openGpop(card.querySelector('.op-move'), p);
       });
       /* 上移/下移 */
       card.querySelector('.op-up').addEventListener('click', function(){ moveItem(p, idx, -1); });
@@ -545,6 +578,13 @@ footer .sep{ opacity:.4; }
             arr.forEach(function(x, i){ x.order = i + 1; });
             markDirty();
             render();
+          } else if (from){
+            var fb2 = card.querySelector('.copy-feedback');
+            if (fb2){
+              fb2.textContent = '⇄ 跨组移动请用 ⇄ 按钮';
+              fb2.classList.add('show');
+              setTimeout(function(){ fb2.classList.remove('show'); }, 1600);
+            }
           }
         }
       });
@@ -558,7 +598,15 @@ footer .sep{ opacity:.4; }
     var arr = visiblePrompts();
     if (idx + delta < 0 || idx + delta >= arr.length) return;
     var t = arr[idx + delta];
-    if (p.group !== t.group) return;
+    if (p.group !== t.group){
+      var fbEl = listEl.querySelector('.card[data-id="' + p.id + '"] .copy-feedback');
+      if (fbEl){
+        fbEl.textContent = '⇄ 跨组移动请用 ⇄ 按钮';
+        fbEl.classList.add('show');
+        setTimeout(function(){ fbEl.classList.remove('show'); }, 1600);
+      }
+      return;
+    }
     var gArr = state.data.prompts.filter(function(x){ return x.group === p.group; })
       .sort(function(a,b){ return (a.order||0) - (b.order||0); });
     var i = gArr.indexOf(p);
@@ -570,10 +618,20 @@ footer .sep{ opacity:.4; }
     render();
   }
 
+  function refreshDirtyUI(){
+    if (state.dirty){
+      sortStatus.classList.add('show');
+      btnSortCmd.disabled = false;
+      if (btnMarkSaved) btnMarkSaved.style.display = '';
+    } else {
+      sortStatus.classList.remove('show');
+      btnSortCmd.disabled = true;
+      if (btnMarkSaved) btnMarkSaved.style.display = 'none';
+    }
+  }
   function markDirty(){
     state.dirty = true;
-    sortStatus.classList.add('show');
-    btnSortCmd.disabled = false;
+    refreshDirtyUI();
     persistUserState();
     scheduleBackup();
   }
@@ -586,17 +644,78 @@ footer .sep{ opacity:.4; }
     var old = btnSortCmd.textContent;
     btnSortCmd.textContent = '✓ 已切回手动顺序';
     setTimeout(function(){
-      if (state.dirty){ btnSortCmd.textContent = '📋 复制排序指令（未保存）'; }
+      if (state.dirty){ btnSortCmd.textContent = '📋 复制变更指令（未保存）'; }
       else { btnSortCmd.textContent = old; }
     }, 2000);
   }
-  function recordUsage(id){
+  function recordUsage(id, card){
     if (!id) return;
     var u = state.usage[id] || (state.usage[id] = { lastUsed: 0, useCount: 0 });
     u.lastUsed = Date.now();
     u.useCount += 1;
     persistUserState();
+    if (card && card.querySelector){
+      var el = card.querySelector('.usage-info');
+      if (el) el.textContent = '⧉ ' + u.useCount + ' 次 · ' + relTime(u.lastUsed);
+    }
   }
+  function relTime(ts){
+    if (!ts) return '';
+    var diff = Date.now() - ts;
+    if (diff < 60000) return '刚刚';
+    if (diff < 3600000) return Math.floor(diff / 60000) + ' 分钟前';
+    if (diff < 86400000) return Math.floor(diff / 3600000) + ' 小时前';
+    if (diff < 30 * 86400000) return Math.floor(diff / 86400000) + ' 天前';
+    return Math.floor(diff / (30 * 86400000)) + ' 个月前';
+  }
+  /* ---------- 移到其它分组（⇄ 浮层） ---------- */
+  var gpopEl = document.getElementById('gpop');
+  var gpopTarget = null;
+  function openGpop(anchorBtn, p){
+    var html = '<div class="gpop-head">移到分组</div>';
+    state.data.groups.forEach(function(g){
+      var cur = (p.group === g.id);
+      html += '<div class="gpop-item' + (cur ? ' cur' : '') + '"' + (cur ? '' : ' data-g="' + g.id + '"') + '>' + g.icon + ' ' + g.name + (cur ? '（当前）' : '') + '</div>';
+    });
+    gpopEl.innerHTML = html;
+    gpopEl.classList.add('open');
+    gpopTarget = p;
+    var r = anchorBtn.getBoundingClientRect();
+    var gw = gpopEl.offsetWidth;
+    var x = Math.min(Math.max(r.left, 8), window.innerWidth - gw - 12);
+    var y = r.bottom + 8;
+    if (y + gpopEl.offsetHeight > window.innerHeight - 12){ y = Math.max(r.top - gpopEl.offsetHeight - 8, 8); }
+    gpopEl.style.left = x + 'px';
+    gpopEl.style.top = y + 'px';
+    gpopEl.querySelectorAll('.gpop-item[data-g]').forEach(function(el){
+      el.addEventListener('click', function(){ moveToGroup(gpopTarget, el.getAttribute('data-g')); });
+    });
+  }
+  function closeGpop(){
+    gpopEl.classList.remove('open');
+    gpopTarget = null;
+  }
+  function moveToGroup(p, gid){
+    if (!p || p.group === gid){ closeGpop(); return; }
+    var from = groupOf(p.group);
+    var to = groupOf(gid);
+    if (!to){ closeGpop(); return; }
+    var gArr = state.data.prompts.filter(function(x){ return x.group === gid; })
+      .sort(function(a, b){ return (a.order || 0) - (b.order || 0); });
+    var maxOrder = gArr.reduce(function(m, x){ return Math.max(m, x.order || 0); }, 0);
+    p.group = gid;
+    p.order = maxOrder + 1;
+    state.moves.push({ title: p.title, from: from ? from.name : '', to: to.name });
+    closeGpop();
+    markDirty();
+    renderNav(); render();
+  }
+  document.addEventListener('click', function(e){
+    if (gpopEl && gpopEl.classList.contains('open')){
+      var onAnchor = e.target.closest && e.target.closest('.op-move');
+      if (!gpopEl.contains(e.target) && !onAnchor){ closeGpop(); }
+    }
+  });
   sortSel.addEventListener('change', function(){
     state.sortMode = sortSel.value;
     persistUserState();
@@ -681,9 +800,10 @@ footer .sep{ opacity:.4; }
   function copyText(text, card){
     function done(){
       var fb = card.querySelector('.copy-feedback');
+      fb.textContent = '✓ 已复制';
       fb.classList.add('show');
       setTimeout(function(){ fb.classList.remove('show'); }, 1500);
-      recordUsage(card && card.getAttribute ? card.getAttribute('data-id') : null);
+      recordUsage(card && card.getAttribute ? card.getAttribute('data-id') : null, card);
     }
     function fallback(){
       var ta = document.createElement('textarea');
@@ -699,7 +819,16 @@ footer .sep{ opacity:.4; }
 
   /* ---------- 排序指令 ---------- */
   function buildSortCmd(){
-    var lines = ['请帮我调整 prompt-pouch 锦囊的排序：'];
+    var lines = ['请帮我调整 prompt-pouch 锦囊（按以下内容落盘 prompts.json）：'];
+    var moves = state.moves || [];
+    if (moves.length){
+      lines.push('【分组调整】');
+      moves.forEach(function(m){
+        lines.push('把「' + m.title + '」从「' + m.from + '」移到「' + m.to + '」');
+      });
+      lines.push('');
+    }
+    lines.push('【各组顺序】');
     state.data.groups.forEach(function(g){
       var ps = state.data.prompts.filter(function(p){ return p.group === g.id; })
         .sort(function(a,b){ return (a.order||0) - (b.order||0); });
@@ -709,6 +838,15 @@ footer .sep{ opacity:.4; }
     });
     return lines.join('\n');
   }
+  btnMarkSaved.addEventListener('click', function(){
+    state.dirty = false;
+    state.moves = [];
+    persistUserState();
+    refreshDirtyUI();
+    var old = btnMarkSaved.textContent;
+    btnMarkSaved.textContent = '✓ 已清除';
+    setTimeout(function(){ btnMarkSaved.textContent = old; }, 1600);
+  });
   btnSortCmd.addEventListener('click', function(){
     copyText(buildSortCmd(), {
       querySelector: function(){ return { classList:{ add:function(){}, remove:function(){} } }; }
@@ -718,7 +856,7 @@ footer .sep{ opacity:.4; }
     setTimeout(function(){
       btnSortCmd.textContent = old;
       if (state.dirty){
-        btnSortCmd.textContent = '📋 复制排序指令（未保存）';
+        btnSortCmd.textContent = '📋 复制变更指令（未保存）';
       }
     }, 2000);
   });
@@ -737,6 +875,7 @@ footer .sep{ opacity:.4; }
   document.addEventListener('keydown', function(e){
     if (e.key === 'Escape'){
       closeFillPanel();
+      closeGpop();
       document.getElementById('bkMask').classList.remove('open');
       if (searchInput.value){ searchInput.value = ''; state.query = ''; searchClear.style.display = 'none'; render(); }
     }
@@ -792,7 +931,9 @@ footer .sep{ opacity:.4; }
     var favs = state.data.prompts.filter(function(p){ return p.favorite; }).map(function(p){ return p.id; });
     var orders = {};
     state.data.prompts.forEach(function(p){ orders[p.id] = p.order || 0; });
-    return { favs: favs, orders: orders, sortMode: state.sortMode, usage: state.usage };
+    var groups = {};
+    state.data.prompts.forEach(function(p){ groups[p.id] = p.group; });
+    return { favs: favs, orders: orders, groups: groups, sortMode: state.sortMode, usage: state.usage, dirty: !!state.dirty, moves: state.moves || [] };
   }
   function persistUserState(){
     if (!state.data) return;
@@ -810,8 +951,14 @@ footer .sep{ opacity:.4; }
     state.data.prompts.forEach(function(p){
       if (typeof o[p.id] === 'number' && o[p.id] > 0) p.order = o[p.id];
     });
+    var g = us.groups || {};
+    state.data.prompts.forEach(function(p){
+      if (g[p.id] && g[p.id] !== p.group) p.group = g[p.id];
+    });
     if (us.sortMode) state.sortMode = us.sortMode;
     if (us.usage) state.usage = us.usage;
+    if (us.dirty) state.dirty = true;
+    if (us.moves && us.moves.length) state.moves = us.moves;
   }
   function applyUserState(){ applyUserStateFrom(localState); }
   function loadLocalState(){
@@ -999,6 +1146,7 @@ footer .sep{ opacity:.4; }
     bootRendered = true;
     applyUserState();
     syncSortUI();
+    refreshDirtyUI();
     renderNav();
     render();
     if (bootMode === 'cache') cacheBadge.style.display = '';
@@ -1031,6 +1179,7 @@ footer .sep{ opacity:.4; }
     .then(function(){
       applyUserState();
       syncSortUI();
+      refreshDirtyUI();
       if (bootRendered){ renderNav(); render(); }
       updateBkUI();
     });
