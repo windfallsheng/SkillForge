@@ -24,6 +24,7 @@ const CATEGORIES = [
   { name: "文档装裱", en: "Documents", skills: ["article-to-html"] },
   { name: "工程提效", en: "Engineering", skills: ["spec-doc2spec", "spec-spec2doc"] },
   { name: "演示汇演", en: "Slides", skills: ["magic-deck"] },
+  { name: "沟通协作", en: "Communication", skills: ["prompt-pouch"] },
   { name: "技能自造", en: "Meta", skills: ["meta-forge"] },
 ];
 

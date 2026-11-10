@@ -17,7 +17,7 @@
 | 工程提效 | Engineering | 开发流水线技能：部署、发布、审查、测试、文档 ↔ 规格互转 | spec-doc2spec、spec-spec2doc |
 | 演示汇演 | Slides | HTML 形态、PPT 体验的魔法幻灯：播放引擎 + 多套风格 + 逐页截图 + 全屏放映 | magic-deck |
 | 数据整备 | Data | Excel / CSV / 图表、数据清洗与模板整理 | （规划中） |
-| 沟通协作 | Communication | 邮件起草、会议纪要、通知周知 | （规划中） |
+| 沟通协作 | Communication | 提示词管理（锦囊本地管理台） | prompt-pouch |
 | 技能自造 | Meta | 锻造技能本身的元技能（创建技能 / 插件） | meta-forge |
 
 ## 技能清单
@@ -32,6 +32,7 @@
 | spec-spec2doc | 工程提效 | [spec-spec2doc/](spec-spec2doc/) | Markdown 规格导出为 Word / PDF 交付文档；自动检测 Pandoc，未装引导跨系统安装 |
 | magic-deck | 演示汇演 | [magic-deck/](magic-deck/) | 内容 → 单文件 HTML 幻灯（16:9 舞台 + 播放引擎 + 四套风格 + 全屏放映纯净模式）：自动播放/循环/间隔、键盘热键、页内连接、逐页 PNG 截图与主体复制（不含操作元素） |
 | meta-forge | 技能自造 | [meta-forge/](meta-forge/) | 元技能：从需求出发锻造完整技能包（薄入口 + resources 拆分 + user-config），自动植入四大机制（CONFIG_VERSION 钥匙 / user-config 抽离 / reference 双轨 / 自检纪律），入仓库时自动登记 README 与 cli.js 分类表 |
+| prompt-pouch | 沟通协作 | [prompt-pouch/](prompt-pouch/) | 锦囊提示词管理台：生成并维护本地 HTML 管理页面（分组侧栏/搜索/拖拽与按钮排序/收藏/{变量}插值/一键复制），数据存 prompts.json，页面与数据分离，AI 是唯一的笔 |
 
 ## 安装
 
