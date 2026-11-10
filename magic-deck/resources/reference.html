@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reference 骨架 — magic-deck 定稿样例</title>
+<style>
+/* ══════════ 0. 基础 ══════════ */
+*{ margin:0; padding:0; box-sizing:border-box; }
+html,body{ width:100%; height:100%; overflow:hidden;
+  font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,'Microsoft YaHei',monospace; }
+button,select,input{ font-family:inherit; }
+/* ══════════ 1. 四主题 CSS 变量（8 变量齐备） ══════════ */
+:root, [data-theme="tech"]{
+  --bg:#0a1929; --bg2:#071525; --panel:rgba(11,30,55,.72); --panel-solid:#0b1e37;
+  --text:#bae6fd; --muted:#5b7fa5; --accent:#0ea5e9; --accent2:#14b8a6;
+  --border:rgba(14,165,233,.18); --glow:rgba(14,165,233,.35);
+  --title-grad:linear-gradient(90deg,#7dd3fc,#0ea5e9 45%,#818cf8);
+  --tag-bg:rgba(14,165,233,.12);
+}
+[data-theme="biz"]{
+  --bg:#f4f6fb; --bg2:#e9edf5; --panel:rgba(255,255,255,.85); --panel-solid:#ffffff;
+  --text:#1e293b; --muted:#64748b; --accent:#2563eb; --accent2:#0891b2;
+  --border:rgba(37,99,235,.14); --glow:rgba(37,99,235,.18);
+  --title-grad:linear-gradient(90deg,#1e40af,#2563eb 55%,#0891b2);
+  --tag-bg:rgba(37,99,235,.08);
+}
+[data-theme="mono"]{
+  --bg:#fafafa; --bg2:#f0f0f0; --panel:rgba(255,255,255,.9); --panel-solid:#ffffff;
+  --text:#16181d; --muted:#6b7280; --accent:#111111; --accent2:#4b5563;
+  --border:rgba(17,17,17,.14); --glow:rgba(17,17,17,.08);
+  --title-grad:linear-gradient(90deg,#111,#333 60%,#666);
+  --tag-bg:rgba(17,17,17,.06);
+}
+[data-theme="warm"]{
+  --bg:#fdf3e7; --bg2:#f7e7d3; --panel:rgba(255,250,243,.85); --panel-solid:#fffaf3;
+  --text:#43301f; --muted:#8a7565; --accent:#d97706; --accent2:#ea580c;
+  --border:rgba(217,119,6,.18); --glow:rgba(217,119,6,.22);
+  --title-grad:linear-gradient(90deg,#b45309,#d97706 50%,#ea580c);
+  --tag-bg:rgba(217,119,6,.1);
+}
+/* ══════════ 2. 背景装饰（舞台外围氛围层） ══════════ */
+.bg-glow{ position:fixed; inset:0; z-index:0;
+  background:
+    radial-gradient(60% 50% at 50% 0%, var(--glow) 0%, transparent 100%),
+    radial-gradient(40% 35% at 100% 100%, var(--glow) 0%, transparent 100%),
+    var(--bg); }
+.bg-grid{ position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:72px 72px;
+  -webkit-mask-image:radial-gradient(circle at center, #000 0%, transparent 78%);
+  mask-image:radial-gradient(circle at center, #000 0%, transparent 78%); }
+/* ══════════ 3. 舞台与切换 ══════════ */
+.stage{ position:fixed; inset:0; z-index:1; display:flex; align-items:center; justify-content:center; }
+.deck{ position:relative; width:1280px; height:720px; transform:scale(var(--sc,1)); transform-origin:center center; flex:0 0 auto; }
+.slide{ position:absolute; inset:0; padding:64px 80px; background:var(--bg); display:flex; flex-direction:column;
+  opacity:0; visibility:hidden; transform:translateX(36px);
+  transition:opacity .45s ease, transform .45s ease, visibility 0s linear .45s; }
+.slide.active{ opacity:1; visibility:visible; transform:translateX(0); transition:opacity .45s ease, transform .45s ease; }
+.slide.dim{ opacity:0; transform:translateX(-36px); }
+/* ══════════ 4. 版式组件（主题变量驱动） ══════════ */
+.s-title{ font-size:40px; font-weight:900; line-height:1.25;
+  background:var(--title-grad); -webkit-background-clip:text; background-clip:text;
+  color:transparent; text-shadow:var(--glow) 0 0 18px; }
+.s-head{ display:flex; align-items:center; gap:18px; margin-bottom:34px; }
+.s-head::before{ content:''; width:6px; height:34px; border-radius:3px;
+  background:linear-gradient(180deg,var(--accent),var(--accent2)); box-shadow:0 0 12px var(--glow); }
+.s-head h2{ font-size:32px; font-weight:800; color:var(--text); }
+.tag{ flex:0 0 auto; margin-left:auto; font-size:13px; padding:5px 14px; border-radius:999px;
+  color:var(--accent); background:var(--tag-bg); border:1px solid var(--border); }
+.panel{ background:var(--panel); border:1px solid var(--border); border-radius:14px;
+  padding:22px 26px; backdrop-filter:blur(6px); }
+.grid2{ display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+.grid3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:22px; }
+.grid4{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
+.card{ background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:20px 22px;
+  transition:transform .2s ease, box-shadow .2s ease; }
+.card:hover{ transform:translateY(-4px); box-shadow:0 8px 24px var(--glow); }
+.card h4{ font-size:18px; font-weight:700; color:var(--text); margin-bottom:8px; }
+.card h4 .en{ font-size:12px; color:var(--muted); margin-left:8px; font-weight:400; }
+.card p{ font-size:14px; color:var(--muted); line-height:1.7; }
+.bignum{ background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:18px 20px; text-align:center; }
+.bignum b{ display:block; font-size:52px; font-weight:900; background:var(--title-grad);
+  -webkit-background-clip:text; background-clip:text; color:transparent; }
+.bignum span{ font-size:13px; color:var(--muted); }
+.toc{ display:flex; flex-direction:column; gap:14px; }
+.toc-item{ display:flex; align-items:center; gap:16px; padding:16px 22px; border-radius:12px;
+  background:var(--panel); border:1px solid var(--border); cursor:pointer;
+  transition:transform .2s ease; }
+.toc-item:hover{ transform:translateX(8px); }
+.toc-item .no{ width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center;
+  font-weight:800; color:var(--accent); background:var(--tag-bg); }
+.toc-item .t{ font-size:18px; font-weight:600; color:var(--text); }
+.toc-item .pg{ margin-left:auto; font-size:13px; color:var(--muted); }
+.checklist{ list-style:none; display:flex; flex-direction:column; gap:12px; }
+.checklist li{ position:relative; padding-left:34px; font-size:16px; color:var(--text); line-height:1.6; }
+.checklist li::before{ content:'✓'; position:absolute; left:0; top:2px; width:22px; height:22px;
+  display:flex; align-items:center; justify-content:center; font-size:13px; color:#fff; border-radius:6px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2)); }
+.theme-card{ display:flex; align-items:center; gap:16px; padding:18px 22px; border-radius:12px;
+  background:var(--panel); border:1px solid var(--border); cursor:pointer; }
+.theme-card .sw{ display:flex; gap:6px; }
+.theme-card .sw i{ width:20px; height:20px; border-radius:50%; border:2px solid rgba(255,255,255,.3); }
+.chip{ display:inline-block; font-size:12px; padding:3px 10px; border-radius:999px;
+  color:var(--accent); background:var(--tag-bg); border:1px solid var(--border); }
+.cover{ justify-content:center; align-items:flex-start; }
+.logo{ width:76px; height:76px; border-radius:18px; margin-bottom:30px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2)); box-shadow:0 0 28px var(--glow); }
+.cover .s-title{ font-size:64px; }
+.sub{ font-size:20px; color:var(--muted); margin-top:22px; letter-spacing:.5px; }
+.sign{ margin-top:auto; font-size:12px; color:var(--muted); letter-spacing:2px; }
+.endpage{ justify-content:center; align-items:center; text-align:center; }
+.endpage .s-title{ font-size:56px; }
+.endpage p{ margin-top:20px; font-size:16px; color:var(--muted); }
+/* ══════════ 5. 五模板骨架 ══════════ */
+.t-minimal .s-title{ font-size:44px; text-align:center; }
+.t-minimal .points{ margin:0 auto; max-width:640px; list-style:none; }
+.t-minimal .points li{ padding:12px 0; border-bottom:1px solid var(--border);
+  font-size:20px; line-height:1.9; color:var(--text); }
+.t-minimal .bignum b{ font-size:88px; }
+.t-magazine .s-title{ font-size:96px; line-height:1.05; }
+.m-split{ display:grid; grid-template-columns:46% 54%; gap:56px; align-items:center; }
+.m-split h3{ font-size:36px; font-weight:800; color:var(--text); margin-bottom:18px; }
+.m-split p{ font-size:16px; color:var(--muted); line-height:1.9; }
+.m-figure{ height:380px; border-radius:18px; display:flex; align-items:flex-end; padding:20px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2)); opacity:.85; }
+.m-strip{ display:flex; justify-content:space-between; }
+.m-strip>div{ flex:1; text-align:center; border-left:1px solid var(--border); }
+.m-strip>div:first-child{ border-left:0; }
+.m-strip b{ display:block; font-size:64px; font-weight:900; background:var(--title-grad);
+  -webkit-background-clip:text; background-clip:text; color:transparent; }
+.m-strip span{ font-size:14px; color:var(--muted); }
+.t-keynote .s-title{ font-size:112px; }
+.k-big{ font-size:64px; font-weight:900; text-align:center; color:var(--text); margin:auto; }
+.k-sub{ font-size:22px; color:var(--muted); text-align:center; margin-top:18px; }
+.k-bar{ width:320px; height:4px; border-radius:2px; margin:40px auto 0;
+  background:linear-gradient(90deg,var(--accent),var(--accent2)); }
+.k-ring{ width:120px; height:120px; border-radius:50%; margin:10px auto;
+  background:conic-gradient(var(--accent) 0 72%, var(--border) 72% 100%);
+  display:flex; align-items:center; justify-content:center; }
+.k-ring b{ font-size:34px; color:var(--text); }
+.tl{ position:relative; padding-left:32px; }
+.tl::before{ content:''; position:absolute; left:6px; top:8px; bottom:8px; width:3px; background:var(--accent); }
+.tl-item{ position:relative; padding:18px 0 18px 24px; }
+.tl-item::before{ content:''; position:absolute; left:-32px; top:24px; width:14px; height:14px;
+  border-radius:50%; background:var(--accent); box-shadow:0 0 0 4px var(--tag-bg); }
+.tl-time{ font-size:24px; font-weight:800; color:var(--accent); }
+.tl-item h4{ font-size:18px; font-weight:700; color:var(--text); margin:6px 0; }
+.tl-item p{ font-size:14px; color:var(--muted); line-height:1.7; }
+/* ══════════ 6. 操作元素（固定样式） ══════════ */
+.toolbar{ position:fixed; right:18px; top:14px; z-index:10;
+  display:flex; align-items:center; gap:10px; }
+.group{ display:flex; align-items:center; gap:8px; padding:4px 6px; border-radius:999px;
+  background:var(--panel-solid); border:1px solid var(--border); box-shadow:0 4px 16px rgba(0,0,0,.18); }
+.tbtn{ display:inline-flex; align-items:center; justify-content:center; gap:6px;
+  padding:7px 12px; line-height:1; font-size:13px; color:var(--text);
+  background:transparent; border:1px solid transparent; border-radius:999px; cursor:pointer;
+  white-space:nowrap; transition:all .15s ease; }
+.tbtn:hover{ border-color:var(--border); background:var(--tag-bg); }
+.tbtn.on{ color:#fff; background:var(--accent); border-color:var(--accent); }
+.tbtn.theme{ width:16px; height:16px; padding:0; border-radius:50%; border:2px solid rgba(255,255,255,.35); }
+.tbtn.theme.on{ outline:2px solid var(--accent); outline-offset:2px; }
+.tbtn.theme[data-theme="tech"]{ background:#0ea5e9; }
+.tbtn.theme[data-theme="biz"]{ background:#2563eb; }
+.tbtn.theme[data-theme="mono"]{ background:#111; }
+.tbtn.theme[data-theme="warm"]{ background:#d97706; }
+select.tbtn{ appearance:auto; padding:7px 10px; }
+label.tbtn{ cursor:pointer; }
+label.tbtn input[type=checkbox]{ width:14px; height:14px; margin:0; flex:0 0 auto; accent-color:var(--accent); }
+.pageno{ position:fixed; left:18px; bottom:16px; z-index:10; padding:6px 14px; border-radius:999px;
+  font-size:13px; color:var(--muted); background:var(--panel-solid); border:1px solid var(--border); }
+.pageno b{ color:var(--accent); }
+.nav{ position:fixed; top:50%; transform:translateY(-50%); z-index:10; width:46px; height:46px;
+  border-radius:50%; font-size:22px; color:var(--text); background:var(--panel-solid);
+  border:1px solid var(--border); cursor:pointer; opacity:0; transition:all .2s ease; }
+.nav.prev{ left:18px; } .nav.next{ right:18px; }
+body:hover .nav{ opacity:1; }
+.nav:hover{ border-color:var(--accent); color:var(--accent); box-shadow:0 0 14px var(--glow); }
+@media (hover:none){ .nav{ opacity:1; } }
+.hint{ position:fixed; bottom:16px; left:50%; transform:translateX(-50%); z-index:10;
+  font-size:11px; color:var(--muted); letter-spacing:.5px; }
+.help-mask{ position:fixed; inset:0; z-index:20; display:none; align-items:center; justify-content:center;
+  background:rgba(0,0,0,.55); backdrop-filter:blur(4px); }
+.help-mask.open{ display:flex; }
+.help-panel{ width:560px; max-height:70vh; overflow:auto; padding:30px 34px; border-radius:16px;
+  background:var(--panel-solid); border:1px solid var(--border); color:var(--text); }
+.help-panel h3{ font-size:20px; margin-bottom:16px; }
+.help-panel table{ width:100%; border-collapse:collapse; font-size:13px; }
+.help-panel td{ padding:6px 8px; border-bottom:1px solid var(--border); }
+.help-panel kbd{ padding:2px 8px; border-radius:5px; background:var(--tag-bg);
+  border:1px solid var(--border); font-family:inherit; }
+.help-note{ margin-top:14px; font-size:12px; color:var(--muted); line-height:1.8; }
+/* ═══ 选页复制面板 ═══ */
+.copy-panel{ width:430px; max-height:72vh; display:flex; flex-direction:column; padding:24px 26px;
+  border-radius:16px; background:var(--panel-solid); border:1px solid var(--border); color:var(--text); }
+.copy-panel h3{ font-size:18px; margin:0; }
+.cp-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.cp-all{ display:inline-flex; align-items:center; gap:6px; font-size:13px; cursor:pointer; }
+.cp-list{ flex:1; overflow-y:auto; border:1px solid var(--border); border-radius:10px; }
+.cp-item{ display:flex; align-items:center; gap:10px; padding:9px 12px; border-bottom:1px solid var(--border);
+  cursor:pointer; font-size:13px; }
+.cp-item:last-child{ border-bottom:none; }
+.cp-item:hover{ background:var(--tag-bg); }
+.cp-item input{ margin:0; flex:0 0 auto; }
+.cp-no{ flex-shrink:0; color:var(--accent); font-weight:600; }
+.cp-preview{ flex:1; min-width:0; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.cp-foot{ display:flex; justify-content:flex-end; gap:10px; margin-top:14px; }
+.cp-foot .tbtn{ border:1px solid var(--border); background:var(--tag-bg); cursor:pointer; }
+.cp-foot .tbtn.primary{ background:var(--accent); color:var(--bg); border-color:transparent; }
+/* ══════════ 7. 全屏放映纯净模式（PPT 放映规范：黑底 + 幻灯充满画面） ══════════ */
+:root:fullscreen{ background:#000; } /* 放映黑底：与 PPT 软件放映一致，比例不匹配处补黑边，不带主题氛围边框 */
+:root:fullscreen .bg-glow,
+:root:fullscreen .bg-grid{ display:none !important; } /* 氛围层只在窗口浏览态，放映时退场 */
+:root:fullscreen .toolbar,
+:root:fullscreen .pageno,
+:root:fullscreen .hint,
+:root:fullscreen .nav,
+:root:fullscreen .help-mask{ display:none !important; }
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<div class="bg-grid"></div>
+<div class="progress" style="position:fixed;top:0;left:0;right:0;height:3px;z-index:10;background:transparent;">
+  <div class="fill" id="progFill" style="height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .3s ease;"></div>
+</div>
+<div class="toolbar">
+  <div class="group" title="主题：点色点整份换肤，点「仅本页」后只改当前页">
+    <button class="tbtn theme" data-theme="tech" title="tech 深蓝科技"></button>
+    <button class="tbtn theme" data-theme="biz" title="biz 浅色商务"></button>
+    <button class="tbtn theme" data-theme="mono" title="mono 极简黑白"></button>
+    <button class="tbtn theme" data-theme="warm" title="warm 温暖渐变"></button>
+    <button class="tbtn" id="btnScope" title="开启后主题只作用于当前页">⭮ 仅本页</button>
+  </div>
+  <div class="group">
+    <button class="tbtn" id="btnPlay">▶ 自动播放</button>
+    <select class="tbtn" id="selInterval">
+      <option value="3">3s</option>
+      <option value="5" selected>5s</option>
+      <option value="8">8s</option>
+      <option value="10">10s</option>
+    </select>
+    <label class="tbtn"><input type="checkbox" id="chkLoop">循环</label>
+    <label class="tbtn"><input type="checkbox" id="chkFromStart" checked>从头</label>
+  </div>
+  <div class="group">
+    <button class="tbtn" id="btnCopy">⧉ 复制本页</button>
+    <button class="tbtn" id="btnCopyMulti">▦ 选页复制</button>
+    <button class="tbtn" id="btnShot">📷 截图本页</button>
+    <button class="tbtn" id="btnShotMulti">▦ 选页截图</button>
+    <button class="tbtn" id="btnFull">⛶ 全屏</button>
+    <button class="tbtn help" id="btnHelp">?</button>
+  </div>
+</div>
+<div class="pageno" id="pageNo"><b>1</b> / 9</div>
+<div class="hint">← → 翻页 · 空格下一页 · P 播放 · S 截图 · C 复制 · F 全屏 · ? 操作说明</div>
+<button class="nav prev" id="btnPrev">‹</button>
+<button class="nav next" id="btnNext">›</button>
+<main class="stage"><div class="deck" id="deck">
+
+  <!-- 页 1 封面（classic 模板） -->
+  <section class="slide cover active" data-title="封面">
+    <div class="logo"></div>
+    <div class="s-title">魔法幻灯<br>Magic Deck</div>
+    <div class="sub">HTML 形态 · PPT 体验 · 单文件离线放映</div>
+    <div class="sign">GENERATED BY SKILLFORGE</div>
+  </section>
+
+  <!-- 页 2 目录 -->
+  <section class="slide" data-title="目录">
+    <div class="s-head"><h2>目录</h2><span class="tag">CONTENTS</span></div>
+    <div class="toc">
+      <div class="toc-item" data-goto="2"><span class="no">01</span><span class="t">经典商务版式</span><span class="pg">第 3 页</span></div>
+      <div class="toc-item" data-goto="3"><span class="no">02</span><span class="t">极简留白版式</span><span class="pg">第 4 页</span></div>
+      <div class="toc-item" data-goto="4"><span class="no">03</span><span class="t">杂志画册版式</span><span class="pg">第 5 页</span></div>
+      <div class="toc-item" data-goto="5"><span class="no">04</span><span class="t">黑金发布版式</span><span class="pg">第 6 页</span></div>
+      <div class="toc-item" data-goto="6"><span class="no">05</span><span class="t">时间线叙事版式</span><span class="pg">第 7 页</span></div>
+    </div>
+  </section>
+
+  <!-- 页 3 内容页（classic：左色条 + 卡片栅格） -->
+  <section class="slide" data-title="经典商务">
+    <div class="s-head"><h2>核心能力</h2><span class="tag">CLASSIC</span></div>
+    <div class="grid3">
+      <div class="card"><h4>单文件交付<span class="en">Single File</span></h4><p>零外部依赖，双击即开，离线可用，分享只需一个 HTML。</p></div>
+      <div class="card"><h4>播放引擎<span class="en">Player</span></h4><p>自动播放、循环、间隔可设，从头或当前页续播。</p></div>
+      <div class="card"><h4>纯净放映<span class="en">Clean</span></h4><p>全屏时工具栏页码全部退场，只留舞台主体。</p></div>
+    </div>
+  </section>
+
+  <!-- 页 4 minimal 极简留白 -->
+  <section class="slide" data-title="极简留白">
+    <div class="t-minimal">
+      <div class="s-title" style="margin-bottom:28px;">少即是多</div>
+      <ul class="points">
+        <li>没有卡片描边，只有文字与留白</li>
+        <li>信息密度低，观点反而更突出</li>
+        <li>适合观点陈述与开场引导</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 页 5 magazine 杂志画册 -->
+  <section class="slide" data-title="杂志画册">
+    <div class="t-magazine">
+      <div class="m-split">
+        <div>
+          <h3>图与文的黄金分栏</h3>
+          <p>左文右图 46/54 分栏，图位用主题渐变色块占位，杂志感扑面而来。数据页另有横向大数字带 m-strip 呈现关键指标。</p>
+        </div>
+        <div class="m-figure"><span class="chip">封面图位 · 渐变占位</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页 6 keynote 黑金发布 -->
+  <section class="slide" data-title="黑金发布">
+    <div class="t-keynote">
+      <div class="k-big">一个观点，讲透</div>
+      <div class="k-sub">每页只放一个核心信息，配合环形进度展示达成率</div>
+      <div class="k-bar"></div>
+      <div class="k-ring"><b>72%</b></div>
+    </div>
+  </section>
+
+  <!-- 页 7 timeline 时间线叙事 -->
+  <section class="slide" data-title="时间线叙事">
+    <div class="s-head"><h2>里程碑</h2><span class="tag">TIMELINE</span></div>
+    <div class="t-timeline">
+      <div class="tl">
+        <div class="tl-item"><div class="tl-time">2026 Q1</div><h4>立项与架构</h4><p>完成技术选型与四主题变量体系。</p></div>
+        <div class="tl-item"><div class="tl-time">2026 Q2</div><h4>模板库建设</h4><p>五套版式骨架与主题正交组合。</p></div>
+        <div class="tl-item"><div class="tl-time">2026 Q3</div><h4>单页换肤</h4><p>整份或单页自由切换主题。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页 8 数据页（bignum 栅格 + magazine 数字带演示） -->
+  <section class="slide" data-title="数据一览">
+    <div class="s-head"><h2>数据一览</h2><span class="tag">DATA</span></div>
+    <div class="grid4">
+      <div class="bignum"><b>28</b><span>模板组件</span></div>
+      <div class="bignum"><b>5</b><span>版式模板</span></div>
+      <div class="bignum"><b>4</b><span>配色主题</span></div>
+      <div class="bignum"><b>12</b><span>键盘热键</span></div>
+    </div>
+    <div class="m-strip" style="margin-top:40px;">
+      <div><b>99.9%</b><span>可用性</span></div>
+      <div><b>1</b><span>文件交付</span></div>
+      <div><b>0</b><span>外部依赖</span></div>
+    </div>
+  </section>
+
+  <!-- 页 9 结束页 -->
+  <section class="slide endpage" data-title="结束">
+    <div class="s-title">谢谢观看</div>
+    <p>按 F 全屏放映 · 按 ? 查看全部热键</p>
+    <p class="sign">GENERATED BY SKILLFORGE</p>
+  </section>
+
+</div></main>
+<div class="help-mask" id="helpMask">
+  <div class="help-panel">
+    <h3>操作说明</h3>
+    <table>
+      <tr><td><kbd>←</kbd> <kbd>→</kbd> / <kbd>空格</kbd></td><td>翻页</td></tr>
+      <tr><td><kbd>P</kbd></td><td>播放 / 暂停</td></tr>
+      <tr><td><kbd>S</kbd></td><td>截图本页（PNG 2x，只含主体）</td></tr>
+      <tr><td><kbd>C</kbd></td><td>复制本页文字（只含主体）</td></tr>
+      <tr><td><kbd>F</kbd></td><td>全屏放映（操作元素自动退场）</td></tr>
+      <tr><td><kbd>1</kbd>-<kbd>9</kbd></td><td>数字直达对应页</td></tr>
+      <tr><td><kbd>Home</kbd> / <kbd>End</kbd></td><td>首页 / 末页</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>关弹层 / 退全屏</td></tr>
+    </table>
+    <div class="help-note">工具栏色点=整份换主题；点「⭮ 仅本页」后色点只改当前页，再点恢复整份。截图与复制只含主体内容，绝不包含工具栏/页码/箭头等操作元素；「▦ 选页复制 / 选页截图」可勾选任意页批量执行，截图逐张下载 PNG。</div>
+  </div>
+</div>
+<div class="help-mask" id="copyMask">
+  <div class="copy-panel">
+    <div class="cp-head">
+      <h3>选择要复制的页面</h3>
+      <label class="cp-all"><input type="checkbox" id="cpAll" checked>全选</label>
+    </div>
+    <div class="cp-list" id="cpList"></div>
+    <div class="cp-foot">
+      <button class="tbtn" id="cpCancel">取消</button>
+      <button class="tbtn primary" id="cpDo">复制所选</button>
+    </div>
+  </div>
+</div>
+<div class="help-mask" id="shotMask">
+  <div class="copy-panel">
+    <div class="cp-head">
+      <h3>选择要截图的页面</h3>
+      <label class="cp-all"><input type="checkbox" id="spAll" checked>全选</label>
+    </div>
+    <div class="cp-list" id="spList"></div>
+    <div class="cp-foot">
+      <button class="tbtn" id="spCancel">取消</button>
+      <button class="tbtn primary" id="spDo">截图所选</button>
+    </div>
+    <div class="help-note">逐张下载 PNG（2560×1440 两倍清晰度）；浏览器首次会询问「下载多个文件」的许可，点允许即可。</div>
+  </div>
+</div>
+<script>
+var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+var N = slides.length;
+var cur = 0, timer = null, playing = false;
+var progFill = document.getElementById('progFill');
+var pageNo = document.getElementById('pageNo');
+var btnPlay = document.getElementById('btnPlay');
+var btnScope = document.getElementById('btnScope');
+var selInterval = document.getElementById('selInterval');
+var chkLoop = document.getElementById('chkLoop');
+var chkFromStart = document.getElementById('chkFromStart');
+
+function go(i){
+  cur = Math.max(0, Math.min(N - 1, i));
+  slides.forEach(function(s, k){
+    s.classList.toggle('active', k === cur);
+    s.classList.toggle('dim', k !== cur);
+  });
+  progFill.style.width = ((cur + 1) / N * 100) + '%';
+  pageNo.innerHTML = '<b>' + (cur + 1) + '</b> / ' + N;
+  if (location.hash !== '#/' + (cur + 1)) history.replaceState(null, '', '#/' + (cur + 1));
+}
+function next(){ if (cur < N - 1) go(cur + 1); else if (chkLoop.checked) go(0); }
+function prev(){ if (cur > 0) go(cur - 1); else if (chkLoop.checked) go(N - 1); }
+function stopPlay(){ if (timer){ clearInterval(timer); timer = null; } playing = false; btnPlay.classList.remove('on'); btnPlay.textContent = '▶ 自动播放'; }
+function startPlay(){
+  var sec = parseInt(selInterval.value, 10); if (!isFinite(sec) || sec < 1) sec = 5;
+  if (chkFromStart.checked) go(0);
+  stopPlay();
+  playing = true; btnPlay.classList.add('on'); btnPlay.textContent = '⏸ 暂停';
+  timer = setInterval(function(){
+    if (cur < N - 1) go(cur + 1); else if (chkLoop.checked) go(0); else stopPlay();
+  }, sec * 1000);
+}
+btnPlay.addEventListener('click', function(){ playing ? stopPlay() : startPlay(); });
+
+/* ── 主题切换（整份 / 仅本页） ── */
+function setGlobalTheme(name){
+  document.documentElement.setAttribute('data-theme', name);
+  slides.forEach(function(s){ s.removeAttribute('data-theme'); });
+}
+function setSlideTheme(name){
+  slides[cur].setAttribute('data-theme', name);
+}
+Array.prototype.slice.call(document.querySelectorAll('.tbtn.theme')).forEach(function(b){
+  b.addEventListener('click', function(){
+    btnScope.classList.contains('on') ? setSlideTheme(b.dataset.theme) : setGlobalTheme(b.dataset.theme);
+    Array.prototype.slice.call(document.querySelectorAll('.tbtn.theme')).forEach(function(x){ x.classList.remove('on'); });
+    b.classList.add('on');
+  });
+});
+btnScope.addEventListener('click', function(){
+  btnScope.classList.toggle('on');
+  btnScope.textContent = btnScope.classList.contains('on') ? '⭮ 本页模式' : '⭮ 仅本页';
+});
+
+/* ── 翻页 / 键盘 ── */
+document.getElementById('btnPrev').addEventListener('click', prev);
+document.getElementById('btnNext').addEventListener('click', next);
+document.addEventListener('keydown', function(e){
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+  if (e.repeat) return;
+  switch (e.key) {
+    case 'ArrowRight': case 'ArrowDown': case 'PageDown': next(); e.preventDefault(); break;
+    case 'ArrowLeft': case 'ArrowUp': case 'PageUp': prev(); e.preventDefault(); break;
+    case ' ': next(); e.preventDefault(); break;
+    case 'Home': go(0); break;
+    case 'End': go(N - 1); break;
+    case 'p': case 'P': playing ? stopPlay() : startPlay(); break;
+    case 's': case 'S': shotPage(); break;
+    case 'c': case 'C': copyPage(); break;
+    case 'f': case 'F': toggleFull(); break;
+    case '?': helpMask.classList.add('open'); break;
+    case 'Escape': helpMask.classList.remove('open'); copyMask.classList.remove('open'); shotMask.classList.remove('open'); if (document.fullscreenElement) document.exitFullscreen(); break;
+    default:
+      if (/^[1-9]$/.test(e.key) && parseInt(e.key, 10) <= N) go(parseInt(e.key, 10) - 1);
+  }
+});
+
+/* ── 页内连接 / 外部链接 / hash 定位 ── */
+document.getElementById('deck').addEventListener('click', function(e){
+  var t = e.target.closest('[data-goto]');
+  if (t) go(parseInt(t.getAttribute('data-goto'), 10));
+});
+window.addEventListener('hashchange', function(){
+  var m = location.hash.match(/^#\/(\d+)$/);
+  if (m) go(parseInt(m[1], 10) - 1);
+});
+
+/* ── 全屏 ── */
+function toggleFull(){
+  if (document.fullscreenElement) document.exitFullscreen();
+  else document.documentElement.requestFullscreen();
+}
+document.getElementById('btnFull').addEventListener('click', toggleFull);
+
+/* ── 复制本页（只含主体） ── */
+function copyPage(){
+  var text = slides[cur].innerText.replace(/\n{2,}/g, '\n').trim();
+  var done = function(){ btnCopy.textContent = '✓ 已复制'; setTimeout(function(){ btnCopy.textContent = '⧉ 复制本页'; }, 1500); };
+  var btnCopy = document.getElementById('btnCopy');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(function(){ fallbackCopy(text); done(); });
+  } else { fallbackCopy(text); done(); }
+}
+function fallbackCopy(text){
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); } catch(e) {}
+  document.body.removeChild(ta);
+}
+
+/* ── 选页复制（默认全选=复制全部；只含各页主体文字） ── */
+var copyMask = document.getElementById('copyMask');
+var cpList = document.getElementById('cpList');
+var cpAll = document.getElementById('cpAll');
+var cpDo = document.getElementById('cpDo');
+var btnCopyMulti = document.getElementById('btnCopyMulti');
+function escapeHtml(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function pagePreview(i){
+  var t = (slides[i].innerText || '').replace(/\n{2,}/g, '\n').trim();
+  var line = t.split('\n')[0] || '';
+  return line.length > 26 ? line.slice(0, 26) + '…' : line;
+}
+function openCopyPanel(){
+  var html = '';
+  for (var i = 0; i < N; i++) {
+    html += '<label class="cp-item"><input type="checkbox" class="cp-check" value="' + i + '" checked>'
+      + '<span class="cp-no">第 ' + (i + 1) + ' 页</span>'
+      + '<span class="cp-preview">' + escapeHtml(pagePreview(i)) + '</span></label>';
+  }
+  cpList.innerHTML = html;
+  cpAll.checked = true;
+  updateCpBtn();
+  closeShotPanel();
+  copyMask.classList.add('open');
+}
+function updateCpBtn(){
+  var n = copyMask.querySelectorAll('.cp-check:checked').length;
+  cpDo.textContent = n ? '复制所选（' + n + ' 页）' : '复制所选';
+}
+function closeCopyPanel(){ copyMask.classList.remove('open'); }
+function copySelectedPages(){
+  var boxes = copyMask.querySelectorAll('.cp-check:checked');
+  var parts = [];
+  Array.prototype.forEach.call(boxes, function(box){
+    var i = parseInt(box.value, 10);
+    var text = slides[i].innerText.replace(/\n{2,}/g, '\n').trim();
+    parts.push('【第 ' + (i + 1) + ' 页】\n' + text);
+  });
+  if (parts.length === 0) return;
+  var all = parts.join('\n\n');
+  closeCopyPanel();
+  var done = function(){ btnCopyMulti.textContent = '✓ 已复制'; setTimeout(function(){ btnCopyMulti.textContent = '▦ 选页复制'; }, 1500); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(all).then(done).catch(function(){ fallbackCopy(all); done(); });
+  } else { fallbackCopy(all); done(); }
+}
+btnCopyMulti.addEventListener('click', openCopyPanel);
+document.getElementById('cpCancel').addEventListener('click', closeCopyPanel);
+cpDo.addEventListener('click', copySelectedPages);
+cpAll.addEventListener('change', function(){
+  var boxes = copyMask.querySelectorAll('.cp-check');
+  Array.prototype.forEach.call(boxes, function(box){ box.checked = cpAll.checked; });
+  updateCpBtn();
+});
+cpList.addEventListener('change', function(e){
+  if (e.target.classList.contains('cp-check')) {
+    var boxes = copyMask.querySelectorAll('.cp-check');
+    var allChecked = true;
+    Array.prototype.forEach.call(boxes, function(box){ if (!box.checked) allChecked = false; });
+    cpAll.checked = allChecked;
+    updateCpBtn();
+  }
+});
+copyMask.addEventListener('click', function(e){ if (e.target === copyMask) closeCopyPanel(); });
+
+/* ── 截图（SVG foreignObject → Canvas → PNG 2x，只含主体）：单页 + 选页批量共用 renderShot ── */
+function renderShot(i, cb){
+  var clone = slides[i].cloneNode(true);
+  clone.classList.remove('dim');
+  clone.style.position = 'relative'; clone.style.inset = 'auto';
+  clone.style.padding = '64px 80px'; clone.style.display = 'flex';
+  clone.style.opacity = '1'; clone.style.visibility = 'visible';
+  clone.style.transform = 'none'; clone.style.transition = 'none';
+  var styleText = Array.prototype.slice.call(document.querySelectorAll('style')).map(function(x){ return x.textContent; }).join('\n');
+  var wrap = document.createElement('div');
+  wrap.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') || 'tech');
+  wrap.style.width = '1280px'; wrap.style.height = '720px';
+  wrap.style.background = 'var(--bg)';
+  wrap.appendChild(clone);
+  var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">'
+    + '<foreignObject width="1280" height="720">'
+    + '<div xmlns="http://www.w3.org/1999/xhtml"><style>' + styleText + '</style>' + wrap.outerHTML + '</div>'
+    + '</foreignObject></svg>';
+  var img = new Image();
+  img.onload = function(){
+    var c = document.createElement('canvas'); c.width = 2560; c.height = 1440;
+    var ctx = c.getContext('2d');
+    ctx.scale(2, 2); ctx.drawImage(img, 0, 0);
+    var a = document.createElement('a');
+    a.download = 'slide-' + (i + 1) + '-' + (document.documentElement.getAttribute('data-theme') || 'tech') + '.png';
+    a.href = c.toDataURL('image/png'); a.click();
+    if (cb) cb();
+  };
+  img.onerror = function(){ if (cb) cb(new Error('shot fail')); };
+  img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+function shotPage(){
+  var btnShot = document.getElementById('btnShot');
+  renderShot(cur, function(err){
+    if (err){ btnShot.textContent = '✗ 失败'; setTimeout(function(){ btnShot.textContent = '📷 截图本页'; }, 1500); }
+    else { btnShot.textContent = '✓ 已保存'; setTimeout(function(){ btnShot.textContent = '📷 截图本页'; }, 1500); }
+  });
+}
+
+/* ── 选页截图（默认全选=逐张下载全部页 PNG，串行接力不挤占） ── */
+var shotMask = document.getElementById('shotMask');
+var spList = document.getElementById('spList');
+var spAll = document.getElementById('spAll');
+var spDo = document.getElementById('spDo');
+var btnShotMulti = document.getElementById('btnShotMulti');
+function openShotPanel(){
+  var html = '';
+  for (var i = 0; i < N; i++) {
+    html += '<label class="cp-item"><input type="checkbox" class="sp-check" value="' + i + '" checked>'
+      + '<span class="cp-no">第 ' + (i + 1) + ' 页</span>'
+      + '<span class="cp-preview">' + escapeHtml(pagePreview(i)) + '</span></label>';
+  }
+  spList.innerHTML = html;
+  spAll.checked = true;
+  updateSpBtn();
+  closeCopyPanel();
+  shotMask.classList.add('open');
+}
+function updateSpBtn(){
+  var n = shotMask.querySelectorAll('.sp-check:checked').length;
+  spDo.textContent = n ? '截图所选（' + n + ' 页）' : '截图所选';
+}
+function closeShotPanel(){ shotMask.classList.remove('open'); }
+function shotSelectedPages(){
+  var boxes = shotMask.querySelectorAll('.sp-check:checked');
+  var idx = [];
+  Array.prototype.forEach.call(boxes, function(box){ idx.push(parseInt(box.value, 10)); });
+  if (idx.length === 0) return;
+  spDo.disabled = true;
+  var k = 0;
+  var step = function(){
+    if (k >= idx.length) {
+      closeShotPanel();
+      spDo.disabled = false;
+      btnShotMulti.textContent = '✓ 已保存 ' + idx.length + ' 页';
+      setTimeout(function(){ btnShotMulti.textContent = '▦ 选页截图'; }, 1500);
+      return;
+    }
+    spDo.textContent = '已保存 ' + k + '/' + idx.length + ' 页…';
+    renderShot(idx[k], step); k++;
+  };
+  step();
+}
+btnShotMulti.addEventListener('click', openShotPanel);
+document.getElementById('spCancel').addEventListener('click', closeShotPanel);
+spDo.addEventListener('click', shotSelectedPages);
+spAll.addEventListener('change', function(){
+  var boxes = shotMask.querySelectorAll('.sp-check');
+  Array.prototype.forEach.call(boxes, function(box){ box.checked = spAll.checked; });
+  updateSpBtn();
+});
+spList.addEventListener('change', function(e){
+  if (e.target.classList.contains('sp-check')) {
+    var boxes = shotMask.querySelectorAll('.sp-check');
+    var allChecked = true;
+    Array.prototype.forEach.call(boxes, function(box){ if (!box.checked) allChecked = false; });
+    spAll.checked = allChecked;
+    updateSpBtn();
+  }
+});
+shotMask.addEventListener('click', function(e){ if (e.target === shotMask) closeShotPanel(); });
+
+/* ── 帮助弹层 / 缩放 ── */
+var helpMask = document.getElementById('helpMask');
+document.getElementById('btnHelp').addEventListener('click', function(){ helpMask.classList.add('open'); });
+helpMask.addEventListener('click', function(e){ if (e.target === helpMask) helpMask.classList.remove('open'); });
+
+function fit(){
+  document.documentElement.style.setProperty('--sc', Math.min(window.innerWidth / 1280, window.innerHeight / 720));
+}
+window.addEventListener('resize', fit);
+
+/* ── 初始化：?theme / ?shot / #/N ── */
+var themeParam = new URLSearchParams(location.search).get('theme');
+if (['tech','biz','mono','warm'].indexOf(themeParam) > -1) setGlobalTheme(themeParam);
+var sm = location.hash.match(/^#\/(\d+)$/);
+var shotParam = new URLSearchParams(location.search).get('shot');
+var jumped = false;
+if (sm){ go(parseInt(sm[1], 10) - 1); jumped = true; }
+if (shotParam && shotParam !== 'all' && /^\d+$/.test(shotParam)){
+  var p = parseInt(shotParam, 10);
+  if (p >= 1 && p <= N){ go(p - 1); jumped = true; }
+}
+fit();
+if (!jumped) go(0);
+</script>
+</body>
+</html>
