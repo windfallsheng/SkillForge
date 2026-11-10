@@ -112,33 +112,63 @@ button,select,input{ font-family:inherit; }
 .endpage{ justify-content:center; align-items:center; text-align:center; }
 .endpage .s-title{ font-size:56px; }
 .endpage p{ margin-top:20px; font-size:16px; color:var(--muted); }
-/* ══════════ 5. 五模板骨架 ══════════ */
-.t-minimal .s-title{ font-size:44px; text-align:center; }
-.t-minimal .points{ margin:0 auto; max-width:640px; list-style:none; }
-.t-minimal .points li{ padding:12px 0; border-bottom:1px solid var(--border);
+/* ══════════ 5. 五模板运行时骨架（data-template 驱动；模板管版式、主题管配色） ══════════ */
+/* 应用模板 = slide 挂 data-template + 结构包装器重组语义节点；标题自动映射到模板固定位置 */
+/* T1 classic 经典商务：默认骨架，无前缀规则 */
+/* T2 minimal 极简留白：去色条居中大标题、无边框卡片、窄栏要点 */
+[data-template="minimal"] .s-head::before{ display:none; }
+[data-template="minimal"] .s-head{ margin-bottom:28px; }
+[data-template="minimal"] .s-head h2{ width:100%; font-size:44px; font-weight:900; text-align:center;
+  background:var(--title-grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+[data-template="minimal"] .s-head .tag{ display:none; }
+[data-template="minimal"] .s-title{ font-size:44px; text-align:center; }
+[data-template="minimal"] .points{ margin:0 auto; max-width:640px; list-style:none; }
+[data-template="minimal"] .points li{ padding:12px 0; border-bottom:1px solid var(--border);
   font-size:20px; line-height:1.9; color:var(--text); }
-.t-minimal .bignum b{ font-size:88px; }
-.t-magazine .s-title{ font-size:96px; line-height:1.05; }
+[data-template="minimal"] .card{ background:transparent; border:none; padding:10px 0; box-shadow:none; }
+[data-template="minimal"] .card:hover{ transform:none; box-shadow:none; }
+[data-template="minimal"] .card h4{ font-size:20px; }
+[data-template="minimal"] .bignum{ background:transparent; border:none; }
+[data-template="minimal"] .bignum b{ font-size:88px; }
+[data-template="minimal"] .cover .logo{ display:none; }
+[data-template="minimal"] .cover{ align-items:center; text-align:center; }
+[data-template="minimal"] .cover .sub{ border-top:1px solid var(--border); padding-top:22px; margin-top:30px; }
+[data-template="minimal"] .toc-item{ background:transparent; border:none; border-bottom:1px solid var(--border); border-radius:0; }
+/* T3 magazine 杂志画册：超大标题跨版 + 左文右图分栏（包装器生成）+ 横向大数字带 */
+[data-template="magazine"] .s-title{ font-size:96px; line-height:1.05; }
+[data-template="magazine"] .s-head h2{ font-size:56px; }
+[data-template="magazine"] .card{ border-radius:18px; padding:28px 30px; }
+[data-template="magazine"] .card h4{ font-size:22px; }
+[data-template="magazine"] .card p{ font-size:15px; }
+[data-template="magazine"] .bignum{ background:transparent; border:none; }
+[data-template="magazine"] .bignum b{ font-size:88px; }
+[data-template="magazine"] .cover .s-title{ font-size:96px; }
 .m-split{ display:grid; grid-template-columns:46% 54%; gap:56px; align-items:center; }
 .m-split h3{ font-size:36px; font-weight:800; color:var(--text); margin-bottom:18px; }
 .m-split p{ font-size:16px; color:var(--muted); line-height:1.9; }
-.m-figure{ height:380px; border-radius:18px; display:flex; align-items:flex-end; padding:20px;
+.m-figure{ height:380px; border-radius:18px; display:flex; flex-wrap:wrap; align-items:flex-end;
+  align-content:flex-end; gap:10px; padding:20px;
   background:linear-gradient(135deg,var(--accent),var(--accent2)); opacity:.85; }
-.m-strip{ display:flex; justify-content:space-between; }
+.m-strip{ display:flex; justify-content:space-between; margin-top:40px; }
 .m-strip>div{ flex:1; text-align:center; border-left:1px solid var(--border); }
 .m-strip>div:first-child{ border-left:0; }
 .m-strip b{ display:block; font-size:64px; font-weight:900; background:var(--title-grad);
   -webkit-background-clip:text; background-clip:text; color:transparent; }
 .m-strip span{ font-size:14px; color:var(--muted); }
-.t-keynote .s-title{ font-size:112px; }
+/* T4 keynote 黑金发布：每页单点大字（包装器生成）+ 环形进度 + 余量小字 */
+[data-template="keynote"] .s-title{ font-size:112px; text-align:center; }
+[data-template="keynote"] .cover{ align-items:center; text-align:center; }
+[data-template="keynote"] .endpage .s-title{ font-size:96px; }
 .k-big{ font-size:64px; font-weight:900; text-align:center; color:var(--text); margin:auto; }
 .k-sub{ font-size:22px; color:var(--muted); text-align:center; margin-top:18px; }
 .k-bar{ width:320px; height:4px; border-radius:2px; margin:40px auto 0;
   background:linear-gradient(90deg,var(--accent),var(--accent2)); }
-.k-ring{ width:120px; height:120px; border-radius:50%; margin:10px auto;
+.k-ring{ width:120px; height:120px; border-radius:50%; margin:14px auto 0;
   background:conic-gradient(var(--accent) 0 72%, var(--border) 72% 100%);
   display:flex; align-items:center; justify-content:center; }
 .k-ring b{ font-size:34px; color:var(--text); }
+.k-note{ margin:30px auto 0; max-width:560px; text-align:center; font-size:13px; color:var(--muted); line-height:1.9; }
+/* T5 timeline 时间线叙事（结构由包装器生成：卡片标题→节点标题自动映射） */
 .tl{ position:relative; padding-left:32px; }
 .tl::before{ content:''; position:absolute; left:6px; top:8px; bottom:8px; width:3px; background:var(--accent); }
 .tl-item{ position:relative; padding:18px 0 18px 24px; }
@@ -207,6 +237,27 @@ body:hover .nav{ opacity:1; }
 .cp-foot{ display:flex; justify-content:flex-end; gap:10px; margin-top:14px; }
 .cp-foot .tbtn{ border:1px solid var(--border); background:var(--tag-bg); cursor:pointer; }
 .cp-foot .tbtn.primary{ background:var(--accent); color:var(--bg); border-color:transparent; }
+/* ═══ 模板应用面板 ═══ */
+.tpl-panel{ width:520px; max-height:78vh; display:flex; flex-direction:column; padding:24px 26px;
+  border-radius:16px; background:var(--panel-solid); border:1px solid var(--border); color:var(--text); }
+.tpl-panel h3{ font-size:18px; margin:0; }
+.tpl-head-note{ font-size:12px; color:var(--muted); }
+.tpl-cards{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin:14px 0 12px; }
+.tpl-card{ display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:12px;
+  background:var(--panel); border:1px solid var(--border); cursor:pointer; transition:all .15s ease; text-align:left; }
+.tpl-card:hover{ border-color:var(--accent); }
+.tpl-card.on{ border-color:var(--accent); box-shadow:0 0 0 2px var(--tag-bg), 0 0 16px var(--glow); }
+.tpl-card .ic{ width:34px; height:34px; border-radius:9px; flex:0 0 auto; display:flex; align-items:center;
+  justify-content:center; font-size:16px; color:#fff; background:linear-gradient(135deg,var(--accent),var(--accent2)); }
+.tpl-card .nm{ display:block; font-size:14px; font-weight:700; }
+.tpl-card .ds{ display:block; font-size:11px; color:var(--muted); margin-top:2px; line-height:1.5; }
+.tpl-scope{ display:flex; gap:8px; margin:2px 0 12px; flex-wrap:wrap; }
+.tpl-scope label{ display:inline-flex; align-items:center; gap:6px; font-size:13px; cursor:pointer; padding:6px 12px;
+  border-radius:999px; border:1px solid var(--border); color:var(--muted); }
+.tpl-scope label input{ margin:0; accent-color:var(--accent); }
+.tpl-scope label.sel{ color:var(--accent); border-color:var(--accent); background:var(--tag-bg); }
+#tplList{ display:none; }
+#tplList.show{ display:block; }
 /* ══════════ 7. 全屏放映纯净模式（PPT 放映规范：黑底 + 幻灯充满画面） ══════════ */
 :root:fullscreen{ background:#000; } /* 放映黑底：与 PPT 软件放映一致，比例不匹配处补黑边，不带主题氛围边框 */
 :root:fullscreen .bg-glow,
@@ -225,6 +276,9 @@ body:hover .nav{ opacity:1; }
   <div class="fill" id="progFill" style="height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .3s ease;"></div>
 </div>
 <div class="toolbar">
+  <div class="group">
+    <button class="tbtn" id="btnTemplate" title="五套版式模板：可应用到全部页面 / 仅本页 / 勾选页面，标题自动映射">🎨 模板</button>
+  </div>
   <div class="group" title="主题：点色点整份换肤，点「仅本页」后只改当前页">
     <button class="tbtn theme" data-theme="tech" title="tech 深蓝科技"></button>
     <button class="tbtn theme" data-theme="biz" title="biz 浅色商务"></button>
@@ -289,65 +343,51 @@ body:hover .nav{ opacity:1; }
   </section>
 
   <!-- 页 4 minimal 极简留白 -->
-  <section class="slide" data-title="极简留白">
-    <div class="t-minimal">
-      <div class="s-title" style="margin-bottom:28px;">少即是多</div>
-      <ul class="points">
-        <li>没有卡片描边，只有文字与留白</li>
-        <li>信息密度低，观点反而更突出</li>
-        <li>适合观点陈述与开场引导</li>
-      </ul>
+  <section class="slide" data-title="极简留白" data-template="minimal">
+    <div class="s-title" style="margin-bottom:28px;">少即是多</div>
+    <ul class="points">
+      <li>没有卡片描边，只有文字与留白</li>
+      <li>信息密度低，观点反而更突出</li>
+      <li>适合观点陈述与开场引导</li>
+    </ul>
+  </section>
+
+  <!-- 页 5 magazine 杂志画册（分栏结构由包装器生成） -->
+  <section class="slide" data-title="杂志画册" data-template="magazine">
+    <div class="s-head"><h2>图与文的黄金分栏</h2><span class="tag">MAGAZINE</span></div>
+    <div class="grid2">
+      <div class="card"><h4>左文右图分栏<span class="en">Split</span></h4><p>46/54 分栏，图位用主题渐变色块占位，杂志感扑面而来。</p></div>
+      <div class="card"><h4>横向大数字带<span class="en">Strip</span></h4><p>数据页的 bignum 自动转成横向大数字带呈现关键指标。</p></div>
     </div>
   </section>
 
-  <!-- 页 5 magazine 杂志画册 -->
-  <section class="slide" data-title="杂志画册">
-    <div class="t-magazine">
-      <div class="m-split">
-        <div>
-          <h3>图与文的黄金分栏</h3>
-          <p>左文右图 46/54 分栏，图位用主题渐变色块占位，杂志感扑面而来。数据页另有横向大数字带 m-strip 呈现关键指标。</p>
-        </div>
-        <div class="m-figure"><span class="chip">封面图位 · 渐变占位</span></div>
-      </div>
+  <!-- 页 6 keynote 黑金发布（单点大字结构由包装器生成） -->
+  <section class="slide" data-title="黑金发布" data-template="keynote">
+    <div class="s-head"><h2>一个观点，讲透</h2><span class="tag">KEYNOTE</span></div>
+    <div class="grid2">
+      <div class="card"><h4>每页一个核心信息<span class="en">Focus</span></h4><p>配合环形进度展示达成率。</p></div>
+      <div class="bignum"><b>72%</b><span>达成率</span></div>
     </div>
   </section>
 
-  <!-- 页 6 keynote 黑金发布 -->
-  <section class="slide" data-title="黑金发布">
-    <div class="t-keynote">
-      <div class="k-big">一个观点，讲透</div>
-      <div class="k-sub">每页只放一个核心信息，配合环形进度展示达成率</div>
-      <div class="k-bar"></div>
-      <div class="k-ring"><b>72%</b></div>
-    </div>
-  </section>
-
-  <!-- 页 7 timeline 时间线叙事 -->
-  <section class="slide" data-title="时间线叙事">
+  <!-- 页 7 timeline 时间线叙事（时间线结构由包装器生成：卡片标题→节点标题） -->
+  <section class="slide" data-title="时间线叙事" data-template="timeline">
     <div class="s-head"><h2>里程碑</h2><span class="tag">TIMELINE</span></div>
-    <div class="t-timeline">
-      <div class="tl">
-        <div class="tl-item"><div class="tl-time">2026 Q1</div><h4>立项与架构</h4><p>完成技术选型与四主题变量体系。</p></div>
-        <div class="tl-item"><div class="tl-time">2026 Q2</div><h4>模板库建设</h4><p>五套版式骨架与主题正交组合。</p></div>
-        <div class="tl-item"><div class="tl-time">2026 Q3</div><h4>单页换肤</h4><p>整份或单页自由切换主题。</p></div>
-      </div>
+    <div class="grid3">
+      <div class="card"><h4>立项与架构<span class="en">2026 Q1</span></h4><p>完成技术选型与四主题变量体系。</p></div>
+      <div class="card"><h4>模板库建设<span class="en">2026 Q2</span></h4><p>五套版式骨架与主题正交组合。</p></div>
+      <div class="card"><h4>单页换肤<span class="en">2026 Q3</span></h4><p>整份或单页自由切换主题。</p></div>
     </div>
   </section>
 
-  <!-- 页 8 数据页（bignum 栅格 + magazine 数字带演示） -->
+  <!-- 页 8 数据页（magazine 下 bignum 自动转横向大数字带） -->
   <section class="slide" data-title="数据一览">
     <div class="s-head"><h2>数据一览</h2><span class="tag">DATA</span></div>
     <div class="grid4">
-      <div class="bignum"><b>28</b><span>模板组件</span></div>
+      <div class="bignum"><b>99.9%</b><span>可用性</span></div>
       <div class="bignum"><b>5</b><span>版式模板</span></div>
       <div class="bignum"><b>4</b><span>配色主题</span></div>
-      <div class="bignum"><b>12</b><span>键盘热键</span></div>
-    </div>
-    <div class="m-strip" style="margin-top:40px;">
-      <div><b>99.9%</b><span>可用性</span></div>
-      <div><b>1</b><span>文件交付</span></div>
-      <div><b>0</b><span>外部依赖</span></div>
+      <div class="bignum"><b>0</b><span>外部依赖</span></div>
     </div>
   </section>
 
@@ -372,7 +412,27 @@ body:hover .nav{ opacity:1; }
       <tr><td><kbd>Home</kbd> / <kbd>End</kbd></td><td>首页 / 末页</td></tr>
       <tr><td><kbd>Esc</kbd></td><td>关弹层 / 退全屏</td></tr>
     </table>
-    <div class="help-note">工具栏色点=整份换主题；点「⭮ 仅本页」后色点只改当前页，再点恢复整份。截图与复制只含主体内容，绝不包含工具栏/页码/箭头等操作元素；「▦ 选页复制 / 选页截图」可勾选任意页批量执行，截图逐张下载 PNG。</div>
+    <div class="help-note">工具栏色点=整份换主题；点「⭮ 仅本页」后色点只改当前页，再点恢复整份。「🎨 模板」=五套版式模板应用到全部页/仅本页/勾选页，标题自动映射，切回经典商务即恢复原排版。截图与复制只含主体内容，绝不包含工具栏/页码/箭头等操作元素；「▦ 选页复制 / 选页截图」可勾选任意页批量执行，截图逐张下载 PNG。</div>
+  </div>
+</div>
+<div class="help-mask" id="tplMask">
+  <div class="tpl-panel">
+    <div class="cp-head">
+      <h3>应用模板</h3>
+      <span class="tpl-head-note">模板只改版式，内容与配色不动</span>
+    </div>
+    <div class="tpl-cards" id="tplCards"></div>
+    <div class="tpl-scope">
+      <label class="sel"><input type="radio" name="tplScope" value="all" checked>全部页面</label>
+      <label><input type="radio" name="tplScope" value="current">仅本页</label>
+      <label><input type="radio" name="tplScope" value="selected">选择页面</label>
+    </div>
+    <div class="cp-list" id="tplList"></div>
+    <div class="cp-foot">
+      <button class="tbtn" id="tplCancel">取消</button>
+      <button class="tbtn primary" id="tplDo">应用模板</button>
+    </div>
+    <div class="help-note">标题自动映射到模板固定位置：timeline 取卡片标题做节点、keynote 取页标题做大观点、magazine 左文右图分栏，切回「经典商务」即恢复原始排版，内容一条不丢。模板与主题正交——换模板后配色保持不变。</div>
   </div>
 </div>
 <div class="help-mask" id="copyMask">
@@ -458,6 +518,203 @@ btnScope.addEventListener('click', function(){
   btnScope.textContent = btnScope.classList.contains('on') ? '⭮ 本页模式' : '⭮ 仅本页';
 });
 
+
+/* ── 模板应用（全部/本页/选页；标题自动映射到模板固定位置，内容不丢） ── */
+var TPLS = [
+  { id:'classic', name:'经典商务', ic:'▦', ds:'左色条标题 + 卡片栅格，稳重大方' },
+  { id:'minimal', name:'极简留白', ic:'▫', ds:'居中大标题 + 无边框要点，安静克制' },
+  { id:'magazine', name:'杂志画册', ic:'▤', ds:'超大标题跨版 + 左文右图 + 大数字带' },
+  { id:'keynote', name:'黑金发布', ic:'◉', ds:'每页一个核心观点，大字居中 + 环形进度' },
+  { id:'timeline', name:'时间线叙事', ic:'☰', ds:'竖线时间轴 + 节点卡片，适合历程回顾' }
+];
+function tplOf(s){ return s.getAttribute('data-template') || 'classic'; }
+function ensureOrigin(s){ if (!s._origin) s._origin = s.innerHTML; }
+function isSpecialPage(s){
+  return s.classList.contains('cover') || s.classList.contains('endpage') || !!s.querySelector('.toc');
+}
+function wrapTimeline(s){
+  var cards = s.querySelectorAll('.card, .points li');
+  if (!cards.length) return;
+  var tl = document.createElement('div'); tl.className = 'tl';
+  Array.prototype.forEach.call(cards, function(card){
+    var it = document.createElement('div'); it.className = 'tl-item';
+    var en = card.querySelector('.en');
+    var tm = document.createElement('div'); tm.className = 'tl-time';
+    tm.textContent = en ? en.textContent.trim() : '·';
+    it.appendChild(tm);
+    var h4 = card.querySelector('h4');
+    var t4 = document.createElement('h4');
+    t4.textContent = h4 ? h4.textContent.replace(en ? en.textContent : '', '').trim() : card.textContent.trim();
+    it.appendChild(t4);
+    var p = card.querySelector('p');
+    if (p){ var np = document.createElement('p'); np.textContent = p.textContent; it.appendChild(np); }
+    tl.appendChild(it);
+  });
+  var host = cards[0].parentNode;
+  host.parentNode.insertBefore(tl, host);
+  host.parentNode.removeChild(host);
+}
+function wrapKeynote(s){
+  var head = s.querySelector('.s-head h2, .s-title');
+  var sub = s.querySelector('.card p');
+  var num = s.querySelector('.bignum b');
+  if (!head && !num) return;
+  var kw = document.createElement('div');
+  kw.style.cssText = 'flex:1;display:flex;flex-direction:column;justify-content:center;';
+  if (head){
+    var kb = document.createElement('div'); kb.className = 'k-big';
+    kb.textContent = head.textContent; kw.appendChild(kb);
+  }
+  if (sub){
+    var ks = document.createElement('div'); ks.className = 'k-sub';
+    ks.textContent = sub.textContent; kw.appendChild(ks);
+  }
+  var bar = document.createElement('div'); bar.className = 'k-bar'; kw.appendChild(bar);
+  if (num){
+    var ring = document.createElement('div'); ring.className = 'k-ring';
+    var rb = document.createElement('b'); rb.textContent = num.textContent; ring.appendChild(rb);
+    kw.appendChild(ring);
+  }
+  var rest = [];
+  Array.prototype.forEach.call(s.querySelectorAll('.card h4'), function(h4){
+    rest.push(h4.childNodes[0] ? h4.childNodes[0].textContent.trim() : h4.textContent);
+  });
+  if (rest.length){
+    var kn = document.createElement('div'); kn.className = 'k-note';
+    kn.textContent = rest.join(' · '); kw.appendChild(kn);
+  }
+  while (s.firstChild) s.removeChild(s.firstChild);
+  s.appendChild(kw);
+}
+function wrapMagazine(s){
+  var head = s.querySelector('.s-head h2');
+  var p = s.querySelector('.card p');
+  var nums = s.querySelectorAll('.bignum');
+  if (!head && !p && !nums.length) return;
+  var mw = document.createElement('div');
+  mw.style.cssText = 'flex:1;display:flex;flex-direction:column;justify-content:center;';
+  var split = document.createElement('div'); split.className = 'm-split';
+  var left = document.createElement('div');
+  if (head){ var h3 = document.createElement('h3'); h3.textContent = head.textContent; left.appendChild(h3); }
+  if (p){ var np = document.createElement('p'); np.textContent = p.textContent; left.appendChild(np); }
+  split.appendChild(left);
+  var fig = document.createElement('div'); fig.className = 'm-figure';
+  Array.prototype.forEach.call(s.querySelectorAll('.card h4'), function(h4){
+    var chip = document.createElement('span'); chip.className = 'chip';
+    chip.textContent = h4.childNodes[0] ? h4.childNodes[0].textContent.trim() : h4.textContent;
+    fig.appendChild(chip);
+  });
+  if (!fig.children.length){
+    var chip = document.createElement('span'); chip.className = 'chip';
+    chip.textContent = '主题渐变图位'; fig.appendChild(chip);
+  }
+  split.appendChild(fig);
+  mw.appendChild(split);
+  if (nums.length >= 2){
+    var strip = document.createElement('div'); strip.className = 'm-strip';
+    Array.prototype.forEach.call(nums, function(n){
+      var d = document.createElement('div');
+      var b = document.createElement('b'); b.textContent = n.querySelector('b').textContent;
+      var sp = document.createElement('span'); sp.textContent = n.querySelector('span').textContent;
+      d.appendChild(b); d.appendChild(sp); strip.appendChild(d);
+    });
+    mw.appendChild(strip);
+  }
+  while (s.firstChild) s.removeChild(s.firstChild);
+  s.appendChild(mw);
+}
+function applyTpl(s, tpl){
+  ensureOrigin(s);
+  s.innerHTML = s._origin;
+  if (tpl === 'classic'){ s.removeAttribute('data-template'); return; }
+  s.setAttribute('data-template', tpl);
+  if (tpl === 'timeline') wrapTimeline(s);
+  else if (tpl === 'keynote' && !isSpecialPage(s)) wrapKeynote(s);
+  else if (tpl === 'magazine' && !isSpecialPage(s)) wrapMagazine(s);
+}
+function applyScope(tpl, scope, selected){
+  var n = 0;
+  slides.forEach(function(s, i){
+    if (scope === 'current' && i !== cur) return;
+    if (scope === 'selected' && selected.indexOf(i) < 0) return;
+    applyTpl(s, tpl); n++;
+  });
+  return n;
+}
+var tplMask = document.getElementById('tplMask');
+var tplCards = document.getElementById('tplCards');
+var tplList = document.getElementById('tplList');
+var tplDo = document.getElementById('tplDo');
+var btnTemplate = document.getElementById('btnTemplate');
+var selTpl = 'classic';
+function closeTplPanel(){ tplMask.classList.remove('open'); }
+function updateTplListVis(){
+  var sc = tplMask.querySelector('input[name="tplScope"]:checked');
+  tplList.classList.toggle('show', !!(sc && sc.value === 'selected'));
+}
+function updateTplBtn(){
+  var sc = tplMask.querySelector('input[name="tplScope"]:checked');
+  var n = N;
+  if (sc && sc.value === 'selected') n = tplMask.querySelectorAll('.tpl-check:checked').length;
+  if (sc && sc.value === 'current') n = 1;
+  tplDo.textContent = n ? '应用模板（' + n + ' 页）' : '应用模板';
+}
+function openTplPanel(){
+  selTpl = tplOf(slides[cur]);
+  var html = '';
+  TPLS.forEach(function(tp){
+    html += '<div class="tpl-card' + (tp.id === selTpl ? ' on' : '') + '" data-tpl="' + tp.id + '">'
+      + '<span class="ic">' + tp.ic + '</span>'
+      + '<span><span class="nm">' + tp.name + '</span><span class="ds">' + tp.ds + '</span></span></div>';
+  });
+  tplCards.innerHTML = html;
+  var pageHtml = '';
+  for (var i = 0; i < N; i++) {
+    pageHtml += '<label class="cp-item"><input type="checkbox" class="tpl-check" value="' + i + '" checked>'
+      + '<span class="cp-no">第 ' + (i + 1) + ' 页</span>'
+      + '<span class="cp-preview">' + escapeHtml(pagePreview(i)) + '</span></label>';
+  }
+  tplList.innerHTML = pageHtml;
+  tplMask.querySelector('input[name="tplScope"][value="all"]').checked = true;
+  updateTplListVis();
+  updateTplBtn();
+  closeCopyPanel(); closeShotPanel();
+  tplMask.classList.add('open');
+}
+function doApplyTpl(){
+  var sc = tplMask.querySelector('input[name="tplScope"]:checked');
+  if (!sc) return;
+  var selected = [];
+  if (sc.value === 'selected'){
+    Array.prototype.forEach.call(tplMask.querySelectorAll('.tpl-check:checked'), function(box){ selected.push(parseInt(box.value, 10)); });
+    if (!selected.length) return;
+  }
+  var n = applyScope(selTpl, sc.value, selected);
+  closeTplPanel();
+  btnTemplate.textContent = '✓ 已应用 ' + n + ' 页';
+  setTimeout(function(){ btnTemplate.textContent = '🎨 模板'; }, 1500);
+}
+btnTemplate.addEventListener('click', openTplPanel);
+document.getElementById('tplCancel').addEventListener('click', closeTplPanel);
+tplDo.addEventListener('click', doApplyTpl);
+tplCards.addEventListener('click', function(e){
+  var c = e.target.closest('.tpl-card');
+  if (!c) return;
+  selTpl = c.getAttribute('data-tpl');
+  Array.prototype.forEach.call(tplCards.children, function(x){ x.classList.remove('on'); });
+  c.classList.add('on');
+});
+tplMask.addEventListener('change', function(e){
+  if (e.target.name === 'tplScope'){
+    Array.prototype.forEach.call(tplMask.querySelectorAll('.tpl-scope label'), function(l){
+      l.classList.toggle('sel', l.querySelector('input') === e.target);
+    });
+    updateTplListVis(); updateTplBtn();
+  }
+  if (e.target.classList.contains('tpl-check')) updateTplBtn();
+});
+tplMask.addEventListener('click', function(e){ if (e.target === tplMask) closeTplPanel(); });
+
 /* ── 翻页 / 键盘 ── */
 document.getElementById('btnPrev').addEventListener('click', prev);
 document.getElementById('btnNext').addEventListener('click', next);
@@ -475,7 +732,7 @@ document.addEventListener('keydown', function(e){
     case 'c': case 'C': copyPage(); break;
     case 'f': case 'F': toggleFull(); break;
     case '?': helpMask.classList.add('open'); break;
-    case 'Escape': helpMask.classList.remove('open'); copyMask.classList.remove('open'); shotMask.classList.remove('open'); if (document.fullscreenElement) document.exitFullscreen(); break;
+    case 'Escape': helpMask.classList.remove('open'); copyMask.classList.remove('open'); shotMask.classList.remove('open'); tplMask.classList.remove('open'); if (document.fullscreenElement) document.exitFullscreen(); break;
     default:
       if (/^[1-9]$/.test(e.key) && parseInt(e.key, 10) <= N) go(parseInt(e.key, 10) - 1);
   }
@@ -537,7 +794,7 @@ function openCopyPanel(){
   cpList.innerHTML = html;
   cpAll.checked = true;
   updateCpBtn();
-  closeShotPanel();
+  closeShotPanel(); closeTplPanel();
   copyMask.classList.add('open');
 }
 function updateCpBtn(){
@@ -635,7 +892,7 @@ function openShotPanel(){
   spList.innerHTML = html;
   spAll.checked = true;
   updateSpBtn();
-  closeCopyPanel();
+  closeCopyPanel(); closeTplPanel();
   shotMask.classList.add('open');
 }
 function updateSpBtn(){
@@ -693,8 +950,14 @@ function fit(){
 window.addEventListener('resize', fit);
 
 /* ── 初始化：?theme / ?shot / #/N ── */
+slides.forEach(function(s){
+  var tp = s.getAttribute('data-template');
+  if (tp && tp !== 'classic') applyTpl(s, tp);
+});
 var themeParam = new URLSearchParams(location.search).get('theme');
 if (['tech','biz','mono','warm'].indexOf(themeParam) > -1) setGlobalTheme(themeParam);
+var tplParam = new URLSearchParams(location.search).get('tpl');
+if (tplParam && TPLS.some(function(t){ return t.id === tplParam; })) applyScope(tplParam, 'all', []);
 var sm = location.hash.match(/^#\/(\d+)$/);
 var shotParam = new URLSearchParams(location.search).get('shot');
 var jumped = false;

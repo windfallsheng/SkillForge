@@ -10,6 +10,7 @@
 - **舞台 1280×720（16:9）**，按窗口等比缩放（--sc），窗口任意大小不变形
 - **截图与复制只含主体**：截图克隆当前 slide、复制取 slide innerText，绝不包含工具栏/页码/箭头/提示等操作元素
 - **全屏纯净**：`:root:fullscreen` 下所有操作元素与背景氛围层（.bg-glow/.bg-grid）全部隐藏、页面底色纯黑 `#000`，只留舞台主体（与 PPT 软件放映一致：幻灯按比例充满画面，比例不匹配处补黑边，绝无主题氛围边框/光斑/网格）
+- **模板运行时切换**：模板（版式）与主题（配色）正交；模板经「🎨 模板」面板随时切换（全部页面/仅本页/勾选页），标题自动映射到模板固定位置，切回经典商务恢复原排版、内容一条不丢
 - 操作元素（toolbar/pageno/hint/nav/help-mask）全部 fixed 定位在舞台之外，永远不进 slide 内部
 
 ## 1. 骨架结构（body 顺序固定）
@@ -18,7 +19,8 @@
 <div class="bg-glow"></div>          <!-- 背景光斑（两个径向渐变 + 底色） -->
 <div class="bg-grid"></div>          <!-- 网格纹理（72px 格，径向 mask 渐隐） -->
 <div class="progress"><div class="fill" id="progFill"></div></div>  <!-- 顶部 3px 渐变进度 -->
-<div class="toolbar">                <!-- 右上工具栏：主题组 + 播放组 + 工具组 -->
+<div class="toolbar">                <!-- 右上工具栏：模板组 + 主题组 + 播放组 + 工具组 -->
+  <div class="group"><button class="tbtn" id="btnTemplate">🎨 模板</button></div>
   <div class="group"><button class="tbtn theme" data-theme="tech|biz|mono|warm">…×4
     <button class="tbtn" id="btnScope" title="仅本页/全部">⭮ 仅本页</button></div>
   <div class="group"><button class="tbtn" id="btnPlay">▶ 自动播放</button>
@@ -42,6 +44,7 @@
   …（每页一个 section.slide，第一页带 active）
 </div></main>
 <div class="help-mask" id="helpMask">…说明弹层…</div>
+<div class="help-mask" id="tplMask">…模板应用面板（模板卡 + 应用范围 + 页清单）…</div>
 <div class="help-mask" id="copyMask">…选页复制面板…</div>
 <div class="help-mask" id="shotMask">…选页截图面板…</div>
 <script>播放引擎（见 §6）</script>
@@ -88,39 +91,43 @@
 - 单页主题的 slide 上保留 data-theme 属性持久生效；截图（§7）克隆 slide 时该属性自然入图，无需特殊处理
 - 生成时按 user-config 的 THEME 给 documentElement 设默认主题，单页差异化主题由用户放映时点选
 
-## 2.2 模板库（五套版式骨架，与主题正交：模板管版式结构、主题管配色）
+## 2.2 模板库（五套版式骨架，运行时即点即换，与主题正交：模板管版式结构、主题管配色）
 
-生成时按 user-config 的 `TEMPLATE` 选一套版式骨架；用户口头点名模板名（如「用杂志风模板」）当次生效不改配置。五套模板共用 §4 全部组件与 CSS 变量，只换结构：
+五套模板随放映随时切换——工具栏「🎨 模板」打开模板应用面板，选模板卡 + 应用范围（全部页面/仅本页/选择页面），点应用即生效。**标题自动映射**：模板的固定标题位自动吃进页面里对应的标题（语义节点）。
 
-### T1 classic 经典商务（默认，现骨架不动）
+### 语义节点约定（标题自动映射的根基）
+
+每页 slide 内容必须按语义约定书写（classic 骨架即语义态）：
+- 页标题：`.s-head h2`（色条标题头）或 `.s-title`（无头大标题）；`.tag` 英文角标
+- 卡片：`.grid2/.grid3/.grid4 > .card`，卡片内 `.card h4`（标题）+ `.card h4 .en`（英文小标签）+ `.card p`（正文）
+- 要点：`ul.points > li`；数据：`.bignum > b`（数字）+ `span`（标签）；目录：`.toc > .toc-item`
+- 封面：`.cover`（logo/s-title/sub/sign）；结束页：`.endpage`
+
+模板应用机制：每页首次应用模板时存档原始 innerHTML（`_origin`），应用 = 恢复语义态 → slide 挂 `data-template` 属性 → 按需执行结构包装器。切回 classic 即恢复原始排版，内容一条不丢。生成侧写语义结构（不再写 `.t-minimal` 等包裹 div），每页 slide 挂 `data-template` 声明默认版式。
+
+### T1 classic 经典商务（默认，语义态本身，无前缀规则）
 - 封面：logo 块 76px + 64px 大标题 + sub + 底部署名
 - 内容页：`.s-head` 左色条标题 + `.grid2/.grid3` 卡片栅格；数据页：`.bignum` 大数字卡栅格；目录：`.toc` 条目列表
 
-### T2 minimal 极简留白
-- 骨架：`<div class="t-minimal">` 包整页内容；封面：无 logo 块，76px 大标题居中 + 细线分隔 + sub + 署名右上角
-- 内容页：标题 44px 居中无色条 + 要点列表 `.points`（每条 28px/1.9 行距，窄栏 640px 居中）；禁止 .card 描边与 .panel 面板，只用文字与留白
-- 数据页：`.bignum` 大数字 88px 居中 + 标签
-- CSS：`.t-minimal .s-title{font-size:44px;text-align:center}`；`.t-minimal .points{margin:0 auto;max-width:640px}`；`.t-minimal .points li{padding:12px 0;border-bottom:1px solid var(--border)}`；`.t-minimal .bignum b{font-size:88px}`
+### T2 minimal 极简留白（纯 CSS，无包装器）
+- `.s-head` 去色条、标题 44px 居中渐变；`.tag` 隐藏；卡片去边框去背景变纯文字；`.bignum` 数字放大 88px；封面隐藏 logo 块整体居中
+- CSS 前缀：`[data-template="minimal"] .s-head::before{display:none}`；`[data-template="minimal"] .s-head h2{font-size:44px;text-align:center;…渐变}`；`[data-template="minimal"] .card{background:transparent;border:none}`；`[data-template="minimal"] .bignum b{font-size:88px}`
 
-### T3 magazine 杂志画册
-- 骨架：`<div class="t-magazine">`；封面：超大标题 96px 跨版左对齐 + 右上 .tag 期号 + 底部双栏署名行
-- 内容页：左右分栏 `.m-split`（grid 46% 54%）：左文（标题 36px + 段落）+ 右图位 `.m-figure`（高 380px 圆角 18 渐变块 var(--accent) 系 + 内嵌 .chip 标注）
-- 数据页：横向大数字带 `.m-strip`（flex 三项，每项 64px 数字 + 标签，项间 1px var(--border) 分隔）
-- CSS：`.t-magazine .s-title{font-size:96px;line-height:1.05}`；`.m-split{display:grid;grid-template-columns:46% 54%;gap:56px;align-items:center}`；`.m-figure{height:380px;border-radius:18px;background:linear-gradient(135deg,var(--accent),var(--accent2));opacity:.85}`；`.m-strip{display:flex;justify-content:space-between}`；`.m-strip>div{flex:1;text-align:center;border-left:1px solid var(--border)}`
+### T3 magazine 杂志画册（包装器 wrapMagazine 生成分栏）
+- 左列：h3=`.s-head h2` 页标题、p=首张卡片正文；右列 `.m-figure` 高 380px 圆角 18 渐变图位 + 卡片标题转 chip 标注；≥2 个 `.bignum` 自动转横向 `.m-strip` 大数字带
+- 封面标题放大 96px；卡片圆角加大
+- CSS 前缀：`[data-template="magazine"] …` + `.m-split/.m-figure/.m-strip`
 
-### T4 keynote 黑金发布
-- 骨架：`<div class="t-keynote">`；封面：巨号 112px 标题居中 + 副题 24px + 底部小字日期署名
-- 内容页：每页只放一个核心观点——`.k-big` 64px 加粗大字居中 + `.k-sub` 22px muted 一句解释 + 底部细进度横线；禁止栅格卡片堆料
-- 数据页：单个 `.bignum` 160px 巨型数字居中 + 标签 + 环形进度装饰 `.k-ring`（conic-gradient 圆环 120px，数字在环内）
-- CSS：`.t-keynote .s-title{font-size:112px}`；`.k-big{font-size:64px;font-weight:900;text-align:center;margin:auto}`；`.k-sub{font-size:22px;color:var(--muted);text-align:center}`；`.k-ring{width:120px;height:120px;border-radius:50%;background:conic-gradient(var(--accent) 0 72%,var(--border) 72% 100%);display:flex;align-items:center;justify-content:center}`
+### T4 keynote 黑金发布（包装器 wrapKeynote 生成单点大字）
+- `.k-big`=页标题（`.s-head h2`）大观点 64px 居中、`.k-sub`=首张卡片正文一句解释、`.k-bar` 细进度线、`.k-ring`=第一个 `.bignum` 数字环形进度 120px、其余卡片标题收成 `.k-note` 小字行
+- 封面/结束页标题 112px/96px 居中
+- CSS 前缀：`[data-template="keynote"] …` + `.k-big/.k-sub/.k-bar/.k-ring/.k-note`
 
-### T5 timeline 时间线叙事
-- 骨架：`<div class="t-timeline">`；封面/结束页同 classic
-- 内容页：纵向时间线 `.tl`（左侧 3px var(--accent) 竖线 + 节点圆点 14px + 每条 .tl-item 卡片：时间 .tl-time 24px 加粗 + 标题 + 描述）
-- 数据页：时间线节点上挂 .bignum 小数字
-- CSS：`.tl{position:relative;padding-left:32px}`；`.tl::before{content:'';position:absolute;left:6px;top:8px;bottom:8px;width:3px;background:var(--accent)}`；`.tl-item{position:relative;padding:18px 0 18px 24px}`；`.tl-item::before{content:'';position:absolute;left:-32px;top:24px;width:14px;height:14px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--tag-bg)}`
+### T5 timeline 时间线叙事（包装器 wrapTimeline 生成时间线）
+- `.card` 组转 `.tl` 竖线时间轴——`.tl-time`=卡内 `.en` 小标签（时间）、节点标题=卡片标题、正文=卡片 p
+- CSS：`.tl` 左侧 3px var(--accent) 竖线 + `.tl-item` 节点圆点 14px
 
-模板选择仅在生成时定版式（user-config TEMPLATE 或口头点名），工具栏不提供运行时模板切换；运行时切换的是主题（全局/单页）。
+模板不再只限生成时定版式：user-config 的 `TEMPLATE` 是生成默认（AI 每页写语义结构 + 对应 slide 挂 data-template），用户放映时随时在模板面板切换（全部/仅本页/勾选页）；`?tpl=xxx` URL 参数全局应用（headless 截图用）。
 
 ## 3. 舞台与切换
 
@@ -162,6 +169,7 @@
 - `.hint`：底部居中 11px 键位提示
 - `.help-mask`：全屏遮罩（open 类显示）；`.help-panel` 内 kbd 键帽表格列全部热键 + `.help-note` 说明截图/复制只含主体、全屏自动隐藏操作元素、?shot 全量截图用法
 - `#copyMask`：选页复制面板；`#shotMask`：选页截图面板——两面板结构同款，均复用 help-mask 遮罩类（全屏自动隐藏）；`.copy-panel` 430px 宽纵向 flex（头部标题+全选 / 中部 `.cp-list` 页清单滚动区 / 底部取消+执行 / 末尾 .help-note 小字提示）；`.cp-item` 行 = checkbox + 页码（accent 加粗）+ 首行预览（muted 单行省略），hover 用 --tag-bg；`.cp-foot .tbtn.primary` 主按钮 accent 底；勾选项截图面板用 `.sp-check`、复制面板用 `.cp-check`，各面板容器内自查询互不干扰
+- `#tplMask`：模板应用面板——`.tpl-panel` 520px 宽纵向 flex（头部标题+「模板只改版式」提示 / 中部 `.tpl-cards` 2 列模板卡（icon 渐变块 + 名 + 描述，当前模板 .on 高亮，点击选中）/ `.tpl-scope` 范围 radio 胶囊（全部页面/仅本页/选择页面，选「选择页面」展开 `.cp-list` 页清单勾选，label.sel 高亮当前）/ 底部取消 + 应用模板（N 页）主按钮 / 末尾 .help-note 说明标题自动映射与切回 classic 恢复）；与选页复制/截图面板互斥打开；Esc/点遮罩/取消关闭
 
 ## 6. 播放引擎 JS（核心，逐条照做）
 
@@ -188,6 +196,8 @@ function prev(){ if (cur > 0) go(cur - 1); else if (chkLoop.checked) go(N - 1); 
   - P：播放/暂停；S：截图本页；C：复制本页；F：全屏；?：说明弹层；Esc：关弹层 + 退全屏
 - **全屏**：`toggleFull()` = fullscreenElement 存在则 exitFullscreen，否则 document.documentElement.requestFullscreen
 - **主题作用域**：btnScope 未 .on 时主题点击 → `documentElement.setAttribute('data-theme', name)` + 遍历 slides 移除所有 slide 级 data-theme；btnScope .on 时 → `slides[cur].setAttribute('data-theme', name)`（仅当前页变色）；`?theme=biz` 参数走全局；工具栏色点 .on 态按全局主题显示
+- **模板应用**：TPLS 五套元信息（id/name/icon/描述）；applyTpl(slide, tpl) = ensureOrigin 存档首次 innerHTML → 恢复语义态 → 挂 data-template（classic 则移除属性）→ 按需 wrapTimeline/wrapKeynote/wrapMagazine（封面/结束页/目录页 isSpecialPage 保护不包装）；applyScope(tpl, scope, selected) 按范围应用返回页数；初始化时每页 data-template 声明自动跑 applyTpl 生效；`?tpl=xxx` 参数全局应用（只认 TPLS 内 id）
+- **标题自动映射**：包装器从语义节点取内容重建模板结构——timeline 节点标题=卡片标题、keynote 大观点=页标题、magazine 分栏标题=页标题；内容一条不丢
 - **页内连接**：deck 上事件委托，`closest('[data-goto]')` 跳页；目录条目/任意元素都可用
 - **外部链接**：任意 `<a href="https://…">` 正常打开，不拦截
 - **hash 定位**：`#/N` 定位第 N 页，hashchange 监听；**初始跳页用 jumped 标记**——`var jumped = false; if (sm){ go(parseInt(sm[1],10)-1); jumped = true; } … 最后 if (!jumped) go(0);`（init 末尾无条件 go(0) 会覆盖 ?shot 跳页，必须跳过）
@@ -203,6 +213,7 @@ function prev(){ if (cur > 0) go(cur - 1); else if (chkLoop.checked) go(N - 1); 
   3. `svg(1280×720 viewBox) + foreignObject(1280×720)` 装 wrap，`new XMLSerializer().serializeToString(svg)` → `data:image/svg+xml;charset=utf-8,` + encodeURIComponent 赋给 `new Image()`
   4. onload 里 `canvas 2560×1440`（2 倍清晰度）drawImage 后 `a.download = 'slide-页码-主题.png'` 点击下载并 `cb()` 接力；onerror 走 `cb(err)` 同样接力不断链；单页成功按钮变「✓ 已保存」1.5s；onerror 变「✗ 失败」
   - **克隆只取 slide 本体**——工具栏/页码/箭头/提示在 slide 之外，天然不入图；slide 内也不得放任何操作元素
+  - slide 级 `data-template` 属性随克隆自然入图（CSS 前缀选择器在收集的 style 文本中生效），模板包装后的 DOM 结构即截图内容，无需特殊处理
 - **选页截图**：`btnShotMulti` 打开 `#shotMask` 面板——`openShotPanel` 按页生成清单（checkbox 默认全选 + 页码 + 首行文字预览）；`spAll` 全选/清空联动、勾选变化实时更新主按钮「截图所选（N 页）」；`shotSelectedPages` 收集选中页**串行**逐张 `renderShot(idx[k], step)`（上一张 onload 后才起下一张，避免并发下载乱序与浏览器吞下载），进度文案「已保存 k/N 页…」，全部完成按钮变「✓ 已保存 N 页」1.5s 并自动关面板；面板底部 .help-note 注明浏览器首次会询问「下载多个文件」许可；与选页复制面板互斥打开；Esc/点遮罩/取消关闭
 
 ## 8. 全屏放映纯净模式（PPT 放映规范：黑底 + 幻灯充满画面）
