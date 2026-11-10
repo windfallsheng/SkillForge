@@ -3,8 +3,10 @@
 /**
  * SkillForge CLI —— 技能锻造坊安装器
  *
- *   skill-forge ls     列出全部技能（分类 + 名称 + 说明）
- *   skill-forge init   交互式挑选技能，装进 AI 助手的技能目录
+ *   skill-forge ls       列出全部技能（分类 + 名称 + 说明）
+ *   skill-forge init     交互式挑选技能，装进 AI 助手的技能目录
+ *   skill-forge update   升级已安装技能（配置版本感知：官方配置结构变化时
+ *                        先备份你的配置，再询问覆盖/保留/稍后处理）
  *
  * 零依赖，Node >= 14。
  */
@@ -21,6 +23,8 @@ const CATEGORIES = [
   { name: "报表汇演", en: "Reports", skills: ["daily-report", "weekly-report", "annual-report"] },
   { name: "文档装裱", en: "Documents", skills: ["article-to-html"] },
   { name: "工程提效", en: "Engineering", skills: ["spec-doc2spec", "spec-spec2doc"] },
+  { name: "演示汇演", en: "Slides", skills: ["magic-deck"] },
+  { name: "技能自造", en: "Meta", skills: ["meta-forge"] },
 ];
 
 // 常见 AI 助手的用户级技能目录（宿主中立，init 时自动探测）
@@ -111,13 +115,35 @@ function loadPreserveSet(skillDir) {
   return set;
 }
 
-function copyDir(src, dest, preserve, hits) {
+// 解析 user-config.md 首行 yaml 的 CONFIG_VERSION（缺失视为 0=未声明版本）
+function parseUserConfigVersion(file) {
+  if (!fs.existsSync(file)) return 0;
+  const m = fs.readFileSync(file, "utf8").match(/^CONFIG_VERSION:\s*(\d+)/m);
+  return m ? parseInt(m[1], 10) : 0;
+}
+
+function stamp() {
+  const d = new Date();
+  const p = (n) => String(n).padStart(2, "0");
+  return "" + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + "-" + p(d.getHours()) + p(d.getMinutes()) + p(d.getSeconds());
+}
+
+function copyDir(src, dest, preserve, hits, upstreams) {
   fs.mkdirSync(dest, { recursive: true });
   for (const entry of fs.readdirSync(src)) {
     const s = path.join(src, entry);
     const d = path.join(dest, entry);
-    if (fs.statSync(s).isDirectory()) copyDir(s, d, preserve, hits);
-    else if (preserve.has(entry.toLowerCase()) && fs.existsSync(d)) hits.push(d);
+    if (fs.statSync(s).isDirectory()) copyDir(s, d, preserve, hits, upstreams);
+    else if (preserve.has(entry.toLowerCase()) && fs.existsSync(d)) {
+      hits.push(d);
+      // 配置演进：官方版与本地版内容不同时，另存 .upstream 对照文件，供用户手动合并新配置点
+      const sData = fs.readFileSync(s, "utf8");
+      const dData = fs.readFileSync(d, "utf8");
+      if (sData !== dData) {
+        fs.writeFileSync(d + ".upstream", sData);
+        upstreams.push(d + ".upstream");
+      }
+    }
     else fs.copyFileSync(s, d);
   }
 }
@@ -214,6 +240,83 @@ async function selectSkillsInteractive(skills) {
   return chosen;
 }
 
+// 解析目标技能目录（--target 优先，否则自动探测；失败返回 null）
+async function resolveTarget(argv, cmd) {
+  if (argv.target) return expandHome(argv.target);
+  const detected = detectTargetDirs();
+  if (detected.length === 1) {
+    console.log(`检测到技能目录：${detected[0]}`);
+    return detected[0];
+  }
+  if (detected.length > 1 && process.stdin.isTTY) {
+    console.log("检测到多个技能目录：");
+    detected.forEach((d, i) => console.log(`  [${i + 1}] ${d}`));
+    const ans = await ask("选择目标目录编号（回车取第一个）：");
+    const i = parseInt(ans, 10) - 1;
+    return detected[isNaN(i) || i < 0 || i >= detected.length ? 0 : i];
+  }
+  if (detected.length > 1) {
+    console.log(`检测到多个技能目录，非交互环境取第一个：${detected[0]}`);
+    return detected[0];
+  }
+  console.log("未检测到常见 AI 助手的技能目录。");
+  console.log(`请用 --target 指定，例如：skill-forge ${cmd} --target ~/.claude/skills`);
+  return null;
+}
+
+// 升级单个技能：配置版本感知（官方 CONFIG_VERSION > 本地时备份并询问），返回展示注记
+async function upgradeSkill(src, dest, argv, existed) {
+  const hits = [];
+  const upstreams = [];
+  let mode = "preserve"; // preserve=保留我的 | official=官方覆盖 | later=稍后处理
+  let bakFile = null;
+
+  const officialCfg = path.join(src, "user-config.md");
+  const localCfg = path.join(dest, "user-config.md");
+  if (existed && fs.existsSync(officialCfg) && fs.existsSync(localCfg)) {
+    const officialVer = parseUserConfigVersion(officialCfg);
+    const localVer = parseUserConfigVersion(localCfg);
+    if (officialVer > localVer) {
+      bakFile = localCfg + ".bak-" + stamp();
+      fs.copyFileSync(localCfg, bakFile);
+      console.log(`\n⚠️  ${path.basename(dest)} 配置结构升级：官方 v${officialVer} > 你的 v${localVer}`);
+      console.log(`   已备份你的配置：${path.basename(bakFile)}`);
+      if (process.stdin.isTTY && !argv.yes) {
+        console.log("   [1] 官方覆盖 —— 用官方新配置替换（旧配置在备份中，随时找回）");
+        console.log("   [2] 保留我的 —— 不覆盖，官方新配置另存 .upstream 对照（默认）");
+        console.log("   [3] 稍后处理 —— 本次只升级技能文件，配置改天自己合并");
+        const ans = await ask("   你的选择（回车默认 2）：");
+        if (ans === "1") mode = "official";
+        else if (ans === "3") mode = "later";
+      } else {
+        console.log("   非交互/--yes：默认保留你的配置，官方新版另存 .upstream 对照");
+      }
+    }
+  }
+
+  if (mode === "official") fs.unlinkSync(localCfg); // 备份已做，移除后 copyDir 正常覆盖
+  copyDir(src, dest, loadPreserveSet(src), hits, upstreams);
+
+  let note = existed ? "已更新" : "已安装";
+  if (mode === "official") {
+    note += `（已用官方配置覆盖，你的旧配置备份在 ${path.basename(bakFile)}）`;
+  } else if (bakFile) {
+    const ups = upstreams.map((u) => path.basename(u)).join("、");
+    note += `（配置结构有变：你的配置已备份 ${path.basename(bakFile)}` +
+      (ups ? ` + 官方版对照 ${ups}` : "") + "，请手动合并）";
+  } else {
+    if (hits.length > 0) {
+      const names = hits.map((h) => path.basename(h)).join("、");
+      note += `（保留你的本地修改未覆盖：${names}）`;
+    }
+    if (upstreams.length > 0) {
+      const names = upstreams.map((u) => path.basename(u)).join("、");
+      note += `；官方配置有更新，已另存对照文件：${names}（可手动合并新配置点）`;
+    }
+  }
+  return note;
+}
+
 async function cmdInit(argv) {
   const skills = scanSkills();
   if (skills.length === 0) {
@@ -222,27 +325,8 @@ async function cmdInit(argv) {
   }
 
   // 1. 目标目录
-  let target = argv.target ? expandHome(argv.target) : null;
-  if (!target) {
-    const detected = detectTargetDirs();
-    if (detected.length === 1) {
-      target = detected[0];
-      console.log(`检测到技能目录：${target}`);
-    } else if (detected.length > 1 && process.stdin.isTTY) {
-      console.log("检测到多个技能目录：");
-      detected.forEach((d, i) => console.log(`  [${i + 1}] ${d}`));
-      const ans = await ask("选择目标目录编号（回车取第一个）：");
-      const i = parseInt(ans, 10) - 1;
-      target = detected[isNaN(i) || i < 0 || i >= detected.length ? 0 : i];
-    } else if (detected.length > 1) {
-      target = detected[0];
-      console.log(`检测到多个技能目录，非交互环境取第一个：${target}`);
-    } else {
-      console.log("未检测到常见 AI 助手的技能目录。");
-      console.log("请用 --target 指定，例如：skill-forge init --target ~/.claude/skills");
-      return;
-    }
-  }
+  const target = await resolveTarget(argv, "init");
+  if (!target) return;
 
   // 2. 选择技能
   let chosen;
@@ -277,21 +361,68 @@ async function cmdInit(argv) {
     }
   }
 
-  // 4. 复制
+  // 4. 复制（已存在的走版本感知升级）
   for (const s of chosen) {
     const src = path.join(PKG_DIR, s.dir);
     const dest = path.join(target, s.dir);
-    const existed = fs.existsSync(dest);
-    const hits = [];
-    copyDir(src, dest, loadPreserveSet(src), hits);
-    let note = existed ? "已更新" : "已安装";
-    if (hits.length > 0) {
-      const names = hits.map((h) => path.basename(h)).join("、");
-      note += `（保留你的本地修改未覆盖：${names}）`;
-    }
+    const note = await upgradeSkill(src, dest, argv, fs.existsSync(dest));
     console.log(`${note}：${s.name} → ${dest}`);
   }
   console.log(`\n完成。共 ${chosen.length} 件技能。`);
+}
+
+// ---------- update ----------
+
+async function cmdUpdate(argv) {
+  const skills = scanSkills();
+  if (skills.length === 0) {
+    console.log("未发现任何技能。");
+    return;
+  }
+
+  // 1. 目标目录
+  const target = await resolveTarget(argv, "update");
+  if (!target) return;
+
+  // 2. 已安装技能 = 目标目录下存在同名目录且带 SKILL.md
+  let installed = [];
+  for (const s of skills) {
+    if (fs.existsSync(path.join(target, s.dir, "SKILL.md"))) installed.push(s);
+  }
+  if (argv.skills) {
+    const wanted = argv.skills.split(",").map((x) => x.trim());
+    installed = installed.filter((s) => wanted.includes(s.name));
+    if (installed.length === 0) {
+      console.log(`错误：目标目录没有已安装的指定技能。可用 --skills 仅限已装技能，请先 init。`);
+      process.exit(1);
+    }
+  }
+  if (installed.length === 0) {
+    console.log(`目标目录没有已安装的 SkillForge 技能，请先 init。`);
+    return;
+  }
+
+  // 3. 确认
+  if (!argv.yes) {
+    console.log(`\n将升级 ${installed.length} 件技能：`);
+    installed.forEach((s) => console.log(`  - ${s.name}`));
+    if (process.stdin.isTTY) {
+      const ans = await ask("确认升级？（y/N）：");
+      if (!/^y/i.test(ans)) {
+        console.log("已取消。");
+        return;
+      }
+    }
+  }
+
+  // 4. 逐个升级（配置版本感知）
+  for (const s of installed) {
+    const src = path.join(PKG_DIR, s.dir);
+    const dest = path.join(target, s.dir);
+    const note = await upgradeSkill(src, dest, argv, true);
+    console.log(`${note}：${s.name} → ${dest}`);
+  }
+  console.log(`\n完成。共升级 ${installed.length} 件技能。`);
 }
 
 // ---------- 入口 ----------
@@ -302,12 +433,19 @@ function printHelp() {
 用法：
   skill-forge ls                      列出全部技能（分类 + 名称 + 说明）
   skill-forge init                    交互式挑选技能并安装到 AI 助手技能目录
+  skill-forge update                  升级已安装技能（配置版本感知，默认全部已装技能）
+  skill-forge update --skills a,b     只升级指定技能
   skill-forge init --target <目录>    指定技能目录（默认自动探测常见助手目录）
   skill-forge init --skills a,b       跳过选择，直接安装指定技能（适合脚本）
   skill-forge init --yes              跳过确认，直接安装
   skill-forge --version               显示版本
 
-升级保护：目标目录已存在的 user-config.md（及技能 .preserve 清单声明的文件）不会被覆盖，你的本地配置永久保留
+升级保护（init/update 均生效）：
+  · 目标目录已存在的 user-config.md（及技能 .preserve 清单声明的文件）不会被覆盖
+  · 官方 user-config.md 的 CONFIG_VERSION 高于你的本地版本（配置结构变化）时：
+    先备份你的配置为 user-config.md.bak-<时间戳>，再询问三选一——
+    [1] 官方覆盖（备份在侧，随时找回）/ [2] 保留我的 + 官方版另存 .upstream 对照（默认）
+    [3] 稍后处理；--yes 或非交互时默认 [2]
 
 示例：
   skill-forge ls
@@ -336,6 +474,7 @@ async function main() {
   if (!cmd) return printHelp();
   if (cmd === "ls" || cmd === "list") return cmdLs();
   if (cmd === "init" || cmd === "install") return cmdInit(argv);
+  if (cmd === "update" || cmd === "upgrade") return cmdUpdate(argv);
   if (cmd === "--version" || cmd === "-v" || cmd === "version") {
     console.log(VERSION);
     return;

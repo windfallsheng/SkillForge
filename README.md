@@ -12,22 +12,26 @@
 
 | 分类 | Category | 说明 | 收录技能 |
 |:---|:---|:---|:---|
-| 报表汇演 | Reports | 聚合 git 与工程数据，按周期产出报告（日报 / 周报 / 月报） | daily-report、weekly-report |
+| 报表汇演 | Reports | 聚合 git 与工程数据，按周期产出报告（日报 / 周报 / 月报 / 年报） | daily-report、weekly-report、annual-report |
 | 文档装裱 | Documents | 文档转换与美化：Word / Markdown / 纯文本 → 精美 HTML + 逐章截图 | article-to-html |
 | 工程提效 | Engineering | 开发流水线技能：部署、发布、审查、测试、文档 ↔ 规格互转 | spec-doc2spec、spec-spec2doc |
+| 演示汇演 | Slides | HTML 形态、PPT 体验的魔法幻灯：播放引擎 + 多套风格 + 逐页截图 + 全屏放映 | magic-deck |
 | 数据整备 | Data | Excel / CSV / 图表、数据清洗与模板整理 | （规划中） |
 | 沟通协作 | Communication | 邮件起草、会议纪要、通知周知 | （规划中） |
-| 技能自造 | Meta | 锻造技能本身的元技能（创建技能 / 插件） | （规划中） |
+| 技能自造 | Meta | 锻造技能本身的元技能（创建技能 / 插件） | meta-forge |
 
 ## 技能清单
 
 | 技能 | 分类 | 目录 | 说明 |
 |:---|:---|:---|:---|
-| daily-report | 报表汇演 | [daily-report/](daily-report/) | 聚合各仓库 git 提交 + 会话口述生成日报（今日完成任务/明日计划/风险阻塞点），支持自然语言日期（今天/昨天/上周三/10月20号）、连续多日批量、纯文字/图片/文件整理、自定义模板、12 行业词条 |
-| weekly-report | 报表汇演 | [weekly-report/](weekly-report/) | 同上生成周报（本周完成任务/下周计划/风险阻塞点 + 本周概览卡），周结束日可配置（默认周五，可改周日等），支持自然语言周定位（本周/上周/10月第2周/节假日锚定） |
+| daily-report | 报表汇演 | [daily-report/](daily-report/) | 聚合各仓库 git 提交 + 会话口述生成日报（今日任务进度/明日计划/风险阻塞点），支持自然语言日期（今天/昨天/上周三/10月20号）、连续多日批量、纯文字/图片/文件整理、自定义模板、12 行业词条 |
+| weekly-report | 报表汇演 | [weekly-report/](weekly-report/) | 同上生成周报（本周任务进度/下周计划/风险阻塞点 + 本周概览卡），周结束日可配置（默认周五，可改周日等），支持自然语言周定位（本周/上周/10月第2周/节假日锚定） |
+| annual-report | 报表汇演 | [annual-report/](annual-report/) | 生成年度总结（五段式：年度概览/核心成果/经验成长/不足反思/新年规划），12 行业职业词典，git 全年提交聚合或纯文字/图片/文件，支持自定义模板与自然语言年度定位 |
 | article-to-html | 文档装裱 | [article-to-html/](article-to-html/) | Word / Markdown / 纯文本 → 精美独立 HTML（思源黑体 + Roboto 商用免费字体，图表 HTML/CSS 重绘），逐章截图（Retina 2x）；现成 HTML 可直接截图或先美化 |
 | spec-doc2spec | 工程提效 | [spec-doc2spec/](spec-doc2spec/) | Word / Markdown 需求文档转结构化需求切片；自动检测 Pandoc，未装引导跨系统安装 |
 | spec-spec2doc | 工程提效 | [spec-spec2doc/](spec-spec2doc/) | Markdown 规格导出为 Word / PDF 交付文档；自动检测 Pandoc，未装引导跨系统安装 |
+| magic-deck | 演示汇演 | [magic-deck/](magic-deck/) | 内容 → 单文件 HTML 幻灯（16:9 舞台 + 播放引擎 + 四套风格 + 全屏放映纯净模式）：自动播放/循环/间隔、键盘热键、页内连接、逐页 PNG 截图与主体复制（不含操作元素） |
+| meta-forge | 技能自造 | [meta-forge/](meta-forge/) | 元技能：从需求出发锻造完整技能包（薄入口 + resources 拆分 + user-config），自动植入四大机制（CONFIG_VERSION 钥匙 / user-config 抽离 / reference 双轨 / 自检纪律），入仓库时自动登记 README 与 cli.js 分类表 |
 
 ## 安装
 
@@ -37,6 +41,7 @@
 npm i -g skill-forge-hub
 skill-forge ls        # 列出全部技能与说明（只读）
 skill-forge init      # 交互式挑选技能，自动探测并安装到 AI 助手技能目录
+skill-forge update    # 升级已安装技能（配置版本感知，见下）
 ```
 
 非交互 / 指定目录场景：
@@ -56,12 +61,26 @@ cp -R spec-doc2spec spec-spec2doc <你的 AI 助手技能目录>/   # 仅 SpecCo
 
 复制后直接说「写日报」「写周报」或丢给它一个文档即可触发；问「日报怎么用 / 周报怎么用」输出使用说明。
 
+## 升级与配置保护
+
+`skill-forge update`（默认升级全部已装技能，可用 `--skills a,b` 指定）在覆盖技能文件前自动保护你的配置：
+
+- **常驻保护**：目标目录已存在的 `user-config.md`（及技能 `.preserve` 清单声明的文件）永不被覆盖，你的本地配置永久保留
+- **版本感知**：官方 `user-config.md` 首行的 `CONFIG_VERSION` 高于你的本地版本（配置结构增/减/改名）时——
+  1. 先把你的配置备份为 `user-config.md.bak-<时间戳>`
+  2. 交互三选一：`[1] 官方覆盖`（旧配置在备份中随时找回）/ `[2] 保留我的` + 官方版另存 `.upstream` 对照（默认）/ `[3] 稍后处理`
+  3. `--yes` 或非交互环境默认 `[2]`，最安全
+- **版本一致**：无感升级，只更新技能文件，配置原样保留
+
+技能维护者约定：官方配置结构每次变化（新增/改名/删除配置键）时，`user-config.md` 的 `CONFIG_VERSION` 递增 1，并在 SKILL.md「配置版本机制」节写明迁移规则（AI 每次执行前也会自检该版本）。
+
 ## 目录结构
 
 ```
 .
 ├── README.md                    # 本文件（双语介绍 + 技能分类）
 ├── template/                    # 新技能模板（薄入口 + resources 拆分规范）
+├── meta-forge/                  # 元技能：造 skill 的 skill（四大机制植入 + 仓库登记）
 ├── article-to-html/
 │   ├── SKILL.md                 # 文档 → 精美 HTML 完整流程 + 逐章截图
 │   ├── design-system.md         # 设计系统（字体 / 配色 / 排版 / 图表重绘）
@@ -93,3 +112,5 @@ cp -R spec-doc2spec spec-spec2doc <你的 AI 助手技能目录>/   # 仅 SpecCo
 - **新技能按 `template/` 结构创建**，目录名 = 技能名（英文短横线），并归入上方「技能分类」表对应分类
 - **已有技能按各自结构维护**：article-to-html 采用 SKILL.md + design-system.md + scripts/ 平铺结构；spec-doc2spec / spec-spec2doc 为单文件薄技能（委托 SpecCore ask 引擎）
 - **通用原则**：零外部依赖（禁 CDN / 外链，内网离线双击可开）、双系统兼容（macOS / Windows）
+- **配置升级**：user-config.md 首行带 `CONFIG_VERSION`，官方配置结构变化时递增并写明迁移规则；CLI update 与 AI 执行时均按该版本做备份 + 迁移提示
+- **元技能**：meta-forge 造技能时的规范真相源在 `resources/forge-rules.md`（澄清清单 / 结构规范 / 四大机制 / 校验清单 / 仓库登记），SKILL.md 流程节点与 template/ 模板均与之对齐
