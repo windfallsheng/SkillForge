@@ -19,6 +19,7 @@ disable-model-invocation: false
 
 ## 生成流程
 
+0. **读用户配置**（OUTPUT_DIR/TEMPLATE_DOCX/TOC/PDF_ENGINE/CONFIG_VERSION）→ 先 Read 同目录 `user-config.md`
 1. **依赖检测**（每次必做）→ `pandoc --version`；未安装按「安装指引」输出并停止。目标为 PDF 时另探测引擎：`xelatex --version`（LaTeX 路径）→ Chrome 路径（打印路径），细节读 `resources/pdf-path.md`
 2. **AI 排版整理** → 统一标题层级、规整表格（超宽表拆表或改列表）、检查图片引用路径、确定元信息（标题/作者）
 3. **Pandoc 输出** → Word：`pandoc <输入.md> -f gfm -t docx -o <输出.docx> [--reference-doc=<模板>] [--toc --toc-depth=3]`（模板探测与图片路径读 `resources/images-and-template.md`）；PDF：双路径命令读 `resources/pdf-path.md`
@@ -26,16 +27,24 @@ disable-model-invocation: false
 5. **修正重转** → 发现问题修正源稿重新转换，再次回验；重转不超过 3 轮，仍不通过如实报告「哪些项无法修复 + 原因」，不交付带错文档
 6. **报告** → 输出路径与格式、回验结论、PDF 引擎与兜底说明
 
-## ⚙️ 默认配置（用户可手动修改；临时口头要求永远优先）
+## ⚙️ 配置与自定义
 
-```yaml
-OUTPUT_DIR: auto              # 输出目录：auto = 与源 md 同目录；可写死绝对路径
-TEMPLATE_DOCX: auto           # Word 模板：auto = 依次探测 <源目录>/template.docx → reference.docx → 无则 Pandoc 默认样式；可指定模板路径
-TOC: true                     # Word/PDF 是否生成目录（--toc --toc-depth=3）
-PDF_ENGINE: auto              # PDF 引擎：auto = 探测 xelatex（有则 LaTeX 路径）→ 无则 Chrome 打印路径
-```
+**执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（OUTPUT_DIR/TEMPLATE_DOCX/TOC/PDF_ENGINE/CONFIG_VERSION）与临时口头要求说明都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留；官方更新配置时另存 `user-config.md.upstream` 对照文件，可按需手动合并新配置点。
 
-> 临时口头要求（仅当次生效）：说「输出到 XX」→ 当次改 OUTPUT_DIR；说「用这个模板」+ 路径 → 当次换模板；说「不要目录」→ 当次 TOC=false；说「必须用 LaTeX 出 PDF」→ 当次 PDF_ENGINE=xelatex（无引擎则引导安装）。
+## 配置版本机制（升级保护）
+
+本 skill 当前配置版本为 `1`（对应 user-config.md 中的 `CONFIG_VERSION`）。执行时若发现 user-config.md 的 CONFIG_VERSION 与本节声明的当前版本不一致：
+
+1. 先将旧 user-config.md 备份为 `user-config.md.bak-<时间戳>`（同目录，绝不删除旧值）
+2. 按本节「配置升级规则」迁移字段：新增字段补默认值、改名字段按映射改写、删除字段的值保留在备份中并在对话提示用户手动确认
+3. 更新 CONFIG_VERSION 为当前版本
+4. 对话中明确告知用户「检测到配置版本从 X 升级到 Y，旧配置已备份至 <路径>」
+
+升级本 skill 时，配置结构如有变化必须同步更新本节的当前版本号与迁移说明；禁止在未声明版本变更的情况下静默修改配置语义。
+
+## 文档同步自检纪律（维护者必读）
+
+修改本 skill 任一文件（SKILL.md / user-config.md / resources/*）后，必须 grep 全文核对相关关键词在各文件间一致（如配置键名/流程节点/阶段名改名时新旧词全仓核对，旧词零残留才算完成）。
 
 ## 安装指引（仅当检测未安装时输出给用户）
 

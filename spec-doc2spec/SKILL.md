@@ -20,6 +20,7 @@ disable-model-invocation: false
 
 ## 生成流程
 
+0. **读用户配置**（OUTPUT_DIR/IMG_DIR/EMF_POLICY/CONFIRM/CONFIG_VERSION）→ 先 Read 同目录 `user-config.md`
 1. **依赖检测**（每次必做）→ `pandoc --version`；未安装按「安装指引」输出并停止，不执行任何转换命令
 2. **格式路由** → `.docx` 走 Pandoc 机械转换；`.md` 直接 Read 原文（跳过第 3 步转换，第 4 步校对照做）；`.pdf` 走 `pdftotext` 文本提取（仅文本、无图无版式）或提示用户先转 Word
 3. **Pandoc 机械转换** → `pandoc <输入.docx> -f docx -t gfm --extract-media=<IMG_DIR> -o 00-converted.md`（标题/表格/列表保留、图片提取到 IMG_DIR）；另生成 `pandoc <输入.docx> -t plain -o 00-plain.txt` 纯文本底稿供完整性核对
@@ -28,16 +29,24 @@ disable-model-invocation: false
 6. **AI 结构加工与落盘** → 读 `resources/structure.md`：提炼需求点与验收标准、按功能单元切分章节、生成澄清清单，按目录规范落盘
 7. **报告** → 产出路径、功能单元清单、校对修正记录、待澄清需求点
 
-## ⚙️ 默认配置（用户可手动修改；临时口头要求永远优先）
+## ⚙️ 配置与自定义
 
-```yaml
-OUTPUT_DIR: auto              # 输出目录：auto = 源文档同目录下新建 {文档名}-spec/ 子目录；也可写死绝对路径
-IMG_DIR: assets/images        # 图片提取目录（相对输出目录）；Pandoc --extract-media 提取到此处
-EMF_POLICY: convert           # EMF/WMF 图片策略：convert = 自动跨系统转 PNG（LibreOffice 兜底）；keep = 保留原样并在澄清清单注明不可渲染
-CONFIRM: never                # 落盘前确认：never = 直接生成落盘；always = 先出加工预览确认后再落盘
-```
+**执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（OUTPUT_DIR/IMG_DIR/EMF_POLICY/CONFIRM/CONFIG_VERSION）与临时口头要求说明都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留；官方更新配置时另存 `user-config.md.upstream` 对照文件，可按需手动合并新配置点。
 
-> 临时口头要求（仅当次生效）：说「输出到 XX 目录」→ 当次改 OUTPUT_DIR；说「图片放 XX」→ 当次改 IMG_DIR；说「先看看效果」→ 当次先出预览确认再落盘。
+## 配置版本机制（升级保护）
+
+本 skill 当前配置版本为 `1`（对应 user-config.md 中的 `CONFIG_VERSION`）。执行时若发现 user-config.md 的 CONFIG_VERSION 与本节声明的当前版本不一致：
+
+1. 先将旧 user-config.md 备份为 `user-config.md.bak-<时间戳>`（同目录，绝不删除旧值）
+2. 按本节「配置升级规则」迁移字段：新增字段补默认值、改名字段按映射改写、删除字段的值保留在备份中并在对话提示用户手动确认
+3. 更新 CONFIG_VERSION 为当前版本
+4. 对话中明确告知用户「检测到配置版本从 X 升级到 Y，旧配置已备份至 <路径>」
+
+升级本 skill 时，配置结构如有变化必须同步更新本节的当前版本号与迁移说明；禁止在未声明版本变更的情况下静默修改配置语义。
+
+## 文档同步自检纪律（维护者必读）
+
+修改本 skill 任一文件（SKILL.md / user-config.md / resources/*）后，必须 grep 全文核对相关关键词在各文件间一致（如配置键名/流程节点/阶段名改名时新旧词全仓核对，旧词零残留才算完成）。
 
 ## 安装指引（仅当检测未安装时输出给用户）
 
