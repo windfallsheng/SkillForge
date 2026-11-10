@@ -429,7 +429,7 @@ li:hover .idx{ transform:scale(1.18) rotate(-4deg); font-size:14px; }
   50%{filter:blur(1.5px) brightness(1.28);}
 }
 .pbar-track.sheen-on .pbar-sweep{ opacity:1; transition:width 1.1s cubic-bezier(.3,.8,.4,1); }
-.pbar-track.sheen-on .pbar-comet{ animation:cometFade 1.1s; }
+.pbar-track.sheen-on .pbar-comet{ animation:cometFade 1.1s ease-out both; }
 .pbar-track.sheen-on .pbar-comet::after{ animation:tailGlow 2.4s ease-in-out infinite; }
 .pbar-track.sheen-on .pbar-comet::before{ animation:glowPulse 2.4s ease-in-out infinite; }
 @keyframes cometFade{ 0%{opacity:0;} 7%{opacity:1;} 86%{opacity:1;} 100%{opacity:0;} }
