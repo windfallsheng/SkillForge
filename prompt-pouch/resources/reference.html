@@ -272,6 +272,63 @@ footer{
 }
 footer b{ color:var(--gold); }
 footer .sep{ opacity:.4; }
+/* 页面直写：侧栏分组管理 / 提示词表单 / toast */
+.nav-add{
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  margin-top:10px; padding:10px 14px; border-radius:10px; cursor:pointer;
+  font-size:13px; letter-spacing:1px; color:var(--gold);
+  border:1px dashed var(--border); background:var(--gold-dim);
+  transition:all .18s ease; user-select:none;
+}
+.nav-add:hover{ background:rgba(232,176,75,.2); box-shadow:0 0 12px rgba(232,176,75,.15); }
+.nav-item .g-name{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.nav-item .g-ops{ display:none; gap:4px; margin-left:6px; flex:0 0 auto; }
+.nav-item:hover .g-ops{ display:flex; }
+.nav-item .g-ops button{
+  width:20px; height:20px; border-radius:6px; border:1px solid var(--border);
+  background:var(--panel2); color:var(--muted); cursor:pointer; font-size:10px;
+  display:flex; align-items:center; justify-content:center; transition:all .15s ease;
+}
+.nav-item .g-ops button:hover{ color:var(--gold); border-color:var(--gold); }
+.nav-item .g-ops .g-del:hover{ color:#e06c5b; border-color:#e06c5b; }
+.fp-field textarea{
+  width:100%; min-height:130px; resize:vertical; padding:9px 12px; border-radius:9px;
+  background:rgba(0,0,0,.25); border:1px solid var(--border); outline:none;
+  color:var(--text); font-family:inherit; font-size:13px; line-height:1.7; transition:border-color .18s ease;
+}
+.fp-field textarea:focus{ border-color:var(--gold); box-shadow:0 0 0 3px var(--gold-dim); }
+.fp-field select{
+  width:100%; padding:9px 12px; border-radius:9px;
+  background:rgba(0,0,0,.25); border:1px solid var(--border); outline:none;
+  color:var(--text); font-family:inherit; font-size:13px; cursor:pointer;
+}
+.fp-field select:focus{ border-color:var(--gold); }
+.op-del:hover{ color:#e06c5b; border-color:#e06c5b; background:rgba(224,108,91,.12); }
+/* 提示词详情弹窗 */
+.detail-panel{ width:660px; }
+.detail-content{
+  max-height:52vh; overflow-y:auto; padding:14px 16px; margin-bottom:10px;
+  background:rgba(0,0,0,.22); border:1px solid var(--border); border-radius:10px;
+  font-size:13px; line-height:1.9; color:var(--text); white-space:pre-wrap; word-break:break-word;
+}
+.detail-vars{
+  display:flex; flex-wrap:wrap; align-items:center; gap:6px;
+  font-size:11px; color:var(--muted); margin-bottom:12px;
+}
+.detail-vars b{ color:var(--gold); }
+.detail-times{
+  display:flex; flex-wrap:wrap; gap:4px 16px;
+  font-size:11px; color:var(--muted); margin-bottom:10px;
+}
+.toast{
+  position:fixed; left:50%; bottom:64px; transform:translateX(-50%) translateY(10px);
+  z-index:400; max-width:76vw; padding:10px 20px; border-radius:999px;
+  background:linear-gradient(135deg, var(--panel), var(--panel2));
+  border:1px solid var(--border); color:var(--gold); font-size:12px; letter-spacing:1px;
+  box-shadow:0 8px 28px rgba(0,0,0,.45); opacity:0; pointer-events:none; transition:all .25s ease;
+}
+.toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+.toast.warn{ color:#e06c5b; border-color:rgba(224,108,91,.5); }
 @media (max-width:820px){
   .layout{ flex-direction:column; padding:16px 16px 100px; }
   aside{ width:100%; display:flex; flex-wrap:wrap; gap:6px; }
@@ -307,6 +364,7 @@ footer .sep{ opacity:.4; }
     <div class="bar">
       <h2 id="curTitle">全部提示词</h2>
       <span class="total" id="curTotal"></span>
+      <button class="btn primary" id="btnAddItem">＋ 新增提示词</button>
       <div class="sort-box">
         <label for="sortSel">排序</label>
         <select id="sortSel" title="切换卡片排序方式">
@@ -322,8 +380,9 @@ footer .sep{ opacity:.4; }
       </div>
       <div class="bk-wrap" id="bkWrap">
         <span class="cache-badge" id="cacheBadge" style="display:none">⚠️ 缓存模式：prompts.json 读取失败，当前显示上次快照</span>
-        <button class="btn" id="btnBkEnable" style="display:none">💾 启用自动备份</button>
-        <span class="bk-status" id="bkStatus">自动备份未开启</span>
+        <button class="btn" id="btnBkEnable" style="display:none">💾 授权目录备份</button>
+        <span class="bk-status" id="bkStatus">本地快照备份中</span>
+        <button class="btn" id="btnBkChange" style="display:none">📂 换目录</button>
         <button class="btn" id="btnBkRestore" style="display:none">↩ 恢复备份</button>
       </div>
     </div>
@@ -359,7 +418,7 @@ footer .sep{ opacity:.4; }
   <div class="fill-panel">
     <div class="fp-head">
       <div class="fp-title">从备份恢复</div>
-      <span class="fp-count">同目录 pouch-backup*.json</span>
+      <span class="fp-count">目录备份 pouch-backup*.json + 本地快照</span>
     </div>
     <div class="bk-list" id="bkList"></div>
     <div class="fp-ops">
@@ -368,11 +427,69 @@ footer .sep{ opacity:.4; }
   </div>
 </div>
 
+<!-- 新增/编辑提示词 -->
+<div class="modal-mask" id="itemMask">
+  <div class="fill-panel">
+    <div class="fp-head">
+      <div class="fp-title" id="itemTitle">新增提示词</div>
+      <span class="fp-count">落盘 prompts.json · 刷新即见</span>
+    </div>
+    <div class="fp-fields">
+      <div class="fp-field"><label for="itemName">标题</label><input id="itemName" placeholder="如：日报速写" /></div>
+      <div class="fp-field"><label for="itemGroup">分组</label><select id="itemGroup"></select></div>
+      <div class="fp-field"><label for="itemTags">标签（逗号分隔，最多 3 个）</label><input id="itemTags" placeholder="如：日报,工作" /></div>
+      <div class="fp-field"><label for="itemContent">内容（支持 {变量} 插值）</label><textarea id="itemContent" placeholder="提示词正文……"></textarea></div>
+    </div>
+    <div class="fp-ops">
+      <button class="btn" id="itemCancel">取消</button>
+      <button class="btn primary" id="itemSave">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 新建/编辑分组 -->
+<div class="modal-mask" id="groupMask">
+  <div class="fill-panel" style="width:360px;">
+    <div class="fp-head">
+      <div class="fp-title" id="groupTitle">新建分组</div>
+      <span class="fp-count">落盘 prompts.json · 刷新即见</span>
+    </div>
+    <div class="fp-fields">
+      <div class="fp-field"><label for="groupName">分组名</label><input id="groupName" placeholder="如：灵感" /></div>
+      <div class="fp-field"><label for="groupIcon">图标（一个 emoji）</label><input id="groupIcon" placeholder="如：✨" maxlength="4" /></div>
+    </div>
+    <div class="fp-ops">
+      <button class="btn" id="groupCancel">取消</button>
+      <button class="btn primary" id="groupSave">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 提示词详情 -->
+<div class="modal-mask" id="detailMask">
+  <div class="fill-panel detail-panel">
+    <div class="fp-head">
+      <div class="fp-title" id="detailTitle">详情</div>
+      <span class="fp-count" id="detailMeta"></span>
+    </div>
+    <div class="detail-times" id="detailTimes" style="display:none"></div>
+    <div class="detail-content" id="detailContent"></div>
+    <div class="detail-vars" id="detailVars" style="display:none"></div>
+    <div class="fp-ops">
+      <button class="btn" id="detailClose">关闭</button>
+      <button class="btn" id="detailEdit">✎ 修改</button>
+      <button class="btn primary" id="detailCopy">⧉ 复制</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <footer>
-  <b>怎么添加 / 修改提示词？</b>对 AI 直接说：<b>「把 XX 加到锦囊的写作分组」</b> 或 <b>「修改锦囊里『日报速写』的内容」</b>，AI 写入 prompts.json，刷新本页即见。
+  <b>怎么添加 / 修改提示词？</b>页面直接点 <b>「＋ 新增提示词」/「👁 详情」/「✎」/「🗑」</b>（授权目录即写即存），或对 AI 说 <b>「把 XX 加到锦囊的写作分组」</b>，AI 写入 prompts.json，刷新即见。
   <span class="sep">|</span> 排序：默认最新添加在前，可切「最近使用 / 使用频率 / 手动顺序」；拖动卡片或点 ▲▼ 自动切回手动、点卡片 ⇄ 移到其它分组，点 <b>📋 复制变更指令</b> 交给 AI 落盘。
   <span class="sep">|</span> 打开方式：HTTP 访问读 prompts.json（file:// 直开则回退到本地缓存快照）。
-  <span class="sep">|</span> 数据安全：收藏与排序存浏览器本地（IndexedDB）刷新不丢；💾 开启自动备份后，每次变更 2 秒内写同目录 pouch-backup.json（滚动双备份，↩ 一键恢复）。
+  <span class="sep">|</span> 数据安全：收藏与排序存浏览器本地（IndexedDB）刷新不丢；备份默认自动——每次变更 2 秒内自动备份，首次变更会请求授权写 prompt-pouch.html 所在目录的 pouch-backup.json（滚动双备份，选一次浏览器就记住），未授权时自动降级为浏览器本地快照（保留最近 5 份）；「📂 换目录」可随时重配，↩ 一键恢复。
 </footer>
 
 <script>
@@ -401,6 +518,7 @@ footer .sep{ opacity:.4; }
   var btnMarkSaved = document.getElementById('btnMarkSaved');
   var bkStatus = document.getElementById('bkStatus');
   var btnBkEnable = document.getElementById('btnBkEnable');
+  var btnBkChange = document.getElementById('btnBkChange');
   var btnBkRestore = document.getElementById('btnBkRestore');
   var cacheBadge = document.getElementById('cacheBadge');
 
@@ -470,16 +588,34 @@ footer .sep{ opacity:.4; }
     html += '<div class="nav-item' + (state.curGroup==='fav'?' on':'') + '" data-g="fav"><span class="icon">⭐</span>收藏<span class="cnt">' + favN + '</span></div>';
     state.data.groups.forEach(function(g){
       var n = state.data.prompts.filter(function(p){ return p.group === g.id; }).length;
-      html += '<div class="nav-item' + (state.curGroup===g.id?' on':'') + '" data-g="' + g.id + '"><span class="icon">' + g.icon + '</span>' + g.name + '<span class="cnt">' + n + '</span></div>';
+      html += '<div class="nav-item' + (state.curGroup===g.id?' on':'') + '" data-g="' + g.id + '"><span class="icon">' + g.icon + '</span><span class="g-name">' + escapeHtml(g.name) + '</span><span class="cnt">' + n + '</span><span class="g-ops"><button class="g-edit" title="编辑分组">✎</button><button class="g-del" title="删除分组">🗑</button></span></div>';
     });
-    html += '<div class="side-tip"><b>锦囊用法</b><br>· 说「把 XX 加到写作分组」→ AI 写入<br>· 顶栏切换排序：最新添加 / 最近使用 / 使用频率 / 手动<br>· 点 ⇄ 移组、拖动卡片自动切手动 → 复制变更指令交给 AI<br>· 点卡片 ⭐ 收藏常用 · 复制次数显示在卡片右上角</div>';
+    html += '<div class="nav-add" id="navAdd">＋ 新建分组</div>';
+    html += '<div class="side-tip"><b>锦囊用法</b><br>· 页面直接增删改：＋ 新建分组 / ＋ 新增提示词 / ✎ 编辑 / 🗑 删除（授权目录即写即存）<br>· 也可对 AI 说「把 XX 加到写作分组」<br>· 顶栏切换排序；⇄ 移组、拖卡片排序自动保存<br>· ⭐ 收藏常用 · 复制次数在卡片右上角</div>';
     sideNav.innerHTML = html;
     sideNav.querySelectorAll('.nav-item').forEach(function(el){
       el.addEventListener('click', function(){
-        state.curGroup = el.getAttribute('data-g');
+        var gv = el.getAttribute('data-g');
+        state.curGroup = (gv === 'all' || gv === 'fav') ? gv : Number(gv);
         renderNav(); render();
       });
     });
+    sideNav.querySelectorAll('.nav-item .g-edit').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var gid = Number(btn.closest('.nav-item').getAttribute('data-g'));
+        openGroupForm(groupOf(gid));
+      });
+    });
+    sideNav.querySelectorAll('.nav-item .g-del').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var gid = Number(btn.closest('.nav-item').getAttribute('data-g'));
+        delGroup(groupOf(gid));
+      });
+    });
+    var addBtn = sideNav.querySelector('#navAdd');
+    if (addBtn) addBtn.addEventListener('click', function(){ openGroupForm(null); });
   }
 
   function render(){
@@ -503,7 +639,7 @@ footer .sep{ opacity:.4; }
       card.innerHTML =
         '<div class="card-top"><span class="card-title"></span>' + (isTpl ? '<span class="tpl-badge">模板</span>' : '') + '<span class="gbadge">' + (g ? g.icon + ' ' + g.name : '') + '</span><span class="usage-info"></span></div>' +
         '<div class="card-body"></div>' +
-        '<button class="card-expand">展开 ▾</button>' +
+        '<button class="card-expand">👁 详情</button>' +
         '<div class="card-foot"><span class="tags-wrap"></span>' +
         '<div class="card-ops">' +
         '<button class="op op-move" title="移到其它分组">⇄</button>' +
@@ -511,6 +647,8 @@ footer .sep{ opacity:.4; }
         '<button class="op op-down" title="下移">▼</button>' +
         '<button class="op op-copy" title="复制提示词">⧉</button>' +
         '<button class="op op-star' + (p.favorite ? ' star-on' : '') + '" title="收藏">★</button>' +
+        '<button class="op op-edit" title="编辑">✎</button>' +
+        '<button class="op op-del" title="删除">🗑</button>' +
         '</div></div>' +
         '<div class="copy-feedback">✓ 已复制</div>';
       card.querySelector('.card-title').textContent = p.title;
@@ -522,12 +660,8 @@ footer .sep{ opacity:.4; }
       var tw = card.querySelector('.tags-wrap');
       (p.tags || []).forEach(function(t){ tw.appendChild(Object.assign(document.createElement('span'), {className:'tag', textContent:t})); });
 
-      /* 展开/收起 */
-      var exBtn = card.querySelector('.card-expand');
-      exBtn.addEventListener('click', function(){
-        var on = card.classList.toggle('expanded');
-        exBtn.textContent = on ? '收起 ▴' : '展开 ▾';
-      });
+      /* 详情弹窗 */
+      card.querySelector('.card-expand').addEventListener('click', function(){ openDetail(p); });
       /* 复制 */
       card.querySelector('.op-copy').addEventListener('click', function(){ smartCopy(p.content, card); });
       /* 收藏 */
@@ -536,6 +670,15 @@ footer .sep{ opacity:.4; }
         persistUserState();
         scheduleBackup();
         renderNav(); render();
+      });
+      /* 编辑 / 删除 */
+      card.querySelector('.op-edit').addEventListener('click', function(e){
+        e.stopPropagation();
+        openItemForm(p);
+      });
+      card.querySelector('.op-del').addEventListener('click', function(e){
+        e.stopPropagation();
+        delItem(p);
       });
       /* 移到其它分组 */
       card.querySelector('.op-move').addEventListener('click', function(e){
@@ -817,6 +960,293 @@ footer .sep{ opacity:.4; }
     } else { fallback(); }
   }
 
+  /* ---------- 页面直写：雪花 id / toast / 写盘 / 表单 ---------- */
+  function idExists(id){
+    return state.data.groups.some(function(g){ return g.id === id; })
+      || state.data.prompts.some(function(p){ return p.id === id; });
+  }
+  function snowflakeId(){
+    var n;
+    do{
+      n = Number(String(Date.now()) + String(Math.floor(Math.random() * 1000)).padStart(3, '0'));
+    } while (idExists(n));
+    return n;
+  }
+  function todayISO(){
+    var d = new Date();
+    function p(n){ return (n < 10 ? '0' : '') + n; }
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  }
+  var toastTimer = null;
+  function toast(msg, warn){
+    var el = document.getElementById('toast');
+    if (!el) return;
+    el.textContent = msg;
+    el.className = 'toast show' + (warn ? ' warn' : '');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ el.className = 'toast'; }, 2800);
+  }
+  function ensureWriteDir(){
+    if (bkDirHandle) return Promise.resolve(true);
+    return maybeAutoAuth().then(function(){ return !!bkDirHandle; });
+  }
+  /* op = { apply: function(最新数据) -> 新数据|null, cmd: 未授权时的 AI 指令 } */
+  function writePromptsJson(op){
+    return ensureWriteDir().then(function(ok){
+      if (!ok){
+        var cmd = typeof op.cmd === 'function' ? op.cmd() : op.cmd;
+        copyText(cmd, { querySelector: function(){ return { classList:{ add:function(){}, remove:function(){} } }; } });
+        toast('页面未授权目录，操作指令已复制 → 粘贴给 AI 落盘', true);
+        return false;
+      }
+      return writeBackupNow().then(function(){
+        return bkRead('prompts.json').then(function(text){
+          if (text) return JSON.parse(text);
+          return fetch('prompts.json', { cache: 'no-store' })
+            .then(function(r){ return r.json(); })
+            .catch(function(){ return state.data; });
+        });
+      }).then(function(latest){
+        var next = op.apply(latest);
+        if (next === null) return false;
+        return bkWrite('prompts.json', JSON.stringify(next, null, 2)).then(function(){
+          state.data = next;
+          applyUserState();
+          state.dirty = false; state.moves = [];
+          persistUserState(); refreshDirtyUI();
+          renderNav(); render();
+          return true;
+        });
+      }).catch(function(){
+        toast('写入 prompts.json 失败，请检查目录授权', true);
+        return false;
+      });
+    });
+  }
+  /* 排序/移组直写：把内存 order/group 覆盖到最新文件（变更 2 秒后自动调用） */
+  function flushData(){
+    if (!state.dirty || !bkDirHandle) return Promise.resolve();
+    return bkRead('prompts.json').then(function(text){
+      if (text) return JSON.parse(text);
+      return fetch('prompts.json', { cache: 'no-store' })
+        .then(function(r){ return r.json(); })
+        .catch(function(){ return state.data; });
+    })
+      .then(function(latest){
+        var byId = {};
+        state.data.prompts.forEach(function(p){ byId[p.id] = p; });
+        latest.prompts.forEach(function(p){
+          var m = byId[p.id];
+          if (m){ p.order = m.order; p.group = m.group; }
+        });
+        return bkWrite('prompts.json', JSON.stringify(latest, null, 2)).then(function(){
+          state.data = latest;
+          applyUserState();
+          state.dirty = false; state.moves = [];
+          persistUserState(); refreshDirtyUI();
+          renderNav(); render();
+          toast('排序 / 移组已自动保存');
+        });
+      }).catch(function(){});
+  }
+
+  /* ---------- 提示词详情弹窗 ---------- */
+  var detailTarget = null;
+  var detailMask = document.getElementById('detailMask');
+  function fakeCard(id){
+    return {
+      getAttribute: function(k){ return k === 'data-id' ? String(id) : null; },
+      querySelector: function(){ return { classList: { add: function(){}, remove: function(){} } }; }
+    };
+  }
+  function openDetail(p){
+    detailTarget = p;
+    var g = groupOf(p.group);
+    var meta = (g ? g.icon + ' ' + g.name : '');
+    if (p.tags && p.tags.length) meta += (meta ? ' · ' : '') + p.tags.join(' / ');
+    var uu = state.usage[p.id];
+    if (uu && uu.useCount > 0) meta += (meta ? ' · ' : '') + '⧉ ' + uu.useCount + ' 次';
+    document.getElementById('detailTitle').textContent = p.title;
+    document.getElementById('detailMeta').textContent = meta;
+    var times = [];
+    times.push('<span>📅 创建 ' + escapeHtml(p.createdAt || '—') + '</span>');
+    if (p.updatedAt && p.updatedAt !== p.createdAt) times.push('<span>✏ 修改 ' + escapeHtml(p.updatedAt) + '</span>');
+    if (uu && uu.lastUsed) times.push('<span>⧉ 最近使用 ' + relTime(uu.lastUsed) + '</span>');
+    var tEl = document.getElementById('detailTimes');
+    if (times.length){ tEl.style.display = 'flex'; tEl.innerHTML = times.join(''); }
+    else { tEl.style.display = 'none'; }
+    document.getElementById('detailContent').textContent = p.content;
+    var vars = extractVars(p.content);
+    var vEl = document.getElementById('detailVars');
+    if (vars.length){
+      vEl.style.display = 'flex';
+      vEl.innerHTML = '<b>含 ' + vars.length + ' 个插值变量，复制时逐个填写：</b>'
+        + vars.map(function(v){ return '<span class="var-badge">' + escapeHtml('{' + v + '}') + '</span>'; }).join('');
+    } else { vEl.style.display = 'none'; }
+    detailMask.classList.add('open');
+  }
+  function closeDetail(){ detailMask.classList.remove('open'); detailTarget = null; }
+  document.getElementById('detailClose').addEventListener('click', closeDetail);
+  document.getElementById('detailEdit').addEventListener('click', function(){
+    var p = detailTarget;
+    closeDetail();
+    if (p) openItemForm(p);
+  });
+  document.getElementById('detailCopy').addEventListener('click', function(){
+    if (!detailTarget) return;
+    var t = detailTarget;
+    var hasVars = hasTemplateVars(t.content);
+    closeDetail();
+    smartCopy(t.content, fakeCard(t.id));
+    if (!hasVars) toast('✓ 已复制');
+  });
+  detailMask.addEventListener('click', function(e){ if (e.target === this) closeDetail(); });
+
+  /* ---------- 提示词增删改 ---------- */
+  var itemMask = document.getElementById('itemMask');
+  var itemTitleEl = document.getElementById('itemTitle');
+  var itemName = document.getElementById('itemName');
+  var itemGroupSel = document.getElementById('itemGroup');
+  var itemTags = document.getElementById('itemTags');
+  var itemContent = document.getElementById('itemContent');
+  var editingItemId = null;
+  function fillGroupOptions(){
+    var v = itemGroupSel.value;
+    itemGroupSel.innerHTML = state.data.groups.map(function(g){
+      return '<option value="' + g.id + '">' + escapeHtml(g.icon + ' ' + g.name) + '</option>';
+    }).join('');
+    if (v) itemGroupSel.value = v;
+  }
+  function openItemForm(p){
+    editingItemId = p ? p.id : null;
+    itemTitleEl.textContent = p ? '编辑提示词' : '新增提示词';
+    fillGroupOptions();
+    if (p){
+      itemName.value = p.title;
+      itemGroupSel.value = String(p.group);
+      itemTags.value = (p.tags || []).join(', ');
+      itemContent.value = p.content;
+    } else {
+      itemName.value = ''; itemTags.value = ''; itemContent.value = '';
+      if (state.curGroup !== 'all' && state.curGroup !== 'fav') itemGroupSel.value = String(state.curGroup);
+    }
+    itemMask.classList.add('open');
+    setTimeout(function(){ itemName.focus(); }, 60);
+  }
+  function closeItemForm(){ itemMask.classList.remove('open'); }
+  function saveItem(){
+    var name = itemName.value.trim();
+    if (!name){ toast('标题不能为空', true); return; }
+    var content = itemContent.value.trim();
+    if (!content){ toast('内容不能为空', true); return; }
+    var gid = Number(itemGroupSel.value);
+    var tags = itemTags.value.split(/[,，]/).map(function(s){ return s.trim(); }).filter(Boolean).slice(0, 3);
+    var editId = editingItemId;
+    closeItemForm();
+    writePromptsJson({
+      apply: function(data){
+        var gArr = data.prompts.filter(function(x){ return x.group === gid; });
+        var maxOrder = gArr.reduce(function(m, x){ return Math.max(m, x.order || 0); }, 0);
+        if (editId){
+          var p = data.prompts.find(function(x){ return x.id === editId; });
+          if (!p){ toast('该提示词已不存在，请刷新后重试', true); return null; }
+          if (p.group !== gid){ p.order = maxOrder + 1; }
+          p.title = name; p.group = gid; p.content = content; p.tags = tags; p.updatedAt = todayISO();
+        } else {
+          data.prompts.push({
+            id: snowflakeId(), group: gid, title: name, content: content,
+            tags: tags, order: maxOrder + 1, favorite: false, createdAt: todayISO()
+          });
+        }
+        return data;
+      },
+      cmd: function(){
+        var gname = groupOf(gid) ? groupOf(gid).name : '分组 ' + gid;
+        if (editId){
+          return '请修改锦囊里 id 为 ' + editId + ' 的提示词：\n【新标题】' + name + '\n【新分组】' + gname + '\n【新标签】' + tags.join(', ') + '\n【新内容】\n' + content + '\n同时把 updatedAt 更新为当前日期';
+        }
+        return '请把以下提示词加到锦囊「' + gname + '」分组：\n【标题】' + name + '\n【标签】' + tags.join(', ') + '\n【内容】\n' + content;
+      }
+    }).then(function(ok){ if (ok) toast(editId ? '提示词已更新' : '提示词已入囊'); });
+  }
+  function delItem(p){
+    if (!window.confirm('确定删除「' + p.title + '」？删除前会自动备份，可从 ↩ 恢复。')) return;
+    writePromptsJson({
+      apply: function(data){
+        data.prompts = data.prompts.filter(function(x){ return x.id !== p.id; });
+        return data;
+      },
+      cmd: '请删除锦囊里「' + p.title + '」这条'
+    }).then(function(ok){ if (ok) toast('已删除「' + p.title + '」'); });
+  }
+  document.getElementById('itemCancel').addEventListener('click', closeItemForm);
+  document.getElementById('itemSave').addEventListener('click', saveItem);
+  itemName.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); saveItem(); } });
+  itemMask.addEventListener('click', function(e){ if (e.target === this) closeItemForm(); });
+
+  /* ---------- 分组增删改 ---------- */
+  var groupMask = document.getElementById('groupMask');
+  var groupTitleEl = document.getElementById('groupTitle');
+  var groupName = document.getElementById('groupName');
+  var groupIcon = document.getElementById('groupIcon');
+  var editingGroupId = null;
+  function openGroupForm(g){
+    editingGroupId = g ? g.id : null;
+    groupTitleEl.textContent = g ? '编辑分组' : '新建分组';
+    groupName.value = g ? g.name : '';
+    groupIcon.value = g ? g.icon : '✨';
+    groupMask.classList.add('open');
+    setTimeout(function(){ groupName.focus(); }, 60);
+  }
+  function closeGroupForm(){ groupMask.classList.remove('open'); }
+  function saveGroup(){
+    var name = groupName.value.trim();
+    if (!name){ toast('分组名不能为空', true); return; }
+    var icon = (groupIcon.value.trim() || '✨').slice(0, 4);
+    var editId = editingGroupId;
+    if (state.data.groups.some(function(g){ return g.name === name && g.id !== editId; })){
+      toast('已存在同名分组「' + name + '」', true);
+      return;
+    }
+    closeGroupForm();
+    writePromptsJson({
+      apply: function(data){
+        if (editId){
+          var g = data.groups.find(function(x){ return x.id === editId; });
+          if (!g){ toast('该分组已不存在，请刷新后重试', true); return null; }
+          g.name = name; g.icon = icon;
+        } else {
+          data.groups.push({ id: snowflakeId(), name: name, icon: icon });
+        }
+        return data;
+      },
+      cmd: editId
+        ? ('请把锦囊分组改名为「' + name + '」（icon ' + icon + '）')
+        : ('请帮我在锦囊创建分组「' + name + '」（icon ' + icon + '）')
+    }).then(function(ok){
+      if (ok) toast(editId ? '分组已更新' : '分组「' + name + '」已创建');
+    });
+  }
+  function delGroup(g){
+    var n = state.data.prompts.filter(function(p){ return p.group === g.id; }).length;
+    if (n > 0){ toast('「' + g.name + '」内还有 ' + n + ' 条提示词，请先移出或删除', true); return; }
+    if (!window.confirm('确定删除分组「' + g.name + '」？')) return;
+    if (state.curGroup === g.id) state.curGroup = 'all';
+    writePromptsJson({
+      apply: function(data){
+        data.groups = data.groups.filter(function(x){ return x.id !== g.id; });
+        return data;
+      },
+      cmd: '请删除锦囊分组「' + g.name + '」'
+    }).then(function(ok){ if (ok) toast('分组「' + g.name + '」已删除'); });
+  }
+  document.getElementById('groupCancel').addEventListener('click', closeGroupForm);
+  document.getElementById('groupSave').addEventListener('click', saveGroup);
+  groupName.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); saveGroup(); } });
+  groupMask.addEventListener('click', function(e){ if (e.target === this) closeGroupForm(); });
+  var btnAddItem = document.getElementById('btnAddItem');
+  if (btnAddItem) btnAddItem.addEventListener('click', function(){ openItemForm(null); });
+
   /* ---------- 排序指令 ---------- */
   function buildSortCmd(){
     var lines = ['请帮我调整 prompt-pouch 锦囊（按以下内容落盘 prompts.json）：'];
@@ -876,7 +1306,10 @@ footer .sep{ opacity:.4; }
     if (e.key === 'Escape'){
       closeFillPanel();
       closeGpop();
+      closeItemForm();
+      closeGroupForm();
       document.getElementById('bkMask').classList.remove('open');
+      closeDetail();
       if (searchInput.value){ searchInput.value = ''; state.query = ''; searchClear.style.display = 'none'; render(); }
     }
   });
@@ -943,6 +1376,8 @@ footer .sep{ opacity:.4; }
   }
   function applyUserStateFrom(us){
     if (!us || !state.data) return;
+    // favs 是收藏全量集合：先清后设，恢复/启动都精确还原收藏态
+    state.data.prompts.forEach(function(p){ p.favorite = false; });
     (us.favs || []).forEach(function(id){
       var p = state.data.prompts.find(function(x){ return x.id === id; });
       if (p) p.favorite = true;
@@ -976,7 +1411,9 @@ footer .sep{ opacity:.4; }
   var bkTimer = null;
   var lastBackupTs = 0;
   var pendingAuth = false;
+  var bkDeclined = false;
   try{ lastBackupTs = parseInt(localStorage.getItem('pouch-last-backup') || '0', 10) || 0; }catch(e){}
+  try{ bkDeclined = localStorage.getItem('pouch-bk-declined') === '1'; }catch(e){}
   function bkSupported(){ return 'showDirectoryPicker' in window; }
   function fmtTime(ts){
     var d = ts instanceof Date ? ts : new Date(ts);
@@ -1023,33 +1460,84 @@ footer .sep{ opacity:.4; }
       return false;
     });
   }
+  function writeSnapNow(){
+    var snap = currentSnapshot();
+    return idbGet('snapRing').then(function(ring){
+      ring = Array.isArray(ring) ? ring : [];
+      ring.push(snap);
+      if (ring.length > 5) ring = ring.slice(ring.length - 5);
+      return idbSet('snapRing', ring);
+    }).then(function(){
+      lastBackupTs = Date.now();
+      try{ localStorage.setItem('pouch-last-backup', String(lastBackupTs)); }catch(e){}
+      updateBkUI();
+      return true;
+    }).catch(function(){
+      updateBkUI();
+      return false;
+    });
+  }
   function scheduleBackup(){
-    if (!bkDirHandle) return;
     if (bkTimer) clearTimeout(bkTimer);
-    bkTimer = setTimeout(function(){ writeBackupNow(); }, 2000);
+    bkTimer = setTimeout(function(){
+      var chain = Promise.resolve();
+      if (state.dirty) chain = flushData();
+      chain.then(function(){
+        if (bkDirHandle){ writeBackupNow(); return; }
+        maybeAutoAuth().then(function(granted){
+          if (granted) writeBackupNow();
+          else writeSnapNow();
+        });
+      });
+    }, 2000);
+  }
+  function maybeAutoAuth(){
+    if (bkDirHandle) return Promise.resolve(true);
+    if (!bkSupported() || bkDeclined || pendingAuth) return Promise.resolve(false);
+    if (!state.data) return Promise.resolve(false);
+    var ok = window.confirm('锦囊自动备份\n\n数据一有变更就会自动备份，建议授权写入 prompt-pouch.html 所在目录（首次弹窗选一次，浏览器会记住）。\n\n点「确定」打开目录选择 → 选 prompt-pouch.html 所在文件夹即可；\n点「取消」则改用浏览器本地快照（保留最近 5 份，清浏览器数据会丢）。');
+    if (!ok){
+      bkDeclined = true;
+      try{ localStorage.setItem('pouch-bk-declined', '1'); }catch(e){}
+      return Promise.resolve(false);
+    }
+    pendingAuth = true; updateBkUI();
+    return window.showDirectoryPicker({ id: 'pouch-backup', mode: 'readwrite' })
+      .then(function(h){
+        bkDirHandle = h; pendingAuth = false; bkDeclined = false;
+        try{ localStorage.removeItem('pouch-bk-declined'); }catch(e){}
+        idbSet('bkHandle', bkDirHandle);
+        updateBkUI();
+        return true;
+      })
+      .catch(function(){ pendingAuth = false; updateBkUI(); return false; });
   }
   function updateBkUI(){
     if (!bkSupported()){
       btnBkEnable.style.display = 'none';
-      btnBkRestore.style.display = 'none';
-      bkStatus.textContent = '当前浏览器不支持同目录备份（建议 Chrome / Edge）';
-      return;
-    }
-    if (!bkDirHandle){
-      btnBkEnable.style.display = '';
-      btnBkEnable.textContent = '💾 启用自动备份';
-      btnBkRestore.style.display = 'none';
-      bkStatus.textContent = '自动备份未开启';
+      btnBkChange.style.display = 'none';
+      btnBkRestore.style.display = '';
+      bkStatus.textContent = '本地快照备份中（此浏览器不支持目录授权，建议 Chrome / Edge）';
       return;
     }
     if (pendingAuth){
       btnBkEnable.style.display = '';
       btnBkEnable.textContent = '🔑 重新授权备份';
-      btnBkRestore.style.display = 'none';
+      btnBkChange.style.display = 'none';
+      btnBkRestore.style.display = '';
       bkStatus.textContent = '备份已连接 · 需重新授权目录';
       return;
     }
+    if (!bkDirHandle){
+      btnBkEnable.style.display = '';
+      btnBkEnable.textContent = '💾 授权目录备份';
+      btnBkChange.style.display = 'none';
+      btnBkRestore.style.display = '';
+      bkStatus.textContent = '本地快照备份中（保留最近 5 份）· 可授权目录写 pouch-backup.json';
+      return;
+    }
     btnBkEnable.style.display = 'none';
+    btnBkChange.style.display = '';
     btnBkRestore.style.display = '';
     bkStatus.textContent = '备份已开启' + (lastBackupTs ? ' · 上次 ' + fmtTime(lastBackupTs) : '');
   }
@@ -1067,7 +1555,7 @@ footer .sep{ opacity:.4; }
   }
   btnBkEnable.addEventListener('click', function(){
     if (!bkSupported()){
-      alert('当前浏览器不支持「选择目录」授权（Chrome / Edge 可用）。\n替代方案：对 AI 说「导出锦囊数据」，生成备份文件备用。');
+      alert('当前浏览器不支持「选择目录」授权（Chrome / Edge 可用）。\n本页已自动使用本地快照备份（保留最近 5 份，随浏览器数据走）；\n也可随时对 AI 说「导出锦囊数据」生成备份文件备用。');
       return;
     }
     if (bkDirHandle && pendingAuth){
@@ -1079,7 +1567,21 @@ footer .sep{ opacity:.4; }
     }
     window.showDirectoryPicker({ id: 'pouch-backup', mode: 'readwrite' })
       .then(function(h){
-        bkDirHandle = h; pendingAuth = false;
+        bkDirHandle = h; pendingAuth = false; bkDeclined = false;
+        try{ localStorage.removeItem('pouch-bk-declined'); }catch(e){}
+        idbSet('bkHandle', bkDirHandle);
+        updateBkUI();
+        writeBackupNow();
+      })
+      .catch(function(){});
+  });
+  btnBkChange.addEventListener('click', function(){
+    if (!bkSupported()){ updateBkUI(); return; }
+    if (!window.confirm('更换备份目录\n\n建议仍选 prompt-pouch.html 所在目录：页面新增/编辑的分组与提示词、自动备份都写在这个目录，选别处会造成页面与数据文件不一致。\n\n确定继续选择目录？')) return;
+    window.showDirectoryPicker({ id: 'pouch-backup', mode: 'readwrite' })
+      .then(function(h){
+        bkDirHandle = h; pendingAuth = false; bkDeclined = false;
+        try{ localStorage.removeItem('pouch-bk-declined'); }catch(e){}
         idbSet('bkHandle', bkDirHandle);
         updateBkUI();
         writeBackupNow();
@@ -1087,41 +1589,54 @@ footer .sep{ opacity:.4; }
       .catch(function(){});
   });
   btnBkRestore.addEventListener('click', function(){
-    if (!bkDirHandle){ updateBkUI(); return; }
     document.getElementById('bkList').innerHTML = '<div class="bk-empty">读取备份清单…</div>';
     document.getElementById('bkMask').classList.add('open');
-    Promise.all([bkRead('pouch-backup.json'), bkRead('pouch-backup.prev.json')])
-      .then(function(arr){ renderBkList(arr); });
+    if (bkDirHandle){
+      Promise.all([bkRead('pouch-backup.json'), bkRead('pouch-backup.prev.json')])
+        .then(function(arr){
+          renderBkList([
+            { name: 'pouch-backup.json', content: arr[0] },
+            { name: 'pouch-backup.prev.json', content: arr[1] }
+          ]);
+        });
+      return;
+    }
+    idbGet('snapRing').then(function(ring){
+      ring = Array.isArray(ring) ? ring.slice() : [];
+      ring.reverse();
+      renderBkList(ring.map(function(snap, i){
+        return { name: '本地快照 #' + (ring.length - i), content: JSON.stringify(snap) };
+      }));
+    });
   });
-  function renderBkList(arr){
-    var names = ['pouch-backup.json', 'pouch-backup.prev.json'];
+  function renderBkList(list){
     var html = ''; var any = false;
-    arr.forEach(function(content, i){
-      if (content === null) return;
+    list.forEach(function(item, i){
+      if (!item || item.content === null) return;
       try{
-        var snap = JSON.parse(content);
+        var snap = JSON.parse(item.content);
         any = true;
         html += '<div class="bk-item">'
-          + '<div class="bk-item-main"><b>' + names[i] + '</b>'
+          + '<div class="bk-item-main"><b>' + item.name + '</b>'
           + '<span>备份时间 ' + fmtTime(snap.time) + '</span>'
           + '<span>' + snap.counts.groups + ' 分组 / ' + snap.counts.prompts + ' 条提示词</span></div>'
           + '<button class="btn bk-restore" data-i="' + i + '">恢复</button>'
           + '</div>';
       }catch(e){}
     });
-    if (!any) html = '<div class="bk-empty">该目录暂无备份文件。开启自动备份后，每次变更都会生成 pouch-backup.json（滚动保留上一版 .prev.json）。</div>';
+    if (!any) html = '<div class="bk-empty">暂无备份。数据一有变更会自动生成备份：已授权目录时写 pouch-backup.json（滚动保留上一版 .prev.json），未授权时写浏览器本地快照（保留最近 5 份）。</div>';
     document.getElementById('bkList').innerHTML = html;
     document.querySelectorAll('.bk-restore').forEach(function(btn){
       btn.addEventListener('click', function(){
-        doRestore(arr[parseInt(btn.getAttribute('data-i'), 10)], btn);
+        doRestore(list[parseInt(btn.getAttribute('data-i'), 10)].content, btn);
       });
     });
   }
   function doRestore(content, btn){
     var snap;
     try{ snap = JSON.parse(content); }catch(e){ alert('备份文件损坏，无法恢复。'); return; }
-    // 先把当前状态固化进备份链（旧备份自动滚入 .prev.json），再应用所选备份
-    writeBackupNow().then(function(){
+    // 先把当前状态固化进备份（目录备份滚入 .prev.json / 快照环记一份），再应用所选备份
+    (bkDirHandle ? writeBackupNow() : writeSnapNow()).then(function(){
       applyUserStateFrom(snap.userState);
       persistUserState();
       renderNav(); render();
