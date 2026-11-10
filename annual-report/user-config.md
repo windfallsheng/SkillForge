@@ -2,12 +2,15 @@
 
 > 你的个人配置全放在这里。skill-forge 升级技能时官方只更新 SKILL.md 与 resources/，
 > 本文件始终保留你的版本——落盘目录、格式、角色画像、自定义模板放心改。
+> 官方升级若带来新配置点，会另存 `user-config.md.upstream` 对照文件到同目录，
+> 你按需查看并手动合并新配置点到本文件。
 
 
 ## ⚙️ 默认配置（用户可手动修改；临时口头要求永远优先）
 
 ```yaml
 DISK: true                     # 是否落盘写文件；false = 默认只在对话输出，不写文件不开浏览器
+CONFIG_VERSION: 1              # 配置结构版本：skill 升级时若配置结构变化会递增；AI 每次执行前对比 SKILL.md「配置版本机制」节声明的当前版本，不一致时按 SKILL.md 的迁移规则处理（先备份本文件为带时间戳 .bak，再迁移，最后对话告知用户）
 FORMATS: [md, txt, html, content-png] # 落盘哪些格式（数组，可删减/增，如 [md, html] / [md, txt, html]（不截图）；content-png = 内容区截图（五张分节卡片整体，不含头部标题/复制按钮/页脚），删除该项即不截图；不影响对话中的 md 正文输出）
 DIR: auto                      # 落盘根目录：auto = 按当前系统自动选 DIR_MAC / DIR_WIN（也可直接写死某个绝对路径）
 DIR_MAC: /Users/luzhaosheng/MyWork/智慧食堂/reports    # macOS 落盘根目录（自动按目标年度建子目录 annual-YYYY；目录不存在时回退用户主目录下 reports）

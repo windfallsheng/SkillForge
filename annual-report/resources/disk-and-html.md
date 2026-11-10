@@ -1,3 +1,5 @@
+> ⛔ **Reference 铁律（最高优先）**：本目录 `reference.html` 是定稿样式源码。生成 HTML 时必须先 Read `resources/reference.html` 与本文件两份，以 reference.html 为骨架模板逐处替换数据（标题/日期/五段条目/TL;DR 摘要/数据卡数字/月提交柱图），本文件的描述是参数解释、变体规则与禁止项；两者冲突时**以 reference.html 为准**。修改本 skill 的 HTML 效果时，必须同步更新 `resources/reference.html` 与本文档的对应描述，禁止只改一处。
+
 # 落盘与 HTML（年度版式）
 
 ## 落盘
@@ -19,7 +21,7 @@
 - 年度提交月度柱图（研发词条；其它词条按职业词典图表主题）：.cb-col 12 根柱一月到十二月、.cb-bar width:24px 柱宽（太小显细弱）、柱高按当月提交数、position:relative 柱上带 .cb-tip hover 浮层「X月 · N 次提交」；置于里程碑节内时间线之后
 - 青色渐变 40px 大胶囊「一键复制」按钮（var(--cyan)→#0284c7，30px 青色光晕，hover 45px 光晕上浮；flex 居中布局，内置 16px 内联 SVG 双矩形复制图标（白色 currentColor 描边、图标与文字 gap 8px、禁用 emoji 图标），复制成功后图标切对勾、文字变「已复制」）；复制源必须用 txt 文件内容（含换行、无 #/##/> 等 Markdown 符号，严禁用 md 内容当复制源）；JS 用 navigator.clipboard.writeText，失败回退隐藏 textarea + document.execCommand('copy')（兼容 file:// 打开）
 - 入场动画：头部淡入下滑、五张卡片依次错峰上浮淡入（概览 0.13s/成果 0.26s/成长 0.4s/反思 0.54s/展望 0.68s）、按钮弹入；卡片入场动画 fadeDown/fadeUp/riseIn 的 fill-mode 必须用 backwards 严禁 both（both 使动画结束后最后一帧 transform:none 永久覆盖 hover 的 3D 偏转 transform，hover 偏转会完全失效）
-- hover 微交互：卡片上浮 translateY(-2px) + 阴影加深 + inset 发光增强、条目淡青底 rgba(14,165,233,.06)、时间线节点放大微旋、数据卡上浮、按钮上浮/按压回缩
+- hover 微交互：卡片上浮 translateY(-2px) + 阴影加深 + inset 发光增强、条目淡青底 rgba(14,165,233,.06)、时间线节点与序号徽章放大微旋（li:hover .idx transform:scale(1.18) rotate(-4deg)、球内数字放大 12→14px、数字必须用 <b> 包裹（.idx b{display:inline-block;transition:transform .2s ease}）+ li:hover .idx b{transform:rotate(-6deg)} 数字在球内独立微旋；用户澄清 hover 变大的字体仅小球内数字，desc 正文保持 15px 不变不加斜体；销售 demo 版类名 .num：li:hover .num scale(1.22) rotate(-6deg)、数字 13→15px 同样 <b> 包裹 + rotate(-6deg)）、数据卡上浮、按钮上浮/按压回缩
 - 卡片级 3D 微倾斜（严禁全页级 mousemove 倾斜）：每张卡片 hover 时仅该卡片随鼠标偏转（perspective(900px) + rotateY(calc(var(--mx,0)*2.5deg)) rotateX(calc(var(--my,0)*-2.5deg)) ±1.25° 极轻微，与 hover 上浮合并写同一条 transform 严禁拆两条相互覆盖）；JS 对每张卡片监听 mousemove 计算卡内相对位置（(clientX-rect.left)/rect.width*2-1 归一化 -1~1）只更新该卡 --mx/--my，mouseleave 归零回正，transition transform .18s 平滑；移动端无 mousemove 保持 0 不倾斜
 - CRT 扫描光带（.scanband position:fixed、left:0/right:0、height:150px、linear-gradient(180deg,transparent,rgba(0,240,255,.03) 50%,transparent)、animation:scanMove 11s linear infinite（top -22%→112%）、pointer-events:none、z-index:998，置于 scanlines 之下一层）
 - 禁止写 @media (prefers-reduced-motion: reduce) 禁用动画的媒体查询块（用户系统开启减少动画时该块会禁用全部动效）

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026 研发年度总结</title>
+<style>
+:root{--cyan:#0ea5e9;--bg:#0a1929;--card:#0b1e37;--border:rgba(14,165,233,.15);--text:#bae6fd;--muted:#5b7fa5;--green:#14b8a6;--orange:#f97316;--purple:#6366f1;--rose:#f43f5e}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--bg)}
+body{
+  font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,'PingFang SC','Microsoft YaHei',monospace;
+  color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+/* 三层科技底纹 */
+.grid-pattern{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(rgba(0,240,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,.03) 1px,transparent 1px);
+  background-size:60px 60px}
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(1px 1px at 12% 22%,rgba(255,255,255,.4),transparent),radial-gradient(1px 1px at 28% 68%,rgba(0,240,255,.5),transparent),radial-gradient(1.5px 1.5px at 45% 15%,rgba(168,85,247,.4),transparent),radial-gradient(1px 1px at 62% 78%,rgba(0,255,136,.4),transparent),radial-gradient(1px 1px at 78% 32%,rgba(255,255,255,.35),transparent),radial-gradient(1.5px 1.5px at 88% 58%,rgba(0,240,255,.45),transparent),radial-gradient(1px 1px at 8% 85%,rgba(255,255,255,.3),transparent),radial-gradient(1px 1px at 55% 45%,rgba(0,240,255,.35),transparent)}
+.scanlines{position:fixed;inset:0;z-index:999;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,240,255,.015) 2px,rgba(0,240,255,.015) 4px)}
+.scanband{position:fixed;left:0;right:0;height:150px;z-index:998;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(0,240,255,.03) 50%,transparent);
+  animation:scanMove 11s linear infinite}
+@keyframes scanMove{from{top:-22%}to{top:112%}}
+.wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:40px 20px}
+/* 头部卡片 */
+.header-card{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--border);border-radius:6px;
+  padding:34px 28px 26px;text-align:center;margin-bottom:18px;
+  box-shadow:0 8px 28px rgba(0,0,0,.35),inset 0 1px 0 rgba(14,165,233,.12);
+  background-image:repeating-linear-gradient(0deg,rgba(14,165,233,.02),rgba(14,165,233,.02) 8px,transparent 8px,transparent 16px)}
+.header-card h1{font-size:26px;letter-spacing:2px;margin-bottom:8px;
+  background:linear-gradient(90deg,#7dd3fc,#0ea5e9,#5eead4);-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:titleGlow 3s ease-in-out infinite}
+@keyframes titleGlow{0%,100%{text-shadow:0 0 8px rgba(14,165,233,.5),0 0 22px rgba(14,165,233,.25)}50%{text-shadow:0 0 14px rgba(14,165,233,.85),0 0 34px rgba(14,165,233,.45)}}
+.header-sub{font-size:12px;color:var(--muted);letter-spacing:1px;margin-bottom:12px}
+.header-badge{display:inline-block;font-size:11px;color:#7dd3fc;border:1px solid rgba(14,165,233,.3);border-radius:999px;padding:4px 14px}
+.card-glow{position:absolute;inset:-40% -20% auto;height:70%;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 10%,rgba(14,165,233,.25),transparent 70%);
+  animation:cardGlow 3s ease-in-out infinite;transform-origin:top center;opacity:.5}
+@keyframes cardGlow{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.6)}}
+/* 四边浮光线 */
+.scanline-el{position:absolute;pointer-events:none}
+.scan-x{top:0;left:0;height:1px;width:100%;background:linear-gradient(90deg,transparent,var(--cyan),transparent);animation:scanX 3s linear infinite}
+.scan-y{top:0;right:0;width:1px;height:100%;background:linear-gradient(180deg,transparent,var(--cyan),transparent);animation:scanY 3s linear infinite}
+.scan-x-rev{bottom:0;left:0;height:1px;width:100%;background:linear-gradient(90deg,transparent,var(--cyan),transparent);animation:scanXRev 3s linear infinite}
+.scan-y-rev{top:0;left:0;width:1px;height:100%;background:linear-gradient(180deg,transparent,var(--cyan),transparent);animation:scanYRev 3s linear infinite}
+@keyframes scanX{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+@keyframes scanY{from{transform:translateY(-100%)}to{transform:translateY(100%)}}
+@keyframes scanXRev{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+@keyframes scanYRev{from{transform:translateY(100%)}to{transform:translateY(-100%)}}
+/* 分节卡片 */
+.section{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--border);border-radius:6px;
+  padding:22px 24px 22px 32px;margin-bottom:18px;
+  box-shadow:0 8px 28px rgba(0,0,0,.35),inset 0 1px 0 rgba(14,165,233,.12);
+  background-image:repeating-linear-gradient(0deg,rgba(14,165,233,.02),rgba(14,165,233,.02) 8px,transparent 8px,transparent 16px);
+  transition:transform .18s ease,box-shadow .18s ease}
+.section:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(0,0,0,.45),inset 0 0 22px rgba(14,165,233,.08)}
+.sec-bar{position:absolute;left:0;top:0;bottom:0;width:8px}
+.sec-ov .sec-bar{background:linear-gradient(180deg,#38bdf8,#0ea5e9);box-shadow:0 0 12px rgba(14,165,233,.3)}
+.sec-ms .sec-bar{background:linear-gradient(180deg,#5eead4,#14b8a6);box-shadow:0 0 12px rgba(20,184,166,.3)}
+.sec-gw .sec-bar{background:linear-gradient(180deg,#a5b4fc,#6366f1);box-shadow:0 0 12px rgba(99,102,241,.3)}
+.sec-rf .sec-bar{background:linear-gradient(180deg,#fda4af,#e11d48);box-shadow:0 0 12px rgba(244,63,94,.3)}
+.sec-pl .sec-bar{background:linear-gradient(180deg,#fdba74,#f97316);box-shadow:0 0 12px rgba(249,115,22,.3)}
+.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.sec-head svg{flex:0 0 auto}
+.sec-head h2{font-size:18px;letter-spacing:1px;animation:secGlow 3s ease-in-out infinite}
+.sec-ov .sec-head h2{color:#7dd3fc}.sec-ms .sec-head h2{color:#5eead4}.sec-gw .sec-head h2{color:#c7d2fe}
+.sec-rf .sec-head h2{color:#fda4af}.sec-pl .sec-head h2{color:#fdba74}
+@keyframes secGlow{0%,100%{text-shadow:0 0 6px rgba(14,165,233,.4)}50%{text-shadow:0 0 14px rgba(14,165,233,.8)}}
+/* 概览：TL;DR + 数据卡 */
+.tldr-line{font-size:15px;line-height:1.75;margin-bottom:18px}
+.tldr-line b{color:#7dd3fc;font-weight:700}
+.stat-row{display:flex;gap:12px;flex-wrap:wrap}
+.stat-card{flex:1 1 160px;position:relative;background:rgba(14,165,233,.05);border:1px solid var(--border);
+  border-radius:6px;padding:16px 14px;min-width:140px;overflow:hidden;
+  transition:transform .18s ease,box-shadow .18s ease}
+.stat-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.35)}
+.stat-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#38bdf8,#0ea5e9)}
+.stat-num{font-size:28px;font-weight:900;letter-spacing:1px;
+  background:linear-gradient(90deg,#7dd3fc,#0ea5e9,#5eead4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat-label{font-size:12px;color:var(--muted);margin-top:6px}
+/* 里程碑时间线 */
+.timeline{position:relative;padding-left:26px}
+.timeline::before{content:'';position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,rgba(14,165,233,.5),rgba(20,184,166,.5))}
+.tl-group{position:relative;margin-bottom:18px}
+.tl-node{position:absolute;left:-26px;top:0;width:16px;height:16px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;color:#fff}
+.tl-node.q1,.tl-node.q2{background:radial-gradient(circle at 30% 28%,#64748b,#475569 60%,#334155);box-shadow:0 0 8px rgba(100,116,139,.3)}
+.tl-node.q3{background:radial-gradient(circle at 30% 28%,#7dd9cf,#14b8a6 55%,#0d9488);box-shadow:0 0 10px rgba(20,184,166,.5)}
+.tl-node.q4{background:radial-gradient(circle at 30% 28%,#7dd3fc,#0ea5e9 55%,#0369a1);box-shadow:0 0 10px rgba(14,165,233,.5);animation:nodePulse 2.4s ease-in-out infinite}
+@keyframes nodePulse{0%,100%{box-shadow:0 0 8px rgba(14,165,233,.4)}50%{box-shadow:0 0 18px rgba(14,165,233,.8)}}
+.tl-q{font-size:12px;font-weight:700;color:#7dd3fc;letter-spacing:1px;margin-bottom:8px}
+.tl-item{position:relative;padding:10px 0 10px 16px;border-top:1px dashed rgba(14,165,233,.18)}
+.tl-item::before{content:'';position:absolute;left:0;top:19px;width:5px;height:5px;border-radius:50%;background:rgba(94,234,212,.8);box-shadow:0 0 6px rgba(94,234,212,.5)}
+.tl-desc{font-size:15px;line-height:1.65}
+.tl-meta{font-size:12px;color:var(--muted);margin-top:4px}
+.tl-badge{display:inline-block;font-size:11px;color:var(--muted);border:1px solid rgba(14,165,233,.2);border-radius:999px;padding:1px 10px;margin-left:6px}
+.tl-empty{font-size:13px;color:var(--muted);padding:6px 0 10px 16px}
+/* 柱图 */
+.cb-wrap{margin-top:18px;padding-top:14px;border-top:1px dashed rgba(14,165,233,.18)}
+.cb-title{font-size:12px;color:var(--muted);margin-bottom:12px;letter-spacing:1px}
+.cb-chart{display:flex;align-items:flex-end;gap:8px;height:110px}
+.cb-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative}
+.cb-bar{width:24px;background:linear-gradient(180deg,#5eead4,#14b8a6);border-radius:3px 3px 0 0;
+  box-shadow:0 0 10px rgba(45,212,191,.35);transition:height .3s ease}
+.cb-col:hover .cb-bar{box-shadow:0 0 16px rgba(45,212,191,.6)}
+.cb-label{font-size:9px;color:var(--muted);margin-top:4px}
+.cb-tip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%) translateY(4px);
+  background:#0b1e37;border:1px solid rgba(14,165,233,.3);color:#bae6fd;font-size:10px;white-space:nowrap;
+  padding:3px 8px;border-radius:4px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:5}
+.cb-col:hover .cb-tip{opacity:1;transform:translateX(-50%) translateY(0)}
+/* 序号徽章 3D 球 */
+.idx{flex:0 0 auto;width:28px;height:28px;border-radius:50%;position:relative;
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  font-size:12px;font-weight:900;margin-top:2px;transition:transform .2s ease,font-size .2s ease}
+.idx.gw{background:radial-gradient(circle at 30% 28%,#c7d2fe,#6366f1 55%,#4338ca);
+  box-shadow:0 2px 4px rgba(0,0,0,.25),0 0 8px rgba(99,102,241,.4),inset -3px -4px 6px rgba(0,0,0,.3),inset 1px 2px 3px rgba(255,255,255,.25)}
+.idx.rf{background:radial-gradient(circle at 30% 28%,#fdaab4,#f43f5e 55%,#be123c);
+  box-shadow:0 2px 4px rgba(0,0,0,.25),0 0 8px rgba(244,63,94,.4),inset -3px -4px 6px rgba(0,0,0,.3),inset 1px 2px 3px rgba(255,255,255,.25)}
+.idx::before{content:'';position:absolute;top:5px;left:7px;width:8px;height:6px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.7),rgba(255,255,255,0));transform:rotate(-28deg);pointer-events:none}
+.idx b{display:inline-block;transition:transform .2s ease}
+/* 条目 */
+.entry{flex:1;min-width:0}
+.entry-head{display:flex;align-items:flex-start;gap:12px}
+.desc{font-size:15px;line-height:1.65}
+.meta{display:block;font-size:12px;color:var(--muted);margin-top:4px}
+.meta b{color:rgba(125,211,252,.9);font-weight:700}
+ol{list-style:none}
+li{display:flex;align-items:flex-start;gap:12px;padding:10px;border-radius:4px;transition:background .18s}
+li:hover{background:rgba(14,165,233,.06)}
+li:hover .idx{transform:scale(1.18) rotate(-4deg);font-size:14px}
+li:hover .idx b{transform:rotate(-6deg)}
+/* 展望目标卡 */
+.goal{background:rgba(249,115,22,.04);border:1px solid rgba(249,115,22,.18);border-radius:6px;
+  padding:14px 16px;margin-bottom:12px;transition:transform .18s ease,box-shadow .18s ease}
+.goal:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.3)}
+.goal-desc{font-size:15px;line-height:1.65;margin-bottom:8px}
+.goal-desc b{color:#fdba74;font-weight:700}
+.goal-q{display:flex;flex-wrap:wrap;gap:6px}
+.q-chip{font-size:11px;color:var(--muted);border:1px solid rgba(14,165,233,.18);background:rgba(14,165,233,.05);
+  border-radius:999px;padding:2px 10px}
+/* 复制按钮 */
+.copy-wrap{display:flex;justify-content:center;margin:8px 0 18px}
+.copy-btn{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;letter-spacing:2px;
+  background:linear-gradient(135deg,var(--cyan),#0284c7);border:none;border-radius:999px;padding:12px 38px;cursor:pointer;
+  box-shadow:0 0 30px rgba(14,165,233,.35);transition:transform .18s ease,box-shadow .18s ease;
+  font-family:inherit}
+.copy-btn:hover{transform:translateY(-2px);box-shadow:0 0 45px rgba(14,165,233,.5)}
+.copy-btn:active{transform:translateY(1px) scale(.98)}
+/* 页脚 */
+footer{text-align:center;font-size:10px;color:var(--muted);letter-spacing:1px;padding:8px 0 4px}
+/* 入场动画 */
+.header-card{animation:fadeDown .6s ease-out backwards}
+.sec-ov{animation:riseIn .5s ease-out .13s backwards}
+.sec-ms{animation:riseIn .5s ease-out .26s backwards}
+.sec-gw{animation:riseIn .5s ease-out .4s backwards}
+.sec-rf{animation:riseIn .5s ease-out .54s backwards}
+.sec-pl{animation:riseIn .5s ease-out .68s backwards}
+.copy-wrap{animation:popIn .4s ease-out .8s backwards}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+@keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+/* 卡片 3D 微倾斜（仅 hover 卡片） */
+.section:hover{transform:perspective(900px) translateY(-2px) rotateY(calc(var(--mx,0)*2.5deg)) rotateX(calc(var(--my,0)*-2.5deg))}
+</style>
+</head>
+<body>
+<div class="grid-pattern"></div>
+<div class="stars"></div>
+<div class="scanband"></div>
+<div class="scanlines"></div>
+<div class="wrap">
+  <header class="header-card" id="headerCard">
+    <span class="scanline-el scan-x"></span>
+    <span class="scanline-el scan-y"></span>
+    <span class="scanline-el scan-x-rev"></span>
+    <span class="scanline-el scan-y-rev"></span>
+    <div class="card-glow"></div>
+    <h1>2026 研发年度总结</h1>
+    <div class="header-sub">全栈开发工程师 · 2026-01 ~ 2026-11（截至 11-09）</div>
+    <span class="header-badge">生成时间 2026-11-09 17:03:01</span>
+  </header>
+
+  <section class="section sec-ov">
+    <div class="sec-bar"></div>
+    <div class="card-glow"></div>
+    <div class="sec-head">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15l4-5M8 15l4-5"/><circle cx="12" cy="14" r="8"/><path d="M12 14l4-5"/></svg>
+      <h2>年度概览</h2>
+    </div>
+    <div class="tldr-line"><b>TL;DR：</b>立项即狂奔的一年：SpecCore 规范驱动开发平台 7 月从零立项，4 个月 1889 次提交、576 个版本发布、代码库净增 19 万行，完成从单机 CLI 到流水线平台的蜕变。</div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-num">1889</div><div class="stat-label">总提交数（07-05 ~ 11-05）</div></div>
+      <div class="stat-card"><div class="stat-num">576</div><div class="stat-label">版本发布（v5.13.0 → v8.3.399）</div></div>
+      <div class="stat-card"><div class="stat-num">+19.0万</div><div class="stat-label">净增代码行（+32.9万 / -13.9万）</div></div>
+      <div class="stat-card"><div class="stat-num">1154</div><div class="stat-label">月度峰值提交（8 月）</div></div>
+    </div>
+  </section>
+
+  <section class="section sec-ms">
+    <div class="sec-bar"></div>
+    <div class="card-glow"></div>
+    <div class="sec-head">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#5eead4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12v3a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V4z"/><path d="M12 11v4M9 17h6v3H9z"/></svg>
+      <h2>核心成果与里程碑</h2>
+    </div>
+    <div class="timeline">
+      <div class="tl-group">
+        <span class="tl-node q1">Q1</span>
+        <div class="tl-q">第一季度</div>
+        <div class="tl-empty">暂无提交记录（项目于 2026-07 立项）</div>
+      </div>
+      <div class="tl-group">
+        <span class="tl-node q2">Q2</span>
+        <div class="tl-q">第二季度</div>
+        <div class="tl-empty">暂无提交记录（项目于 2026-07 立项）</div>
+      </div>
+      <div class="tl-group">
+        <span class="tl-node q3">Q3</span>
+        <div class="tl-q">第三季度（7-9 月）</div>
+        <div class="tl-item"><div class="tl-desc">1、7 月立项首发：SpecCore CLI 完整功能落地，v5.13.0 首版发布</div><div class="tl-meta">335 次提交 · +5.4 万行<span class="tl-badge">Q3</span></div></div>
+        <div class="tl-item"><div class="tl-desc">2、8 月密集攻坚：知识资产四层覆盖架构（TOC 目录/自动注入/RAG 检索/阅读清单）成形</div><div class="tl-meta">月内 1154 次提交 · +16.4 万行 · 发布 200+ 版本<span class="tl-badge">Q3</span></div></div>
+        <div class="tl-item"><div class="tl-desc">3、9 月流水线成形：run 端到端流水线与迭代体系建立</div><div class="tl-meta">+7.6 万行 · 328 次提交<span class="tl-badge">Q3</span></div></div>
+      </div>
+      <div class="tl-group">
+        <span class="tl-node q4">Q4</span>
+        <div class="tl-q">第四季度（10-11 月，截至当前）</div>
+        <div class="tl-item"><div class="tl-desc">4、10 月发布节奏收敛：v8.3 系列起跑，月度发布收紧至约 30 个版本</div><div class="tl-meta">+1.8 万行<span class="tl-badge">Q4</span></div></div>
+        <div class="tl-item"><div class="tl-desc">5、11-03 v8.3.370 累积发布：GLOBAL 治乱、反推域隔离、文档生成器升格、澄清链修复</div><div class="tl-meta">聚合发布 · 350→370<span class="tl-badge">Q4</span></div></div>
+        <div class="tl-item"><div class="tl-desc">6、11-04 v8.3.388：E2E 全链路深度检查 11 项修复 + execute 意图语义硬化</div><div class="tl-meta">379~388 聚合发布<span class="tl-badge">Q4</span></div></div>
+        <div class="tl-item"><div class="tl-desc">7、11-04 v8.3.394：反推链接力协议补全、全局分析默认纯技术、QA 环接力协议（exit 10）</div><div class="tl-meta">392~394 聚合发布<span class="tl-badge">Q4</span></div></div>
+        <div class="tl-item"><div class="tl-desc">8、11-05 v8.3.399（截至当前）：用例核对闸开卷设闸——execute 收尾逐用例勾稽，未实现即入修复环</div><div class="tl-meta">398~399 聚合发布<span class="tl-badge">Q4</span></div></div>
+      </div>
+    </div>
+    <div class="cb-wrap">
+      <div class="cb-title">年度提交月度分布（次）</div>
+      <div class="cb-chart">
+        <div class="cb-col"><div class="cb-tip">1月 · 0 次提交</div><div class="cb-bar" style="height:2px"></div><div class="cb-label">1月</div></div>
+        <div class="cb-col"><div class="cb-tip">2月 · 0 次提交</div><div class="cb-bar" style="height:2px"></div><div class="cb-label">2月</div></div>
+        <div class="cb-col"><div class="cb-tip">3月 · 0 次提交</div><div class="cb-bar" style="height:2px"></div><div class="cb-label">3月</div></div>
+        <div class="cb-col"><div class="cb-tip">4月 · 0 次提交</div><div class="cb-bar" style="height:2px"></div><div class="cb-label">4月</div></div>
+        <div class="cb-col"><div class="cb-tip">5月 · 0 次提交</div><div class="cb-bar" style="height:2px"></div><div class="cb-label">5月</div></div>
+        <div class="cb-col"><div class="cb-tip">6月 · 0 次提交</div><div class="cb-bar" style="height:2px"></div><div class="cb-label">6月</div></div>
+        <div class="cb-col"><div class="cb-tip">7月 · 335 次提交</div><div class="cb-bar" style="height:32px"></div><div class="cb-label">7月</div></div>
+        <div class="cb-col"><div class="cb-tip">8月 · 1154 次提交</div><div class="cb-bar" style="height:92px"></div><div class="cb-label">8月</div></div>
+        <div class="cb-col"><div class="cb-tip">9月 · 328 次提交</div><div class="cb-bar" style="height:31px"></div><div class="cb-label">9月</div></div>
+        <div class="cb-col"><div class="cb-tip">10月 · 54 次提交</div><div class="cb-bar" style="height:8px"></div><div class="cb-label">10月</div></div>
+        <div class="cb-col"><div class="cb-tip">11月 · 18 次提交</div><div class="cb-bar" style="height:4px"></div><div class="cb-label">11月</div></div>
+        <div class="cb-col"><div class="cb-tip">12月 · 0 次提交</div><div class="cb-bar" style="height:2px"></div><div class="cb-label">12月</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section sec-gw">
+    <div class="sec-bar"></div>
+    <div class="card-glow"></div>
+    <div class="sec-head">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#a5b4fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+      <h2>经验与成长</h2>
+    </div>
+    <ol>
+      <li><span class="idx gw"><b>1</b></span><div class="entry"><div class="desc">沉淀了「四层知识资产架构」（TOC 目录/自动注入/RAG 检索/阅读清单），解决了 AI 对规范库看不见、记不住、找不回的三类可见性断层。</div></div></li>
+      <li><span class="idx gw"><b>2</b></span><div class="entry"><div class="desc">掌握了 ask 引擎意图识别与 AI 接力协议（[SPECCORE_EXEC]/[SPECCORE_PROMPT]/[SPECCORE_CONTINUE] 标记链），人机协作可从任意断点续跑。</div></div></li>
+      <li><span class="idx gw"><b>3</b></span><div class="entry"><div class="desc">建立了「聚合发布」节奏：小步高频提交 + 里程碑聚合 tag，兼顾问题定位粒度与交付速度。</div></div></li>
+      <li><span class="idx gw"><b>4</b></span><div class="entry"><div class="desc">积累了质量门禁体系经验：骨架完成度自检、用例核对闸、QA 三阶段验证环，质量兜底不再依赖人肉复查。</div></div></li>
+    </ol>
+  </section>
+
+  <section class="section sec-rf">
+    <div class="sec-bar"></div>
+    <div class="card-glow"></div>
+    <div class="sec-head">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fda4af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+      <h2>不足与反思</h2>
+    </div>
+    <ol>
+      <li><span class="idx rf"><b>1</b></span><div class="entry"><div class="desc">8 月节奏过载：单月 1154 次提交、8-08 单日 95 个版本。</div><div class="meta">影响：文档与代码同步滞后，质量债累积。</div><div class="meta" style="color:rgba(125,211,252,.85)"><b style="color:#7dd3fc">改进：</b>明年收敛为双周聚合发布、月度版本 ≤20 个。</div></div></li>
+      <li><span class="idx rf"><b>2</b></span><div class="entry"><div class="desc">生成物污染统计口径：code-graph 等生成物单文件数十万行噪音曾混入行数统计。</div><div class="meta">影响：工作量指标失真，误导投入判断。</div><div class="meta" style="color:rgba(125,211,252,.85)"><b style="color:#7dd3fc">改进：</b>统计前强制剔除生成物路径白名单。</div></div></li>
+      <li><span class="idx rf"><b>3</b></span><div class="entry"><div class="desc">发布颗粒度两端失衡：Q3 一日最多 95 个 tag，Q4 单次聚合最多 10 个版本。</div><div class="meta">影响：问题定位粒度在过细与过粗之间摇摆。</div><div class="meta" style="color:rgba(125,211,252,.85)"><b style="color:#7dd3fc">改进：</b>固定批次大小，每批 ≤10 版本聚合。</div></div></li>
+    </ol>
+  </section>
+
+  <section class="section sec-pl">
+    <div class="sec-bar"></div>
+    <div class="card-glow"></div>
+    <div class="sec-head">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fdba74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>
+      <h2>新年展望与规划</h2>
+    </div>
+    <div class="goal"><div class="goal-desc">1、<b>发布节奏工程化</b>：双周聚合发布落地，2027 年版本发布总量 ≤120 个</div><div class="goal-q"><span class="q-chip">Q1 建立节奏</span><span class="q-chip">Q2 稳定运行</span></div></div>
+    <div class="goal"><div class="goal-desc">2、<b>测试覆盖率跃升</b>：核心链路自动化覆盖 ≥80%，用例核对闸覆盖全部命令</div><div class="goal-q"><span class="q-chip">Q1 铺 E2E</span><span class="q-chip">Q3 达标</span></div></div>
+    <div class="goal"><div class="goal-desc">3、<b>生成物与体量治理</b>：启动耗时降 30%、生成物目录隔离入白名单</div><div class="goal-q"><span class="q-chip">Q2 完成隔离</span><span class="q-chip">Q4 验收性能</span></div></div>
+    <div class="goal"><div class="goal-desc">4、<b>生态落地</b>：spec-once/流水线在 ≥3 个真实项目落地并沉淀案例</div><div class="goal-q"><span class="q-chip">Q2 试点</span><span class="q-chip">Q4 案例库发布</span></div></div>
+  </section>
+
+  <div class="copy-wrap">
+    <button class="copy-btn" id="copyBtn" type="button">
+      <svg id="copyIcon" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4">
+        <rect x="5.5" y="5.5" width="8.5" height="8.5" rx="1.5"/>
+        <path d="M10.5 5.5V4a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 4v5A1.5 1.5 0 0 0 4 10.5h1.5"/>
+      </svg>
+      <span id="copyText">一键复制</span>
+    </button>
+  </div>
+  <footer>GENERATED BY SPECCORE TEAM · 2026</footer>
+</div>
+<script>
+// 复制源 = txt 纯文本全文
+var TXT = "2026 研发年度总结\n\n生成时间：2026-11-09 17:03:01\n\n年度概览\nTL;DR：立项即狂奔的一年：SpecCore 规范驱动开发平台 7 月从零立项，4 个月 1889 次提交、576 个版本发布、代码库净增 19 万行，完成从单机 CLI 到流水线平台的蜕变。\n1、总提交数：1889 次（07-05 ~ 11-05）\n2、版本发布：576 个（v5.13.0 → v8.3.399）\n3、净增代码：+19.0 万行（+32.9 万 / -13.9 万）\n4、月度峰值：1154 次提交（8 月）\n\n核心成果与里程碑\n1、7 月立项首发：SpecCore CLI 完整功能落地，v5.13.0 首版发布（335 次提交、+5.4 万行）- Q3\n2、8 月密集攻坚：知识资产四层覆盖架构（TOC 目录/自动注入/RAG 检索/阅读清单）成形，月内 1154 次提交、+16.4 万行、发布 200+ 版本 - Q3\n3、9 月流水线成形：run 端到端流水线与迭代体系建立，+7.6 万行、328 次提交 - Q3\n4、10 月发布节奏收敛：v8.3 系列起跑，月度发布收紧至约 30 个版本，+1.8 万行 - Q4\n5、11-03 v8.3.370 累积发布：GLOBAL 治乱、反推域隔离、文档生成器升格、澄清链修复 - Q4\n6、11-04 v8.3.388：E2E 全链路深度检查 11 项修复 + execute 意图语义硬化 - Q4\n7、11-04 v8.3.394：反推链接力协议补全、全局分析默认纯技术、QA 环接力协议（exit 10）- Q4\n8、11-05 v8.3.399（截至当前）：用例核对闸开卷设闸——execute 收尾逐用例勾稽，未实现即入修复环 - Q4\n\n经验与成长\n1、沉淀了「四层知识资产架构」（TOC 目录/自动注入/RAG 检索/阅读清单），解决了 AI 对规范库看不见、记不住、找不回的三类可见性断层。\n2、掌握了 ask 引擎意图识别与 AI 接力协议（[SPECCORE_EXEC]/[SPECCORE_PROMPT]/[SPECCORE_CONTINUE] 标记链），人机协作可从任意断点续跑。\n3、建立了「聚合发布」节奏：小步高频提交 + 里程碑聚合 tag，兼顾问题定位粒度与交付速度。\n4、积累了质量门禁体系经验：骨架完成度自检、用例核对闸、QA 三阶段验证环，质量兜底不再依赖人肉复查。\n\n不足与反思\n1、8 月节奏过载：单月 1154 次提交、8-08 单日 95 个版本。\n影响：文档与代码同步滞后，质量债累积。\n改进：明年收敛为双周聚合发布、月度版本 ≤20 个。\n2、生成物污染统计口径：code-graph 等生成物单文件数十万行噪音曾混入行数统计。\n影响：工作量指标失真，误导投入判断。\n改进：统计前强制剔除生成物路径白名单。\n3、发布颗粒度两端失衡：Q3 一日最多 95 个 tag，Q4 单次聚合最多 10 个版本。\n影响：问题定位粒度在过细与过粗之间摇摆。\n改进：固定批次大小，每批 ≤10 版本聚合。\n\n新年展望与规划\n1、发布节奏工程化：双周聚合发布落地，2027 年版本发布总量 ≤120 个（Q1 建立节奏、Q2 稳定运行）。\n2、测试覆盖率跃升：核心链路自动化覆盖 ≥80%，用例核对闸覆盖全部命令（Q1 铺 E2E、Q3 达标）。\n3、生成物与体量治理：启动耗时降 30%、生成物目录隔离入白名单（Q2 完成隔离、Q4 验收性能）。\n4、生态落地：spec-once/流水线在 ≥3 个真实项目落地并沉淀案例（Q2 试点、Q4 案例库发布）。";
+
+// 一键复制
+var btn = document.getElementById('copyBtn');
+var icon = document.getElementById('copyIcon');
+var txt = document.getElementById('copyText');
+btn.addEventListener('click', function(){
+  function done(){ icon.innerHTML = '<path d="M2.5 8.5l3.5 3.5 7-7.5"/>'; txt.textContent = '已复制'; setTimeout(function(){ icon.innerHTML = '<rect x="5.5" y="5.5" width="8.5" height="8.5" rx="1.5"/><path d="M10.5 5.5V4a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 4v5A1.5 1.5 0 0 0 4 10.5h1.5"/>'; txt.textContent = '一键复制'; }, 1600); }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(TXT).then(done, function(){ fallback(); });
+  } else { fallback(); }
+  function fallback(){
+    var ta = document.createElement('textarea');
+    ta.value = TXT; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); done(); } catch(e){}
+    document.body.removeChild(ta);
+  }
+});
+
+// 卡片级 3D 微倾斜（仅 hover 卡片）
+document.querySelectorAll('.section').forEach(function(card){
+  card.addEventListener('mousemove', function(e){
+    var r = card.getBoundingClientRect();
+    var mx = (e.clientX - r.left) / r.width * 2 - 1;
+    var my = (e.clientY - r.top) / r.height * 2 - 1;
+    card.style.setProperty('--mx', mx.toFixed(3));
+    card.style.setProperty('--my', my.toFixed(3));
+  });
+  card.addEventListener('mouseleave', function(){
+    card.style.setProperty('--mx', 0);
+    card.style.setProperty('--my', 0);
+  });
+});
+
+// ?shot=content：内容区截图模式
+if (location.search.indexOf('shot=content') > -1) {
+  document.getElementById('headerCard').style.display = 'none';
+  document.querySelector('.copy-wrap').style.display = 'none';
+  document.querySelector('footer').style.display = 'none';
+  document.querySelector('.wrap').style.padding = '40px';
+  // 截图模式停入场动画，避免 backwards 0 相位整体半透明
+  document.querySelectorAll('.header-card,.section,.copy-wrap').forEach(function(el){
+    el.style.animation = 'none'; el.style.opacity = '1';
+  });
+}
+</script>
+</body>
+</html>
