@@ -94,8 +94,15 @@ main{ flex:1; min-width:0; }
   font-weight:900;
 }
 .bar .total{ font-size:12px; color:var(--muted); }
+.sort-box{ margin-left:auto; display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted); }
+.sort-box select{
+  background:var(--panel2); border:1px solid var(--border); color:var(--text);
+  font-family:inherit; font-size:12px; letter-spacing:1px;
+  border-radius:999px; padding:5px 12px; outline:none; cursor:pointer;
+}
+.sort-box select:focus{ border-color:var(--gold); }
 .sort-status{
-  margin-left:auto; font-size:12px; color:var(--muted);
+  font-size:12px; color:var(--muted);
   display:flex; align-items:center; gap:10px;
 }
 .sort-status.show{ color:var(--gold); }
@@ -283,6 +290,15 @@ footer .sep{ opacity:.4; }
     <div class="bar">
       <h2 id="curTitle">全部提示词</h2>
       <span class="total" id="curTotal"></span>
+      <div class="sort-box">
+        <label for="sortSel">排序</label>
+        <select id="sortSel" title="切换卡片排序方式">
+          <option value="added">最新添加</option>
+          <option value="recent">最近使用</option>
+          <option value="freq">使用频率</option>
+          <option value="manual">手动顺序</option>
+        </select>
+      </div>
       <div class="sort-status" id="sortStatus">
         <button class="btn" id="btnSortCmd" disabled>📋 复制排序指令</button>
       </div>
@@ -333,7 +349,7 @@ footer .sep{ opacity:.4; }
 
 <footer>
   <b>怎么添加 / 修改提示词？</b>对 AI 直接说：<b>「把 XX 加到锦囊的写作分组」</b> 或 <b>「修改锦囊里『日报速写』的内容」</b>，AI 写入 prompts.json，刷新本页即见。
-  <span class="sep">|</span> 排序：拖动卡片或点 ▲▼ 调整，然后点 <b>📋 复制排序指令</b> 把顺序交给 AI 落盘。
+  <span class="sep">|</span> 排序：默认最新添加在前，可切「最近使用 / 使用频率 / 手动顺序」；拖动卡片或点 ▲▼ 自动切回手动，点 <b>📋 复制排序指令</b> 交给 AI 落盘。
   <span class="sep">|</span> 打开方式：HTTP 访问读 prompts.json（file:// 直开则回退到本地缓存快照）。
   <span class="sep">|</span> 数据安全：收藏与排序存浏览器本地（IndexedDB）刷新不丢；💾 开启自动备份后，每次变更 2 秒内写同目录 pouch-backup.json（滚动双备份，↩ 一键恢复）。
 </footer>
@@ -345,7 +361,9 @@ footer .sep{ opacity:.4; }
     data: null,
     curGroup: 'all',   // 'all' | 'fav' | group.id
     query: '',
-    dirty: false
+    dirty: false,
+    sortMode: 'added', // 'added' 最新添加 | 'recent' 最近使用 | 'freq' 使用频率 | 'manual' 手动顺序
+    usage: {}          // id -> { lastUsed: ts, useCount: n }（复制时统计，存浏览器本地态）
   };
 
   /* ---------- 数据加载 ---------- */
@@ -356,6 +374,7 @@ footer .sep{ opacity:.4; }
   var searchInput = document.getElementById('searchInput');
   var searchClear = document.getElementById('searchClear');
   var sortStatus = document.getElementById('sortStatus');
+  var sortSel = document.getElementById('sortSel');
   var btnSortCmd = document.getElementById('btnSortCmd');
   var bkStatus = document.getElementById('bkStatus');
   var btnBkEnable = document.getElementById('btnBkEnable');
@@ -377,8 +396,40 @@ footer .sep{ opacity:.4; }
           || (p.tags || []).join(' ').toLowerCase().indexOf(q) > -1;
       });
     }
-    ps.sort(function(a,b){ return (a.order||0) - (b.order||0); });
+    ps.sort(sortCmp());
     return ps;
+  }
+
+  /* ---------- 排序比较器（四种模式） ---------- */
+  function createdAtOf(p){
+    if (p.createdAt){ var t = new Date(p.createdAt).getTime(); if (!isNaN(t)) return t; }
+    return 0;
+  }
+  function sortCmp(){
+    switch (state.sortMode){
+      case 'recent':
+        return function(a,b){
+          var ua = state.usage[a.id] || { lastUsed: 0 };
+          var ub = state.usage[b.id] || { lastUsed: 0 };
+          if (ua.lastUsed !== ub.lastUsed) return ub.lastUsed - ua.lastUsed;
+          return (a.order||0) - (b.order||0);
+        };
+      case 'freq':
+        return function(a,b){
+          var ua = state.usage[a.id] || { useCount: 0 };
+          var ub = state.usage[b.id] || { useCount: 0 };
+          if (ua.useCount !== ub.useCount) return ub.useCount - ua.useCount;
+          return (a.order||0) - (b.order||0);
+        };
+      case 'manual':
+        return function(a,b){ return (a.order||0) - (b.order||0); };
+      default: /* 'added'：默认最新添加在前 */
+        return function(a,b){
+          var ta = createdAtOf(a), tb = createdAtOf(b);
+          if (ta !== tb) return tb - ta;
+          return (a.order||0) - (b.order||0);
+        };
+    }
   }
   function groupOf(id){
     for (var i = 0; i < state.data.groups.length; i++){
@@ -398,7 +449,7 @@ footer .sep{ opacity:.4; }
       var n = state.data.prompts.filter(function(p){ return p.group === g.id; }).length;
       html += '<div class="nav-item' + (state.curGroup===g.id?' on':'') + '" data-g="' + g.id + '"><span class="icon">' + g.icon + '</span>' + g.name + '<span class="cnt">' + n + '</span></div>';
     });
-    html += '<div class="side-tip"><b>锦囊用法</b><br>· 说「把 XX 加到写作分组」→ AI 写入<br>· 拖动卡片排序 → 复制指令交给 AI<br>· 点卡片 ⭐ 收藏常用</div>';
+    html += '<div class="side-tip"><b>锦囊用法</b><br>· 说「把 XX 加到写作分组」→ AI 写入<br>· 顶栏切换排序：最新添加 / 最近使用 / 使用频率 / 手动<br>· 拖动卡片自动切手动 → 复制指令交给 AI<br>· 点卡片 ⭐ 收藏常用</div>';
     sideNav.innerHTML = html;
     sideNav.querySelectorAll('.nav-item').forEach(function(el){
       el.addEventListener('click', function(){
@@ -464,6 +515,7 @@ footer .sep{ opacity:.4; }
 
       /* 拖拽 */
       card.addEventListener('dragstart', function(e){
+        ensureManual();
         state.dragId = p.id;
         card.classList.add('dragging');
         e.dataTransfer.effectAllowed = 'move';
@@ -502,6 +554,7 @@ footer .sep{ opacity:.4; }
   }
 
   function moveItem(p, idx, delta){
+    ensureManual();
     var arr = visiblePrompts();
     if (idx + delta < 0 || idx + delta >= arr.length) return;
     var t = arr[idx + delta];
@@ -524,6 +577,31 @@ footer .sep{ opacity:.4; }
     persistUserState();
     scheduleBackup();
   }
+  function syncSortUI(){ if (sortSel) sortSel.value = state.sortMode; }
+  function ensureManual(){
+    if (state.sortMode === 'manual') return;
+    state.sortMode = 'manual';
+    syncSortUI();
+    persistUserState();
+    var old = btnSortCmd.textContent;
+    btnSortCmd.textContent = '✓ 已切回手动顺序';
+    setTimeout(function(){
+      if (state.dirty){ btnSortCmd.textContent = '📋 复制排序指令（未保存）'; }
+      else { btnSortCmd.textContent = old; }
+    }, 2000);
+  }
+  function recordUsage(id){
+    if (!id) return;
+    var u = state.usage[id] || (state.usage[id] = { lastUsed: 0, useCount: 0 });
+    u.lastUsed = Date.now();
+    u.useCount += 1;
+    persistUserState();
+  }
+  sortSel.addEventListener('change', function(){
+    state.sortMode = sortSel.value;
+    persistUserState();
+    render();
+  });
 
   /* ---------- 模板插值（{{变量}} / {变量}） ---------- */
   function escapeHtml(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -605,6 +683,7 @@ footer .sep{ opacity:.4; }
       var fb = card.querySelector('.copy-feedback');
       fb.classList.add('show');
       setTimeout(function(){ fb.classList.remove('show'); }, 1500);
+      recordUsage(card && card.getAttribute ? card.getAttribute('data-id') : null);
     }
     function fallback(){
       var ta = document.createElement('textarea');
@@ -713,7 +792,7 @@ footer .sep{ opacity:.4; }
     var favs = state.data.prompts.filter(function(p){ return p.favorite; }).map(function(p){ return p.id; });
     var orders = {};
     state.data.prompts.forEach(function(p){ orders[p.id] = p.order || 0; });
-    return { favs: favs, orders: orders };
+    return { favs: favs, orders: orders, sortMode: state.sortMode, usage: state.usage };
   }
   function persistUserState(){
     if (!state.data) return;
@@ -731,6 +810,8 @@ footer .sep{ opacity:.4; }
     state.data.prompts.forEach(function(p){
       if (typeof o[p.id] === 'number' && o[p.id] > 0) p.order = o[p.id];
     });
+    if (us.sortMode) state.sortMode = us.sortMode;
+    if (us.usage) state.usage = us.usage;
   }
   function applyUserState(){ applyUserStateFrom(localState); }
   function loadLocalState(){
@@ -916,6 +997,8 @@ footer .sep{ opacity:.4; }
   function firstRender(){
     if (bootRendered || !state.data) return;
     bootRendered = true;
+    applyUserState();
+    syncSortUI();
     renderNav();
     render();
     if (bootMode === 'cache') cacheBadge.style.display = '';
@@ -947,6 +1030,7 @@ footer .sep{ opacity:.4; }
     .catch(function(){})
     .then(function(){
       applyUserState();
+      syncSortUI();
       if (bootRendered){ renderNav(); render(); }
       updateBkUI();
     });
