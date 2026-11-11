@@ -42,6 +42,10 @@ disable-model-invocation: false
    - 收尾提示启动方式：`cd <DIR> && python3 -m http.server <PORT>`（Windows 无 python3 时 `py -m http.server`），浏览器访问 `http://localhost:<PORT>/prompt-pouch.html`（HTTP 才能读 prompts.json；file:// 直开回退缓存快照）
 2. **维护**（页面已存在时）：读 `<DIR>/<DATA_DIR>/prompts.json` → 按用户意图修改 → 写回（UTF-8、2 空格缩进、保留 version 字段）→ 提醒用户刷新页面
    - **分类交互**：用户说「添加 XX」但未说分组 → AskUserQuestion 列出全部现有分组（加「新建分组」选项）让用户选；用户指定的分组不存在 → 明确告知该分组不存在，并问是否新建（新建则补 groups 条目：id 16 位数字主键（雪花规则见 data-format.md）、name 中文、icon 一个 emoji）
+2.5 **交付前自检**（初始化与每次维护落盘后必做，硬门禁不可跳过）：
+   - **json 机器校验**：`python3 -c "import json;json.load(open('<DIR>/<DATA_DIR>/prompts.json',encoding='utf-8'))"`（Windows 用 py）解析通过，且 schema 自查无缺（version/groups/prompts 齐全、group 引用存在、order 连续、新增条目 createdAt 到时分秒）
+   - **页面零报错验证**：Playwright headless（缺则 `pip3 install --user playwright`；用系统 Chrome，channel="chrome" 无需下载浏览器）→ 起本地服务 `cd <DIR> && python3 -m http.server <PORT>` → goto `http://localhost:<PORT>/prompt-pouch.html` → 挂 pageerror 监听（零容忍）→ 断言卡片数 `document.querySelectorAll('.card').length` 等于 prompts.json 的 prompts 条数（证明数据被正确读到；落回内置示例种子即自检失败）→ 收尾停服务
+   - 未通过 → 修复后重跑，禁止跳过直接交付
 3. **打开页面**：用户说「打开锦囊 / 打开提示词页面」→
    - 目标目录无页面时先执行步骤 1（初始化）
    - 后台起本地服务（`cd <DIR> && python3 -m http.server <PORT>`，Windows 用 `py -m http.server`；端口被占则换 PORT+1 再试）

@@ -13,9 +13,14 @@ disable-model-invocation: false
 ## 生成流程
 
 0. **读用户配置**（TEMPLATE/THEME/TRANSITION/ANIM/WIDTH/HEIGHT/SEC/FILENAME/DIR 等）→ 先 Read 同目录 `user-config.md`
-1. **收集内容**：解析用户提供的内容（文字/文件/结构化要点），确定页数与每页版式
+1. **收集内容**：解析用户提供的内容（文字/文件/结构化要点），确定页数与每页版式 → 先 Read `resources/content-guide.md` 按内容气质选版式骨架 / 按领域选成套模板 / 按用途定页数节奏 / 按数据挑图表形式
 2. **生成 HTML**（每页写语义结构——.s-head 标题 / .card 卡片 / .points 要点 / .bignum 数据，按 TEMPLATE 在对应页 slide 挂 data-template 声明默认版式；十六主题 CSS 变量、主题面板、动画库（deck 标签 data-transition 翻页八套 + 元素 data-anim 入场十二式 / data-anim-leave 离场 / data-anim-emphasis 强调 + 标题文字拆分 + 边栏 ⚙ 工具 Tab 控制）、模板面板（16 套 + 预览本页）、编辑能力（撤销/重做/页面管理边栏：新页/复页/排序/删页）、播放引擎、热键、截图/复制、全屏纯净模式）→ 先 Read `resources/reference.html` + `resources/deck-spec.md` 两份，以 reference.html 为骨架逐处替换内容
-3. **落盘与命名**：写 `<文件名>.html` 到 DIR 目录，自动打开浏览器供用户放映。命名三级优先：①用户口头指定文件名 → 用指定名；②未指定且 FILENAME=auto → 按本次内容主题+用途总结中文名（如「智能探针系统-产品介绍」，让用户日后能按名找回继续改）；③FILENAME 写死固定名 → 用固定名。重名一律自动加日期后缀，绝不覆盖；落盘目录复用不清空、不改动目录内既有文件
+2.5 **交付前自检**（落盘前必做，硬门禁不可跳过）：写工作区 `outputs/<文件名>.html` 后——
+   - Bash 起 `python3 -m http.server 8941`（后台，端口占用换 8942/8943…）
+   - Playwright headless 自检（缺则 `pip3 install --user playwright`；用系统 Chrome，无需 playwright install 下载浏览器）：`p.chromium.launch(channel="chrome", headless=True)` → goto 页面 → 挂 pageerror 监听（零容忍）→ 按页数循环 `go(i)` 把每一页翻完
+   - 截首 / 中 / 末三页 PNG，Read 自查：版式正常、文字无溢出截断、图表数据到位、无豆腐块缺字
+   - 任何报错或视觉问题：修 HTML → 重检；全绿才进第 3 步
+3. **落盘与命名**：自检通过后 `cp` 到 DIR 目录，自动打开浏览器供用户放映。命名三级优先：①用户口头指定文件名 → 用指定名；②未指定且 FILENAME=auto → 按本次内容主题+用途总结中文名（如「智能探针系统-产品介绍」，让用户日后能按名找回继续改）；③FILENAME 写死固定名 → 用固定名。重名一律自动加日期后缀，绝不覆盖；落盘目录复用不清空、不改动目录内既有文件
 4. **使用咨询**（用户只问「怎么用 / 使用说明 / 能干什么」等用法、未要求生成）→ 读 `resources/usage-guide.md`，将其内容原样输出（首行标题改为「魔法幻灯生成器使用指南」），不生成 HTML
 
 ## ⚙️ 配置与自定义
