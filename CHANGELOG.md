@@ -2,6 +2,13 @@
 
 SkillForge（技能锻造坊）npm 包 `skill-forge-hub`（命令名 `skill-forge`）版本变更记录。
 
+## 1.0.2（2026-11-11）
+
+**三报表滚动入场：视口外卡片滚到才上浮渐显**
+
+- 滚动入场：初始视口外的卡片滚到视口才上浮渐显（首屏卡维持加载错峰动画；IntersectionObserver + html.js 门控，无 JS/打印/截图模式一律全显）
+- translate 独立属性不碰 transform——hover 3D 偏转零冲突；入场完即清 transition-delay 不拖慢 hover；stagger 70ms 封顶 280ms；2s 兜底强制显示
+
 ## 1.0.1（2026-11-11）
 
 **发布后三连修：三报表 mono 氛围换装 + 锦囊四层科技氛围 + 日报/周报噪点退隐**
