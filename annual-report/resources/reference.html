@@ -36,7 +36,7 @@
   --border:rgba(53,116,240,.26); --glow:rgba(53,116,240,.3); --glow-soft:rgba(53,116,240,.13);
   --title-grad:linear-gradient(90deg,#dfe1e5,#5e9aff 50%,#3574f0);
   --tag-bg:rgba(53,116,240,.13);
-  --scan:rgba(94,154,255,.22); --scan-dim:rgba(94,154,255,.05);
+  --scan:rgba(223,225,229,.18); --scan-dim:rgba(223,225,229,.07);
   --heat:rgba(53,116,240,.55);
   --green:#4da36b; --orange:#d09645; --rose:#d85f73;
 }
@@ -64,6 +64,8 @@
 }
 /* 浅色主题下星点氛围自然退隐 */
 [data-theme="biz"] .stars, [data-theme="light"] .stars, [data-theme="warm"] .stars{ opacity:.28; }
+/* mono 黑亮下星点换装：去彩改中性灰白（条纹留存不泛蓝） */
+[data-theme="mono"] .stars{ background:radial-gradient(1px 1px at 12% 22%,rgba(223,225,229,.32),transparent),radial-gradient(1px 1px at 28% 68%,rgba(223,225,229,.28),transparent),radial-gradient(1.5px 1.5px at 45% 15%,rgba(223,225,229,.24),transparent),radial-gradient(1px 1px at 62% 78%,rgba(223,225,229,.26),transparent),radial-gradient(1px 1px at 78% 32%,rgba(223,225,229,.3),transparent),radial-gradient(1.5px 1.5px at 88% 58%,rgba(223,225,229,.28),transparent),radial-gradient(1px 1px at 8% 85%,rgba(223,225,229,.26),transparent),radial-gradient(1px 1px at 55% 45%,rgba(223,225,229,.24),transparent)}
 
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{background:var(--bg)}
@@ -446,7 +448,7 @@ if (location.search.indexOf('shot=content') > -1) {
   });
 }
 
-// 主题换肤：四套配色随点随换；记忆上次选择（localStorage，失败静默）；?shot 截图模式隐藏坞
+// 主题换肤：五套配色随点随换；记忆上次选择（localStorage，失败静默）；?shot 截图模式隐藏坞
 (function(){
   var THEMES = ['tech','biz','mono','light','warm'];
   var dock = document.getElementById('themeDock');
