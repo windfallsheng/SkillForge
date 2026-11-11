@@ -397,6 +397,13 @@ li:hover .idx{ transform:scale(1.18) rotate(-4deg); font-size:14px; }
 /* 滚动入场：html.js 门控（无 JS/打印全显）；初始视口外的卡片滚到视口才上浮渐显；translate 独立属性不碰 transform，hover 3D 偏转零冲突 */
 html.js .rv{ opacity:0; translate:0 16px; transition:opacity .5s ease-out, translate .5s ease-out; }
 html.js .rv.in{ opacity:1; translate:0 0; }
+/* 窄屏收敛：<680px 视口下 clamp 的 640px 下限会横向溢出，wrap 改流式满宽、边距收窄、标题字号统一 26px */
+@media (max-width:680px){
+  body{ padding:24px 12px 32px; }
+  .wrap{ width:100%; max-width:none; }
+  .header-card{ padding:26px 18px 20px; }
+  .header-card h1{ font-size:26px; }
+}
 </style>
 </head>
 <body>

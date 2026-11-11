@@ -85,6 +85,11 @@
                      linear-gradient(90deg,rgba(15,23,42,.05) 1px,transparent 1px); }
   html[data-theme="biz"] .bg-stars, html[data-theme="mono"] .bg-stars{ opacity:.3; filter:grayscale(1) invert(1); }
   html[data-theme="biz"] .stat, html[data-theme="mono"] .stat{ box-shadow:0 2px 10px rgba(0,0,0,.06); }
+/* 窄屏等比缩放预览：视口窄于 1280 画布时整页视觉等比缩放（headless 1280×720 截图不受影响） */
+@media (max-width:1279px){
+  html{ overflow-x:hidden; }
+  body{ transform:scale(calc(100vw / 1280px)); transform-origin:top left; }
+}
 </style>
 </head>
 <body class="mode-cover">

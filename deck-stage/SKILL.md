@@ -87,7 +87,7 @@ DIR（落盘根目录，DIR_MAC/DIR_WIN 双键）、THEME（tech/biz/mono/light/
 - 图表扩容：chart 自绘柱 / chart-pie 原生饼图（percent/donut 选项）/ chart-line 原生折线（series 多线/smooth 选项）——原生图表在 PowerPoint/WPS 里可直接编辑数据
 - bullets 配图：page.image 给绝对路径即右侧配图（contain 等比内嵌），文本区自动缩窄，仅第一页带图
 - builder 是真相源：版式改动只改 `resources/pptx-builder.js` 并同步 `data-schema.md` 描述，禁止只改一处
-- 封面模板是截图底版：视觉改动只改 `resources/cover-template.html`；模板是静态版式（无动画），保截图零风险
+- 封面模板是截图底版：视觉改动只改 `resources/cover-template.html`；模板是静态版式（无动画），保截图零风险；窄屏浏览器直开时按视口等比缩放预览（截图走 headless 1280×720，不受影响）
 - 依赖纪律：pptxgenjs 装在 skill 目录 node_modules（离线可用）；不引入其它运行时依赖
 
 ## 核心约束
