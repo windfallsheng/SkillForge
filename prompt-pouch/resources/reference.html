@@ -15,6 +15,7 @@
   --tag-bg:rgba(232,176,75,.1);
   --star:#f7d9a0;
   --glow:rgba(232,176,75,.35);
+  --scan:rgba(232,176,75,.2); --scan-dim:rgba(232,176,75,.04);
   --btn-ink:#241505;
   --bar-hi:rgba(23,17,12,.96); --bar-lo:rgba(23,17,12,.88);
 }
@@ -27,6 +28,7 @@
   --tag-bg:rgba(56,189,248,.1);
   --star:#7dd3fc;
   --glow:rgba(56,189,248,.35);
+  --scan:rgba(56,189,248,.2); --scan-dim:rgba(56,189,248,.04);
   --btn-ink:#041018;
   --bar-hi:rgba(10,25,41,.96); --bar-lo:rgba(10,25,41,.88);
 }
@@ -40,6 +42,7 @@
   --tag-bg:rgba(53,116,240,.1);
   --star:#dfe1e5;
   --glow:rgba(53,116,240,.22);
+  --scan:rgba(223,225,229,.18); --scan-dim:rgba(223,225,229,.05);
   --btn-ink:#1e1f22;
   --bar-hi:rgba(30,31,34,.96); --bar-lo:rgba(30,31,34,.88);
 }
@@ -58,7 +61,7 @@
 [data-theme="mono"] .bk-item,
 [data-theme="mono"] .detail-content{ background:rgba(223,225,229,.06); }
 [data-theme="mono"] .theme-dock .th-dot[data-theme="mono"]{ border:1.5px solid rgba(94,154,255,.6); }
-[data-theme="mono"] body{ background:var(--bg); } /* 主体纯 #1e1f22：去掉顶部光晕/网格线/160° 渐变，消除上灰下黑断层（JetBrains New UI Dark 编辑区同色） */
+[data-theme="mono"] body{ background:var(--bg); } /* 主体纯 #1e1f22：去掉顶部光晕/160° 渐变，消除上灰下黑断层（JetBrains New UI Dark 编辑区同色）；四层氛围独立于 body，mono 下星点换装灰白、条纹灰白不泛蓝 */
 
 /* ═══ light IDEA 白亮：IntelliJ Light 官方色系（白编辑区 + 浅灰面板 #f2f2f2 + IDEA 蓝强调） ═══ */
 [data-theme="light"]{
@@ -70,6 +73,7 @@
   --tag-bg:rgba(38,117,191,.08);
   --star:#e5a33c;
   --glow:rgba(38,117,191,.16);
+  --scan:rgba(38,117,191,.12); --scan-dim:rgba(38,117,191,.03);
   --btn-ink:#ffffff;
   --bar-hi:rgba(255,255,255,.96); --bar-lo:rgba(255,255,255,.88);
 }
@@ -88,7 +92,7 @@
 [data-theme="light"] .bk-item,
 [data-theme="light"] .detail-content{ background:#f7f9fb; }
 [data-theme="light"] .theme-dock .th-dot[data-theme="light"]{ border:1.5px solid rgba(38,117,191,.5); }
-[data-theme="light"] body{ background:var(--bg); } /* 主体纯白 #ffffff：去掉顶部光晕/网格线/160° 渐变，对齐 IntelliJ Light 编辑区 */
+[data-theme="light"] body{ background:var(--bg); } /* 主体纯白 #ffffff：去掉顶部光晕/160° 渐变，对齐 IntelliJ Light 编辑区；四层氛围独立于 body */
 [data-theme="mint"]{ /* 薄荷绿 */
   --bg:#0d1a12; --bg2:#12241a;
   --panel:#182f22; --panel2:#1e3a2a;
@@ -98,6 +102,7 @@
   --tag-bg:rgba(74,222,128,.1);
   --star:#b9ffd8;
   --glow:rgba(74,222,128,.35);
+  --scan:rgba(74,222,128,.2); --scan-dim:rgba(74,222,128,.04);
   --btn-ink:#04150a;
   --bar-hi:rgba(13,26,18,.96); --bar-lo:rgba(13,26,18,.88);
 }
@@ -106,12 +111,52 @@ html,body{ height:100%; }
 body{
   background:
     radial-gradient(1200px 500px at 70% -10%, var(--gold-dim), transparent 60%),
-    repeating-linear-gradient(90deg, rgba(255,255,255,.012) 0 1px, transparent 1px 90px),
     linear-gradient(160deg, var(--bg) 0%, var(--bg2) 100%);
   color:var(--text);
   font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,'PingFang SC','Microsoft YaHei',monospace;
   min-height:100%;
 }
+
+/* ============ 四层科技氛围（与日报/周报/年报同源，透明度淡半档——工具页不扰读） ============ */
+.grid-pattern{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:linear-gradient(var(--scan-dim) 1px, transparent 1px),linear-gradient(90deg, var(--scan-dim) 1px, transparent 1px);
+  background-size:60px 60px;
+}
+.stars{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.3), transparent),
+    radial-gradient(1px 1px at 28% 64%, var(--scan), transparent),
+    radial-gradient(1.5px 1.5px at 41% 32%, rgba(255,255,255,.24), transparent),
+    radial-gradient(1px 1px at 56% 78%, var(--scan), transparent),
+    radial-gradient(1px 1px at 67% 12%, var(--scan), transparent),
+    radial-gradient(1.5px 1.5px at 79% 52%, var(--scan), transparent),
+    radial-gradient(1px 1px at 88% 86%, rgba(255,255,255,.26), transparent),
+    radial-gradient(1px 1px at 93% 24%, var(--scan), transparent);
+}
+.scanlines{
+  position:fixed; inset:0; z-index:999; pointer-events:none;
+  background:repeating-linear-gradient(0deg, transparent 0 2px, var(--scan-dim) 2px 4px);
+}
+.scanband{
+  position:fixed; left:0; right:0; height:150px; z-index:998; pointer-events:none;
+  background:linear-gradient(180deg, transparent, var(--scan-dim) 50%, transparent);
+  animation:scanMove 11s linear infinite;
+}
+@keyframes scanMove{ from{top:-22%;} to{top:112%;} }
+/* mono 黑亮下氛围换装：条纹留存、颜色去彩——星点改中性灰白（IDEA 文本色系），与报表 mono 同源 */
+[data-theme="mono"] .stars{ background-image:
+  radial-gradient(1px 1px at 12% 18%, rgba(223,225,229,.26), transparent),
+  radial-gradient(1px 1px at 28% 64%, rgba(223,225,229,.22), transparent),
+  radial-gradient(1.5px 1.5px at 41% 32%, rgba(223,225,229,.2), transparent),
+  radial-gradient(1px 1px at 56% 78%, rgba(223,225,229,.18), transparent),
+  radial-gradient(1px 1px at 67% 12%, rgba(223,225,229,.2), transparent),
+  radial-gradient(1.5px 1.5px at 79% 52%, rgba(223,225,229,.22), transparent),
+  radial-gradient(1px 1px at 88% 86%, rgba(223,225,229,.24), transparent),
+  radial-gradient(1px 1px at 93% 24%, rgba(223,225,229,.24), transparent); }
+/* 浅色主题下星点氛围自然淡出 */
+[data-theme="light"] .stars{ opacity:.28; }
 /* ============ 顶栏 ============ */
 header{
   position:sticky; top:0; z-index:30;
@@ -221,7 +266,9 @@ main{ flex:1; min-width:0; }
 /* 卡片列表 */
 .list{ display:grid; grid-template-columns:repeat(auto-fill,minmax(360px,1fr)); gap:14px; }
 .card{
-  background:linear-gradient(180deg, var(--panel) 0%, var(--panel2) 100%);
+  background:
+    repeating-linear-gradient(180deg, var(--scan-dim) 0 1px, transparent 1px 8px),
+    linear-gradient(180deg, var(--panel) 0%, var(--panel2) 100%);
   border:1px solid var(--border); border-radius:14px;
   padding:16px 18px 14px; position:relative;
   transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
@@ -551,6 +598,10 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
 </style>
 </head>
 <body>
+<div class="grid-pattern"></div>
+<div class="stars"></div>
+<div class="scanband"></div>
+<div class="scanlines"></div>
 
 <header>
   <div class="hd-row">
