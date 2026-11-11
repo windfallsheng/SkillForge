@@ -2,7 +2,7 @@
 name: prompt-pouch
 description: >
   锦囊（prompt-pouch）提示词管理 Skill：生成并维护一个本地 HTML 提示词管理页面（锦囊管理台），
-  暖棕金/深蓝科技/极简黑白/薄荷绿四套主题（右下角换肤坞随时切换，THEME 配置可设默认），功能为分组侧栏（带计数徽章）+ 搜索（关键词高亮）+ 卡片网格 + 四种排序（最新添加默认/最近使用/使用频率/手动，
+  暖棕金/深蓝科技/Darcula 深灰蓝/薄荷绿四套主题（右下角换肤坞随时切换，THEME 配置可设默认），功能为分组侧栏（带计数徽章）+ 搜索（关键词高亮）+ 卡片网格 + 四种排序（最新添加默认/最近使用/使用频率/手动，
   拖拽与 ▲▼ 自动切手动）+ 使用统计 + 收藏星标 + {变量} 插值填充面板 + 一键复制 + 卡片「👁 详情」弹窗
   （全文滚动查看 / 复制 / 修改 / 创建修改时间线）；数据存 <DIR>/cache/prompts.json（DATA_DIR 可配），
   页面与数据严格分离，双笔协作（页面经授权目录直写，AI 代笔维护）。三类任务：①初始化——目标目录无页面时确认目录（默认用户配置 DIR）
@@ -62,7 +62,7 @@ disable-model-invocation: false
 
 **执行本 skill 前必须先 Read 同目录 `user-config.md`**：目录（DIR/DIR_WIN）、端口（PORT）、初始化数据（INIT_DATA）、确认开关（CONFIRM）、主题（THEME）等默认配置都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留。
 
-**THEME 主题机制**：页面内置四套主题——gold 暖棕金（默认）/ tech 深蓝科技 / mono 极简黑白 / mint 薄荷绿。初始化复制 reference.html 后，将 html 根标签 `data-theme` 属性值设为配置 `THEME`（仅此一处修改）；页面右下角「换肤坞」色点可随时切换主题，选择经浏览器 localStorage 持久（key: sf-pouch-theme），刷新后保持；localStorage 优先级高于根标签 data-theme。已初始化的页面改配置 THEME 不追溯——用户手动换过主题即以其选择为准。
+**THEME 主题机制**：页面内置四套主题——gold 暖棕金（默认）/ tech 深蓝科技 / mono Darcula 深灰蓝（JetBrains IDE 同款观感）/ mint 薄荷绿。初始化复制 reference.html 后，将 html 根标签 `data-theme` 属性值设为配置 `THEME`（仅此一处修改）；页面右下角「换肤坞」色点可随时切换主题，选择经浏览器 localStorage 持久（key: sf-pouch-theme），刷新后保持；localStorage 优先级高于根标签 data-theme。已初始化的页面改配置 THEME 不追溯——用户手动换过主题即以其选择为准。
 
 **配置版本机制（升级保护）**：user-config.md 头部 `CONFIG_VERSION` 标识结构版本。升级 skill 后若发现新版本结构（如 v2 新增 THEME 字段）而用户配置是旧版：先备份旧配置为 `user-config.md.bak-时间戳`，将旧值迁移进新结构（保留用户已有 DIR/PORT/INIT_DATA/CONFIRM，缺失字段补默认值），更新 CONFIG_VERSION，最后用一句话告知用户配置已升级、旧文件备份在哪。 **无法迁移项处理**（值域失效 / 语义漂移 / 数据不兼容）：三绝不——绝不静默（无法迁移项停下问，不猜值）、绝不丢失（旧值永远在备份）、一次说清（升级报告三段式：⚠️ 版本与备份路径 / ✅ 已自动迁移 / 🟡 无法迁移项逐条附原因+影响+建议替代）；随后 AskUserQuestion 三选项（A 用建议值 / B 用户给新值 / C 保持旧配置——不更新 CONFIG_VERSION，每次执行再提醒）；报告必附回滚一句话；数据文件（prompts.json）迁移前先复制 .bak-时间戳，能映射则映射、不能则写兼容层（旧 id 兼容保留即范例）或留备份提示手动整理
 

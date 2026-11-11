@@ -2,6 +2,14 @@
 
 SkillForge（技能锻造坊）npm 包 `skill-forge-hub`（命令名 `skill-forge`）版本变更记录。
 
+## 0.5.2（2026-11-11）
+
+**锦囊 mono 主题换装 JetBrains Darcula**
+
+- 从「Linear 式纯黑」改为 Darcula 官方色板：背景 `#2b2b2b` / 面板 `#3c3f41` / 卡片渐变 `#313335` / 正文蓝灰 `#a9b7c6` / 边框 `#4e5254`——深灰底 + 蓝灰字 + 灰阶面板，与 JetBrains IDE 观感一致，久看不累
+- 组件适配全面蓝灰化：魔法棒/图标滤镜、标签、星标、弹层、输入区、卡片内描边与 hover 描边、换肤坞色点
+- 主题名同步：「极简黑白」→「Darcula 深灰蓝」（SKILL.md / user-config.md / usage-guide.md / 换肤坞 title）
+
 ## 0.5.1（2026-11-11）
 
 **自检闭环补全**（交付前硬门禁，四技能全覆盖）

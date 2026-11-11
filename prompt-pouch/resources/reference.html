@@ -30,34 +30,34 @@
   --btn-ink:#041018;
   --bar-hi:rgba(10,25,41,.96); --bar-lo:rgba(10,25,41,.88);
 }
-/* ═══ mono 深黑极简：Linear 式黑画布 + 纯白强调 + 灰阶层次（黑底白字，货真价实的黑色主题） ═══ */
+/* ═══ mono 深灰蓝：JetBrains Darcula 色系（深灰底 + 蓝灰文字 + 灰阶面板，IDE 同款观感） ═══ */
 [data-theme="mono"]{
-  --bg:#0a0a0b; --bg2:#121215;
-  --panel:#17171a; --panel2:#1e1e22;
-  --text:#f5f5f7; --muted:#9b9ba4;
-  --gold:#ffffff; --gold2:#d9d9de; --gold-dim:rgba(255,255,255,.09);
-  --border:rgba(255,255,255,.11);
-  --tag-bg:rgba(255,255,255,.07);
-  --star:#f5f5f7;
-  --glow:rgba(255,255,255,.16);
-  --btn-ink:#0a0a0b;
-  --bar-hi:rgba(10,10,11,.96); --bar-lo:rgba(10,10,11,.88);
+  --bg:#2b2b2b; --bg2:#313335;
+  --panel:#3c3f41; --panel2:#313335;
+  --text:#a9b7c6; --muted:#808080;
+  --gold:#a9b7c6; --gold2:#6b7280; --gold-dim:rgba(169,183,198,.12);
+  --border:#4e5254;
+  --tag-bg:#3c3f41;
+  --star:#d7dce3;
+  --glow:rgba(169,183,198,.18);
+  --btn-ink:#2b2b2b;
+  --bar-hi:rgba(43,43,43,.96); --bar-lo:rgba(43,43,43,.88);
 }
-/* mono 深黑组件适配：魔法棒黑白化、白标签、白星标、深色弹层、输入区半透明白、黑点白描边 */
-[data-theme="mono"] .lg{ filter:grayscale(1) brightness(.3); }
+/* mono 深灰蓝组件适配：魔法棒灰化、蓝灰标签、浅蓝灰星标、深灰弹层、输入区微亮蓝灰、色点蓝灰描边 */
+[data-theme="mono"] .lg{ filter:grayscale(1) brightness(.45); }
 [data-theme="mono"] .nav-item .icon,
-[data-theme="mono"] .search .kw{ filter:grayscale(1) brightness(1.35); }
-[data-theme="mono"] .tpl-badge{ color:#f5f5f7; background:rgba(255,255,255,.12); }
-[data-theme="mono"] .op.star-on{ color:#ffffff; border-color:rgba(255,255,255,.42); background:rgba(255,255,255,.15); }
-[data-theme="mono"] .gpop{ background:#1e1e22; border-color:rgba(255,255,255,.13); box-shadow:0 12px 32px rgba(0,0,0,.55); }
+[data-theme="mono"] .search .kw{ filter:grayscale(1) brightness(1.15); }
+[data-theme="mono"] .tpl-badge{ color:#a9b7c6; background:rgba(169,183,198,.14); }
+[data-theme="mono"] .op.star-on{ color:#d7dce3; border-color:rgba(169,183,198,.45); background:rgba(169,183,198,.16); }
+[data-theme="mono"] .gpop{ background:#3c3f41; border-color:#4e5254; box-shadow:0 12px 32px rgba(0,0,0,.6); }
 [data-theme="mono"] .fp-preview,
 [data-theme="mono"] .fp-field input,
 [data-theme="mono"] .fp-field textarea,
 [data-theme="mono"] .fp-field select,
 [data-theme="mono"] .fp-live textarea,
 [data-theme="mono"] .bk-item,
-[data-theme="mono"] .detail-content{ background:rgba(255,255,255,.05); }
-[data-theme="mono"] .theme-dock .th-dot[data-theme="mono"]{ border:1.5px solid rgba(255,255,255,.5); }
+[data-theme="mono"] .detail-content{ background:rgba(169,183,198,.07); }
+[data-theme="mono"] .theme-dock .th-dot[data-theme="mono"]{ border:1.5px solid rgba(169,183,198,.55); }
 [data-theme="mint"]{ /* 薄荷绿 */
   --bg:#0d1a12; --bg2:#12241a;
   --panel:#182f22; --panel2:#1e3a2a;
@@ -197,8 +197,8 @@ main{ flex:1; min-width:0; }
   cursor:grab; display:flex; flex-direction:column; gap:8px;
 }
 .card:hover{ transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.35); border-color:var(--glow); }
-[data-theme="mono"] .card{ box-shadow:0 1px 0 rgba(255,255,255,.05) inset; }
-[data-theme="mono"] .card:hover{ box-shadow:0 10px 30px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.09); }
+[data-theme="mono"] .card{ box-shadow:0 1px 0 rgba(169,183,198,.07) inset; }
+[data-theme="mono"] .card:hover{ box-shadow:0 10px 30px rgba(0,0,0,.55),0 0 0 1px rgba(169,183,198,.14); }
 .card.dragging{ opacity:.35; cursor:grabbing; }
 .card.drop-target{ border-color:var(--gold); box-shadow:0 0 0 2px var(--gold-dim); }
 .card-top{ display:flex; align-items:center; gap:8px; }
@@ -473,7 +473,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
 .theme-dock .th-dot.on{ border-color:var(--text); }
 .theme-dock .th-dot[data-theme="gold"]{ background:#e8b04b; }
 .theme-dock .th-dot[data-theme="tech"]{ background:#0ea5e9; }
-.theme-dock .th-dot[data-theme="mono"]{ background:#111; }
+.theme-dock .th-dot[data-theme="mono"]{ background:#2b2b2b; }
 .theme-dock .th-dot[data-theme="mint"]{ background:#4ade80; }
 @media print{ .theme-dock{ display:none; } }
 </style>
@@ -2031,7 +2031,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
   <div class="theme-dock" id="themeDock">
     <button class="th-dot" type="button" data-theme="gold" title="gold 暖棕金"></button>
     <button class="th-dot" type="button" data-theme="tech" title="tech 深蓝科技"></button>
-    <button class="th-dot" type="button" data-theme="mono" title="mono 极简黑白"></button>
+    <button class="th-dot" type="button" data-theme="mono" title="mono Darcula 深灰蓝"></button>
     <button class="th-dot" type="button" data-theme="mint" title="mint 薄荷绿"></button>
   </div>
 </body>

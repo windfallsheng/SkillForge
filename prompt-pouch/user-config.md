@@ -15,7 +15,7 @@ BACKUP_DIR: backup
 INIT_DATA: example
 
 # 页面主题（初始化时写入页面根标签 data-theme；页面右下角换肤坞可随时切换）
-# 可选：gold 暖棕金（默认）/ tech 深蓝科技 / mono 极简黑白 / mint 薄荷绿
+# 可选：gold 暖棕金（默认）/ tech 深蓝科技 / mono Darcula 深灰蓝 / mint 薄荷绿
 THEME: gold
 
 # 初始化/落盘前是否先确认目标目录
