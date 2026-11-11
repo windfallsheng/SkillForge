@@ -14,7 +14,7 @@ disable-model-invocation: false
 
 0. **读用户配置**（TEMPLATE/THEME/TRANSITION/ANIM/WIDTH/HEIGHT/SEC/FILENAME/DIR 等）→ 先 Read 同目录 `user-config.md`
 1. **收集内容**：解析用户提供的内容（文字/文件/结构化要点），确定页数与每页版式 → 先 Read `resources/content-guide.md` 按内容气质选版式骨架 / 按领域选成套模板 / 按用途定页数节奏 / 按数据挑图表形式
-2. **生成 HTML**（每页写语义结构——.s-head 标题 / .card 卡片 / .points 要点 / .bignum 数据，按 TEMPLATE 在对应页 slide 挂 data-template 声明默认版式；十六主题 CSS 变量、主题面板、动画库（deck 标签 data-transition 翻页八套 + 元素 data-anim 入场十二式 / data-anim-leave 离场 / data-anim-emphasis 强调 + 标题文字拆分 + 边栏 ⚙ 工具 Tab 控制）、模板面板（16 套 + 预览本页）、编辑能力（撤销/重做/页面管理边栏：新页/复页/排序/删页）、播放引擎、热键、截图/复制、全屏纯净模式）→ 先 Read `resources/reference.html` + `resources/deck-spec.md` 两份，以 reference.html 为骨架逐处替换内容
+2. **生成 HTML**（每页写语义结构——.s-head 标题 / .card 卡片 / .points 要点 / .bignum 数据，按 TEMPLATE 在对应页 slide 挂 data-template 声明默认版式；十七主题 CSS 变量、主题面板、动画库（deck 标签 data-transition 翻页八套 + 元素 data-anim 入场十二式 / data-anim-leave 离场 / data-anim-emphasis 强调 + 标题文字拆分 + 边栏 ⚙ 工具 Tab 控制）、模板面板（16 套 + 预览本页）、编辑能力（撤销/重做/页面管理边栏：新页/复页/排序/删页）、播放引擎、热键、截图/复制、全屏纯净模式）→ 先 Read `resources/reference.html` + `resources/deck-spec.md` 两份，以 reference.html 为骨架逐处替换内容
 2.5 **交付前自检**（落盘前必做，硬门禁不可跳过）：写工作区 `outputs/<文件名>.html` 后——
    - Bash 起 `python3 -m http.server 8941`（后台，端口占用换 8942/8943…）
    - Playwright headless 自检（缺则 `pip3 install --user playwright`；用系统 Chrome，无需 playwright install 下载浏览器）：`p.chromium.launch(channel="chrome", headless=True)` → goto 页面 → 挂 pageerror 监听（零容忍）→ 按页数循环 `go(i)` 把每一页翻完
@@ -30,7 +30,7 @@ disable-model-invocation: false
 ## 规则速览
 
 - 单文件 HTML 离线双击可打开：禁用 CDN/@import/外链 CSS/JS/图片/网络字体，字体用系统栈
-- 模板十六套（版式骨架）与主题十六套（配色）正交组合，均运行时即点即换：模板经「🎨 模板」面板应用（全部页/仅本页/勾选页），先「👁 预览本页」看效果（不落 data-template，取消自动还原）；生成时按 TEMPLATE/口头点名在 slide 挂 data-template 声明默认版式；标题自动映射——timeline 取卡片标题做节点、keynote 取页标题做大观点、magazine 左文右图分栏、steps 卡片转箭头步骤条、vintage 卡片收双栏报纸、poster 要点转斜切色带、finance 百分比转仪表环，切回经典商务恢复原排版内容不丢；`.slide` 自带 `background:var(--bg)` 使单页换肤整页变色
+- 模板十六套（版式骨架）与主题十七套（配色）正交组合，均运行时即点即换：模板经「🎨 模板」面板应用（全部页/仅本页/勾选页），先「👁 预览本页」看效果（不落 data-template，取消自动还原）；生成时按 TEMPLATE/口头点名在 slide 挂 data-template 声明默认版式；标题自动映射——timeline 取卡片标题做节点、keynote 取页标题做大观点、magazine 左文右图分栏、steps 卡片转箭头步骤条、vintage 卡片收双栏报纸、poster 要点转斜切色带、finance 百分比转仪表环，切回经典商务恢复原排版内容不丢；`.slide` 自带 `background:var(--bg)` 使单页换肤整页变色
 - 编辑操作全套可回退：Ctrl+Z 撤销 / Ctrl+Shift+Z 重做（工具栏 ↶↷）；「▤ 页导航 / G 键」右侧页面管理边栏：点击缩略图跳页、悬停操作条复页/上移/下移/删页；「＋ 新页」在边栏头部，16 版式任选插在当前页后；全部编辑只作用于内存，刷新后回到原始 deck
 - 工具栏控件统一 flex 垂直居中：`.toolbar/.group` flex + align-items:center + gap；`.tbtn` inline-flex + gap:6px + line-height:1；checkbox 14×14 与文字 6px 间距，文字不贴控件、上下不偏斜
 - 页面 1280×720 舞台 + 按窗口等比缩放（--sc），窗口任意大小不变形

@@ -2,6 +2,15 @@
 
 SkillForge（技能锻造坊）npm 包 `skill-forge-hub`（命令名 `skill-forge`）版本变更记录。
 
+## 0.5.5（2026-11-11）
+
+**全坊主题换装 IDEA 黑亮 + 新增 IDEA 白亮**
+
+- mono「黑」主题升级为 IDEA 黑亮（JetBrains New UI Dark 官方色系）：编辑区/主体 #1e1f22 + 面板/弹框 #2b2d30 + 描边 #3c3f41 + 文字 #dfe1e5 + IDEA 蓝 #3574f0，修正上一版老 Darcula 色板（#2b2b2b 系）与 IDE 观感不符的问题
+- 新增 light「白」主题（IntelliJ Light 官方色系）：白编辑区 #ffffff + 浅灰面板 #f2f2f2 + 描边 #d1d1d1 + IDEA 蓝 #2675bf
+- 覆盖范围：锦囊（四主题→五主题）、日报/周报/年报（四主题→五主题）、magic-deck（十六主题→十七主题）、deck-stage（四主题→五主题），换肤坞/主题数组/文档清单全同步
+- article-to-html 不参与：A 款四主题是「主色调 accent」体系非明暗语义，D 终端极客（黑）与 C 极简白（白）已由风格款覆盖
+
 ## 0.5.4（2026-11-11）
 
 **锦囊交互完善（SKILL.md）**

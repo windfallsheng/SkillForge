@@ -27,13 +27,21 @@ button,select,input{ font-family:inherit; }
   --tag-bg:rgba(37,99,235,.08);
   --card-shadow:0 1px 2px rgba(15,23,42,.05),0 10px 28px rgba(15,23,42,.12);
 }
-[data-theme="mono"]{
-  --bg:#f2f2f4; --bg2:#e4e4e8; --panel:rgba(255,255,255,.98); --panel-solid:#ffffff;
-  --text:#16181d; --muted:#6b7280; --accent:#111111; --accent2:#4b5563;
-  --border:rgba(17,17,17,.14); --glow:rgba(17,17,17,.08);
-  --title-grad:linear-gradient(90deg,#111,#333 60%,#666);
-  --tag-bg:rgba(17,17,17,.06);
-  --card-shadow:0 1px 2px rgba(0,0,0,.06),0 10px 28px rgba(0,0,0,.1);
+[data-theme="mono"]{ /* IDEA 黑亮：JetBrains New UI Dark 官方（编辑区 #1e1f22 + 面板 #2b2d30 + 描边 #3c3f41） */
+  --bg:#1e1f22; --bg2:#2b2d30; --panel:rgba(43,45,48,.92); --panel-solid:#2b2d30;
+  --text:#dfe1e5; --muted:#9aa0a6; --accent:#3574f0; --accent2:#5e9aff;
+  --border:rgba(53,116,240,.24); --glow:rgba(53,116,240,.3);
+  --title-grad:linear-gradient(90deg,#dfe1e5,#5e9aff 50%,#3574f0);
+  --tag-bg:rgba(53,116,240,.12);
+  --card-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 12px 32px rgba(0,0,0,.5),0 0 24px rgba(53,116,240,.16);
+}
+[data-theme="light"]{ /* IDEA 白亮：IntelliJ Light 官方（白编辑区 + 浅灰面板 #f2f2f2 + IDEA 蓝 #2675bf） */
+  --bg:#ffffff; --bg2:#f2f2f2; --panel:rgba(255,255,255,.96); --panel-solid:#ffffff;
+  --text:#1e1f22; --muted:#6e7781; --accent:#2675bf; --accent2:#4a9be0;
+  --border:rgba(38,117,191,.18); --glow:rgba(38,117,191,.2);
+  --title-grad:linear-gradient(90deg,#1e5f9f,#2675bf 55%,#4a9be0);
+  --tag-bg:rgba(38,117,191,.08);
+  --card-shadow:0 1px 2px rgba(30,31,34,.06),0 10px 28px rgba(30,31,34,.12);
 }
 [data-theme="warm"]{
   --bg:#f7ebd9; --bg2:#efe0c8; --panel:rgba(255,250,243,.97); --panel-solid:#fffaf3;
@@ -1274,9 +1282,9 @@ function startPlay(){
 }
 btnPlay.addEventListener('click', function(){ playing ? stopPlay() : startPlay(); });
 
-/* ── 主题切换（🎨 主题面板：16 色点网格即点即换，范围全部 / 仅本页） ── */
+/* ── 主题切换（🎨 主题面板：17 色点网格即点即换，范围全部 / 仅本页） ── */
 var THEMES = [
-  ['tech','深蓝科技','#0ea5e9'], ['biz','浅色商务','#2563eb'], ['mono','极简黑白','#111111'], ['warm','温暖渐变','#d97706'],
+  ['tech','深蓝科技','#0ea5e9'], ['biz','浅色商务','#2563eb'], ['mono','IDEA 黑亮','#1e1f22'], ['light','IDEA 白亮','#ffffff'], ['warm','温暖渐变','#d97706'],
   ['aurora','极光紫','#5e6ad2'], ['dracula','德古拉紫','#bd93f9'], ['nord','北欧冰蓝','#88c0d0'], ['midnight','东京夜色','#7aa2f7'],
   ['matrix','终端荧光绿','#00ff9c'], ['cyber','赛博霓虹','#ff2d78'], ['apple','苹果极简','#0071e3'], ['stripe','条纹紫蓝','#635bff'],
   ['notion','纸感暖白','#2383e2'], ['gruvbox','复古暖橙','#fe8019'], ['gold','黑金奢华','#d4af37'], ['ocean','深洋蓝','#38bdf8']
@@ -2499,7 +2507,7 @@ slides.forEach(function(s){
   if (tp && tp !== 'classic') applyTpl(s, tp);
 });
 var themeParam = new URLSearchParams(location.search).get('theme');
-if (['tech','biz','mono','warm'].indexOf(themeParam) > -1) setGlobalTheme(themeParam);
+if (['tech','biz','mono','light','warm'].indexOf(themeParam) > -1) setGlobalTheme(themeParam);
 var tplParam = new URLSearchParams(location.search).get('tpl');
 if (tplParam && TPLS.some(function(t){ return t.id === tplParam; })) applyScope(tplParam, 'all', []);
 var sm = location.hash.match(/^#\/(\d+)$/);

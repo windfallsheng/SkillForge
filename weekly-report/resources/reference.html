@@ -28,16 +28,27 @@
   --heat:rgba(37,99,235,.55);
   --green:#0d9488; --orange:#ea580c; --rose:#e11d48;
 }
-[data-theme="mono"]{
-  --bg:#f2f2f4; --bg2:#e4e4e8; --panel:rgba(255,255,255,.98); --panel-solid:#ffffff;
-  --card-shadow:0 1px 2px rgba(0,0,0,.06), 0 10px 28px rgba(0,0,0,.1);
-  --text:#16181d; --muted:#6b7280; --accent:#111111; --accent2:#4b5563;
-  --border:rgba(17,17,17,.14); --glow:rgba(17,17,17,.08); --glow-soft:rgba(17,17,17,.1);
-  --title-grad:linear-gradient(90deg,#111,#333 60%,#666);
-  --tag-bg:rgba(17,17,17,.06);
-  --scan:rgba(17,17,17,.1); --scan-dim:rgba(17,17,17,.04);
-  --heat:rgba(17,17,17,.55);
-  --green:#0f766e; --orange:#c2410c; --rose:#be123c;
+[data-theme="mono"]{ /* IDEA 黑亮：JetBrains New UI Dark 官方（编辑区 #1e1f22 + 面板 #2b2d30 + 描边 #3c3f41） */
+  --bg:#1e1f22; --bg2:#2b2d30; --panel:rgba(43,45,48,.95); --panel-solid:#2b2d30;
+  --card-shadow:0 1px 0 rgba(255,255,255,.06) inset, 0 12px 32px rgba(0,0,0,.5), 0 0 24px rgba(53,116,240,.16);
+  --text:#dfe1e5; --muted:#9aa0a6; --accent:#3574f0; --accent2:#5e9aff;
+  --border:rgba(53,116,240,.26); --glow:rgba(53,116,240,.3); --glow-soft:rgba(53,116,240,.13);
+  --title-grad:linear-gradient(90deg,#dfe1e5,#5e9aff 50%,#3574f0);
+  --tag-bg:rgba(53,116,240,.13);
+  --scan:rgba(94,154,255,.22); --scan-dim:rgba(94,154,255,.05);
+  --heat:rgba(53,116,240,.55);
+  --green:#4da36b; --orange:#d09645; --rose:#d85f73;
+}
+[data-theme="light"]{ /* IDEA 白亮：IntelliJ Light 官方（白编辑区 + 浅灰面板 #f2f2f2 + IDEA 蓝 #2675bf） */
+  --bg:#ffffff; --bg2:#f2f2f2; --panel:rgba(255,255,255,.98); --panel-solid:#ffffff;
+  --card-shadow:0 1px 2px rgba(30,31,34,.06), 0 10px 28px rgba(30,31,34,.12);
+  --text:#1e1f22; --muted:#6e7781; --accent:#2675bf; --accent2:#4a9be0;
+  --border:rgba(38,117,191,.18); --glow:rgba(38,117,191,.2); --glow-soft:rgba(38,117,191,.1);
+  --title-grad:linear-gradient(90deg,#1e5f9f,#2675bf 55%,#4a9be0);
+  --tag-bg:rgba(38,117,191,.08);
+  --scan:rgba(38,117,191,.12); --scan-dim:rgba(38,117,191,.04);
+  --heat:rgba(38,117,191,.55);
+  --green:#2f8a5b; --orange:#d97706; --rose:#d6336c;
 }
 [data-theme="warm"]{
   --bg:#f7ebd9; --bg2:#efe0c8; --panel:rgba(255,250,243,.97); --panel-solid:#fffaf3;
@@ -51,7 +62,7 @@
   --green:#0d9488; --orange:#c2410c; --rose:#be123c;
 }
 /* 浅色主题下星点氛围自然退隐 */
-[data-theme="biz"] .stars, [data-theme="mono"] .stars, [data-theme="warm"] .stars{ opacity:.28; }
+[data-theme="biz"] .stars, [data-theme="light"] .stars, [data-theme="warm"] .stars{ opacity:.28; }
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{background:var(--bg);}
 body{
@@ -520,7 +531,8 @@ li:hover .idx{ transform:scale(1.18) rotate(-4deg); font-size:14px; }
 .theme-dock .th-dot.on{ border-color:var(--text); }
 .theme-dock .th-dot[data-theme="tech"]{ background:#0ea5e9; }
 .theme-dock .th-dot[data-theme="biz"]{ background:#2563eb; }
-.theme-dock .th-dot[data-theme="mono"]{ background:#111; }
+.theme-dock .th-dot[data-theme="mono"]{ background:#1e1f22; }
+.theme-dock .th-dot[data-theme="light"]{ background:#ffffff; }
 .theme-dock .th-dot[data-theme="warm"]{ background:#d97706; }
 @media print{ .theme-dock{ display:none; } }
 </style>
@@ -811,7 +823,8 @@ li:hover .idx{ transform:scale(1.18) rotate(-4deg); font-size:14px; }
 <div class="theme-dock" id="themeDock">
   <button class="th-dot" type="button" data-theme="tech" title="深蓝科技"></button>
   <button class="th-dot" type="button" data-theme="biz" title="浅色商务"></button>
-  <button class="th-dot" type="button" data-theme="mono" title="极简黑白"></button>
+  <button class="th-dot" type="button" data-theme="mono" title="IDEA 黑亮"></button>
+<button class="th-dot" type="button" data-theme="light" title="IDEA 白亮"></button>
   <button class="th-dot" type="button" data-theme="warm" title="温暖渐变"></button>
 </div>
 
@@ -969,7 +982,7 @@ function sheen(track, src){
 
 // 主题换肤：四套配色随点随换；记忆上次选择（localStorage，失败静默）；?shot 截图模式隐藏坞
 (function(){
-  var THEMES = ['tech','biz','mono','warm'];
+  var THEMES = ['tech','biz','mono','light','warm'];
   var dock = document.getElementById('themeDock');
   if (!dock) return;
   if (location.search.indexOf('shot=') !== -1){ dock.style.display = 'none'; }

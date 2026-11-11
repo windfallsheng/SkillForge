@@ -23,7 +23,7 @@ disable-model-invocation: false
 
 **执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（DISK/FORMATS/DIR/OPEN_HTML/THEME/TEMPLATE/ROLE/CONFIRM/CONFIG_VERSION）与自定义模板都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留；官方更新配置时另存 `user-config.md.upstream` 对照文件，可按需手动合并新配置点。
 
-- **THEME**：html 页面主题，tech 深蓝科技（默认）/ biz 浅色商务 / mono 极简黑白 / warm 温暖渐变；生成时写 `<html data-theme="THEME值">` 定默认，页面右下角换肤坞随点随换（localStorage 记忆、?shot 截图模式与打印隐藏）
+- **THEME**：html 页面主题，tech 深蓝科技（默认）/ biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变；生成时写 `<html data-theme="THEME值">` 定默认，页面右下角换肤坞随点随换（localStorage 记忆、?shot 截图模式与打印隐藏）
 
 ## 配置版本机制（升级保护）
 
@@ -50,5 +50,5 @@ disable-model-invocation: false
 - 三段兜底写「暂无」；计划点带进度百分比与预估用时+完成标准（口述有时必写）；风险阻塞点四环（问题+影响+建议+责任与时间，第四环口述有时必写）
 - 用时单位 XH（小时），估算值注明「约」
 - 数字凡有对比基准必带；业务结果指标优先于提交统计；流水无主语、结论判断归因处允许「我」；落笔前五问自检（结论/基准/闭环/可验证/归属）
-- 页面主题四选一（tech 深蓝科技默认 / biz 浅色商务 / mono 极简黑白 / warm 温暖渐变）：THEME 配置定默认，右下角换肤坞随点随换
+- 页面主题五选一（tech 深蓝科技默认 / biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变）：THEME 配置定默认，右下角换肤坞随点随换
 - 完整规则（聚合来源 / 纯文字模式 / 写作风格约束 / 使用提示）见 `resources/content-rules.md`

@@ -30,34 +30,63 @@
   --btn-ink:#041018;
   --bar-hi:rgba(10,25,41,.96); --bar-lo:rgba(10,25,41,.88);
 }
-/* ═══ mono 深灰蓝：JetBrains Darcula 色系（深灰底 + 蓝灰文字 + 灰阶面板，IDE 同款观感） ═══ */
+/* ═══ mono IDEA 黑亮：JetBrains New UI Dark 官方色系（编辑区 #1e1f22 + 面板/弹框 #2b2d30 + 描边 #3c3f41，IDE 同款） ═══ */
 [data-theme="mono"]{
-  --bg:#2b2b2b; --bg2:#313335;
-  --panel:#3c3f41; --panel2:#313335;
-  --text:#a9b7c6; --muted:#808080;
-  --gold:#a9b7c6; --gold2:#6b7280; --gold-dim:rgba(169,183,198,.12);
-  --border:#4e5254;
-  --tag-bg:#3c3f41;
-  --star:#d7dce3;
-  --glow:rgba(169,183,198,.18);
-  --btn-ink:#2b2b2b;
-  --bar-hi:rgba(43,43,43,.96); --bar-lo:rgba(43,43,43,.88);
+  --bg:#1e1f22; --bg2:#2b2d30;
+  --panel:#2b2d30; --panel2:#313438;
+  --text:#dfe1e5; --muted:#9aa0a6;
+  --gold:#3574f0; --gold2:#5e9aff; --gold-dim:rgba(53,116,240,.14);
+  --border:#3c3f41;
+  --tag-bg:rgba(53,116,240,.1);
+  --star:#dfe1e5;
+  --glow:rgba(53,116,240,.22);
+  --btn-ink:#1e1f22;
+  --bar-hi:rgba(30,31,34,.96); --bar-lo:rgba(30,31,34,.88);
 }
-/* mono 深灰蓝组件适配：魔法棒灰化、蓝灰标签、浅蓝灰星标、深灰弹层、输入区微亮蓝灰、色点蓝灰描边 */
-[data-theme="mono"] .lg{ filter:grayscale(1) brightness(.45); }
+/* mono IDEA 黑亮组件适配：魔法棒提亮、图标灰白提亮、蓝标签、白星标、深灰弹层、输入区微亮、色点蓝描边 */
+[data-theme="mono"] .lg{ filter:grayscale(1) brightness(.5); }
 [data-theme="mono"] .nav-item .icon,
-[data-theme="mono"] .search .kw{ filter:grayscale(1) brightness(1.15); }
-[data-theme="mono"] .tpl-badge{ color:#a9b7c6; background:rgba(169,183,198,.14); }
-[data-theme="mono"] .op.star-on{ color:#d7dce3; border-color:rgba(169,183,198,.45); background:rgba(169,183,198,.16); }
-[data-theme="mono"] .gpop{ background:#3c3f41; border-color:#4e5254; box-shadow:0 12px 32px rgba(0,0,0,.6); }
+[data-theme="mono"] .search .kw{ filter:grayscale(1) brightness(1.25); }
+[data-theme="mono"] .tpl-badge{ color:#dfe1e5; background:rgba(223,225,229,.12); }
+[data-theme="mono"] .op.star-on{ color:#dfe1e5; border-color:rgba(223,225,229,.5); background:rgba(223,225,229,.16); }
+[data-theme="mono"] .gpop{ background:#2b2d30; border-color:#3c3f41; box-shadow:0 12px 32px rgba(0,0,0,.55); }
 [data-theme="mono"] .fp-preview,
 [data-theme="mono"] .fp-field input,
 [data-theme="mono"] .fp-field textarea,
 [data-theme="mono"] .fp-field select,
 [data-theme="mono"] .fp-live textarea,
 [data-theme="mono"] .bk-item,
-[data-theme="mono"] .detail-content{ background:rgba(169,183,198,.07); }
-[data-theme="mono"] .theme-dock .th-dot[data-theme="mono"]{ border:1.5px solid rgba(169,183,198,.55); }
+[data-theme="mono"] .detail-content{ background:rgba(223,225,229,.06); }
+[data-theme="mono"] .theme-dock .th-dot[data-theme="mono"]{ border:1.5px solid rgba(94,154,255,.6); }
+
+/* ═══ light IDEA 白亮：IntelliJ Light 官方色系（白编辑区 + 浅灰面板 #f2f2f2 + IDEA 蓝强调） ═══ */
+[data-theme="light"]{
+  --bg:#ffffff; --bg2:#f2f2f2;
+  --panel:#f2f2f2; --panel2:#ffffff;
+  --text:#1e1f22; --muted:#6e7781;
+  --gold:#2675bf; --gold2:#4a9be0; --gold-dim:rgba(38,117,191,.12);
+  --border:#d1d1d1;
+  --tag-bg:rgba(38,117,191,.08);
+  --star:#e5a33c;
+  --glow:rgba(38,117,191,.16);
+  --btn-ink:#ffffff;
+  --bar-hi:rgba(255,255,255,.96); --bar-lo:rgba(255,255,255,.88);
+}
+/* light IDEA 白亮组件适配：魔法棒灰黑、图标灰化、蓝标签、暖金星标、白弹层、输入区浅灰、色点蓝描边 */
+[data-theme="light"] .lg{ filter:grayscale(1) brightness(.7); }
+[data-theme="light"] .nav-item .icon,
+[data-theme="light"] .search .kw{ filter:grayscale(1) brightness(.85); }
+[data-theme="light"] .tpl-badge{ color:#2675bf; background:rgba(38,117,191,.1); }
+[data-theme="light"] .op.star-on{ color:#e5a33c; border-color:rgba(229,163,60,.5); background:rgba(229,163,60,.14); }
+[data-theme="light"] .gpop{ background:#ffffff; border-color:#d1d1d1; box-shadow:0 12px 32px rgba(30,31,34,.14); }
+[data-theme="light"] .fp-preview,
+[data-theme="light"] .fp-field input,
+[data-theme="light"] .fp-field textarea,
+[data-theme="light"] .fp-field select,
+[data-theme="light"] .fp-live textarea,
+[data-theme="light"] .bk-item,
+[data-theme="light"] .detail-content{ background:#f7f9fb; }
+[data-theme="light"] .theme-dock .th-dot[data-theme="light"]{ border:1.5px solid rgba(38,117,191,.5); }
 [data-theme="mint"]{ /* 薄荷绿 */
   --bg:#0d1a12; --bg2:#12241a;
   --panel:#182f22; --panel2:#1e3a2a;
@@ -473,7 +502,8 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
 .theme-dock .th-dot.on{ border-color:var(--text); }
 .theme-dock .th-dot[data-theme="gold"]{ background:#e8b04b; }
 .theme-dock .th-dot[data-theme="tech"]{ background:#0ea5e9; }
-.theme-dock .th-dot[data-theme="mono"]{ background:#2b2b2b; }
+.theme-dock .th-dot[data-theme="mono"]{ background:#1e1f22; }
+.theme-dock .th-dot[data-theme="light"]{ background:#ffffff; }
 .theme-dock .th-dot[data-theme="mint"]{ background:#4ade80; }
 @media print{ .theme-dock{ display:none; } }
 </style>
@@ -2009,9 +2039,9 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     });
 })();
 
-/* 主题换肤：四套配色随点随换；记忆上次选择（localStorage，失败静默） */
+/* 主题换肤：五套配色随点随换；记忆上次选择（localStorage，失败静默） */
 (function(){
-  var THEMES = ['gold','tech','mono','mint'];
+  var THEMES = ['gold','tech','mono','light','mint'];
   function init(){
     var dock = document.getElementById('themeDock');
     if (!dock) return;
@@ -2043,7 +2073,8 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
   <div class="theme-dock" id="themeDock">
     <button class="th-dot" type="button" data-theme="gold" title="gold 暖棕金"></button>
     <button class="th-dot" type="button" data-theme="tech" title="tech 深蓝科技"></button>
-    <button class="th-dot" type="button" data-theme="mono" title="mono Darcula 深灰蓝"></button>
+    <button class="th-dot" type="button" data-theme="mono" title="mono IDEA 黑亮"></button>
+    <button class="th-dot" type="button" data-theme="light" title="light IDEA 白亮"></button>
     <button class="th-dot" type="button" data-theme="mint" title="mint 薄荷绿"></button>
   </div>
 </body>

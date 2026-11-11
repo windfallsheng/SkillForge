@@ -1,6 +1,6 @@
 # magic-deck HTML 幻灯片完整规范
 
-> ⛔ **Reference 铁律（最高优先）**：本目录 `reference.html` 是定稿骨架源码（默认 classic 模板 + 十六套版式模板 + 十六主题 + 全部组件 + 播放引擎 + 单页主题 + 模板预览/撤销重做/右侧边栏双 Tab（页面管理 + 动画工具））。生成 HTML 时必须先 Read `resources/reference.html` 与本文件两份，以 reference.html 为骨架逐处替换内容；两者冲突时**以 reference.html 为准**。修改本 skill 的 HTML 效果时，必须同步更新 `resources/reference.html` 与本文档的对应描述，禁止只改一处。
+> ⛔ **Reference 铁律（最高优先）**：本目录 `reference.html` 是定稿骨架源码（默认 classic 模板 + 十六套版式模板 + 十七主题 + 全部组件 + 播放引擎 + 单页主题 + 模板预览/撤销重做/右侧边栏双 Tab（页面管理 + 动画工具））。生成 HTML 时必须先 Read `resources/reference.html` 与本文件两份，以 reference.html 为骨架逐处替换内容；两者冲突时**以 reference.html 为准**。修改本 skill 的 HTML 效果时，必须同步更新 `resources/reference.html` 与本文档的对应描述，禁止只改一处。
 
 生成单文件 HTML 幻灯片（HTML 形态、PPT 体验），所有实现细节以本文为准。
 
@@ -53,7 +53,7 @@
 <script>播放引擎（见 §6）</script>
 ```
 
-## 2. 十六主题 CSS 变量（完整色值，12 令牌 × 16 主题，默认 tech）
+## 2. 十七主题 CSS 变量（完整色值，12 令牌 × 17 主题，默认 tech）
 
 ```css
 :root, [data-theme="tech"]{ /* 深蓝科技（默认） */
@@ -70,12 +70,19 @@
   --title-grad:linear-gradient(90deg,#1e40af,#2563eb 55%,#0891b2);
   --tag-bg:rgba(37,99,235,.08);
 }
-[data-theme="mono"]{ /* 极简黑白 */
-  --bg:#fafafa; --bg2:#f0f0f0; --panel:rgba(255,255,255,.9); --panel-solid:#ffffff;
-  --text:#16181d; --muted:#6b7280; --accent:#111111; --accent2:#4b5563;
-  --border:rgba(17,17,17,.14); --glow:rgba(17,17,17,.08);
-  --title-grad:linear-gradient(90deg,#111,#333 60%,#666);
-  --tag-bg:rgba(17,17,17,.06);
+[data-theme="mono"]{ /* IDEA 黑亮 */
+  --bg:#1e1f22; --bg2:#2b2d30; --panel:rgba(43,45,48,.92); --panel-solid:#2b2d30;
+  --text:#dfe1e5; --muted:#9aa0a6; --accent:#3574f0; --accent2:#5e9aff;
+  --border:rgba(53,116,240,.24); --glow:rgba(53,116,240,.3);
+  --title-grad:linear-gradient(90deg,#dfe1e5,#5e9aff 50%,#3574f0);
+  --tag-bg:rgba(53,116,240,.12);
+}
+[data-theme="light"]{ /* IDEA 白亮 */
+  --bg:#ffffff; --bg2:#f2f2f2; --panel:rgba(255,255,255,.96); --panel-solid:#ffffff;
+  --text:#1e1f22; --muted:#6e7781; --accent:#2675bf; --accent2:#4a9be0;
+  --border:rgba(38,117,191,.18); --glow:rgba(38,117,191,.2);
+  --title-grad:linear-gradient(90deg,#1e5f9f,#2675bf 55%,#4a9be0);
+  --tag-bg:rgba(38,117,191,.08);
 }
 [data-theme="warm"]{ /* 温暖渐变 */
   --bg:#fdf3e7; --bg2:#f7e7d3; --panel:rgba(255,250,243,.85); --panel-solid:#fffaf3;
