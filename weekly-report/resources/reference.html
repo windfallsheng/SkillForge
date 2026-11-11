@@ -225,7 +225,8 @@ h1{
 .ring .track{ fill:none; stroke:var(--tag-bg); stroke-width:7; }
 .ring .val{
   fill:none; stroke:url(#ringGrad); stroke-width:7; stroke-linecap:round;
-  stroke-dasharray:226.19; stroke-dashoffset:0;
+  stroke-dasharray:226.19; stroke-dashoffset:var(--ring-offset,0);
+  animation:ringSweep 1.2s ease-out .25s backwards; /* --ring-offset=226.19×(1-pct) 数据驱动，未设时满环 */
   filter:drop-shadow(0 0 6px var(--glow));
 }
 .ring-num{
@@ -234,6 +235,7 @@ h1{
   text-shadow:0 0 12px var(--glow);
 }
 .ring-label{ font-size:11px; color:var(--muted); text-align:center; line-height:1.5; }
+@keyframes ringSweep{ from{ stroke-dashoffset:226.19; } to{ stroke-dashoffset:var(--ring-offset,0); } }
 /* 热力图 */
 .heat-card{
   grid-column:2/4; grid-row:2; display:flex; align-items:center; gap:14px;
@@ -245,6 +247,7 @@ h1{
 .hm{
   width:14px; height:14px; border-radius:3px; position:relative; cursor:default;
   background:var(--tag-bg);
+  animation:hmOn .5s ease-out backwards;
 }
 .hm[data-v="1"]{ background:var(--glow); }
 .hm[data-v="2"]{ background:var(--heat); }
@@ -256,6 +259,10 @@ h1{
   opacity:0; pointer-events:none; transition:opacity .15s;
 }
 .hm:hover::after{ opacity:1; }
+.heat-grid .hm:nth-child(3n+1){ animation-delay:.06s; }
+.heat-grid .hm:nth-child(3n+2){ animation-delay:.14s; }
+.heat-grid .hm:nth-child(3n){ animation-delay:.22s; }
+@keyframes hmOn{ from{ opacity:0; transform:scale(.3); } }
 .heat-days{ display:grid; grid-template-columns:repeat(5, 14px); gap:4px; margin-top:4px; padding-left:26px; }
 .heat-days span{ font-size:9px; color:var(--muted); text-align:center; }
 .heat-legend{ display:flex; align-items:center; gap:3px; margin-left:auto; }
@@ -545,7 +552,7 @@ li:hover .idx{ transform:scale(1.18) rotate(-4deg); font-size:14px; }
 .theme-dock .th-dot[data-theme="mono"]{ background:#1e1f22; }
 .theme-dock .th-dot[data-theme="light"]{ background:#ffffff; }
 .theme-dock .th-dot[data-theme="warm"]{ background:#d97706; }
-@media print{ .theme-dock{ display:none; } .rv{ opacity:1 !important; translate:none !important; } }
+@media print{ .theme-dock{ display:none; .ring .val,.hm{ animation:none !important; } } .rv{ opacity:1 !important; translate:none !important; .ring .val,.hm{ animation:none !important; } } .ring .val,.hm{ animation:none !important; } }
 /* 滚动入场：html.js 门控（无 JS/打印全显）；初始视口外的卡片滚到视口才上浮渐显；translate 独立属性不碰 transform，hover 3D 偏转零冲突 */
 html.js .rv{ opacity:0; translate:0 16px; transition:opacity .5s ease-out, translate .5s ease-out; }
 html.js .rv.in{ opacity:1; translate:0 0; }

@@ -165,13 +165,14 @@ body{
 .cb-chart{display:flex;align-items:flex-end;gap:8px;height:110px}
 .cb-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative}
 .cb-bar{width:24px;background:linear-gradient(180deg,#5eead4,#14b8a6);border-radius:3px 3px 0 0;
-  box-shadow:0 0 10px rgba(45,212,191,.35);transition:height .3s ease}
+  box-shadow:0 0 10px rgba(45,212,191,.35);transition:height .3s ease;animation:cbGrow 1s ease-out both}
 .cb-col:hover .cb-bar{box-shadow:0 0 16px rgba(45,212,191,.6)}
 .cb-label{font-size:9px;color:var(--muted);margin-top:4px}
 .cb-tip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%) translateY(4px);
   background:var(--panel-solid);border:1px solid var(--glow);color:var(--text);font-size:10px;white-space:nowrap;
   padding:3px 8px;border-radius:4px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:5}
 .cb-col:hover .cb-tip{opacity:1;transform:translateX(-50%) translateY(0)}
+@keyframes cbGrow{ from{height:0;} }
 /* 序号徽章 3D 球 */
 .idx{flex:0 0 auto;width:28px;height:28px;border-radius:50%;position:relative;
   display:flex;align-items:center;justify-content:center;color:#fff;
@@ -246,7 +247,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);letter-spacing:1px;pa
 .theme-dock .th-dot[data-theme="mono"]{ background:#1e1f22; }
 .theme-dock .th-dot[data-theme="light"]{ background:#ffffff; }
 .theme-dock .th-dot[data-theme="warm"]{ background:#d97706; }
-@media print{ .theme-dock{ display:none; } .rv{ opacity:1 !important; translate:none !important; } }
+@media print{ .theme-dock{ display:none; .cb-bar{ animation:none !important; } } .rv{ opacity:1 !important; translate:none !important; .cb-bar{ animation:none !important; } } .cb-bar{ animation:none !important; } }
 /* 滚动入场：html.js 门控（无 JS/打印全显）；初始视口外的卡片滚到视口才上浮渐显；translate 独立属性不碰 transform，hover 3D 偏转零冲突 */
 html.js .rv{ opacity:0; translate:0 16px; transition:opacity .5s ease-out, translate .5s ease-out; }
 html.js .rv.in{ opacity:1; translate:0 0; }
