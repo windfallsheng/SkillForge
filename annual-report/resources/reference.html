@@ -162,17 +162,9 @@ body{
 /* 柱图 */
 .cb-wrap{margin-top:18px;padding-top:14px;border-top:1px dashed var(--border)}
 .cb-title{font-size:12px;color:var(--muted);margin-bottom:12px;letter-spacing:1px}
-.cb-chart{display:flex;align-items:flex-end;gap:8px;height:110px}
-.cb-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative}
-.cb-bar{width:24px;background:linear-gradient(180deg,#5eead4,#14b8a6);border-radius:3px 3px 0 0;
-  box-shadow:0 0 10px rgba(45,212,191,.35);transition:height .3s ease;animation:cbGrow 1s ease-out both}
-.cb-col:hover .cb-bar{box-shadow:0 0 16px rgba(45,212,191,.6)}
-.cb-label{font-size:9px;color:var(--muted);margin-top:4px}
-.cb-tip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%) translateY(4px);
-  background:var(--panel-solid);border:1px solid var(--glow);color:var(--text);font-size:10px;white-space:nowrap;
-  padding:3px 8px;border-radius:4px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:5}
-.cb-col:hover .cb-tip{opacity:1;transform:translateX(-50%) translateY(0)}
-@keyframes cbGrow{ from{height:0;} }
+.ech{width:100%;height:110px}
+.ech-off{display:flex;align-items:center;justify-content:center}
+.ech-off::after{content:attr(data-off);font-size:11px;color:var(--muted);text-align:center;line-height:1.6;padding:0 10px}
 /* 序号徽章 3D 球 */
 .idx{flex:0 0 auto;width:28px;height:28px;border-radius:50%;position:relative;
   display:flex;align-items:center;justify-content:center;color:#fff;
@@ -247,7 +239,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);letter-spacing:1px;pa
 .theme-dock .th-dot[data-theme="mono"]{ background:#1e1f22; }
 .theme-dock .th-dot[data-theme="light"]{ background:#ffffff; }
 .theme-dock .th-dot[data-theme="warm"]{ background:#d97706; }
-@media print{ .theme-dock{ display:none; .cb-bar{ animation:none !important; } } .rv{ opacity:1 !important; translate:none !important; .cb-bar{ animation:none !important; } } .cb-bar{ animation:none !important; } }
+@media print{ .theme-dock{ display:none; } .rv{ opacity:1 !important; translate:none !important; } }
 /* 滚动入场：html.js 门控（无 JS/打印全显）；初始视口外的卡片滚到视口才上浮渐显；translate 独立属性不碰 transform，hover 3D 偏转零冲突 */
 html.js .rv{ opacity:0; translate:0 16px; transition:opacity .5s ease-out, translate .5s ease-out; }
 html.js .rv.in{ opacity:1; translate:0 0; }
@@ -257,15 +249,6 @@ html.js .rv.in{ opacity:1; translate:0 0; }
   .wrap{ width:100%; max-width:none; }
   .header-card{ padding:26px 18px 20px; }
   .header-card h1{ font-size:26px; }
-  /* 月提交柱图窄屏收敛：12 列 flex 收缩 + bar 弹性宽 + tip 首末列锚定防裁剪 */
-  .cb-chart{ gap:4px; }
-  .cb-col{ min-width:0; }
-  .cb-bar{ width:100%; max-width:24px; }
-  .cb-label{ font-size:8px; }
-  .cb-col:first-child .cb-tip{ left:0; transform:translateY(4px); }
-  .cb-col:first-child:hover .cb-tip{ transform:translateY(0); }
-  .cb-col:last-child .cb-tip{ left:auto; right:0; transform:translateY(4px); }
-  .cb-col:last-child:hover .cb-tip{ transform:translateY(0); }
 }
 </style>
 </head>
@@ -348,20 +331,7 @@ html.js .rv.in{ opacity:1; translate:0 0; }
     </div>
     <div class="cb-wrap">
       <div class="cb-title">年度提交月度分布（次）</div>
-      <div class="cb-chart">
-        <div class="cb-col"><div class="cb-tip">1月 · 0 次提交</div><div class="cb-bar" style="height:2px"></div><div class="cb-label">1月</div></div>
-        <div class="cb-col"><div class="cb-tip">2月 · 0 次提交</div><div class="cb-bar" style="height:2px"></div><div class="cb-label">2月</div></div>
-        <div class="cb-col"><div class="cb-tip">3月 · 0 次提交</div><div class="cb-bar" style="height:2px"></div><div class="cb-label">3月</div></div>
-        <div class="cb-col"><div class="cb-tip">4月 · 0 次提交</div><div class="cb-bar" style="height:2px"></div><div class="cb-label">4月</div></div>
-        <div class="cb-col"><div class="cb-tip">5月 · 0 次提交</div><div class="cb-bar" style="height:2px"></div><div class="cb-label">5月</div></div>
-        <div class="cb-col"><div class="cb-tip">6月 · 0 次提交</div><div class="cb-bar" style="height:2px"></div><div class="cb-label">6月</div></div>
-        <div class="cb-col"><div class="cb-tip">7月 · 335 次提交</div><div class="cb-bar" style="height:32px"></div><div class="cb-label">7月</div></div>
-        <div class="cb-col"><div class="cb-tip">8月 · 1154 次提交</div><div class="cb-bar" style="height:92px"></div><div class="cb-label">8月</div></div>
-        <div class="cb-col"><div class="cb-tip">9月 · 328 次提交</div><div class="cb-bar" style="height:31px"></div><div class="cb-label">9月</div></div>
-        <div class="cb-col"><div class="cb-tip">10月 · 54 次提交</div><div class="cb-bar" style="height:8px"></div><div class="cb-label">10月</div></div>
-        <div class="cb-col"><div class="cb-tip">11月 · 18 次提交</div><div class="cb-bar" style="height:4px"></div><div class="cb-label">11月</div></div>
-        <div class="cb-col"><div class="cb-tip">12月 · 0 次提交</div><div class="cb-bar" style="height:2px"></div><div class="cb-label">12月</div></div>
-      </div>
+      <div class="ech" id="monthChart" data-off="图表需联网加载 echarts，离线环境不显示"></div>
     </div>
   </section>
 
@@ -419,6 +389,7 @@ html.js .rv.in{ opacity:1; translate:0 0; }
   <button class="th-dot" type="button" data-theme="warm" title="温暖渐变"></button>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
 <script>
 // 复制源 = txt 纯文本全文
 var TXT = "2026 研发年度总结\n\n生成时间：2026-11-09 17:03:01\n\n年度概览\nTL;DR：立项即狂奔的一年：SpecCore 规范驱动开发平台 7 月从零立项，4 个月 1889 次提交、576 个版本发布、代码库净增 19 万行，完成从单机 CLI 到流水线平台的蜕变。\n1、总提交数：1889 次（07-05 ~ 11-05）\n2、版本发布：576 个（v5.13.0 → v8.3.399）\n3、净增代码：+19.0 万行（+32.9 万 / -13.9 万）\n4、月度峰值：1154 次提交（8 月）\n\n核心成果与里程碑\n1、7 月立项首发：SpecCore CLI 完整功能落地，v5.13.0 首版发布（335 次提交、+5.4 万行）- Q3\n2、8 月密集攻坚：知识资产四层覆盖架构（TOC 目录/自动注入/RAG 检索/阅读清单）成形，月内 1154 次提交、+16.4 万行、发布 200+ 版本 - Q3\n3、9 月流水线成形：run 端到端流水线与迭代体系建立，+7.6 万行、328 次提交 - Q3\n4、10 月发布节奏收敛：v8.3 系列起跑，月度发布收紧至约 30 个版本，+1.8 万行 - Q4\n5、11-03 v8.3.370 累积发布：GLOBAL 治乱、反推域隔离、文档生成器升格、澄清链修复 - Q4\n6、11-04 v8.3.388：E2E 全链路深度检查 11 项修复 + execute 意图语义硬化 - Q4\n7、11-04 v8.3.394：反推链接力协议补全、全局分析默认纯技术、QA 环接力协议（exit 10）- Q4\n8、11-05 v8.3.399（截至当前）：用例核对闸开卷设闸——execute 收尾逐用例勾稽，未实现即入修复环 - Q4\n\n经验与成长\n1、沉淀了「四层知识资产架构」（TOC 目录/自动注入/RAG 检索/阅读清单），解决了 AI 对规范库看不见、记不住、找不回的三类可见性断层。\n2、掌握了 ask 引擎意图识别与 AI 接力协议（[SPECCORE_EXEC]/[SPECCORE_PROMPT]/[SPECCORE_CONTINUE] 标记链），人机协作可从任意断点续跑。\n3、建立了「聚合发布」节奏：小步高频提交 + 里程碑聚合 tag，兼顾问题定位粒度与交付速度。\n4、积累了质量门禁体系经验：骨架完成度自检、用例核对闸、QA 三阶段验证环，质量兜底不再依赖人肉复查。\n\n不足与反思\n1、8 月节奏过载：单月 1154 次提交、8-08 单日 95 个版本。\n影响：文档与代码同步滞后，质量债累积。\n改进：明年收敛为双周聚合发布、月度版本 ≤20 个。\n2、生成物污染统计口径：code-graph 等生成物单文件数十万行噪音曾混入行数统计。\n影响：工作量指标失真，误导投入判断。\n改进：统计前强制剔除生成物路径白名单。\n3、发布颗粒度两端失衡：Q3 一日最多 95 个 tag，Q4 单次聚合最多 10 个版本。\n影响：问题定位粒度在过细与过粗之间摇摆。\n改进：固定批次大小，每批 ≤10 版本聚合。\n\n新年展望与规划\n1、发布节奏工程化：双周聚合发布落地，2027 年版本发布总量 ≤120 个（Q1 建立节奏、Q2 稳定运行）。\n2、测试覆盖率跃升：核心链路自动化覆盖 ≥80%，用例核对闸覆盖全部命令（Q1 铺 E2E、Q3 达标）。\n3、生成物与体量治理：启动耗时降 30%、生成物目录隔离入白名单（Q2 完成隔离、Q4 验收性能）。\n4、生态落地：spec-once/流水线在 ≥3 个真实项目落地并沉淀案例（Q2 试点、Q4 案例库发布）。";
@@ -468,6 +439,45 @@ if (location.search.indexOf('shot=content') > -1) {
   });
 }
 
+// 月度提交柱图（echarts CDN 渲染；离线时容器降级提示；?shot 截图模式停动画——headless 虚拟时间下动画帧不推进会停在初始帧）
+(function(){
+  var el = document.getElementById('monthChart');
+  if (!el) return;
+  if (typeof echarts === 'undefined'){ el.classList.add('ech-off'); return; }
+  var noAnim = location.search.indexOf('shot=') !== -1;
+  var chart = echarts.init(el);
+  var MONTHS = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  var VALS = [0,0,0,0,0,0,335,1154,328,54,18,0];
+  function tokens(){
+    var s = getComputedStyle(document.documentElement);
+    return {
+      accent:s.getPropertyValue('--accent').trim(), accent2:s.getPropertyValue('--accent2').trim(),
+      muted:s.getPropertyValue('--muted').trim(), text:s.getPropertyValue('--text').trim(),
+      border:s.getPropertyValue('--border').trim(), glow:s.getPropertyValue('--glow').trim(),
+      panel:s.getPropertyValue('--panel-solid').trim()
+    };
+  }
+  function option(){
+    var t = tokens();
+    return {
+      animation: !noAnim,
+      grid:{ left:2, right:2, top:18, bottom:18 },
+      tooltip:{ trigger:'axis', backgroundColor:t.panel, borderColor:t.border,
+        textStyle:{ color:t.text, fontSize:11 },
+        formatter:function(p){ return p[0].name + ' · ' + p[0].value + ' 次提交'; } },
+      xAxis:{ type:'category', data:MONTHS, axisTick:{ show:false },
+        axisLine:{ lineStyle:{ color:t.border } }, axisLabel:{ color:t.muted, fontSize:9 } },
+      yAxis:{ type:'value', show:false, max:1200 },
+      series:[{ type:'bar', data:VALS, barWidth:'46%',
+        itemStyle:{ borderRadius:[3,3,0,0],
+          color:new echarts.graphic.LinearGradient(0,0,0,1,[{ offset:0, color:t.accent2 },{ offset:1, color:t.accent }]),
+          shadowBlur:10, shadowColor:t.glow } }]
+    };
+  }
+  chart.setOption(option());
+  window.__sfEchartsTheme = function(){ chart.setOption(option()); };
+  window.addEventListener('resize', function(){ chart.resize(); });
+})();
 // 主题换肤：五套配色随点随换；记忆上次选择（localStorage，失败静默）；?shot 截图模式隐藏坞
 (function(){
   var THEMES = ['tech','biz','mono','light','warm'];
@@ -476,7 +486,8 @@ if (location.search.indexOf('shot=content') > -1) {
   if (location.search.indexOf('shot=') !== -1){ dock.style.display = 'none'; }
   function apply(t){ document.documentElement.setAttribute('data-theme', t);
     dock.querySelectorAll('.th-dot').forEach(function(d){ d.classList.toggle('on', d.getAttribute('data-theme') === t); });
-    try{ localStorage.setItem('sf-report-theme', t); }catch(e){} }
+    try{ localStorage.setItem('sf-report-theme', t); }catch(e){}
+    if (window.__sfEchartsTheme) window.__sfEchartsTheme(); }
   var cur = document.documentElement.getAttribute('data-theme');
   var saved = null; try{ saved = localStorage.getItem('sf-report-theme'); }catch(e){}
   if (saved && THEMES.indexOf(saved) !== -1 && saved !== cur){ apply(saved); }

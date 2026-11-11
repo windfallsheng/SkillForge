@@ -220,22 +220,17 @@ h1{
   grid-column:1; grid-row:2/6; display:flex; flex-direction:column; align-items:center;
   justify-content:center; gap:8px;
 }
-.ring{ position:relative; width:88px; height:88px; }
-.ring svg{ transform:rotate(-90deg); }
-.ring .track{ fill:none; stroke:var(--tag-bg); stroke-width:7; }
-.ring .val{
-  fill:none; stroke:url(#ringGrad); stroke-width:7; stroke-linecap:round;
-  stroke-dasharray:226.19; stroke-dashoffset:var(--ring-offset,0);
-  animation:ringSweep 1.2s ease-out .25s backwards; /* --ring-offset=226.19×(1-pct) 数据驱动，未设时满环 */
-  filter:drop-shadow(0 0 6px var(--glow));
-}
+.ring-ech{ position:relative; width:88px; height:88px; }
+.ring-ech::before{ content:''; position:absolute; inset:8px; border-radius:50%; border:7px solid var(--tag-bg); }
+.ring-ech .ech{ width:100%; height:100%; }
+.ech-off{ display:flex; align-items:center; justify-content:center; }
+.ech-off::after{ content:attr(data-off); font-size:11px; color:var(--muted); text-align:center; line-height:1.6; padding:0 10px; }
 .ring-num{
   position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
   font-size:22px; font-weight:900; color:var(--accent);
   text-shadow:0 0 12px var(--glow);
 }
 .ring-label{ font-size:11px; color:var(--muted); text-align:center; line-height:1.5; }
-@keyframes ringSweep{ from{ stroke-dashoffset:226.19; } to{ stroke-dashoffset:var(--ring-offset,0); } }
 /* 热力图 */
 .heat-card{
   grid-column:2/4; grid-row:2; display:flex; align-items:center; gap:14px;
@@ -243,28 +238,11 @@ h1{
   padding:12px 14px; flex-wrap:wrap;
 }
 .heat-title{ font-size:12px; font-weight:700; color:var(--text); letter-spacing:1px; white-space:nowrap; }
-.heat-grid{ display:grid; grid-template-columns:repeat(3, 14px); grid-auto-flow:column; grid-template-rows:repeat(5, 14px); gap:4px; }
-.hm{
-  width:14px; height:14px; border-radius:3px; position:relative; cursor:default;
-  background:var(--tag-bg);
-  animation:hmOn .5s ease-out backwards;
-}
-.hm[data-v="1"]{ background:var(--glow); }
-.hm[data-v="2"]{ background:var(--heat); }
-.hm[data-v="3"]{ background:var(--accent2); box-shadow:0 0 8px var(--glow); }
-.hm::after{
-  content:attr(data-tip); position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%);
-  background:var(--panel-solid); border:1px solid var(--border); border-radius:4px;
-  color:var(--text); font-size:10px; padding:3px 8px; white-space:nowrap; z-index:5;
-  opacity:0; pointer-events:none; transition:opacity .15s;
-}
-.hm:hover::after{ opacity:1; }
-.heat-grid .hm:nth-child(3n+1){ animation-delay:.06s; }
-.heat-grid .hm:nth-child(3n+2){ animation-delay:.14s; }
-.heat-grid .hm:nth-child(3n){ animation-delay:.22s; }
-@keyframes hmOn{ from{ opacity:0; transform:scale(.3); } }
-.heat-days{ display:grid; grid-template-columns:repeat(5, 14px); gap:4px; margin-top:4px; padding-left:26px; }
-.heat-days span{ font-size:9px; color:var(--muted); text-align:center; }
+.heat-card .ech{ width:150px; height:112px; flex:0 0 auto; }
+.hl-swatch{ width:14px; height:14px; border-radius:3px; background:var(--tag-bg); }
+.hl-swatch[data-v="1"]{ background:var(--glow); }
+.hl-swatch[data-v="2"]{ background:var(--heat); }
+.hl-swatch[data-v="3"]{ background:var(--accent2); box-shadow:0 0 8px var(--glow); }
 .heat-legend{ display:flex; align-items:center; gap:3px; margin-left:auto; }
 .heat-legend span{ font-size:9px; color:var(--muted); }
 /* 指标胶囊 */
@@ -290,26 +268,11 @@ h1{
 .ov-compare .down{ color:var(--rose); font-weight:700; }
 /* 柱图 */
 .cb-row{
-  grid-column:2/4; grid-row:6; display:flex; align-items:flex-end; justify-content:space-around;
-  height:86px; padding:0 6px; border-top:1px dashed var(--border); padding-top:10px; position:relative;
+  grid-column:2/4; grid-row:6; border-top:1px dashed var(--border); padding-top:10px;
+  height:96px;
 }
-.cb-col{ position:relative; display:flex; flex-direction:column; align-items:center; gap:6px; height:100%; justify-content:flex-end; }
-.cb-bar{
-  width:32px; border-radius:4px 4px 0 0;
-  background:linear-gradient(180deg, var(--accent2), var(--accent) 60%, var(--accent2));
-  box-shadow:0 0 10px var(--glow);
-  min-height:3px; animation:cbGrow 1s ease-out both;
-}
-@keyframes cbGrow{ from{height:0;} }
-.cb-col .cb-day{ font-size:9.5px; color:var(--muted); }
-.cb-col .cb-tip{
-  position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
-  background:var(--panel-solid); border:1px solid var(--border); border-radius:4px;
-  color:var(--text); font-size:10px; padding:4px 8px; white-space:nowrap; z-index:5;
-  opacity:0; pointer-events:none; transition:opacity .15s;
-}
-.cb-col:hover .cb-tip{ opacity:1; }
-.cb-count{ font-size:11px; font-weight:900; color:var(--accent); text-shadow:0 0 8px var(--glow); }
+.cb-row .ech{ width:100%; height:86px; }
+
 /* ============ 分节卡片 ============ */
 .section{
   position:relative; background:var(--panel-solid);
@@ -552,7 +515,7 @@ li:hover .idx{ transform:scale(1.18) rotate(-4deg); font-size:14px; }
 .theme-dock .th-dot[data-theme="mono"]{ background:#1e1f22; }
 .theme-dock .th-dot[data-theme="light"]{ background:#ffffff; }
 .theme-dock .th-dot[data-theme="warm"]{ background:#d97706; }
-@media print{ .theme-dock{ display:none; .ring .val,.hm{ animation:none !important; } } .rv{ opacity:1 !important; translate:none !important; .ring .val,.hm{ animation:none !important; } } .ring .val,.hm{ animation:none !important; } }
+@media print{ .theme-dock{ display:none; } .rv{ opacity:1 !important; translate:none !important; } }
 /* 滚动入场：html.js 门控（无 JS/打印全显）；初始视口外的卡片滚到视口才上浮渐显；translate 独立属性不碰 transform，hover 3D 偏转零冲突 */
 html.js .rv{ opacity:0; translate:0 16px; transition:opacity .5s ease-out, translate .5s ease-out; }
 html.js .rv.in{ opacity:1; translate:0 0; }
@@ -562,10 +525,6 @@ html.js .rv.in{ opacity:1; translate:0 0; }
   .wrap{ width:100%; max-width:none; }
   .header-card{ padding:26px 18px 20px; }
   .header-card h1{ font-size:26px; }
-  /* 日提交柱图窄屏收敛：长文本 tip 换行限宽 + 首末列锚定防裁剪 */
-  .cb-col .cb-tip{ white-space:normal; max-width:120px; text-align:center; }
-  .cb-col:first-child .cb-tip{ left:0; transform:none; }
-  .cb-col:last-child .cb-tip{ left:auto; right:0; transform:none; }
 }
 </style>
 </head>
@@ -627,42 +586,17 @@ html.js .rv.in{ opacity:1; translate:0 0; }
     <div class="ov-bento">
       <div class="ov-title">本周概览</div>
       <div class="ring-box">
-        <div class="ring">
-          <svg width="88" height="88" viewBox="0 0 88 88">
-            <defs>
-              <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="var(--accent2)"/>
-                <stop offset="100%" stop-color="var(--accent)"/>
-              </linearGradient>
-            </defs>
-            <circle class="track" cx="44" cy="44" r="36"/>
-            <circle class="val" cx="44" cy="44" r="36"/>
-          </svg>
-          <div class="ring-num">100%</div>
+        <div class="ring-ech">
+          <div class="ech" id="ringChart" data-off="离线不显示"></div>
+          <div class="ring-num">8/8</div>
         </div>
         <div class="ring-label">8/8 项已交付</div>
       </div>
 
       <div class="heat-card">
         <span class="heat-title">提交热力图</span>
-        <div class="heat-grid">
-          <span class="hm" data-v="0" data-tip="周一上午 · 0 次"></span>
-          <span class="hm" data-v="0" data-tip="周一下午 · 0 次"></span>
-          <span class="hm" data-v="0" data-tip="周一晚上 · 0 次"></span>
-          <span class="hm" data-v="0" data-tip="周二上午 · 0 次"></span>
-          <span class="hm" data-v="0" data-tip="周二下午 · 0 次"></span>
-          <span class="hm" data-v="0" data-tip="周二晚上 · 0 次"></span>
-          <span class="hm" data-v="0" data-tip="周三上午 · 0 次"></span>
-          <span class="hm" data-v="3" data-tip="周三下午 · 8 次"></span>
-          <span class="hm" data-v="0" data-tip="周三晚上 · 0 次"></span>
-          <span class="hm" data-v="0" data-tip="周四上午 · 0 次"></span>
-          <span class="hm" data-v="1" data-tip="周四下午 · 1 次"></span>
-          <span class="hm" data-v="0" data-tip="周四晚上 · 0 次"></span>
-          <span class="hm" data-v="2" data-tip="周五上午 · 2 次"></span>
-          <span class="hm" data-v="0" data-tip="周五下午 · 0 次"></span>
-          <span class="hm" data-v="0" data-tip="周五晚上 · 0 次"></span>
-        </div>
-        <div class="heat-legend"><span>少</span><span class="hm" data-v="0"></span><span class="hm" data-v="1"></span><span class="hm" data-v="2"></span><span class="hm" data-v="3"></span><span>多</span></div>
+        <div class="ech" id="heatChart" data-off="图表需联网加载 echarts，离线环境不显示"></div>
+        <div class="heat-legend"><span>少</span><span class="hl-swatch" data-v="0"></span><span class="hl-swatch" data-v="1"></span><span class="hl-swatch" data-v="2"></span><span class="hl-swatch" data-v="3"></span><span>多</span></div>
       </div>
 
       <div class="ov-item">
@@ -688,36 +622,7 @@ html.js .rv.in{ opacity:1; translate:0 0; }
       <div class="ov-compare">vs 上周：提交 17 → 11 <span class="down">（-35%）</span> · 完成任务 8 项</div>
 
       <div class="cb-row">
-        <div class="cb-col">
-          <div class="cb-tip">周一 · 0 次提交</div>
-          <span class="cb-count">0</span>
-          <div class="cb-bar" style="height:3px; animation-delay:.5s;"></div>
-          <span class="cb-day">周一</span>
-        </div>
-        <div class="cb-col">
-          <div class="cb-tip">周二 · 0 次提交</div>
-          <span class="cb-count">0</span>
-          <div class="cb-bar" style="height:3px; animation-delay:.55s;"></div>
-          <span class="cb-day">周二</span>
-        </div>
-        <div class="cb-col">
-          <div class="cb-tip">周三 · 8 次提交 · 多线收束/礼物/登录/互动/配送</div>
-          <span class="cb-count">8</span>
-          <div class="cb-bar" style="height:100%; animation-delay:.6s;"></div>
-          <span class="cb-day">周三</span>
-        </div>
-        <div class="cb-col">
-          <div class="cb-tip">周四 · 1 次提交 · 底部导航仿参考图重绘</div>
-          <span class="cb-count">1</span>
-          <div class="cb-bar" style="height:12.5%; animation-delay:.65s;"></div>
-          <span class="cb-day">周四</span>
-        </div>
-        <div class="cb-col">
-          <div class="cb-tip">周五 · 2 次提交 · 白条三角根治/发版</div>
-          <span class="cb-count">2</span>
-          <div class="cb-bar" style="height:25%; animation-delay:.7s;"></div>
-          <span class="cb-day">周五</span>
-        </div>
+        <div class="ech" id="dayChart" data-off="图表需联网加载 echarts，离线环境不显示"></div>
       </div>
     </div>
   </div>
@@ -860,6 +765,7 @@ html.js .rv.in{ opacity:1; translate:0 0; }
   <button class="th-dot" type="button" data-theme="warm" title="温暖渐变"></button>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
 <script>
 // 复制纯文本
 var TXT = "本周周报 - 20261102 ~ 20261106\n\n生成时间：2026-11-06 14:57:02\n\nTL;DR：本周 11 次提交覆盖客户端/服务端/网关三端，周三单日 8 次提交集中交付直播、礼物、登录、互动等多线功能；底部导航两轮修复后随 v1.2.2 收口。整体节奏紧凑、无阻塞风险，下周可聚焦配送链路打磨与直播体验优化。\n\n本周结论\n1、最重要的结果：八项功能全部交付并随 v1.2.2 收口，底部导航顽疾两轮修复后根治\n2、值得处理的变化：多端并行交付节奏加速，需求拆解粒度偏粗、联调集中在周三单日\n3、下周优先的动作：聚焦配送链路打磨与直播体验优化，联调前移、避免单日集中交付\n\n本周任务进度\n1、完成底部导航仿参考图重绘：白栏穹顶拱形与发布按钮凸出，两轮修复根治白条与三角缺口，并发布 v1.2.2（3 次提交、23 文件、+1741/-178 行）- 进度100% - 用时约1.5D\n2、完成订单配送能力深化：客户端配送费预估与骑手状态展示，服务端 DISPATCHING 状态机与骑手通道抽象（2 次提交、15 文件、+507/-35 行）- 进度100% - 用时约1.5D\n3、完成对外号正名为产品级主账号邻音号，我的页/账号中心/联系人/群聊全面去内部术语（1 次提交、4 文件、+25/-25 行）- 进度100% - 用时约0.5D\n4、完成萤火虚拟币礼物体系：钱包/充值/16 款四档礼物/原子扣款与 43001 拦截、WS 房间广播、模拟观众自动送礼（1 次提交、22 文件、+1246/-3 行）- 进度100% - 用时约1D\n5、完成帖子互动闭环与媒体上传：评论/点赞/收藏/分享四实体与互动快照、30MB 短视频上传接口（1 次提交、22 文件、+1311/-31 行）- 进度100% - 用时约1D\n6、完成登录安全加固与三方登录：短信验证码（回显+限流+签名）、微信/支付宝绑定、换绑手机号、APK 版本门禁（1 次提交、42 文件、+1792/-87 行）- 进度100% - 用时约1.5D\n7、完成网关 V2 二进制帧协议升级：Protobuf 上下行帧、JWT 握手鉴权与 HMAC 签名、房间索引、wsprobe 冒烟探针（1 次提交、10 文件、+1552/-59 行）- 进度100% - 用时约1D\n8、完成多线功能收束：直播推流与观众端、验证码/三方登录页、短视频录制播放、收藏互动、更新自检、SSL pinning（1 次提交、72 文件、+11.1k/-2.1k 行）- 进度100% - 用时约2D\n\n下周计划\n暂无\n\n风险阻塞点\n暂无";
@@ -1012,6 +918,90 @@ function sheen(track, src){
   }
 })();
 
+// 概览三图（echarts CDN 渲染：交付率圆环/提交热力图/日提交柱图；离线时容器降级提示；?shot 截图模式停动画——headless 虚拟时间下动画帧不推进会停在初始帧）
+(function(){
+  if (typeof echarts === 'undefined'){
+    document.querySelectorAll('.ech').forEach(function(el){ el.classList.add('ech-off'); });
+    return;
+  }
+  var noAnim = location.search.indexOf('shot=') !== -1;
+  function tokens(){
+    var s = getComputedStyle(document.documentElement);
+    return {
+      accent:s.getPropertyValue('--accent').trim(), accent2:s.getPropertyValue('--accent2').trim(),
+      muted:s.getPropertyValue('--muted').trim(), text:s.getPropertyValue('--text').trim(),
+      border:s.getPropertyValue('--border').trim(), glow:s.getPropertyValue('--glow').trim(),
+      heat:s.getPropertyValue('--heat').trim(), tag:s.getPropertyValue('--tag-bg').trim(),
+      panel:s.getPropertyValue('--panel-solid').trim()
+    };
+  }
+  var DAYS = ['周一','周二','周三','周四','周五'];
+  var DAY_VALS = [0,0,8,1,2];
+  var DAY_TIPS = ['周一 · 0 次提交','周二 · 0 次提交','周三 · 8 次提交 · 多线收束/礼物/登录/互动/配送','周四 · 1 次提交 · 底部导航仿参考图重绘','周五 · 2 次提交 · 白条三角根治/发版'];
+  var HEAT = [
+    { value:[0,4,0], name:'周一上午' }, { value:[1,4,0], name:'周一下午' }, { value:[2,4,0], name:'周一晚上' },
+    { value:[0,3,0], name:'周二上午' }, { value:[1,3,0], name:'周二下午' }, { value:[2,3,0], name:'周二晚上' },
+    { value:[0,2,0], name:'周三上午' }, { value:[1,2,8], name:'周三下午' }, { value:[2,2,0], name:'周三晚上' },
+    { value:[0,1,0], name:'周四上午' }, { value:[1,1,1], name:'周四下午' }, { value:[2,1,0], name:'周四晚上' },
+    { value:[0,0,2], name:'周五上午' }, { value:[1,0,0], name:'周五下午' }, { value:[2,0,0], name:'周五晚上' }
+  ];
+  function ringOption(){
+    var t = tokens();
+    return {
+      animation: !noAnim,
+      series:[{ type:'pie', radius:['66%','82%'], center:['50%','50%'],
+        label:{ show:false }, emphasis:{ scale:false },
+        data:[{ value:8, name:'已交付',
+          itemStyle:{ color:new echarts.graphic.LinearGradient(0,0,1,1,[{ offset:0, color:t.accent2 },{ offset:1, color:t.accent }]),
+            shadowBlur:8, shadowColor:t.glow } }] }]
+    };
+  }
+  function heatOption(){
+    var t = tokens();
+    return {
+      animation: !noAnim,
+      grid:{ left:2, right:4, top:4, bottom:16 },
+      tooltip:{ backgroundColor:t.panel, borderColor:t.border,
+        textStyle:{ color:t.text, fontSize:11 },
+        formatter:function(p){ return p.name + ' · ' + p.value[2] + ' 次'; } },
+      xAxis:{ type:'category', data:['上午','下午','晚上'], axisTick:{ show:false }, axisLine:{ show:false }, axisLabel:{ color:t.muted, fontSize:9 } },
+      yAxis:{ type:'category', data:['周五','周四','周三','周二','周一'], axisTick:{ show:false }, axisLine:{ show:false }, axisLabel:{ color:t.muted, fontSize:9 } },
+      visualMap:{ show:false, min:0, max:3, inRange:{ color:[t.tag, t.glow, t.heat, t.accent2] } },
+      series:[{ type:'heatmap', data:HEAT, itemStyle:{ borderWidth:2, borderColor:'transparent', borderRadius:2 } }]
+    };
+  }
+  function dayOption(){
+    var t = tokens();
+    return {
+      animation: !noAnim,
+      grid:{ left:2, right:2, top:14, bottom:16 },
+      tooltip:{ trigger:'axis', backgroundColor:t.panel, borderColor:t.border,
+        textStyle:{ color:t.text, fontSize:11 },
+        formatter:function(p){ return DAY_TIPS[p[0].dataIndex]; } },
+      xAxis:{ type:'category', data:DAYS, axisTick:{ show:false },
+        axisLine:{ lineStyle:{ color:t.border } }, axisLabel:{ color:t.muted, fontSize:9.5 } },
+      yAxis:{ type:'value', show:false },
+      series:[{ type:'bar', data:DAY_VALS, barWidth:'40%',
+        itemStyle:{ borderRadius:[4,4,0,0],
+          color:new echarts.graphic.LinearGradient(0,0,0,1,[{ offset:0, color:t.accent2 },{ offset:1, color:t.accent }]),
+          shadowBlur:10, shadowColor:t.glow } }]
+    };
+  }
+  var charts = [];
+  ['ringChart','heatChart','dayChart'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el){ charts.push({ id:id, chart:echarts.init(el) }); }
+  });
+  function setAll(){
+    charts.forEach(function(c){
+      var o = c.id === 'ringChart' ? ringOption() : (c.id === 'heatChart' ? heatOption() : dayOption());
+      c.chart.setOption(o, true);
+    });
+  }
+  setAll();
+  window.__sfEchartsTheme = setAll;
+  window.addEventListener('resize', function(){ charts.forEach(function(c){ c.chart.resize(); }); });
+})();
 // 主题换肤：五套配色随点随换；记忆上次选择（localStorage，失败静默）；?shot 截图模式隐藏坞
 (function(){
   var THEMES = ['tech','biz','mono','light','warm'];
@@ -1020,7 +1010,8 @@ function sheen(track, src){
   if (location.search.indexOf('shot=') !== -1){ dock.style.display = 'none'; }
   function apply(t){ document.documentElement.setAttribute('data-theme', t);
     dock.querySelectorAll('.th-dot').forEach(function(d){ d.classList.toggle('on', d.getAttribute('data-theme') === t); });
-    try{ localStorage.setItem('sf-report-theme', t); }catch(e){} }
+    try{ localStorage.setItem('sf-report-theme', t); }catch(e){}
+    if (window.__sfEchartsTheme) window.__sfEchartsTheme(); }
   var cur = document.documentElement.getAttribute('data-theme');
   var saved = null; try{ saved = localStorage.getItem('sf-report-theme'); }catch(e){}
   if (saved && THEMES.indexOf(saved) !== -1 && saved !== cur){ apply(saved); }
