@@ -2,6 +2,14 @@
 
 SkillForge（技能锻造坊）npm 包 `skill-forge-hub`（命令名 `skill-forge`）版本变更记录。
 
+## 0.5.3（2026-11-11）
+
+**锦囊数据目录正名：cache/ → data/**
+
+- DATA_DIR 默认值 `cache` → `data`（语义正名：目录放的是全量数据不是缓存，缓存语义留给将来真正的过程性缓存）；CONFIG_VERSION v3 → v4
+- 页面读侧三级兜底：`data/prompts.json` → 旧默认 `cache/prompts.json` → 根目录旧平铺文件；写侧一律写 `data/`；页面文案全部同步
+- 升级迁移：AI 发现 v3 旧默认 cache/ 目录 → 备份后改名迁移为 data/ 并告知用户（用户显式自定义目录名则尊重不动）
+
 ## 0.5.2（2026-11-11）
 
 **锦囊 mono 主题换装 JetBrains Darcula**

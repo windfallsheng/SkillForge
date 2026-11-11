@@ -517,7 +517,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
         <button class="btn" id="btnMarkSaved" style="display:none" title="把指令交给 AI 落盘后点此清除未保存标记">✓ 已落盘</button>
       </div>
       <div class="bk-wrap" id="bkWrap">
-        <span class="cache-badge" id="cacheBadge" style="display:none">⚠️ 缓存模式：cache/prompts.json 读取失败，当前显示上次快照</span>
+        <span class="cache-badge" id="cacheBadge" style="display:none">⚠️ 快照模式：data/prompts.json 读取失败，当前显示上次快照</span>
         <button class="btn" id="btnBkEnable" style="display:none">💾 授权目录备份</button>
         <span class="bk-status" id="bkStatus">本地快照备份中</span>
         <button class="btn" id="btnBkChange" style="display:none">📂 换目录</button>
@@ -570,7 +570,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
   <div class="fill-panel">
     <div class="fp-head">
       <div class="fp-title" id="itemTitle">新增提示词</div>
-      <span class="fp-count">落盘 cache/prompts.json · 刷新即见</span>
+      <span class="fp-count">落盘 data/prompts.json · 刷新即见</span>
     </div>
     <div class="fp-fields">
       <div class="fp-field"><label for="itemName">标题</label><input id="itemName" placeholder="如：日报速写" /></div>
@@ -590,7 +590,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
   <div class="fill-panel" style="width:460px;">
     <div class="fp-head">
       <div class="fp-title" id="groupTitle">新建分组</div>
-      <span class="fp-count">落盘 cache/prompts.json · 刷新即见</span>
+      <span class="fp-count">落盘 data/prompts.json · 刷新即见</span>
     </div>
     <div class="fp-fields">
       <div class="fp-field"><label for="groupName">分组名</label><input id="groupName" placeholder="如：灵感" /></div>
@@ -635,7 +635,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     <div class="hp-grid">
       <div class="hp-item">
         <div class="hp-t">① 添加与修改</div>
-        <div class="hp-d">页面点 <b>「＋ 新增提示词」/「👁 详情」/「✎」/「🗑」</b>（授权目录即写即存），或对 AI 说 <b>「把 XX 加到锦囊的写作输出分组」</b>，AI 写入 cache/prompts.json，刷新即见。</div>
+        <div class="hp-d">页面点 <b>「＋ 新增提示词」/「👁 详情」/「✎」/「🗑」</b>（授权目录即写即存），或对 AI 说 <b>「把 XX 加到锦囊的写作输出分组」</b>，AI 写入 data/prompts.json，刷新即见。</div>
       </div>
       <div class="hp-item">
         <div class="hp-t">② 排序与移动</div>
@@ -643,7 +643,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
       </div>
       <div class="hp-item">
         <div class="hp-t">③ 打开方式</div>
-        <div class="hp-d">HTTP 访问读 cache/prompts.json；file:// 直开则回退到本地缓存快照。</div>
+        <div class="hp-d">HTTP 访问读 data/prompts.json；file:// 直开则回退到本地缓存快照。</div>
       </div>
       <div class="hp-item">
         <div class="hp-t">④ 数据安全</div>
@@ -1232,17 +1232,20 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
       return writeBackupNow().then(function(){
         return readPouch().then(function(text){
           if (text) return JSON.parse(text);
-          return fetch('cache/prompts.json', { cache: 'no-store' })
+          return fetch('data/prompts.json', { cache: 'no-store' })
             .then(function(r){ if (!r.ok) throw new Error('nf'); return r.json(); })
             .catch(function(){
-              return fetch('prompts.json', { cache: 'no-store' }).then(function(r2){ return r2.json(); });
+              return fetch('cache/prompts.json', { cache: 'no-store' }).then(function(r2){ if (!r2.ok) throw new Error('nf'); return r2.json(); });
+            })
+            .catch(function(){
+              return fetch('prompts.json', { cache: 'no-store' }).then(function(r3){ return r3.json(); });
             })
             .catch(function(){ return state.data; });
         });
       }).then(function(latest){
         var next = op.apply(latest);
         if (next === null) return false;
-        return bkWrite('prompts.json', 'cache', JSON.stringify(next, null, 2)).then(function(){
+        return bkWrite('prompts.json', 'data', JSON.stringify(next, null, 2)).then(function(){
           state.data = next;
           applyUserState();
           state.dirty = false; state.moves = [];
@@ -1251,7 +1254,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
           return true;
         });
       }).catch(function(){
-        toast('写入 cache/prompts.json 失败，请检查目录授权', true);
+        toast('写入 data/prompts.json 失败，请检查目录授权', true);
         return false;
       });
     });
@@ -1261,10 +1264,13 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     if (!state.dirty || !bkDirHandle) return Promise.resolve();
     return readPouch().then(function(text){
       if (text) return JSON.parse(text);
-      return fetch('cache/prompts.json', { cache: 'no-store' })
+      return fetch('data/prompts.json', { cache: 'no-store' })
         .then(function(r){ if (!r.ok) throw new Error('nf'); return r.json(); })
         .catch(function(){
-          return fetch('prompts.json', { cache: 'no-store' }).then(function(r2){ return r2.json(); });
+          return fetch('cache/prompts.json', { cache: 'no-store' }).then(function(r2){ if (!r2.ok) throw new Error('nf'); return r2.json(); });
+        })
+        .catch(function(){
+          return fetch('prompts.json', { cache: 'no-store' }).then(function(r3){ return r3.json(); });
         })
         .catch(function(){ return state.data; });
     })
@@ -1275,7 +1281,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
           var m = byId[p.id];
           if (m){ p.order = m.order; p.group = m.group; }
         });
-        return bkWrite('prompts.json', 'cache', JSON.stringify(latest, null, 2)).then(function(){
+        return bkWrite('prompts.json', 'data', JSON.stringify(latest, null, 2)).then(function(){
           state.data = latest;
           applyUserState();
           state.dirty = false; state.moves = [];
@@ -1674,11 +1680,14 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
       return h;
     });
   }
-  /* 数据文件读：cache/prompts.json 优先，读不到回退根目录旧文件（旧目录结构兼容） */
+  /* 数据文件读：data/prompts.json 优先，读不到回退旧默认 cache/，再回退根目录旧文件（结构兼容） */
   function readPouch(){
-    return bkRead('prompts.json', 'cache').then(function(text){
+    return bkRead('prompts.json', 'data').then(function(text){
       if (text !== null) return text;
-      return bkRead('prompts.json');
+      return bkRead('prompts.json', 'cache').then(function(text2){
+        if (text2 !== null) return text2;
+        return bkRead('prompts.json');
+      });
     });
   }
   /* 备份文件读：backup/ 优先，读不到回退根目录旧文件（旧目录结构兼容） */
@@ -1954,15 +1963,18 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     render();
     if (bootMode === 'cache') cacheBadge.style.display = '';
     if (bootMode === 'demo'){
-      cacheBadge.textContent = '📌 示例模式：未读到 cache/prompts.json，当前展示系统自带示例提示词（file:// 直开或数据文件尚未生成）。经 HTTP 打开页面并生成数据文件后即为你的提示词，示例可随时删除。';
+      cacheBadge.textContent = '📌 示例模式：未读到 data/prompts.json，当前展示系统自带示例提示词（file:// 直开或数据文件尚未生成）。经 HTTP 打开页面并生成数据文件后即为你的提示词，示例可随时删除。';
       cacheBadge.style.display = '';
     }
   }
   // 数据优先：fetch 主链不依赖本地存储，页面尽快可见
-  fetch('cache/prompts.json', { cache: 'no-store' })
+  fetch('data/prompts.json', { cache: 'no-store' })
     .then(function(r){ if (!r.ok) throw new Error('nf'); return r.json(); })
     .catch(function(){
-      return fetch('prompts.json', { cache: 'no-store' }).then(function(r2){ return r2.json(); });
+      return fetch('cache/prompts.json', { cache: 'no-store' }).then(function(r2){ if (!r2.ok) throw new Error('nf'); return r2.json(); });
+    })
+    .catch(function(){
+      return fetch('prompts.json', { cache: 'no-store' }).then(function(r3){ return r3.json(); });
     })
     .then(function(data){
       state.data = data;

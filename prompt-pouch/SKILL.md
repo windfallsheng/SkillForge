@@ -4,9 +4,9 @@ description: >
   锦囊（prompt-pouch）提示词管理 Skill：生成并维护一个本地 HTML 提示词管理页面（锦囊管理台），
   暖棕金/深蓝科技/Darcula 深灰蓝/薄荷绿四套主题（右下角换肤坞随时切换，THEME 配置可设默认），功能为分组侧栏（带计数徽章）+ 搜索（关键词高亮）+ 卡片网格 + 四种排序（最新添加默认/最近使用/使用频率/手动，
   拖拽与 ▲▼ 自动切手动）+ 使用统计 + 收藏星标 + {变量} 插值填充面板 + 一键复制 + 卡片「👁 详情」弹窗
-  （全文滚动查看 / 复制 / 修改 / 创建修改时间线）；数据存 <DIR>/cache/prompts.json（DATA_DIR 可配），
+  （全文滚动查看 / 复制 / 修改 / 创建修改时间线）；数据存 <DIR>/data/prompts.json（DATA_DIR 可配），
   页面与数据严格分离，双笔协作（页面经授权目录直写，AI 代笔维护）。三类任务：①初始化——目标目录无页面时确认目录（默认用户配置 DIR）
-  并生成 prompt-pouch.html（样式真相源为 resources/reference.html，原样复制）与 cache/prompts.json
+  并生成 prompt-pouch.html（样式真相源为 resources/reference.html，原样复制）与 data/prompts.json
   （默认示例五组：写作输出/沟通协作/规划执行/复盘成长/提问艺术，每条带 createdAt；页面另内置同款示例种子 DEFAULT_POUCH，prompts.json 读不到时兜底展示）；②维护——按用户口述增删改提示词与分组、调整排序、
   切换收藏，读写 prompts.json（UTF-8、2 空格缩进），用户刷新页面即见；③打开——用户说「打开锦囊」时
   起本地服务并按平台打开浏览器访问管理页面。
@@ -64,12 +64,12 @@ disable-model-invocation: false
 
 **THEME 主题机制**：页面内置四套主题——gold 暖棕金（默认）/ tech 深蓝科技 / mono Darcula 深灰蓝（JetBrains IDE 同款观感）/ mint 薄荷绿。初始化复制 reference.html 后，将 html 根标签 `data-theme` 属性值设为配置 `THEME`（仅此一处修改）；页面右下角「换肤坞」色点可随时切换主题，选择经浏览器 localStorage 持久（key: sf-pouch-theme），刷新后保持；localStorage 优先级高于根标签 data-theme。已初始化的页面改配置 THEME 不追溯——用户手动换过主题即以其选择为准。
 
-**配置版本机制（升级保护）**：user-config.md 头部 `CONFIG_VERSION` 标识结构版本。升级 skill 后若发现新版本结构（如 v2 新增 THEME 字段）而用户配置是旧版：先备份旧配置为 `user-config.md.bak-时间戳`，将旧值迁移进新结构（保留用户已有 DIR/PORT/INIT_DATA/CONFIRM，缺失字段补默认值），更新 CONFIG_VERSION，最后用一句话告知用户配置已升级、旧文件备份在哪。 **无法迁移项处理**（值域失效 / 语义漂移 / 数据不兼容）：三绝不——绝不静默（无法迁移项停下问，不猜值）、绝不丢失（旧值永远在备份）、一次说清（升级报告三段式：⚠️ 版本与备份路径 / ✅ 已自动迁移 / 🟡 无法迁移项逐条附原因+影响+建议替代）；随后 AskUserQuestion 三选项（A 用建议值 / B 用户给新值 / C 保持旧配置——不更新 CONFIG_VERSION，每次执行再提醒）；报告必附回滚一句话；数据文件（prompts.json）迁移前先复制 .bak-时间戳，能映射则映射、不能则写兼容层（旧 id 兼容保留即范例）或留备份提示手动整理
+**配置版本机制（升级保护）**：user-config.md 头部 `CONFIG_VERSION` 标识结构版本。升级 skill 后若发现新版本结构（如 v2 新增 THEME 字段）而用户配置是旧版：先备份旧配置为 `user-config.md.bak-时间戳`，将旧值迁移进新结构（保留用户已有 DIR/PORT/INIT_DATA/CONFIRM，缺失字段补默认值），更新 CONFIG_VERSION，最后用一句话告知用户配置已升级、旧文件备份在哪。v4 特例：用户配置 DATA_DIR: cache（v3 旧默认、非用户显式自定义）→ 目录改名 cache→data（先复制 .bak-时间戳）并同步更新配置值；用户显式自定义过其它目录名则尊重其选择不动。 **无法迁移项处理**（值域失效 / 语义漂移 / 数据不兼容）：三绝不——绝不静默（无法迁移项停下问，不猜值）、绝不丢失（旧值永远在备份）、一次说清（升级报告三段式：⚠️ 版本与备份路径 / ✅ 已自动迁移 / 🟡 无法迁移项逐条附原因+影响+建议替代）；随后 AskUserQuestion 三选项（A 用建议值 / B 用户给新值 / C 保持旧配置——不更新 CONFIG_VERSION，每次执行再提醒）；报告必附回滚一句话；数据文件（prompts.json）迁移前先复制 .bak-时间戳，能映射则映射、不能则写兼容层（旧 id 兼容保留即范例）或留备份提示手动整理
 
 ## 核心约束
 
 - **页面与数据分离**：HTML 不内嵌用户数据——一切用户数据只进 <DATA_DIR>/prompts.json；HTML 内置只读示例种子（DEFAULT_POUCH 五组 15 条），仅当 prompts.json 读不到且浏览器无缓存快照时兜底展示（file:// 直开也能看到示范数据），一旦读到 prompts.json 即以文件为准；样式升级只改仓库 reference.html 后重新复制到目标目录（用户数据不受影响）
-- **目录结构（v3）**：数据文件默认 `<DIR>/<DATA_DIR>/prompts.json`（默认 cache/），自动备份默认 `<DIR>/<BACKUP_DIR>/`（默认 backup/，pouch-backup.json + .prev.json 滚动双备份）；页面读侧兼容旧平铺结构（新路径读不到时兜底读根目录旧文件），写侧一律写新路径；AI 初始化/维护时发现旧平铺结构（根目录 prompts.json / pouch-backup*.json）→ 建子目录并迁移文件（迁移前先复制 .bak-时间戳），一句话告知用户
+- **目录结构（v4）**：数据文件默认 `<DIR>/<DATA_DIR>/prompts.json`（默认 data/，v4 起语义正名——目录放的是全量数据不是缓存），自动备份默认 `<DIR>/<BACKUP_DIR>/`（默认 backup/，pouch-backup.json + .prev.json 滚动双备份）；页面读侧三级兜底（data/ → 旧默认 cache/ → 根目录旧平铺文件），写侧一律写新路径；AI 初始化/维护时发现旧结构（v3 默认 cache/ 目录、或根目录平铺 prompts.json / pouch-backup*.json）→ 迁移为 data/ 结构（迁移前先复制 .bak-时间戳），一句话告知用户
 - **双笔协作**：页面（授权目录时）与 AI 都可写 prompts.json——页面上有「＋ 新增提示词 / ✎ / 🗑 / 分组管理」表单直写；AI 落盘前必须重读最新文件再合并写回（见「页面双笔纪律」）
 - **prompts.json 结构必须合法**：写回前自查 schema（version/groups[]/prompts[] 各字段齐全、group 引用存在、order 连续）
 - **排序四模式**：页面顶栏切换「最新添加（默认，按 createdAt 倒序）/ 最近使用 / 使用频率 / 手动顺序」；最近使用与使用频率由页面在复制时自动统计（浏览器本地态，AI 不落盘）；用户在非手动模式下拖动卡片或点 ▲▼ 会自动切回手动顺序、点卡片 ⇄ 可把提示词移到其它分组——用户随后粘贴「复制变更指令」，AI 必须按指令落盘：先执行「分组调整」节（改各条 group），再按「各组顺序」节每组列出的顺序重写各条 `order`，写回后提醒用户刷新并点页面「✓ 已落盘」清除标记
