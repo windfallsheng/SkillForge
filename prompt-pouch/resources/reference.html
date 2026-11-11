@@ -58,6 +58,7 @@
 [data-theme="mono"] .bk-item,
 [data-theme="mono"] .detail-content{ background:rgba(223,225,229,.06); }
 [data-theme="mono"] .theme-dock .th-dot[data-theme="mono"]{ border:1.5px solid rgba(94,154,255,.6); }
+[data-theme="mono"] body{ background:var(--bg); } /* 主体纯 #1e1f22：去掉顶部光晕/网格线/160° 渐变，消除上灰下黑断层（JetBrains New UI Dark 编辑区同色） */
 
 /* ═══ light IDEA 白亮：IntelliJ Light 官方色系（白编辑区 + 浅灰面板 #f2f2f2 + IDEA 蓝强调） ═══ */
 [data-theme="light"]{
@@ -87,6 +88,7 @@
 [data-theme="light"] .bk-item,
 [data-theme="light"] .detail-content{ background:#f7f9fb; }
 [data-theme="light"] .theme-dock .th-dot[data-theme="light"]{ border:1.5px solid rgba(38,117,191,.5); }
+[data-theme="light"] body{ background:var(--bg); } /* 主体纯白 #ffffff：去掉顶部光晕/网格线/160° 渐变，对齐 IntelliJ Light 编辑区 */
 [data-theme="mint"]{ /* 薄荷绿 */
   --bg:#0d1a12; --bg2:#12241a;
   --panel:#182f22; --panel2:#1e3a2a;
@@ -240,7 +242,7 @@ main{ flex:1; min-width:0; }
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
 
-/* 搜索命中高亮（四主题令牌适配） */
+/* 搜索命中高亮（五主题令牌适配） */
 mark.hl{ background:var(--gold-dim); color:var(--gold); border-radius:3px; padding:0 2px; font-weight:700; }
 .hl-note{ font-size:10px; color:var(--gold); background:var(--gold-dim); border:1px solid var(--border); border-radius:4px; padding:0 5px; line-height:16px; margin-left:6px; vertical-align:middle; }
 .gbadge{
@@ -267,9 +269,49 @@ mark.hl{ background:var(--gold-dim); color:var(--gold); border-radius:3px; paddi
 .card-time .ct-ico{ color:var(--gold); flex:0 0 auto; }
 .card-foot{ display:flex; align-items:center; gap:8px; margin-top:2px; }
 .tag{
+  display:inline-flex; align-items:center; gap:2px;
   font-size:10px; color:var(--muted); background:var(--panel2);
   border:1px solid var(--border); border-radius:999px; padding:2px 8px; letter-spacing:.5px;
+  cursor:pointer; transition:color .15s ease, border-color .15s ease, background .15s ease;
 }
+.tag:hover{ color:var(--gold); border-color:var(--gold2); }
+.tag.on{ color:var(--btn-ink); background:var(--gold); border-color:var(--gold); }
+.tag .tag-x{
+  display:none; border:none; background:none; color:inherit; cursor:pointer;
+  font-size:11px; line-height:1; padding:0 2px; margin-right:-3px;
+}
+.tag:hover .tag-x{ display:inline-block; }
+.tag .tag-x:hover{ color:var(--gold); }
+.tag-add{
+  display:none; border:1px dashed var(--border); background:none; color:var(--muted);
+  border-radius:999px; font-size:10px; line-height:1; padding:3px 7px; cursor:pointer;
+}
+.tags-wrap:hover .tag-add{ display:inline-block; }
+.tag-add:hover{ color:var(--gold); border-color:var(--gold2); }
+.emoji-pick{
+  display:grid; grid-template-columns:repeat(9,1fr); gap:6px;
+  max-height:200px; overflow-y:auto; padding:4px 4px 4px 0;
+}
+.emoji-pick button{
+  font-size:28px; line-height:1.4; padding:5px 0; text-align:center;
+  background:none; border:1px solid transparent; border-radius:8px; cursor:pointer;
+}
+.emoji-pick button:hover{ background:var(--tag-bg); border-color:var(--border); transform:scale(1.12); }
+.emoji-pick button.sel{ background:var(--gold-dim); border-color:var(--gold); }
+.tag-filter{
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:11px; color:var(--gold); background:var(--gold-dim);
+  border:1px solid var(--border); border-radius:999px; padding:3px 6px 3px 10px;
+}
+.tag-filter b{ font-weight:600; max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.tag-filter .tf-x{
+  border:none; background:var(--border); color:var(--text); width:16px; height:16px;
+  border-radius:50%; cursor:pointer; font-size:10px; line-height:1; padding:0;
+  display:inline-flex; align-items:center; justify-content:center;
+}
+.tag-filter .tf-x:hover{ background:var(--gold); color:var(--btn-ink); }
+.nav-item.drag-over{ opacity:.35; }
+.nav-item.drop-target{ box-shadow:inset 0 2px 0 var(--gold); }
 .card-ops{ margin-left:auto; display:flex; gap:6px; opacity:0; transition:opacity .18s ease; }
 .card:hover .card-ops{ opacity:1; }
 .op{
@@ -492,7 +534,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
   .list{ grid-template-columns:1fr; }
   .card-ops{ opacity:1; }
 }
-/* 主题换肤坞：右下角四色点随点随换，记忆上次选择；打印隐藏 */
+/* 主题换肤坞：右下角五色点随点随换，记忆上次选择；打印隐藏 */
 .theme-dock{ position:fixed; right:18px; bottom:18px; z-index:1001; display:flex; gap:8px;
   padding:8px 10px; border-radius:999px; background:var(--panel2); border:1px solid var(--border);
   box-shadow:0 4px 18px rgba(0,0,0,.3); }
@@ -532,6 +574,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     <div class="bar">
       <h2 id="curTitle">全部提示词</h2>
       <span class="total" id="curTotal"></span>
+      <span class="tag-filter" id="tagFilterChip" style="display:none"><span class="tf-ico">🏷</span><b id="tagFilterName"></b><button class="tf-x" id="tagFilterClear" title="清除标签过滤">✕</button></span>
       <button class="btn primary" id="btnAddItem">＋ 新增提示词</button>
       <div class="sort-box">
         <label for="sortSel">排序</label>
@@ -552,6 +595,9 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
         <span class="bk-status" id="bkStatus">本地快照备份中</span>
         <button class="btn" id="btnBkChange" style="display:none">📂 换目录</button>
         <button class="btn" id="btnBkRestore" style="display:none">↩ 恢复备份</button>
+        <button class="btn" id="btnBkExport" title="把当前全部数据导出为 JSON 文件">⤓ 导出</button>
+        <button class="btn" id="btnBkImport" title="从 JSON 文件导入（覆盖现有数据，导入前自动备份）">⤒ 导入</button>
+        <input type="file" id="importFile" accept=".json,application/json" style="display:none" />
       </div>
     </div>
     <div class="list" id="cardList"></div>
@@ -617,7 +663,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
 
 <!-- 新建/编辑分组 -->
 <div class="modal-mask" id="groupMask">
-  <div class="fill-panel" style="width:460px;">
+  <div class="fill-panel" style="width:640px;">
     <div class="fp-head">
       <div class="fp-title" id="groupTitle">新建分组</div>
       <span class="fp-count">落盘 data/prompts.json · 刷新即见</span>
@@ -625,6 +671,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     <div class="fp-fields">
       <div class="fp-field"><label for="groupName">分组名</label><input id="groupName" placeholder="如：灵感" /></div>
       <div class="fp-field"><label for="groupIcon">图标（一个 emoji）</label><input id="groupIcon" placeholder="如：✨" maxlength="4" /></div>
+      <div class="fp-field"><label>快捷选择（点击填入，输入框仍可手输/粘贴任意字符）</label><div class="emoji-pick" id="emojiPick"></div></div>
     </div>
     <div class="fp-ops">
       <button class="btn" id="groupCancel">取消</button>
@@ -694,6 +741,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     sortMode: 'added', // 'added' 最新添加 | 'recent' 最近使用 | 'freq' 使用频率 | 'manual' 手动顺序
     usage: {},         // id -> { lastUsed: ts, useCount: n }（复制时统计，存浏览器本地态）
     moves: [],         // 跨组移动待办 [{title, from, to}]（随变更指令交给 AI 落盘）
+    tagFilter: '',     // 标签过滤（点卡片标签设置，再点取消；切分组自动清除）
   };
 
   /* ---------- 数据加载 ---------- */
@@ -753,10 +801,25 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
   function showErr(msg){
     listEl.innerHTML = '<div class="empty">' + msg + '</div>';
   }
+  function applyTagFilter(t){
+    state.tagFilter = (state.tagFilter === t) ? '' : t;
+    syncTagFilterUI();
+    render();
+  }
+  function syncTagFilterUI(){
+    var chip = document.getElementById('tagFilterChip');
+    var nameEl = document.getElementById('tagFilterName');
+    if (!chip) return;
+    if (!state.tagFilter){ chip.style.display = 'none'; }
+    else { chip.style.display = ''; nameEl.textContent = state.tagFilter; }
+  }
   function visiblePrompts(){
     var ps = state.data.prompts.slice();
     if (state.curGroup === 'fav') ps = ps.filter(function(p){ return p.favorite; });
     else if (state.curGroup !== 'all') ps = ps.filter(function(p){ return p.group === state.curGroup; });
+    if (state.tagFilter){
+      ps = ps.filter(function(p){ return (p.tags || []).indexOf(state.tagFilter) > -1; });
+    }
     if (state.query){
       var q = state.query.toLowerCase();
       ps = ps.filter(function(p){
@@ -827,16 +890,17 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     html += '<div class="nav-item' + (state.curGroup==='fav'?' on':'') + '" data-g="fav"><span class="icon">⭐</span>收藏<span class="cnt">' + favN + '</span></div>';
     state.data.groups.forEach(function(g){
       var n = state.data.prompts.filter(function(p){ return p.group === g.id; }).length;
-      html += '<div class="nav-item' + (state.curGroup===g.id?' on':'') + '" data-g="' + g.id + '"><span class="icon">' + g.icon + '</span><span class="g-name">' + escapeHtml(g.name) + '</span><span class="cnt">' + n + '</span><span class="g-ops"><button class="g-edit" title="编辑分组">✎</button><button class="g-del" title="删除分组">🗑</button></span></div>';
+      html += '<div class="nav-item' + (state.curGroup===g.id?' on':'') + '" data-g="' + g.id + '" draggable="true" title="拖拽调整分组顺序"><span class="icon">' + g.icon + '</span><span class="g-name">' + escapeHtml(g.name) + '</span><span class="cnt">' + n + '</span><span class="g-ops"><button class="g-edit" title="编辑分组">✎</button><button class="g-del" title="删除分组">🗑</button></span></div>';
     });
     html += '</div>';
     html += '<div class="nav-add" id="navAdd">＋ 新建分组</div>';
-    html += '<div class="side-tip"><b>锦囊用法</b><br>· 页面直接增删改：＋ 新建分组 / ＋ 新增提示词 / ✎ 编辑 / 🗑 删除（授权目录即写即存）<br>· 也可对 AI 说「把 XX 加到写作输出分组」<br>· 顶栏切换排序；⇄ 移组、拖卡片排序自动保存<br>· ⭐ 收藏常用 · 复制次数在卡片右上角</div>';
+    html += '<div class="side-tip"><b>锦囊用法</b><br>· 页面直接增删改：＋ 新建分组 / ＋ 新增提示词 / ✎ 编辑 / 🗑 删除（授权目录即写即存）<br>· 也可对 AI 说「把 XX 加到写作输出分组」<br>· 顶栏切换排序；⇄ 移组、拖卡片排序自动保存；拖分组条调整分组顺序<br>· 点卡片标签按标签筛选（再点取消）；标签悬停 ✕ 删 / ＋ 加；⤓ 导出 / ⤒ 导入 JSON 备份<br>· ⭐ 收藏常用 · 复制次数在卡片右上角</div>';
     sideNav.innerHTML = html;
     sideNav.querySelectorAll('.nav-item').forEach(function(el){
       el.addEventListener('click', function(){
         var gv = el.getAttribute('data-g');
         state.curGroup = (gv === 'all' || gv === 'fav') ? gv : Number(gv);
+        state.tagFilter = ''; syncTagFilterUI();
         renderNav(); render();
       });
     });
@@ -852,6 +916,29 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
         e.stopPropagation();
         var gid = Number(btn.closest('.nav-item').getAttribute('data-g'));
         delGroup(groupOf(gid));
+      });
+    });
+    var dragGid = null;
+    sideNav.querySelectorAll('.nav-item[draggable="true"]').forEach(function(el){
+      el.addEventListener('dragstart', function(e){
+        dragGid = Number(el.getAttribute('data-g'));
+        el.classList.add('drag-over');
+        try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', String(dragGid)); } catch(err){}
+      });
+      el.addEventListener('dragover', function(e){ e.preventDefault(); });
+      el.addEventListener('dragenter', function(e){
+        if (el.getAttribute('data-g') !== String(dragGid)) el.classList.add('drop-target');
+      });
+      el.addEventListener('dragleave', function(){ el.classList.remove('drop-target'); });
+      el.addEventListener('drop', function(e){
+        e.preventDefault();
+        el.classList.remove('drop-target');
+        if (dragGid === null || el.getAttribute('data-g') === String(dragGid)) return;
+        reorderGroups(dragGid, Number(el.getAttribute('data-g')));
+      });
+      el.addEventListener('dragend', function(){
+        sideNav.querySelectorAll('.nav-item').forEach(function(x){ x.classList.remove('drag-over','drop-target'); });
+        dragGid = null;
       });
     });
     var addBtn = sideNav.querySelector('#navAdd');
@@ -907,7 +994,32 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
         card.querySelector('.card-top').appendChild(note);
       }
       var tw = card.querySelector('.tags-wrap');
-      (p.tags || []).forEach(function(t){ tw.insertAdjacentHTML('beforeend', '<span class="tag">' + hlHtml(t, state.query) + '</span>'); });
+      (p.tags || []).forEach(function(t){
+        var tg = document.createElement('span');
+        tg.className = 'tag' + (state.tagFilter === t ? ' on' : '');
+        var lb = document.createElement('span');
+        lb.innerHTML = hlHtml(t, state.query);
+        var x = document.createElement('button');
+        x.type = 'button';
+        x.className = 'tag-x';
+        x.textContent = '✕';
+        x.title = '删除标签「' + t + '」';
+        x.addEventListener('click', function(e){ e.stopPropagation(); removeTag(p, t); });
+        tg.appendChild(lb);
+        tg.appendChild(x);
+        tg.title = '点击筛选该标签（再点取消）';
+        tg.addEventListener('click', function(){ applyTagFilter(t); });
+        tw.appendChild(tg);
+      });
+      if ((p.tags || []).length < 3){
+        var ta = document.createElement('button');
+        ta.type = 'button';
+        ta.className = 'tag-add';
+        ta.textContent = '＋';
+        ta.title = '添加标签（多个用逗号分隔，最多 3 个）';
+        ta.addEventListener('click', function(e){ e.stopPropagation(); quickAddTag(p); });
+        tw.appendChild(ta);
+      }
 
       /* 详情弹窗 */
       card.querySelector('.card-expand').addEventListener('click', function(){ openDetail(p); });
@@ -1451,6 +1563,42 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
       cmd: '请删除锦囊里「' + p.title + '」这条'
     }).then(function(ok){ if (ok) toast('已删除「' + p.title + '」'); });
   }
+  /* 标签快捷操作：卡片标签悬停 ✕ 删 / ＋ 加（授权目录即写即存，未授权生成指令） */
+  function removeTag(p, t){
+    writePromptsJson({
+      apply: function(data){
+        var item = data.prompts.find(function(x){ return x.id === p.id; });
+        if (!item){ toast('该提示词已不存在，请刷新后重试', true); return null; }
+        item.tags = (item.tags || []).filter(function(x){ return x !== t; });
+        item.updatedAt = nowStamp();
+        return data;
+      },
+      cmd: '请删除锦囊里「' + p.title + '」的标签「' + t + '」（tags 中移除该项，同时把 updatedAt 更新为当前时间 YYYY-MM-DD HH:mm:ss）'
+    }).then(function(ok){
+      if (ok){
+        if (state.tagFilter === t) applyTagFilter(t);
+        toast('已删除标签「' + t + '」');
+      }
+    });
+  }
+  function quickAddTag(p){
+    var cur = (p.tags || []).slice(0, 3);
+    var input = window.prompt('为「' + p.title + '」添加标签（多个用逗号分隔，最多 3 个）：', cur.join(', '));
+    if (input === null) return;
+    var adds = input.split(/[,，]/).map(function(s){ return s.trim(); }).filter(Boolean);
+    if (!adds.length) return;
+    var merged = cur.concat(adds).slice(0, 3);
+    writePromptsJson({
+      apply: function(data){
+        var item = data.prompts.find(function(x){ return x.id === p.id; });
+        if (!item){ toast('该提示词已不存在，请刷新后重试', true); return null; }
+        item.tags = merged;
+        item.updatedAt = nowStamp();
+        return data;
+      },
+      cmd: '请把锦囊里「' + p.title + '」的标签更新为：' + merged.join(', ') + '（同时把 updatedAt 更新为当前时间 YYYY-MM-DD HH:mm:ss）'
+    }).then(function(ok){ if (ok) toast('标签已更新'); });
+  }
   document.getElementById('itemCancel').addEventListener('click', closeItemForm);
   document.getElementById('itemSave').addEventListener('click', saveItem);
   itemName.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); saveItem(); } });
@@ -1462,11 +1610,28 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
   var groupName = document.getElementById('groupName');
   var groupIcon = document.getElementById('groupIcon');
   var editingGroupId = null;
+  /* 分组图标快捷面板：预置 emoji 点击填入，输入框仍可手输/粘贴任意字符 */
+  var EMOJI_PRESETS = ['✨','✍️','🖋','✏️','📝','📄','📋','🗒','📚','📖','📎','🔗','🧾','📊','📈','📉','🗂','📁','📦','🗃','🧰','💬','🗣','📣','☎️','📧','✉️','🤝','🔄','👥','🎙','🎧','📌','🗓','📅','⏰','⏱','⚙️','🔧','🛠','🧭','🗺','🚀','🏁','🎯','📍','🧠','💡','🔍','🧩','🔬','🧪','🏆','🥇','⭐','🌟','🔥','✅','✔️','⚠️','🚨','🔒','🛡','💎','🎨','🖌','🎬','🎵','📷','🌈','🍀','🌱','🌸','⚡','❄️','☀️','🌙','🍎','☕','🍵','🎂','🎁','🎉','🎊','🧸','🐣','🦄','💻','🖥','⌨️','🖱','📱','🔋','💾','📡'];
+  var emojiPickEl = document.getElementById('emojiPick');
+  EMOJI_PRESETS.forEach(function(e){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = e;
+    b.title = e;
+    b.addEventListener('click', function(){ groupIcon.value = e; syncEmojiSel(); });
+    emojiPickEl.appendChild(b);
+  });
+  function syncEmojiSel(){
+    var v = groupIcon.value.trim();
+    Array.prototype.forEach.call(emojiPickEl.children, function(b){ b.classList.toggle('sel', b.textContent === v); });
+  }
+  groupIcon.addEventListener('input', syncEmojiSel);
   function openGroupForm(g){
     editingGroupId = g ? g.id : null;
     groupTitleEl.textContent = g ? '编辑分组' : '新建分组';
     groupName.value = g ? g.name : '';
     groupIcon.value = g ? g.icon : '✨';
+    syncEmojiSel();
     groupMask.classList.add('open');
     setTimeout(function(){ groupName.focus(); }, 60);
   }
@@ -1512,12 +1677,78 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
       cmd: '请删除锦囊分组「' + g.name + '」'
     }).then(function(ok){ if (ok) toast('分组「' + g.name + '」已删除'); });
   }
+  function reorderGroups(moveId, beforeId){
+    var ids = state.data.groups.map(function(g){ return g.id; });
+    var mi = ids.indexOf(moveId), bi = ids.indexOf(beforeId);
+    if (mi < 0 || bi < 0 || mi === bi) return;
+    ids.splice(mi, 1);
+    ids.splice(ids.indexOf(beforeId), 0, moveId);
+    writePromptsJson({
+      apply: function(data){
+        var byId = {};
+        data.groups.forEach(function(g){ byId[g.id] = g; });
+        data.groups = ids.map(function(id){ return byId[id]; });
+        return data;
+      },
+      cmd: '请把锦囊分组顺序调整为：' + ids.map(function(id){ var g = groupOf(id); return g ? g.name : id; }).join('、')
+    }).then(function(ok){ if (ok) toast('分组顺序已保存'); });
+  }
   document.getElementById('groupCancel').addEventListener('click', closeGroupForm);
   document.getElementById('groupSave').addEventListener('click', saveGroup);
   groupName.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); saveGroup(); } });
   groupMask.addEventListener('click', function(e){ if (e.target === this) closeGroupForm(); });
   var btnAddItem = document.getElementById('btnAddItem');
   if (btnAddItem) btnAddItem.addEventListener('click', function(){ openItemForm(null); });
+
+  /* ---------- 导入 / 导出 ---------- */
+  var btnBkExport = document.getElementById('btnBkExport');
+  var btnBkImport = document.getElementById('btnBkImport');
+  var importFile = document.getElementById('importFile');
+  function doExport(){
+    if (!state.data){ toast('暂无数据可导出', true); return; }
+    var blob = new Blob([JSON.stringify(state.data, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    function p(n){ return (n < 10 ? '0' : '') + n; }
+    var d = new Date();
+    a.href = url;
+    a.download = 'prompts-backup-' + d.getFullYear() + p(d.getMonth()+1) + p(d.getDate()) + '-' + p(d.getHours()) + p(d.getMinutes()) + p(d.getSeconds()) + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+    toast('已导出 ' + state.data.prompts.length + ' 条提示词');
+  }
+  function doImport(){
+    if (!bkDirHandle){ toast('请先授权目录（页面顶部「💾 授权目录备份」）', true); return; }
+    importFile.value = '';
+    importFile.click();
+  }
+  importFile.addEventListener('change', function(){
+    var f = importFile.files[0];
+    if (!f) return;
+    var reader = new FileReader();
+    reader.onload = function(){
+      var d = null;
+      try {
+        d = JSON.parse(String(reader.result));
+        if (!d || !Array.isArray(d.groups) || !Array.isArray(d.prompts)){
+          toast('文件格式不对：需要含 groups 与 prompts 的锦囊数据', true);
+          return;
+        }
+      } catch(err){ toast('JSON 解析失败，请确认文件内容', true); return; }
+      var cur = (state.data && state.data.prompts) ? state.data.prompts.length : 0;
+      if (!window.confirm('导入将覆盖现有 ' + cur + ' 条数据为 ' + d.prompts.length + ' 条（导入前自动备份，可从 ↩ 恢复）。确定继续？')) return;
+      writePromptsJson({ apply: function(){ return d; }, cmd: '' }).then(function(ok){
+        if (ok) toast('已导入 ' + d.prompts.length + ' 条提示词');
+      });
+    };
+    reader.readAsText(f, 'utf-8');
+  });
+  btnBkExport.addEventListener('click', doExport);
+  btnBkImport.addEventListener('click', doImport);
+  var tagFilterClear = document.getElementById('tagFilterClear');
+  if (tagFilterClear) tagFilterClear.addEventListener('click', function(){ applyTagFilter(''); });
 
   /* ---------- 排序指令 ---------- */
   function buildSortCmd(){

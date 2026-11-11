@@ -3,7 +3,7 @@
  * pptx-builder.js — 登台 deck-stage 生成器（真相源）
  * 用法: node pptx-builder.js --data <data.json> --out <输出.pptx>
  * 读 data.json（schema 见 data-schema.md），按页类型渲染 16:9 pptx。
- * 主题四套与报告 HTML 深蓝面板体系同源：tech 深蓝科技（默认）/ biz 浅色商务 / mono 极简黑白 / warm 温暖渐变。
+  * 主题五套与报告 HTML 深蓝面板体系同源：tech 深蓝科技（默认）/ biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变。
  * 依赖: pptxgenjs（本 skill 目录 node_modules，离线可用）。
  */
 'use strict';

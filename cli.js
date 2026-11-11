@@ -41,6 +41,9 @@ const KNOWN_SKILL_DIRS = [
 // 包内不视为技能的目录
 const SKIP_DIRS = new Set(["template", "node_modules", ".git", ".github"]);
 
+// 复制时排除的杂质（macOS 元数据 / 嵌套版本库目录）
+const COPY_EXCLUDE = new Set([".ds_store", ".git"]);
+
 // ---------- 工具 ----------
 
 function expandHome(p) {
@@ -129,23 +132,49 @@ function stamp() {
   return "" + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + "-" + p(d.getHours()) + p(d.getMinutes()) + p(d.getSeconds());
 }
 
-function copyDir(src, dest, preserve, hits, upstreams) {
+function copyDir(src, dest, preserve, hits, upstreams, genUpstream) {
   fs.mkdirSync(dest, { recursive: true });
   for (const entry of fs.readdirSync(src)) {
+    if (COPY_EXCLUDE.has(entry.toLowerCase())) continue; // 跳过 .DS_Store 等杂质
     const s = path.join(src, entry);
     const d = path.join(dest, entry);
-    if (fs.statSync(s).isDirectory()) copyDir(s, d, preserve, hits, upstreams);
+    if (fs.statSync(s).isDirectory()) copyDir(s, d, preserve, hits, upstreams, genUpstream);
     else if (preserve.has(entry.toLowerCase()) && fs.existsSync(d)) {
       hits.push(d);
       // 配置演进：官方版与本地版内容不同时，另存 .upstream 对照文件，供用户手动合并新配置点
       const sData = fs.readFileSync(s, "utf8");
       const dData = fs.readFileSync(d, "utf8");
       if (sData !== dData) {
-        fs.writeFileSync(d + ".upstream", sData);
-        upstreams.push(d + ".upstream");
+        if (genUpstream !== false) {
+          fs.writeFileSync(d + ".upstream", sData);
+          upstreams.push(d + ".upstream");
+        }
+      } else {
+        // 内容已一致（用户已手动合并或本就相同），旧对照文件已无意义
+        try { fs.unlinkSync(d + ".upstream"); } catch (e) {}
       }
     }
     else fs.copyFileSync(s, d);
+  }
+}
+
+// 升级前清理：删除目标目录中官方已移除的文件（历史升级只增不删，废弃文件会残留）
+// 保护：preserve 清单文件、.upstream 对照、.bak- 备份、node_modules 依赖、COPY_EXCLUDE 项一律不动
+function pruneDir(src, dest, preserve) {
+  if (!fs.existsSync(dest)) return;
+  for (const entry of fs.readdirSync(dest)) {
+    const lower = entry.toLowerCase();
+    if (COPY_EXCLUDE.has(lower)) continue;
+    if (lower === "node_modules" || lower.endsWith(".upstream") || lower.includes(".bak-")) continue;
+    if (preserve.has(lower)) continue; // 用户文件永不删除
+    const d = path.join(dest, entry);
+    const s = path.join(src, entry);
+    if (fs.statSync(d).isDirectory()) {
+      pruneDir(s, d, preserve);
+      if (fs.readdirSync(d).length === 0) fs.rmdirSync(d); // 清空后的目录一并删除
+    } else if (!fs.existsSync(s)) {
+      fs.unlinkSync(d);
+    }
   }
 }
 
@@ -288,7 +317,7 @@ async function upgradeSkill(src, dest, argv, existed) {
       if (process.stdin.isTTY && !argv.yes) {
         console.log("   [1] 官方覆盖 —— 用官方新配置替换（旧配置在备份中，随时找回）");
         console.log("   [2] 保留我的 —— 不覆盖，官方新配置另存 .upstream 对照（默认）");
-        console.log("   [3] 稍后处理 —— 本次只升级技能文件，配置改天自己合并");
+        console.log("   [3] 稍后处理 —— 本次只升级技能文件，不生成对照文件，配置改天自己合并");
         const ans = await ask("   你的选择（回车默认 2）：");
         if (ans === "1") mode = "official";
         else if (ans === "3") mode = "later";
@@ -302,7 +331,9 @@ async function upgradeSkill(src, dest, argv, existed) {
     fs.unlinkSync(localCfg); // 备份已做，移除后 copyDir 正常覆盖
     try { fs.unlinkSync(localCfg + ".upstream"); } catch (e) {} // 旧对照已无意义，清理
   }
-  copyDir(src, dest, loadPreserveSet(src), hits, upstreams);
+  const preserve = loadPreserveSet(src);
+  if (existed) pruneDir(src, dest, preserve); // 先清理官方已删除的文件，再复制（只增不删 → 结构同步）
+  copyDir(src, dest, preserve, hits, upstreams, mode !== "later"); // [3] 稍后处理不生成对照文件
 
   // 依赖提示：技能自带 package.json（如 deck-stage 依赖 PptxGenJS）且目标无 node_modules 时
   // （本地仓库直装会连带复制 node_modules 离线可用；npm 全局装出的包不含 node_modules）
@@ -314,6 +345,8 @@ async function upgradeSkill(src, dest, argv, existed) {
   let note = existed ? "已更新" : "已安装";
   if (mode === "official") {
     note += `（已用官方配置覆盖，你的旧配置备份在 ${path.basename(bakFile)}）`;
+  } else if (mode === "later") {
+    note += `（配置结构有变：你的配置已备份 ${path.basename(bakFile)}，本次未生成对照文件，请稍后自行合并）`;
   } else if (bakFile) {
     const ups = upstreams.map((u) => path.basename(u)).join("、");
     note += `（配置结构有变：你的配置已备份 ${path.basename(bakFile)}` +
@@ -494,7 +527,7 @@ function printHelp() {
   · 官方 user-config.md 的 CONFIG_VERSION 高于你的本地版本（配置结构变化）时：
     先备份你的配置为 user-config.md.bak-<时间戳>，再询问三选一——
     [1] 官方覆盖（备份在侧，随时找回）/ [2] 保留我的 + 官方版另存 .upstream 对照（默认）
-    [3] 稍后处理；--yes 或非交互时默认 [2]
+    [3] 稍后处理（不生成对照文件）；--yes 或非交互时默认 [2]
 
 示例：
   skill-forge ls

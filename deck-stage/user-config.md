@@ -2,7 +2,7 @@
 DIR_MAC: /Users/luzhaosheng/MyWork/智慧食堂/reports
 DIR_WIN: %USERPROFILE%\reports
 
-# pptx 主题（与报告四主题同源）
+# pptx 主题（与报告五主题同源）
 # 可选：tech 深蓝科技（默认）/ biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变
 THEME: tech
 

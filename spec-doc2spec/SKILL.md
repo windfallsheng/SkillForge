@@ -10,6 +10,7 @@ description: >
   跨系统适配 macOS / Windows / Linux（Pandoc 安装、EMF 转换工具链探测、路径引用）。
   支持 .docx（Pandoc 转换）/ .md（直接读取）；.pdf 走 pdftotext 文本提取（无图）或提示先转 Word。
   不处理一般性的文档内容讨论（如「帮我看看这份文档讲了什么」），只处理「文档 → 需求规格」的转换任务。
+  用户询问用法（doc2spec 怎么用/使用说明/能干什么）时走使用说明应答：读 resources/usage-guide.md 原样输出（首行标题改为「doc2spec 使用指南」），不执行任何转换命令。
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 disable-model-invocation: false
 ---

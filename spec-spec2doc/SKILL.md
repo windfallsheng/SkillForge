@@ -9,6 +9,7 @@ description: >
   引擎可配置 PDF_ENGINE。输出目录默认与源文档同目录，可配置 OUTPUT_DIR。
   跨系统适配 macOS / Windows / Linux（Pandoc/LaTeX 安装、中文字体探测、Chrome 路径探测）。
   不处理一般性的文档格式转换（如「把这个 txt 转成 Word」），只处理「规格 → 交付文档」的转换任务。
+  用户询问用法（spec2doc 怎么用/使用说明/能干什么）时走使用说明应答：读 resources/usage-guide.md 原样输出（首行标题改为「spec2doc 使用指南」），不执行任何转换命令。
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 disable-model-invocation: false
 ---

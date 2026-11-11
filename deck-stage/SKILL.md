@@ -7,7 +7,7 @@ description: >
   视觉与报告深蓝面板体系同源：tech 深蓝科技（默认）/biz 浅色商务/mono IDEA 黑亮/light IDEA 白亮/warm 温暖渐变五主题，
   五段节色（蓝/绿/紫/玫红/橙）。每页可带演讲备注（notes），bullets 页可配图。
   数据经结构化 data.json 交给 resources/pptx-builder.js（PptxGenJS，本目录 node_modules 离线可用）产出 16:9 pptx。
-  当用户请求把报告/日报/周报/年报转成 PPT、做成 PPT、导出 pptx、生成演示文稿、登台，或询问本 skill 用法时使用。
+  当用户请求把报告/日报/周报/年报转成 PPT、做成 PPT、导出 pptx、生成演示文稿、登台，或询问本 skill 用法时使用。用户要 HTML 网页幻灯（网页放映/分享）时不用本 skill（交给 magic-deck）；「做 PPT/演示文稿」未言明产出形态时先 AskUserQuestion 二选一（.pptx 可编辑文件 → 本 skill；HTML 网页幻灯 → magic-deck），不擅自默认。
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 disable-model-invocation: false
 ---
@@ -15,6 +15,11 @@ disable-model-invocation: false
 # 登台 deck-stage
 
 把报告三件套（日报/周报/年报）的产出——或任何散装素材——转成专业 .pptx 演示文稿。常规页原生可编辑（文本/数据卡/时间线/柱图/饼图/折线），封面/结尾页 HTML 截图保真，每页可带演讲备注，视觉与报告同源。写报告 → 放映（magic-deck）→ 登台（本 skill），最后一公里闭环。
+
+## 意图边界（与 magic-deck 分流）
+
+- 本 skill 产 **.pptx 可编辑文件**（PowerPoint/WPS 打开可改）；用户要 HTML 网页幻灯（网页放映/分享）→ 交给 magic-deck
+- 「做 PPT / 做演示文稿」未言明产出形态 → AskUserQuestion 二选一：A .pptx 可编辑文件（继续本 skill）/ B HTML 网页幻灯（交给 magic-deck），不擅自默认
 
 ## 三问交互模型（生成前必走，一问不跳）
 
@@ -54,7 +59,22 @@ disable-model-invocation: false
 
 ## ⚙️ 默认配置（在 user-config.md，执行前必须先 Read）
 
-DIR（落盘根目录，DIR_MAC/DIR_WIN 双键）、THEME（tech/biz/mono/warm）、OPEN_PPTX（生成后是否打开）、CONFIRM（落盘前确认）、MODE（成片方式 page-by-page/once）、AUDIENCE（受众画像，备注话术参考）、NOTES（是否生成演讲备注）——均以 `user-config.md` 为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留。
+DIR（落盘根目录，DIR_MAC/DIR_WIN 双键）、THEME（tech/biz/mono/light/warm）、OPEN_PPTX（生成后是否打开）、CONFIRM（落盘前确认）、MODE（成片方式 page-by-page/once）、AUDIENCE（受众画像，备注话术参考）、NOTES（是否生成演讲备注）——均以 `user-config.md` 为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留。
+
+## 🔧 配置版本机制（升级保护）
+
+`user-config.md` 头部有 `CONFIG_VERSION` 字段，声明配置结构版本。本 skill 当前要求版本为 2。每次执行前先读 user-config.md：
+
+1. 若 CONFIG_VERSION 缺失或小于当前要求版本：先将旧 `user-config.md` 备份为 `user-config.md.bak-<时间戳>`
+2. 按版本迁移规则迁移字段（新增字段补默认值、改名字段按映射改名、删除字段保留在备份并在对话中提示用户）
+3. 更新 `CONFIG_VERSION` 为当前版本
+4. 对话告知用户「配置已升级到 vN：新增 X、改名 Y」
+
+禁止在未声明版本变更的情况下静默修改配置语义；配置结构如有变化必须同步更新本节的当前版本号。
+
+**无法迁移项处理**（值域失效 / 语义漂移）：三绝不——绝不静默（无法迁移项停下问，不猜值）、绝不丢失（旧值永远在 .bak-时间戳）、一次说清（升级报告三段式：⚠️ 版本与备份路径 → ✅ 已自动迁移 → 🟡 无法迁移项逐条附原因+影响+建议替代）；随后 AskUserQuestion 三选项（A 用建议值 / B 用户给新值 / C 保持旧配置——不更新 CONFIG_VERSION，每次执行再提醒）；报告必附回滚一句话。
+
+升级技能时 user-config.md 不会被覆盖（官方更新另存 `user-config.md.upstream` 对照文件）。
 
 ## 规则速览
 
@@ -62,7 +82,7 @@ DIR（落盘根目录，DIR_MAC/DIR_WIN 双键）、THEME（tech/biz/mono/warm�
 - 页类型分页：timeline 每页 8 条、bullets 每页 6 条自动续页（builder 自动处理，AI 不用拆）
 - 节色五档：blue 概览 / green 成果 / purple 成长 / rose 反思 / orange 展望，与年报 HTML 同款
 - 数值纪律：业务结果指标优先、git 统计兜底；数字必带对比基准（同比/环比）
-- 主题四套与报告 HTML 令牌同源；theme 写在 data.json 里，未写默认 tech
+- 主题五套与报告 HTML 令牌同源；theme 写在 data.json 里，未写默认 tech
 - 演讲备注：NOTES=true 时每页写 notes（单页/第一页）或 notesList（按分页逐页）；话术按 AUDIENCE 画像，写开场白/数据解读/过渡句，不写正文照读
 - 图表扩容：chart 自绘柱 / chart-pie 原生饼图（percent/donut 选项）/ chart-line 原生折线（series 多线/smooth 选项）——原生图表在 PowerPoint/WPS 里可直接编辑数据
 - bullets 配图：page.image 给绝对路径即右侧配图（contain 等比内嵌），文本区自动缩窄，仅第一页带图

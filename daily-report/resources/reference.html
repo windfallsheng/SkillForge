@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>今日日报 - 20261106</title>
 <style>
-/* ═══ 四主题令牌：12 核心契约（与 magic-deck 一致）+ 报告扩展（发光/氛围/语义色）；html[data-theme] 运行时切换，THEME 生成时定默认 ═══ */
+/* ═══ 五主题令牌：12 核心契约（与 magic-deck 一致）+ 报告扩展（发光/氛围/语义色）；html[data-theme] 运行时切换，THEME 生成时定默认 ═══ */
 :root, [data-theme="tech"]{
   --bg:#0a1929; --bg2:#071525; --panel:rgba(11,30,55,.9); --panel-solid:#0b1e37;
   --card-shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 12px 32px rgba(1,6,16,.5), 0 0 24px rgba(14,165,233,.15);
@@ -63,6 +63,12 @@
 }
 /* 浅色主题下星点氛围自然退隐 */
 [data-theme="biz"] .stars, [data-theme="light"] .stars, [data-theme="warm"] .stars{ opacity:.28; }
+/* mono 黑亮下科技氛围退隐：纯正 #1e1f22 编辑区观感（网格/星点/扫描线/移动光带全退，与 JetBrains New UI Dark 一致） */
+[data-theme="mono"] .grid-pattern,
+[data-theme="mono"] .stars,
+[data-theme="mono"] .scanlines,
+[data-theme="mono"] .scanband{ display:none; }
+[data-theme="mono"] body::before{ display:none; } /* 噪点层同退 */
 
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{background:var(--bg);}
@@ -363,7 +369,7 @@ li:hover .idx{ transform:scale(1.18) rotate(-4deg); font-size:14px; }
   text-align:center; font-size:10px; color:var(--muted); letter-spacing:1.5px;
   padding:6px 0 2px; position:relative; z-index:1;
 }
-/* 主题换肤坞：右下角四色点随点随换，记忆上次选择；打印与截图模式隐藏 */
+/* 主题换肤坞：右下角五色点随点随换，记忆上次选择；打印与截图模式隐藏 */
 .theme-dock{
   position:fixed; right:18px; bottom:18px; z-index:1001;
   display:flex; gap:8px; padding:8px 10px; border-radius:999px;
@@ -623,7 +629,7 @@ var TXT = "今日日报 - 20261106\n\n生成时间：2026-11-06 17:30:39\n\nTL;D
       p.style.animationDuration = c[6] + 's';
       p.style.setProperty('--dx', c[7] + 'px');
       p.style.setProperty('--dy', c[8] + 'px');
-      if (c[1] >= 5.5) p.className = 'cp cp-deep'; // 深色带配色由 .cp-deep 类承接（四主题令牌驱动，勿内联写死）
+      if (c[1] >= 5.5) p.className = 'cp cp-deep'; // 深色带配色由 .cp-deep 类承接（五主题令牌驱动，勿内联写死）
       comet.appendChild(p);
     }
   });
