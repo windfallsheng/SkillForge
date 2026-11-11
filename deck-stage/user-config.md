@@ -1,5 +1,5 @@
 # 落盘根目录（自动按目标日期建子目录；目录不存在时回退用户主目录下 reports）
-DIR_MAC: /Users/luzhaosheng/MyWork/智慧食堂/reports
+DIR_MAC: ~/reports
 DIR_WIN: %USERPROFILE%\reports
 
 # pptx 主题（与报告五主题同源）

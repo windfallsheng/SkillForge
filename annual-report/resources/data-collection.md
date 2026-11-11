@@ -4,18 +4,19 @@
 
 ## 1. 代码仓库全年提交聚合（可选，开发类用户）
 
-- 遍历仓库清单（见 disk-and-html.md 的仓库清单节），对每仓执行全年统计：
+- 遍历 user-config.md 的 DATA_SOURCES 清单（type: git 项；个人数据源必须写在 user-config.md，本文件随升级覆盖），对每仓执行全年统计：
   - 总提交数：`git log --since={区间起} --until={区间止} --oneline | wc -l`
   - 增删行数：`git log --since=... --until=... --numstat --pretty=tformat: | awk` 汇总 add/del
   - **先剔除生成物路径**（.speccore/code-graph/、node_modules、dist、*.lock 等，用 grep -vE 按制表符+路径过滤），否则 graph.json 之类单文件可贡献数十万行噪音
   - 月度分布：`git log --since=... --until=... --format='%ad' --date=format:'%Y-%m' | sort | uniq -c`（12 个月柱图数据）
   - 里程碑：`git tag` / `git log --merges --oneline` 提取版本发布与重要合并，读 tag 信息取版本号与日期
-- 仓库按系统取有效路径（macOS / Windows 双列表，空列跳过）
+- 仓库按系统取有效路径（mac / win 双字段，「-」= 该系统不存在跳过）
 
 ## 2. 会话口述与文字材料
 
 - 用户口述的年度大事（「年初做了 X」「Q3 上了 Y」）逐条记录
 - 用户提供的总结草稿/文档（md/txt/docx）Read 提取要点；图片逐张 Read 识别内容
+- DATA_SOURCES 清单中 type: file 的文件/目录直接 Read 提取要点；type: remote 的 url 联网拉取内容提取要点（仅收集时联网，HTML 产物仍零外链）
 - 聊天记录/周报/日报文件也可作为素材
 
 ## 3. 合并去重与口径

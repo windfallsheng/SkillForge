@@ -1,27 +1,10 @@
 # 数据收集
 
-先检测当前系统再取对应路径列（macOS：`uname -s` 返回 Darwin；Windows：`node -e "console.log(process.platform)"` 返回 win32），按需检查以下工作区当日提交，聚合产出。只汇总有提交的仓库：
+先检测当前系统（macOS：`uname -s` 返回 Darwin；Windows：`node -e "console.log(process.platform)"` 返回 win32），再 Read 同目录外的 `user-config.md` 顶部「默认配置」的 DATA_SOURCES 清单，按清单逐项收集（空清单 = 只按会话/文字内容生成）。每项按 type 分三种行为：
 
-| 仓库 | macOS 路径 | Windows 路径 |
-|---|---|---|
-| NearCast | /Users/luzhaosheng/SmartDeveloper/DevWorkspace/Android_Studio/NearCast | - |
-| nearcast-server | /Users/luzhaosheng/SmartDeveloper/DevWorkspace/IntelliJ_IDEA/nearcast-server | - |
-| nearcast-go | /Users/luzhaosheng/SmartDeveloper/DevWorkspace/GoProject/nearcast-go | - |
-| nearcast-admin | /Users/luzhaosheng/SmartDeveloper/DevWorkspace/WebProject/nearcast-admin | - |
-| SmartCanteenConsumerMachineApp | /Users/luzhaosheng/SmartDeveloper/DevWorkspace/Android_Studio/SmartCanteenConsumerMachineApp | - |
-| TrustPay | /Users/luzhaosheng/SmartDeveloper/DevWorkspace/Android_Studio/TrustPay | - |
-| srf-app | - | d:\Workspace_Java\srf-app |
-| srf-manage | - | d:\Workspace_Java\srf-manage |
-| srf-operation | - | d:\Workspace_Java\srf-operation |
-| srf-service | - | d:\Workspace_Java\srf-service |
-| srf-web-user | - | d:\Web_Projects\srf-web-user |
-| srf-web-operation | - | d:\Web_Projects\srf-web-operation |
-| srf-web-wx | - | d:\Web_Projects\srf-web-wx |
-| srf-web-h5-teacher | - | d:\Web_Projects\srf-web-h5-teacher |
-| srf-web-uop | - | d:\Web_Projects\srf-web-uop |
-| Spec-Core-Smart-Canteen | - | d:\Workspace_QCoder\Spec-Core-Smart-Canteen |
-
-- 「-」= 该仓库在当前系统不存在，跳过；当前系统对应列全为「-」（陌生机器）时跳过 提交记录收集，只按会话/文字内容生成
+- git = 代码仓库：取 mac / win 中当前系统对应路径（「-」= 该系统不存在，跳过；当前系统全部为「-」的陌生机器时跳过 git 收集，只按会话/文字内容生成），用下方命令模板聚合该仓当日提交，只汇总有提交的仓库
+- file = 普通文件/目录：直接 Read 内容（文档/纪要/日志等素材），提取要点并入
+- remote = 远程网络源：AI 联网拉取 url 内容提取要点（仅收集时联网，HTML 产物仍零外链）
 
 命令模板：
 
@@ -34,7 +17,7 @@ git -C <仓库路径> log --since="YYYY-MM-DD 00:00:00" --until="YYYY-MM-DD 23:5
 - 同主题多提交（含多次提交与 MR 合并记录）合并为一条任务点，量化数据累加
 - 提交记录无法给出实际耗时，用时取合理估算值，允许用户事后修正
 - 无当日提交的仓库不写入日报
-- 仓库路径（当前系统列）不存在/非代码仓库时静默跳过该仓库（不报错、不写入）
-- 用户说「只写 xxx 的日报 / 只聚合 xxx 仓库」时只收集指定仓库
+- 仓库路径（当前系统字段）不存在/非代码仓库时静默跳过该仓库（不报错、不写入）
+- 用户说「只写 xxx 的日报 / 只聚合 xxx」时按 name 匹配只收集指定数据源
 - 提交记录之外的默认来源：本次会话中用户已提及/口述的工作内容（任务、进度、风险等对话信息）一并聚合，与 提交记录去重合并
 - 用户明确说"只整理这段文字/只按这段"时，忽略提交记录与会话上下文，只用指定文字

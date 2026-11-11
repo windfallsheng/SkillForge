@@ -10,16 +10,28 @@
 
 ```yaml
 DISK: true                     # 是否落盘写文件；false = 默认只在对话输出，不写文件不开浏览器
-CONFIG_VERSION: 2              # 配置结构版本：skill 升级时若配置结构变化会递增；AI 每次执行前对比 SKILL.md「配置版本机制」节声明的当前版本，不一致时按 SKILL.md 的迁移规则处理（先备份本文件为带时间戳 .bak，再迁移，最后对话告知用户）
+CONFIG_VERSION: 3              # 配置结构版本：skill 升级时若配置结构变化会递增；AI 每次执行前对比 SKILL.md「配置版本机制」节声明的当前版本，不一致时按 SKILL.md 的迁移规则处理（先备份本文件为带时间戳 .bak，再迁移，最后对话告知用户）
 FORMATS: [md, txt, html, content-png] # 落盘哪些格式（数组，可删减/增，如 [md, html] / [md, txt, html]（不截图）；content-png = 整页内容区截图（头部标题卡片 + 今日任务进度/明日计划/风险阻塞点三张分节卡片整体截出，头部卡片必须带上），删除该项即不截图；不影响对话中的 md 正文输出）
 DIR: auto                      # 落盘根目录：auto = 按当前系统自动选 DIR_MAC / DIR_WIN（也可直接写死某个绝对路径）
-DIR_MAC: /Users/luzhaosheng/MyWork/智慧食堂/reports    # macOS 落盘根目录（自动按目标日期建子目录；目录不存在时回退用户主目录下 reports）
-DIR_WIN: d:\Workspace_QCoder\reports                   # Windows 落盘根目录（自动按目标日期建子目录；目录/盘符不存在时回退用户主目录下 reports）
+DIR_MAC: ~/reports                               # macOS 落盘根目录（自动按目标日期建子目录；目录不存在时回退用户主目录下 reports）
+DIR_WIN: %USERPROFILE%\reports                   # Windows 落盘根目录（自动按目标日期建子目录；目录/盘符不存在时回退用户主目录下 reports）
 OPEN_HTML: true                # 落盘后是否自动用浏览器打开 html（FORMATS 不含 html 时忽略）
 THEME: tech                    # html 页面主题：tech 深蓝科技（默认）/ biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变；生成时写 <html data-theme="THEME值"> 定默认，页面右下角换肤坞五色点随点随换（浏览器本地记忆，?shot 截图模式自动隐藏，打印隐藏）
 TEMPLATE: default              # 报告模板：default = 内置三段式（任务进度/明日计划/风险阻塞点）；custom = 使用下方「📝 自定义模板」节；口头临时指定模板仅当次生效
 ROLE: 全栈开发工程师（企业内技术开发）  # 用户默认职业角色与主要工作内容（两者并存：职业名 + 括号内工作内容，生成内容/术语/量化指标/节奏条/风险话术全部按此画像走）；用户随口描述职业时（如「我搞装修的，天天跑工地」）→ AI 提炼为规范表述（装修项目经理（负责工地现场管理、施工进度与质量巡检））更新此处；说「以 XX 的身份写」→ 当次临时换角色不改配置；说「以后默认用 XX 角色 / 我的职业是 XX / 我的主要工作是 XX」→ 永久更新此处
 CONFIRM: never                 # 落盘前确认：never = 直接生成落盘不确认（默认）；text = 纯文字整理模式先出效果确认后再落盘；always = 任何方式生成都先确认；临时说「先看看效果」当次先确认、说「不用确认」当次跳过
+DATA_SOURCES: []               # 数据源清单（升级不覆盖；AI 每次生成前 Read 本文件按此清单收集；空清单 = 只按会话/文字内容生成）。每项：name 唯一名称 + type 类型 + 路径。三种类型示例（把下方 # 注释示例改成你的真实数据源后填入上方数组）：
+  # - name: 主项目仓库          # 名称：唯一 key（重名视为同一数据源；口述「只聚合 xxx」按 name 匹配）
+  #   type: git                # git = 代码仓库（git log 聚合提交）
+  #   mac: ~/Projects/main-app  # macOS 路径（绝对路径或 ~ 开头）
+  #   win: D:\Projects\main-app # Windows 路径；「-」= 该系统不存在，自动跳过
+  # - name: 周例会纪要
+  #   type: file               # file = 普通文件/目录（直接 Read 内容聚合，适合文档/纪要/日志素材）
+  #   mac: ~/Documents/meeting-notes.md
+  #   win: -
+  # - name: 数据接口
+  #   type: remote             # remote = 远程网络源（AI 联网拉取 url 内容；仅生成时联网，HTML 产物仍零外链）
+  #   url: https://example.com/data.json
 ```
 
 > 临时口头要求（仅对当次生效，不修改上方配置）：说「不落盘/别写文件」→ 当次 DISK=false；说「写到桌面/存到 ~/report（macOS）或 D:\report（Windows）」→ 当次改用该 DIR；说「只要 md / 只出 html / 只要内容区截图」→ 当次只落指定格式；说「这次不截图」→ 当次不生成内容区截图；说「只要截图/重新截个图」→ 当次只对现有 html 执行内容区截图（不重新收集数据、不重写 md/txt/html 内容文件）；说「别开浏览器」→ 当次 OPEN_HTML=false；说「这次按 xxx 模板来」→ 当次临时换模板（不改配置）；说「以后都用这个模板」→ 自动写入下方「📝 自定义模板」节并把 TEMPLATE 改为 custom（永久生效）；说「先看看效果/先出效果再落盘」→ 当次先出效果确认后再落盘；说「不用确认/直接落盘」→ 当次跳过确认直接落盘。说「页面用浅色商务主题/浅色主题」→ 当次 THEME=biz；说「以后默认用暖色主题」→ 永久改 THEME=warm。

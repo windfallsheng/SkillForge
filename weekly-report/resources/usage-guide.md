@@ -46,7 +46,7 @@
 - 词典外行业走兜底：按骨架 + 你提供的素材现场生成词条；说「记住这个行业」→ 固化为新词条
 
 ## 控制落盘（临时要求，仅对当次生效）
-- 默认：对话输出 Markdown + md/txt/html 三文件 + 内容区截图 content-png 落盘到 DIR（auto 按系统选：macOS=/Users/luzhaosheng/MyWork/reports、Windows=d:\Workspace_QCoder\reports）/<当周最后一天日期>/ + html 自动打开（DIR 目录/盘符不存在时自动改用用户主目录下 reports：macOS=~/reports、Windows=%USERPROFILE%\reports）
+- 默认：对话输出 Markdown + md/txt/html 三文件 + 内容区截图 content-png 落盘到 DIR（auto 按系统选：macOS=~/reports、Windows=%USERPROFILE%\reports，模板默认值，实际以 user-config.md 为准）/<当周最后一天日期>/ + html 自动打开（DIR 目录/盘符不存在时自动改用用户主目录下 reports：macOS=~/reports、Windows=%USERPROFILE%\reports）
 - 说「写到桌面」→ 本次落盘到桌面（macOS=~/Desktop、Windows=%USERPROFILE%\Desktop）；说「存到 ~/report / D:\report」→ 本次用指定目录（均自动按当周最后一天建子目录）
 - 说「不落盘/别写文件」→ 本次只在对话输出，不写文件、不开浏览器
 - 说「只要 md」「只出 html」「只要内容区截图」→ 本次只落指定格式文件；说「这次不截图」→ 本次跳过截图（content-png = 本周概览与三张卡片整体一张图，四周约 40px 留白、「本周任务进度」标题右侧带周范围徽章（跟随 WEEK_END），不含头部标题、复制按钮、页脚）
@@ -59,7 +59,7 @@
 |---|---|---|
 | DISK | 是否落盘写文件 | true（落盘，默认）/ false（默认只在对话输出） |
 | FORMATS | 落盘哪些格式（数组） | [md, txt, html, content-png]（默认，含内容区截图）/ [md, html] / [md, txt, html]（不截图）；content-png = 概览与三张卡片整体截图（四周约 40px 留白、任务进度节带周范围徽章），不含头部标题/复制按钮/页脚 |
-| DIR | 落盘根目录 | auto（按当前系统自动选 DIR_MAC / DIR_WIN，默认）；DIR_MAC = macOS 根目录（/Users/luzhaosheng/MyWork/reports）；DIR_WIN = Windows 根目录（d:\Workspace_QCoder\reports） |
+| DIR | 落盘根目录 | auto（按当前系统自动选 DIR_MAC / DIR_WIN，默认）；DIR_MAC = macOS 根目录（模板默认 ~/reports，可改）；DIR_WIN = Windows 根目录（模板默认 %USERPROFILE%\reports，可改） |
 | OPEN_HTML | 落盘后是否自动打开 html | true（自动打开，默认）/ false（不打开） |
 | WEEK_END | 周结束日（当周最后一天，决定周范围与落盘目录名） | friday（默认）/ sunday / saturday 等 |
 | TEMPLATE | 报告模板 | default（内置四段式，默认）/ custom（按「📝 自定义模板」节的结构生成） |

@@ -1,7 +1,7 @@
 CONFIG_VERSION: 4
 
 # 页面与数据目录（prompt-pouch.html 与 prompts.json 的落盘处）
-DIR: /Users/luzhaosheng/MyWork/prompt-pouch
+DIR: ~/prompt-pouch
 DIR_WIN: %USERPROFILE%\prompt-pouch
 
 # 本地预览端口（HTTP 方式访问 data/prompts.json）
