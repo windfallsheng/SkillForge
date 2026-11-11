@@ -7,7 +7,7 @@ description: >
   （全文滚动查看 / 复制 / 修改 / 创建修改时间线）；数据存 <DIR>/data/prompts.json（DATA_DIR 可配），
   页面与数据严格分离，双笔协作（页面经授权目录直写，AI 代笔维护）。三类任务：①初始化——目标目录无页面时确认目录（默认用户配置 DIR）
   并生成 prompt-pouch.html（样式真相源为 resources/reference.html，原样复制）与 data/prompts.json
-  （默认示例五组：写作输出/沟通协作/规划执行/复盘成长/提问艺术，每条带 createdAt；页面另内置同款示例种子 DEFAULT_POUCH，prompts.json 读不到时兜底展示）；②维护——按用户口述增删改提示词与分组、调整排序、
+  （默认示例五组：写作输出/沟通协作/规划执行/复盘成长/提问艺术，每条带 createdAt；页面另内置同款示例种子 DEFAULT_POUCH，prompts.json 读不到时兜底展示）；②维护——用户说「把这段话/这段对话/这个文件/XX 加进锦囊、存成提示词、收藏这句话」或口述增删改提示词与分组、调整排序、
   切换收藏，读写 prompts.json（UTF-8、2 空格缩进），用户刷新页面即见；③打开——用户说「打开锦囊」时
   起本地服务并按平台打开浏览器访问管理页面。
   数据通过 HTTP 方式访问（file:// 直开会回退浏览器缓存快照，需提示用户起本地服务）。
@@ -35,13 +35,19 @@ disable-model-invocation: false
 ## 执行流程
 
 0. **读用户配置**（DIR/DIR_WIN/PORT/DATA_DIR/BACKUP_DIR/INIT_DATA/CONFIRM/THEME/CONFIG_VERSION）→ 先 Read 同目录 `user-config.md`
+0.5 **意图识别与确认**：
+   - **明确入囊**：用户说「把这段话/这段对话/这个文件 加进锦囊、存成提示词、收藏这句话、整理进锦囊」→ 直接进入维护或批量整理流程
+   - **模糊意图**：用户表达可能指向锦囊但不明确（如「保存这个」「记一下这个」）→ 先 AskUserQuestion 确认（选项：放入锦囊提示词 / 只是本次会话临时记录 / 其它），确认后执行，不擅自写文件
+   - **明确无关**：普通对话、没有保存意图 → 不触发任何文件操作
 1. **初始化**（目标目录无 `prompt-pouch.html` 时）：
+   - **已有页面分支**：用户说「创建/生成」但目标目录已有 prompt-pouch.html → AskUserQuestion 三选项：A 打开现有页面（推荐，数据无损）；B 覆盖重建——旧页面先复制 .bak-时间戳，仅重置页面为新版 reference.html（DATA_DIR/BACKUP_DIR 数据目录一概不动，用户数据绝不丢）；C 取消不创建。默认推荐 A
    - **目录确认**：用户未提目录 → 用配置 `DIR`；`CONFIRM: true` 时先 AskUserQuestion 确认（选项：用默认目录 / 换目录）；用户已说「放到 XX 目录」→ 直接用该目录（本次会话有效，不改配置文件）
    - 复制 `resources/reference.html` → `<DIR>/prompt-pouch.html`（原样复制，不修改任何样式与脚本；唯一例外：html 根标签 `data-theme` 属性值设为配置 `THEME`——reference 默认 "gold"，仅当配置非 gold 时替换该属性值）
    - 创建 `<DIR>/<DATA_DIR>/` 与 `<DIR>/<BACKUP_DIR>/` 子目录（配置为空串则跳过、平铺根目录）；生成 `<DIR>/<DATA_DIR>/prompts.json`：`INIT_DATA: example` 时写入「各职业通用」示例五组（写作输出/沟通协作/规划执行/复盘成长/提问艺术，每组 3 条，标题与正文按下方「## 默认示例数据」清单写，**每条必带 createdAt 当前时间（YYYY-MM-DD HH:mm:ss，写到时分秒）**）；`empty` 时写空结构（version + 空 groups/prompts）
    - 收尾提示启动方式：`cd <DIR> && python3 -m http.server <PORT>`（Windows 无 python3 时 `py -m http.server`），浏览器访问 `http://localhost:<PORT>/prompt-pouch.html`（HTTP 才能读 prompts.json；file:// 直开回退缓存快照）
 2. **维护**（页面已存在时）：读 `<DIR>/<DATA_DIR>/prompts.json` → 按用户意图修改 → 写回（UTF-8、2 空格缩进、保留 version 字段）→ 提醒用户刷新页面
-   - **分类交互**：用户说「添加 XX」但未说分组 → AskUserQuestion 列出全部现有分组（加「新建分组」选项）让用户选；用户指定的分组不存在 → 明确告知该分组不存在，并问是否新建（新建则补 groups 条目：id 16 位数字主键（雪花规则见 data-format.md）、name 中文、icon 一个 emoji）
+   - **落盘确认**：写回前展示将要落盘的内容（新增/修改的标题、分组、正文摘要，一句话说清改了什么），等用户确认后落盘；用户明确说「直接存/不用确认」则跳过（本次会话有效）；写回前重读最新文件合并
+   - **分类交互**：用户说「添加 XX」但未说分组 → 先按现有分组语义智能匹配（如内容讲周报 → 建议「写作输出 ✍️」并说明理由），匹配到则默认归入、用户可改口换组；匹配不到 → AskUserQuestion 列出全部现有分组（加「新建分组」选项）让用户选；用户指定的分组不存在 → 明确告知该分组不存在，并问是否新建（新建则补 groups 条目：id 16 位数字主键（雪花规则见 data-format.md）、name 中文、icon 一个 emoji）
 2.5 **交付前自检**（初始化与每次维护落盘后必做，硬门禁不可跳过）：
    - **json 机器校验**：`python3 -c "import json;json.load(open('<DIR>/<DATA_DIR>/prompts.json',encoding='utf-8'))"`（Windows 用 py）解析通过，且 schema 自查无缺（version/groups/prompts 齐全、group 引用存在、order 连续、新增条目 createdAt 到时分秒）
    - **页面零报错验证**：Playwright headless（缺则 `pip3 install --user playwright`；用系统 Chrome，channel="chrome" 无需下载浏览器）→ 起本地服务 `cd <DIR> && python3 -m http.server <PORT>` → goto `http://localhost:<PORT>/prompt-pouch.html` → 挂 pageerror 监听（零容忍）→ 断言卡片数 `document.querySelectorAll('.card').length` 等于 prompts.json 的 prompts 条数（证明数据被正确读到；落回内置示例种子即自检失败）→ 收尾停服务
@@ -53,8 +59,8 @@ disable-model-invocation: false
 4. **结构规则与维护操作** → 读 `resources/data-format.md`（schema、id 规范、createdAt、updatedAt、排序落盘、插值语法、排序模式）
 5. **批量整理入囊**（用户给一堆文字/文件/说「把最近对话框内容整理进锦囊」）：
    - 读 `<DIR>/<DATA_DIR>/prompts.json` 现状 → 逐条提炼候选提示词（标题/正文/建议归入哪个现有组/标签 1-3 个）
-   - 输出整理方案表给用户：每条建议分组与理由；现有组装不下的条目推荐新建分组（中文名 + emoji icon + 一句推荐理由），不擅自落盘
-   - 用户口述调整（换组/改名/删条目/改推荐组名）→ 确认后一次性落盘：id 雪花规则、createdAt 当天、各组 order 续排，写回前重读最新文件合并
+   - 输出整理方案表给用户：每条建议分组与理由、**插值泛化建议**（识别可泛化的具体词——人名/日期/数字/对象名，建议改为 {变量}，附改写前后对比与复用效果，如「把『Q3 报告』换成 {报告主题}，这条就能复用于任何主题」）；现有组装不下的条目推荐新建分组（中文名 + emoji icon + 一句推荐理由），不擅自落盘
+   - 用户口述调整（换组/改名/删条目/改推荐组名/接受或拒绝插值建议）→ 确认后一次性落盘：id 雪花规则、createdAt 当天、各组 order 续排，写回前重读最新文件合并
    - 落盘后提醒用户刷新页面
 6. **使用咨询**（用户只问「锦囊怎么用」等用法、未要求生成或修改）→ 读 `resources/usage-guide.md`，将其内容原样输出（首行标题改为「锦囊使用指南」），不读写任何文件
 
@@ -78,4 +84,5 @@ disable-model-invocation: false
 - **updatedAt 规范**：AI 修改提示词（改标题/分组/内容/标签）时同步写/更新 `updatedAt`（当天日期，格式同 createdAt）；仅重排 order 或改收藏不更新；新增不写（视为无修改）
 - **页面双笔纪律**：页面经目录授权后可直写 prompts.json（增删改分组与提示词、排序落盘）。AI 每次维护必须先重读最新 prompts.json 再修改写回，严禁基于会话早期读入的旧内容覆盖写回（会丢失页面刚写入的改动）；页面未授权目录时的操作会生成「复制指令」交回 AI，按指令内容落盘
 - **插值语法**：内容里的 `{变量名}`（如「{功能名}」）会被页面自动识别为填充面板变量，写内容时按需保留花括号占位
+- **插值泛化纪律**：新增/整理提示词时主动识别可泛化的具体词（人名/日期/数字/对象名），向用户建议改为 {变量}（附改写示例与复用效果），用户确认后才改；不擅自泛化，用户拒绝则原样保留
 - **主题令牌纪律**：reference.html 组件样式一律引用 CSS 变量（--gold/--gold2/--gold-dim/--border/--tag-bg/--star/--glow/--bar-hi/--bar-lo 等），禁止在组件侧硬编码暖棕金色值（#e8b04b、rgba(232,176,75,…)、rgba(23,17,12,…)）；新增样式需复用现有令牌或先在四主题块中各补一致定义；改主题只改对应 [data-theme] 块，不动组件
