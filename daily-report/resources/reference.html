@@ -393,7 +393,10 @@ li:hover .idx{ transform:scale(1.18) rotate(-4deg); font-size:14px; }
 .theme-dock .th-dot[data-theme="mono"]{ background:#1e1f22; }
 .theme-dock .th-dot[data-theme="light"]{ background:#ffffff; }
 .theme-dock .th-dot[data-theme="warm"]{ background:#d97706; }
-@media print{ .theme-dock{ display:none; } }
+@media print{ .theme-dock{ display:none; } .rv{ opacity:1 !important; translate:none !important; } }
+/* 滚动入场：html.js 门控（无 JS/打印全显）；初始视口外的卡片滚到视口才上浮渐显；translate 独立属性不碰 transform，hover 3D 偏转零冲突 */
+html.js .rv{ opacity:0; translate:0 16px; transition:opacity .5s ease-out, translate .5s ease-out; }
+html.js .rv.in{ opacity:1; translate:0 0; }
 </style>
 </head>
 <body>
@@ -733,6 +736,37 @@ function sheen(track, src){
   dock.querySelectorAll('.th-dot').forEach(function(d){
     d.addEventListener('click', function(){ apply(d.getAttribute('data-theme')); });
   });
+})();
+/* 滚动入场：初始视口外的卡片滚到视口才上浮渐显（首屏卡维持加载错峰动画）；无 JS 时 html.js 不生效全显 */
+(function(){
+  if (location.search.indexOf('shot=') !== -1) return;
+  document.documentElement.classList.add('js');
+  if (!('IntersectionObserver' in window)) return;
+  var els = Array.prototype.slice.call(document.querySelectorAll('.header-card,.overview,.section'));
+  var rvs = [];
+  els.forEach(function(el){
+    if (el.getBoundingClientRect().top < innerHeight * 0.92) return;
+    el.classList.add('rv');
+    rvs.push(el);
+  });
+  if (!rvs.length) return;
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08 });
+  rvs.forEach(function(el, i){
+    el.addEventListener('transitionend', function h(ev){
+      if (ev.target !== el) return;
+      el.style.transitionDelay = '';
+      el.removeEventListener('transitionend', h);
+    });
+    el.style.transitionDelay = Math.min(i * 70, 280) + 'ms';
+    io.observe(el);
+  });
+  setTimeout(function(){
+    document.querySelectorAll('.rv:not(.in)').forEach(function(el){ el.classList.add('in'); });
+  }, 2000);
 })();
 </script>
 </body>
