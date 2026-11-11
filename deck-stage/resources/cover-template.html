@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="tech">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PPT 封面底版</title>
+<style>
+  /* ⛔ 封面/亮点页截图模板（静态版式，无动画，保截图零风险）
+     视觉与报告深蓝面板体系同源；AI 执行时替换 <script> 内 COVER 数据后经 Chrome headless 截图。
+     四主题经 html[data-theme] 切换；截图窗口 1280x720（16:9）。 */
+  :root{
+    --bg:#0a1929; --panel:#0b1e37; --panel-line:#0f3350; --text:#e6f1ff; --muted:#8892b0;
+    --accent:#38bdf8; --accent2:#0ea5e9; --border:#1e3a5f; --glow:rgba(14,165,233,.25);
+    --title-mid:#ffffff;
+  }
+  html[data-theme="biz"]{ --bg:#ffffff; --panel:#f8fafc; --panel-line:#e2e8f0; --text:#0f172a; --muted:#64748b; --accent:#2563eb; --accent2:#1d4ed8; --border:#e2e8f0; --glow:rgba(37,99,235,.14); --title-mid:#1e40af; }
+  html[data-theme="mono"]{ --bg:#ffffff; --panel:#ffffff; --panel-line:#d4d4d4; --text:#111111; --muted:#666666; --accent:#000000; --accent2:#333333; --border:#cccccc; --glow:rgba(0,0,0,.08); --title-mid:#555555; }
+  html[data-theme="warm"]{ --bg:#1c0f0f; --panel:#2a1717; --panel-line:#4a2f1f; --text:#fff1e6; --muted:#c4a98f; --accent:#fdba74; --accent2:#f97316; --border:#4a2f1f; --glow:rgba(249,115,22,.22); --title-mid:#ffffff; }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  body{
+    width:1280px; height:720px; overflow:hidden; position:relative;
+    background:var(--bg); color:var(--text);
+    font-family:"PingFang SC","Microsoft YaHei","Source Han Sans SC",sans-serif;
+  }
+  /* 三层科技底纹（静态） */
+  .bg-grid{ position:absolute; inset:0;
+    background-image:linear-gradient(rgba(0,240,255,.03) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(0,240,255,.03) 1px,transparent 1px);
+    background-size:60px 60px; }
+  .bg-stars{ position:absolute; inset:0;
+    background-image:radial-gradient(1px 1px at 12% 18%,rgba(255,255,255,.9),transparent),
+                     radial-gradient(1.2px 1.2px at 88% 12%,rgba(0,240,255,.7),transparent),
+                     radial-gradient(1px 1px at 72% 82%,rgba(167,139,250,.8),transparent),
+                     radial-gradient(1.5px 1.5px at 8% 78%,rgba(94,234,212,.7),transparent),
+                     radial-gradient(1px 1px at 42% 32%,rgba(253,186,116,.7),transparent),
+                     radial-gradient(1.2px 1.2px at 62% 66%,rgba(244,114,182,.6),transparent),
+                     radial-gradient(1px 1px at 32% 92%,rgba(0,240,255,.6),transparent),
+                     radial-gradient(1px 1px at 94% 44%,rgba(255,255,255,.8),transparent); }
+  .bg-noise{ position:absolute; inset:0; opacity:.04;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  /* 顶部光斑（静态） */
+  .card-glow{ position:absolute; top:0; left:50%; transform:translateX(-50%) scale(1.6); width:70%; height:55%;
+    background:radial-gradient(ellipse at 50% 10%,var(--glow),transparent 70%); pointer-events:none; }
+  /* 主体 */
+  .wrap{ position:relative; z-index:2; height:100%; display:flex; flex-direction:column; padding:56px 72px 40px; }
+  .badge{ align-self:flex-start; font-size:13px; letter-spacing:.22em; color:var(--muted);
+    border:1px solid var(--border); border-radius:999px; padding:7px 18px; }
+  .center{ flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .title{ font-size:58px; font-weight:800; line-height:1.25; letter-spacing:.02em;
+    background:linear-gradient(120deg,var(--accent) 0%,var(--title-mid) 55%,var(--accent2) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 0 18px var(--glow)) drop-shadow(0 0 6px var(--glow)); }
+  .subtitle{ margin-top:22px; font-size:20px; color:var(--muted); letter-spacing:.06em; }
+  .rule{ margin-top:30px; width:210px; height:3px; border-radius:2px;
+    background:linear-gradient(90deg,var(--accent),transparent); }
+  /* 数据卡横排 */
+  .stats{ display:flex; gap:22px; margin-top:46px; }
+  .stat{ flex:1; background:var(--panel); border:1px solid var(--panel-line); border-radius:8px;
+    padding:18px 22px; position:relative; overflow:hidden; }
+  .stat::before{ content:""; position:absolute; left:0; top:14px; bottom:14px; width:5px; border-radius:0 3px 3px 0;
+    background:linear-gradient(180deg,var(--accent),var(--accent2)); box-shadow:0 0 10px var(--glow); }
+  .stat .v{ font-size:34px; font-weight:800;
+    background:linear-gradient(120deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .stat .l{ margin-top:6px; font-size:13px; color:var(--muted); }
+  .stat .d{ margin-top:6px; font-size:11.5px; font-weight:700; }
+  .stat .d.up{ color:#34d399; } .stat .d.down{ color:#fb7185; }
+  /* 底栏 */
+  .foot{ display:flex; justify-content:space-between; align-items:center; margin-top:38px;
+    font-size:13px; color:var(--muted); }
+  .foot .info span{ margin-right:26px; }
+  .foot .brand{ letter-spacing:.18em; font-size:11px; }
+  /* 结尾版式 */
+  body.mode-closing .center{ align-items:center; text-align:center; }
+  body.mode-closing .badge{ align-self:center; }
+  body.mode-closing .rule{ margin-left:auto; margin-right:auto;
+    background:linear-gradient(90deg,transparent,var(--accent),transparent); }
+  body.mode-closing .foot{ justify-content:center; }
+  body.mode-closing .stats{ display:none; }
+  /* 浅色主题适配：标题渐变不发虚、网格星点换深色、白卡靠投影分层 */
+  html[data-theme="biz"] .title, html[data-theme="mono"] .title{ filter:none; }
+  html[data-theme="biz"] .bg-grid, html[data-theme="mono"] .bg-grid{
+    background-image:linear-gradient(rgba(15,23,42,.05) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(15,23,42,.05) 1px,transparent 1px); }
+  html[data-theme="biz"] .bg-stars, html[data-theme="mono"] .bg-stars{ opacity:.3; filter:grayscale(1) invert(1); }
+  html[data-theme="biz"] .stat, html[data-theme="mono"] .stat{ box-shadow:0 2px 10px rgba(0,0,0,.06); }
+</style>
+</head>
+<body class="mode-cover">
+  <div class="bg-noise"></div>
+  <div class="bg-grid"></div>
+  <div class="bg-stars"></div>
+  <div class="card-glow"></div>
+  <div class="wrap">
+    <div class="badge" id="badge">GENERATED BY SPECCORE TEAM</div>
+    <div class="center">
+      <div class="title" id="title">2026 研发年度总结</div>
+      <div class="subtitle" id="subtitle">资深研发工程师 · 全栈方向</div>
+      <div class="rule"></div>
+      <div class="stats" id="stats"></div>
+    </div>
+    <div class="foot">
+      <div class="info"><span id="info">2026-01-01 ~ 2026-12-31 · 生成于 2026-11-11</span></div>
+      <div class="brand">GENERATED BY SPECCORE TEAM</div>
+    </div>
+  </div>
+<script>
+/* ── COVER 数据（AI 执行时替换此对象内容） ─────────────────────── */
+var COVER = {
+  mode: "cover",                 // cover 封面 / closing 结尾
+  badge: "GENERATED BY SPECCORE TEAM",
+  title: "2026 研发年度总结",
+  subtitle: "资深研发工程师 · 全栈方向",
+  info: "2026-01-01 ~ 2026-12-31 · 生成于 2026-11-11",
+  stats: [                        // 3-4 张数据卡；closing 模式忽略
+    { value: "486", label: "全年提交", delta: "较去年 +18%", up: true },
+    { value: "12.6万", label: "增删代码行", delta: "核心模块重构", up: true },
+    { value: "9", label: "版本里程碑", delta: "4 次大版本", up: true }
+  ]
+};
+(function apply(){
+  document.body.className = COVER.mode === "closing" ? "mode-closing" : "mode-cover";
+  document.getElementById("badge").textContent = COVER.badge || "";
+  document.getElementById("title").textContent = COVER.title || "";
+  document.getElementById("subtitle").textContent = COVER.subtitle || "";
+  document.getElementById("info").textContent = COVER.info || "";
+  var box = document.getElementById("stats");
+  box.innerHTML = "";
+  (COVER.stats || []).slice(0, 4).forEach(function(s){
+    var d = document.createElement("div");
+    d.className = "stat";
+    d.innerHTML = '<div class="v">' + s.value + '</div><div class="l">' + s.label + '</div>' +
+      (s.delta ? '<div class="d ' + (s.up === false ? "down" : "up") + '">' + s.delta + "</div>" : "");
+    box.appendChild(d);
+  });
+})();
+</script>
+</body>
+</html>

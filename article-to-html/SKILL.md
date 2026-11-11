@@ -47,6 +47,25 @@ Turn any Word/Markdown/plain-text article into a standalone styled HTML page and
 - **为什么只有 Roboto + 思源黑体？** 两者均为免费商用授权，其余字体一律不用，零侵权
 - **单文件版什么时候给？** 定稿后重铸一次；中途调整期间不重铸以省时间
 - **改过的文章再处理？** 会先问「覆盖重生成 / 只重新截图 / 仅改样式」三选一
+- **页面能换主题色吗？** A 款页面右下角四个色点随时切换（科技蓝/暖棕金/墨绿/梅紫），浏览器记住上次选择；默认主题色在 user-config.md 的 THEME 配置里改
+
+## ⚙️ 配置与自定义主题
+
+**执行本 skill 前必须先 Read 同目录 `user-config.md`**：`THEME` 配置决定 A 款页面的默认主题色（tech 科技蓝 / gold 暖棕金 / forest 墨绿 / plum 梅紫）。升级技能时 user-config.md 不会被覆盖，你的修改永久保留。
+
+## 配置版本机制（升级保护）
+
+本 skill 当前配置版本为 `1`（对应 user-config.md 中的 `CONFIG_VERSION`）。执行时若发现 user-config.md 的 CONFIG_VERSION 与本节声明不一致：
+1. 将旧 user-config.md 备份为 `user-config.md.bak-<时间戳>`
+2. 保留用户全部自定义字段，按本节「当前版本变更记录」逐项改写旧字段
+3. 更新 CONFIG_VERSION 为当前版本
+4. 对话中明确告知用户「检测到配置版本从 X 升级到 Y，旧配置已备份至 <路径>」
+
+升级本 skill 时，配置结构如有变化必须同步更新本节的当前版本号与迁移说明；禁止在未声明版本变更的情况下静默修改配置语义。
+
+**无法迁移项处理**（值域失效 / 语义漂移 / 数据不兼容）：三情形——①旧值不在新值域（如旧模板/主题名已移除）②同名键含义变化（单位/枚举变更）③数据文件 schema 不兼容。三绝不：绝不静默（无法迁移项停下问，不猜值）、绝不丢失（旧值永远在 .bak-时间戳）、一次说清（升级报告三段式：⚠️ 版本与备份路径 → ✅ 已自动迁移清单 → 🟡 无法迁移项逐条附原因+影响+建议替代）；随后 AskUserQuestion 三选项（A 用建议值 / B 用户给新值 / C 保持旧配置——不更新 CONFIG_VERSION，每次执行再提醒）；报告必附回滚一句话；数据文件迁移前先复制 .bak-时间戳，能映射则映射、不能则写兼容层或留备份提示手动整理
+
+当前版本变更记录：暂无（初始版本 1，含 THEME 字段）。
 
 ## Prerequisites（新用户准备）
 
@@ -105,6 +124,7 @@ Turn any Word/Markdown/plain-text article into a standalone styled HTML page and
 - 通读解析出的内容，判断文章气质（科技 / 文艺 / 教程 / 科普 / 报道 / 商业等），从 [design-system.md](design-system.md)「0. 风格菜单」的六款版式中选一款
 - 默认款（暗色封面长文风）适用于大多数科技 / 产品文；文艺散文选文艺排版风；教程干货选极简白；硬核技术选终端极客风；科普清单选卡片流；深度报道选报纸分栏
 - 拿不准或用户有明确偏好时，用 AskUserQuestion 让用户在 2-4 款候选里挑（每款附一句话气质描述），不替用户做有风格争议的决定
+- A 款页面主题色默认取 user-config.md 的 `THEME` 值写入 `<html data-theme>`，页面右下角换肤坞四色点随点随换（浏览器本地记忆）
 - 任何风格都不许引入第三个字体：文艺排版风同样只用思源黑体，文艺感靠排版营造（大行距、留白、首字下沉、细分割线），不得改用宋体
 - 无论哪款风格：字体白名单锁死（Roboto + 思源黑体）、零兜底、第 3.5 步核查照跑
 
@@ -113,6 +133,7 @@ Turn any Word/Markdown/plain-text article into a standalone styled HTML page and
 - 先写入当前工作区（如 `outputs/<标题>.html`），完成后用 Bash `cp` 到用户目标目录——Write 工具被沙盒限制在工作区内
 - 大文件分片写：Write 创建文件（head + 封面 + 前几章），后续用 SearchReplace 以文件末尾 `</section>\n</div>\n</body>\n</html>` 为锚点追加章节
 - 使用 [design-system.md](design-system.md) 中的 CSS 变量与组件模式；源文档中每张图表必须有对应的 HTML/CSS 组件；表格 `td` 一律 `vertical-align:middle`
+- A 款生成时 `<html>` 标签必须带 `data-theme="<THEME值>"` + 换肤坞 HTML 与坞 JS（见 design-system.md 骨架模板）；主题色一律用 --accent 家族令牌，禁止硬编码色值
 - 页面背景默认浅灰 `#f6f8fb`；用户要纯白截图时改 `--bg:#ffffff`（深色封面 hero 保持不动）
 
 ### 3.5 交付前零侵权核查（必做，不可跳过）
@@ -204,6 +225,7 @@ grep -nE "PingFang|YaHei|apple-system|sans-serif|serif|monospace|SF Mono|Menlo|M
 - 等价于「更新模式」的「仅改样式保留内容」：只动 CSS（配色/间距/字号/组件样式），不动正文；若外来 HTML 缺章节骨架，可顺手改造成自家骨架（文字不动）
 - **每轮调整后重跑第 3.5 步核查**，防调整引入新字体污染
 - 第 4.5 步双确认闭环照跑：美化完先 RunPreview 问满意，点头才进入截图；至多 3 轮
+- 美化 A 款自家骨架时保留换肤坞（坞 HTML + 坞 JS + [data-theme] 块）；被误删时按 design-system.md 骨架模板补装
 - 美化定稿后用户要截图 → 转 6.3；单文件版如需要，用 inline_fonts.py 重铸
 
 **6.3 只截图**
@@ -237,3 +259,4 @@ grep -nE "PingFang|YaHei|apple-system|sans-serif|serif|monospace|SF Mono|Menlo|M
 5. **宽度一致性**：不注入固定宽度时封面是全宽（视口宽）、章节是内容宽（698px），宽窄不一；必须按第 5 步注入样式后再截
 6. **字体栈严禁兜底**：--sans/--mono 只许 Roboto + 思源黑体（含 Noto/思源黑体别名），加苹方/雅黑兜底会导致字体缺失时静默回退、截图抽检无法发现
 7. **章节截图顺序**：`C00-封面` → `C00-引言` → `C01…C13`，按序拼接即整篇长图
+8. **主题色禁止硬编码**：A 款配色一律走 --accent 家族令牌（--accent/--hero-base/--title-grad 等），写死色值会导致换肤坞失灵、四主题渲染错乱

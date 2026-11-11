@@ -23,7 +23,7 @@ const CATEGORIES = [
   { name: "报表汇演", en: "Reports", skills: ["daily-report", "weekly-report", "annual-report"] },
   { name: "文档装裱", en: "Documents", skills: ["article-to-html"] },
   { name: "工程提效", en: "Engineering", skills: ["spec-doc2spec", "spec-spec2doc"] },
-  { name: "演示汇演", en: "Slides", skills: ["magic-deck"] },
+  { name: "演示汇演", en: "Slides", skills: ["magic-deck", "deck-stage"] },
   { name: "沟通协作", en: "Communication", skills: ["prompt-pouch"] },
   { name: "技能自造", en: "Meta", skills: ["meta-forge"] },
 ];
@@ -203,33 +203,36 @@ function detectTargetDirs() {
   return found;
 }
 
-async function selectSkillsInteractive(skills) {
+async function selectSkillsInteractive(skills, target) {
   const numbered = [];
   const mapped = new Set(CATEGORIES.reduce((acc, c) => acc.concat(c.skills), []));
-  let text = "\n可选技能（编号多选，逗号分隔；a=全选；q=退出）：\n\n";
+  const isInstalled = (s) => fs.existsSync(path.join(target, s.dir, "SKILL.md"));
+  let installedCount = 0;
+  let text = "\n可选技能（a=全部安装；编号挑选，逗号分隔，如 1,3；q=退出）：\n\n";
+  const render = (s) => {
+    numbered.push(s);
+    const installed = isInstalled(s);
+    if (installed) installedCount++;
+    text += `  [${numbered.length}] ${s.name.padEnd(16)} ${(installed ? "★已装" : "").padEnd(8)}${shortDesc(s.description)}\n`;
+  };
   for (const cat of CATEGORIES) {
     const list = cat.skills.map((n) => skills.find((s) => s.name === n)).filter(Boolean);
     if (list.length === 0) continue;
     text += `【${cat.name} ${cat.en}】\n`;
-    for (const s of list) {
-      numbered.push(s);
-      text += `  [${numbered.length}] ${s.name.padEnd(16)} ${shortDesc(s.description)}\n`;
-    }
+    for (const s of list) render(s);
     text += "\n";
   }
   const rest = skills.filter((s) => !mapped.has(s.name));
   if (rest.length > 0) {
     text += "【未分类】\n";
-    for (const s of rest) {
-      numbered.push(s);
-      text += `  [${numbered.length}] ${s.name.padEnd(16)} ${shortDesc(s.description)}\n`;
-    }
+    for (const s of rest) render(s);
     text += "\n";
   }
+  text += `共 ${skills.length} 件技能，目标目录已装 ${installedCount} 件（★ 标注，重选已装=升级）\n`;
   console.log(text);
   const ans = await ask("你的选择：");
   if (/^q$/i.test(ans)) return [];
-  if (/^a$/i.test(ans)) return skills;
+  if (/^a$/i.test(ans)) return numbered; // 全选返回清单展示顺序，与编号一致
   const chosen = [];
   for (const part of ans.split(/[,，\s]+/)) {
     if (!part) continue;
@@ -295,8 +298,18 @@ async function upgradeSkill(src, dest, argv, existed) {
     }
   }
 
-  if (mode === "official") fs.unlinkSync(localCfg); // 备份已做，移除后 copyDir 正常覆盖
+  if (mode === "official") {
+    fs.unlinkSync(localCfg); // 备份已做，移除后 copyDir 正常覆盖
+    try { fs.unlinkSync(localCfg + ".upstream"); } catch (e) {} // 旧对照已无意义，清理
+  }
   copyDir(src, dest, loadPreserveSet(src), hits, upstreams);
+
+  // 依赖提示：技能自带 package.json（如 deck-stage 依赖 PptxGenJS）且目标无 node_modules 时
+  // （本地仓库直装会连带复制 node_modules 离线可用；npm 全局装出的包不含 node_modules）
+  let depNote = "";
+  if (fs.existsSync(path.join(dest, "package.json")) && !fs.existsSync(path.join(dest, "node_modules"))) {
+    depNote = `（缺依赖：cd ${dest} && npm install）`;
+  }
 
   let note = existed ? "已更新" : "已安装";
   if (mode === "official") {
@@ -315,6 +328,7 @@ async function upgradeSkill(src, dest, argv, existed) {
       note += `；官方配置有更新，已另存对照文件：${names}（可手动合并新配置点）`;
     }
   }
+  if (depNote) note += depNote;
   return note;
 }
 
@@ -339,7 +353,7 @@ async function cmdInit(argv) {
       process.exit(1);
     }
   } else if (process.stdin.isTTY) {
-    chosen = await selectSkillsInteractive(skills);
+    chosen = await selectSkillsInteractive(skills, target);
     if (chosen.length === 0) {
       console.log("未选择任何技能，退出。");
       return;
@@ -349,15 +363,35 @@ async function cmdInit(argv) {
     process.exit(1);
   }
 
-  // 3. 确认
+  // 3. 确认（已装技能分组提示：默认升级保留本地配置，可 s 跳过已装只装新）
+  const already = chosen.filter((s) => fs.existsSync(path.join(target, s.dir, "SKILL.md")));
   if (!argv.yes) {
     console.log(`\n将安装 ${chosen.length} 件技能到：${target}`);
-    chosen.forEach((s) => console.log(`  - ${s.name}`));
+    chosen.filter((s) => !already.includes(s)).forEach((s) => console.log(`  ＋ ${s.name}`));
+    if (already.length > 0) {
+      already.forEach((s) => console.log(`  ↻ ${s.name}（已装，将升级到官方最新）`));
+      console.log("   升级保留你的 user-config.md 等本地文件；配置结构变化时自动备份后询问。");
+    }
     if (process.stdin.isTTY) {
-      const ans = await ask("确认安装？（y/N）：");
-      if (!/^y/i.test(ans)) {
-        console.log("已取消。");
-        return;
+      if (already.length > 0) {
+        const ans = await ask("确认安装？（y=全部 / s=跳过已装只装新 / N=取消）：");
+        if (/^s$/i.test(ans)) {
+          chosen = chosen.filter((s) => !already.includes(s));
+          if (chosen.length === 0) {
+            console.log("已装技能全部跳过，没有新技能可装。");
+            return;
+          }
+          console.log(`已跳过 ${already.length} 件已装技能，仅安装 ${chosen.length} 件新技能。`);
+        } else if (!/^y/i.test(ans)) {
+          console.log("已取消。");
+          return;
+        }
+      } else {
+        const ans = await ask("确认安装？（y/N）：");
+        if (!/^y/i.test(ans)) {
+          console.log("已取消。");
+          return;
+        }
       }
     }
   }
@@ -392,6 +426,20 @@ async function cmdUpdate(argv) {
   }
   if (argv.skills) {
     const wanted = argv.skills.split(",").map((x) => x.trim());
+    const unknown = wanted.filter((n) => !skills.some((s) => s.name === n));
+    const notInstalled = wanted.filter(
+      (n) =>
+        skills.some((s) => s.name === n) && !installed.some((s) => s.name === n)
+    );
+    if (unknown.length) {
+      console.log(
+        `错误：仓库中不存在这些技能：${unknown.join(", ")}。可用技能：${skills.map((s) => s.name).join(", ")}`
+      );
+      process.exit(1);
+    }
+    if (notInstalled.length) {
+      console.log(`提示：以下技能尚未安装到目标目录，本次跳过：${notInstalled.join(", ")}`);
+    }
     installed = installed.filter((s) => wanted.includes(s.name));
     if (installed.length === 0) {
       console.log(`错误：目标目录没有已安装的指定技能。可用 --skills 仅限已装技能，请先 init。`);
@@ -433,11 +481,11 @@ function printHelp() {
 
 用法：
   skill-forge ls                      列出全部技能（分类 + 名称 + 说明）
-  skill-forge init                    交互式挑选技能并安装到 AI 助手技能目录
+  skill-forge init                    列清单交互挑选：a=全部安装 / 编号挑选（已装标 ★，确认时可跳过已装）
   skill-forge update                  升级已安装技能（配置版本感知，默认全部已装技能）
-  skill-forge update --skills a,b     只升级指定技能
+  skill-forge update --skills a,b     只升级指定技能（未安装的提示跳过）
   skill-forge init --target <目录>    指定技能目录（默认自动探测常见助手目录）
-  skill-forge init --skills a,b       跳过选择，直接安装指定技能（适合脚本）
+  skill-forge init --skills a,b       跳过选择，直接安装/升级指定技能（适合脚本与单件补装）
   skill-forge init --yes              跳过确认，直接安装
   skill-forge --version               显示版本
 

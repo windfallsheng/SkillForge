@@ -5,7 +5,55 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>2026 研发年度总结</title>
 <style>
-:root{--cyan:#0ea5e9;--bg:#0a1929;--card:#0b1e37;--border:rgba(14,165,233,.15);--text:#bae6fd;--muted:#5b7fa5;--green:#14b8a6;--orange:#f97316;--purple:#6366f1;--rose:#f43f5e}
+
+/* ═══ 四主题令牌：12 核心契约（与 magic-deck 一致）+ 报告扩展（发光/氛围/热力/语义色）；html[data-theme] 运行时切换，THEME 生成时定默认 ═══ */
+:root, [data-theme="tech"]{
+  --bg:#0a1929; --bg2:#071525; --panel:rgba(11,30,55,.9); --panel-solid:#0b1e37;
+  --text:#bae6fd; --muted:#5b7fa5; --accent:#0ea5e9; --accent2:#14b8a6;
+  --border:rgba(14,165,233,.18); --glow:rgba(14,165,233,.35); --glow-soft:rgba(14,165,233,.15);
+  --title-grad:linear-gradient(90deg,#7dd3fc,#0ea5e9 45%,#818cf8);
+  --tag-bg:rgba(14,165,233,.12);
+  --card-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 12px 32px rgba(1,6,16,.5),0 0 24px rgba(14,165,233,.15);
+  --scan:rgba(0,240,255,.2); --scan-dim:rgba(0,240,255,.05);
+  --heat:rgba(14,165,233,.55);
+  --green:#14b8a6; --orange:#f97316; --rose:#f43f5e;
+}
+[data-theme="biz"]{
+  --bg:#e8ecf5; --bg2:#dde3ef; --panel:rgba(255,255,255,.97); --panel-solid:#ffffff;
+  --text:#1e293b; --muted:#64748b; --accent:#2563eb; --accent2:#0891b2;
+  --border:rgba(37,99,235,.14); --glow:rgba(37,99,235,.18); --glow-soft:rgba(37,99,235,.12);
+  --title-grad:linear-gradient(90deg,#1e40af,#2563eb 55%,#0891b2);
+  --tag-bg:rgba(37,99,235,.08);
+  --card-shadow:0 1px 2px rgba(15,23,42,.05),0 10px 28px rgba(15,23,42,.12);
+  --scan:rgba(37,99,235,.14); --scan-dim:rgba(37,99,235,.04);
+  --heat:rgba(37,99,235,.55);
+  --green:#0d9488; --orange:#ea580c; --rose:#e11d48;
+}
+[data-theme="mono"]{
+  --bg:#f2f2f4; --bg2:#e4e4e8; --panel:rgba(255,255,255,.98); --panel-solid:#ffffff;
+  --text:#16181d; --muted:#6b7280; --accent:#111111; --accent2:#4b5563;
+  --border:rgba(17,17,17,.14); --glow:rgba(17,17,17,.08); --glow-soft:rgba(17,17,17,.1);
+  --title-grad:linear-gradient(90deg,#111,#333 60%,#666);
+  --tag-bg:rgba(17,17,17,.06);
+  --card-shadow:0 1px 2px rgba(0,0,0,.06),0 10px 28px rgba(0,0,0,.1);
+  --scan:rgba(17,17,17,.1); --scan-dim:rgba(17,17,17,.04);
+  --heat:rgba(17,17,17,.55);
+  --green:#0f766e; --orange:#c2410c; --rose:#be123c;
+}
+[data-theme="warm"]{
+  --bg:#f7ebd9; --bg2:#efe0c8; --panel:rgba(255,250,243,.97); --panel-solid:#fffaf3;
+  --text:#43301f; --muted:#8a7565; --accent:#d97706; --accent2:#ea580c;
+  --border:rgba(217,119,6,.18); --glow:rgba(217,119,6,.22); --glow-soft:rgba(217,119,6,.14);
+  --title-grad:linear-gradient(90deg,#b45309,#d97706 50%,#ea580c);
+  --tag-bg:rgba(217,119,6,.1);
+  --card-shadow:0 1px 2px rgba(120,72,24,.07),0 10px 28px rgba(120,72,24,.13);
+  --scan:rgba(217,119,6,.16); --scan-dim:rgba(217,119,6,.04);
+  --heat:rgba(217,119,6,.55);
+  --green:#0d9488; --orange:#c2410c; --rose:#be123c;
+}
+/* 浅色主题下星点氛围自然退隐 */
+[data-theme="biz"] .stars, [data-theme="mono"] .stars, [data-theme="warm"] .stars{ opacity:.28; }
+
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{background:var(--bg)}
 body{
@@ -14,51 +62,51 @@ body{
 }
 /* 三层科技底纹 */
 .grid-pattern{position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:linear-gradient(rgba(0,240,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,.03) 1px,transparent 1px);
+  background:linear-gradient(var(--scan-dim) 1px,transparent 1px),linear-gradient(90deg,var(--scan-dim) 1px,transparent 1px);
   background-size:60px 60px}
 .stars{position:fixed;inset:0;z-index:0;pointer-events:none;
   background:radial-gradient(1px 1px at 12% 22%,rgba(255,255,255,.4),transparent),radial-gradient(1px 1px at 28% 68%,rgba(0,240,255,.5),transparent),radial-gradient(1.5px 1.5px at 45% 15%,rgba(168,85,247,.4),transparent),radial-gradient(1px 1px at 62% 78%,rgba(0,255,136,.4),transparent),radial-gradient(1px 1px at 78% 32%,rgba(255,255,255,.35),transparent),radial-gradient(1.5px 1.5px at 88% 58%,rgba(0,240,255,.45),transparent),radial-gradient(1px 1px at 8% 85%,rgba(255,255,255,.3),transparent),radial-gradient(1px 1px at 55% 45%,rgba(0,240,255,.35),transparent)}
 .scanlines{position:fixed;inset:0;z-index:999;pointer-events:none;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,240,255,.015) 2px,rgba(0,240,255,.015) 4px)}
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,var(--scan-dim) 2px,var(--scan-dim) 4px)}
 .scanband{position:fixed;left:0;right:0;height:150px;z-index:998;pointer-events:none;
-  background:linear-gradient(180deg,transparent,rgba(0,240,255,.03) 50%,transparent);
+  background:linear-gradient(180deg,transparent,var(--scan-dim) 50%,transparent);
   animation:scanMove 11s linear infinite}
 @keyframes scanMove{from{top:-22%}to{top:112%}}
 .wrap{width:clamp(640px, 60%, 1200px); margin:0 auto; position:relative; z-index:1; padding:40px 0}
 /* 头部卡片 */
-.header-card{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--border);border-radius:6px;
+.header-card{position:relative;overflow:hidden;background:var(--panel-solid);border:1px solid var(--border);border-radius:6px;
   padding:34px 28px 26px;text-align:center;margin-bottom:18px;
-  box-shadow:0 8px 28px rgba(0,0,0,.35),inset 0 1px 0 rgba(14,165,233,.12);
-  background-image:repeating-linear-gradient(0deg,rgba(14,165,233,.02),rgba(14,165,233,.02) 8px,transparent 8px,transparent 16px)}
+  box-shadow:var(--card-shadow);
+  background-image:repeating-linear-gradient(180deg, rgba(255,255,255,.012) 0 1px, transparent 1px 8px)}
 .header-card h1{font-size:26px;letter-spacing:2px;margin-bottom:8px;
-  background:linear-gradient(90deg,#7dd3fc,#0ea5e9,#5eead4);-webkit-background-clip:text;background-clip:text;color:transparent;
+  background:var(--title-grad);-webkit-background-clip:text;background-clip:text;color:transparent;
   animation:titleGlow 3s ease-in-out infinite}
-@keyframes titleGlow{0%,100%{text-shadow:0 0 8px rgba(14,165,233,.5),0 0 22px rgba(14,165,233,.25)}50%{text-shadow:0 0 14px rgba(14,165,233,.85),0 0 34px rgba(14,165,233,.45)}}
+@keyframes titleGlow{0%,100%{text-shadow:0 0 8px var(--glow),0 0 22px var(--glow-soft)}50%{text-shadow:0 0 14px var(--glow),0 0 34px var(--glow-soft)}}
 .header-sub{font-size:12px;color:var(--muted);letter-spacing:1px;margin-bottom:12px}
-.header-badge{display:inline-block;font-size:11px;color:#7dd3fc;border:1px solid rgba(14,165,233,.3);border-radius:999px;padding:4px 14px}
+.header-badge{display:inline-block;font-size:11px;color:var(--accent);border:1px solid var(--glow);border-radius:999px;padding:4px 14px}
 .card-glow{position:absolute;inset:-40% -20% auto;height:70%;pointer-events:none;
-  background:radial-gradient(ellipse at 50% 10%,rgba(14,165,233,.25),transparent 70%);
+  background:radial-gradient(ellipse at 50% 10%,var(--glow),transparent 70%);
   animation:cardGlow 3s ease-in-out infinite;transform-origin:top center;opacity:.5}
 @keyframes cardGlow{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.6)}}
 /* 四边浮光线 */
 .scanline-el{position:absolute;pointer-events:none}
-.scan-x{top:0;left:0;height:1px;width:100%;background:linear-gradient(90deg,transparent,var(--cyan),transparent);animation:scanX 3s linear infinite}
-.scan-y{top:0;right:0;width:1px;height:100%;background:linear-gradient(180deg,transparent,var(--cyan),transparent);animation:scanY 3s linear infinite}
-.scan-x-rev{bottom:0;left:0;height:1px;width:100%;background:linear-gradient(90deg,transparent,var(--cyan),transparent);animation:scanXRev 3s linear infinite}
-.scan-y-rev{top:0;left:0;width:1px;height:100%;background:linear-gradient(180deg,transparent,var(--cyan),transparent);animation:scanYRev 3s linear infinite}
+.scan-x{top:0;left:0;height:1px;width:100%;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:scanX 3s linear infinite}
+.scan-y{top:0;right:0;width:1px;height:100%;background:linear-gradient(180deg,transparent,var(--accent),transparent);animation:scanY 3s linear infinite}
+.scan-x-rev{bottom:0;left:0;height:1px;width:100%;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:scanXRev 3s linear infinite}
+.scan-y-rev{top:0;left:0;width:1px;height:100%;background:linear-gradient(180deg,transparent,var(--accent),transparent);animation:scanYRev 3s linear infinite}
 @keyframes scanX{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
 @keyframes scanY{from{transform:translateY(-100%)}to{transform:translateY(100%)}}
 @keyframes scanXRev{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
 @keyframes scanYRev{from{transform:translateY(100%)}to{transform:translateY(-100%)}}
 /* 分节卡片 */
-.section{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--border);border-radius:6px;
+.section{position:relative;overflow:hidden;background:var(--panel-solid);border:1px solid var(--border);border-radius:6px;
   padding:22px 24px 22px 32px;margin-bottom:18px;
-  box-shadow:0 8px 28px rgba(0,0,0,.35),inset 0 1px 0 rgba(14,165,233,.12);
-  background-image:repeating-linear-gradient(0deg,rgba(14,165,233,.02),rgba(14,165,233,.02) 8px,transparent 8px,transparent 16px);
+  box-shadow:var(--card-shadow);
+  background-image:repeating-linear-gradient(180deg, rgba(255,255,255,.012) 0 1px, transparent 1px 8px);
   transition:transform .18s ease,box-shadow .18s ease}
-.section:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(0,0,0,.45),inset 0 0 22px rgba(14,165,233,.08)}
+.section:hover{transform:translateY(-2px);box-shadow:var(--card-shadow),inset 0 0 22px var(--glow-soft)}
 .sec-bar{position:absolute;left:0;top:0;bottom:0;width:8px}
-.sec-ov .sec-bar{background:linear-gradient(180deg,#38bdf8,#0ea5e9);box-shadow:0 0 12px rgba(14,165,233,.3)}
+.sec-ov .sec-bar{background:linear-gradient(180deg,var(--accent2),var(--accent));box-shadow:0 0 12px var(--glow)}
 .sec-ms .sec-bar{background:linear-gradient(180deg,#5eead4,#14b8a6);box-shadow:0 0 12px rgba(20,184,166,.3)}
 .sec-gw .sec-bar{background:linear-gradient(180deg,#a5b4fc,#6366f1);box-shadow:0 0 12px rgba(99,102,241,.3)}
 .sec-rf .sec-bar{background:linear-gradient(180deg,#fda4af,#e11d48);box-shadow:0 0 12px rgba(244,63,94,.3)}
@@ -66,24 +114,24 @@ body{
 .sec-head{display:flex;align-items:center;gap:10px;margin-bottom:16px}
 .sec-head svg{flex:0 0 auto}
 .sec-head h2{font-size:18px;letter-spacing:1px;animation:secGlow 3s ease-in-out infinite}
-.sec-ov .sec-head h2{color:#7dd3fc}.sec-ms .sec-head h2{color:#5eead4}.sec-gw .sec-head h2{color:#c7d2fe}
+.sec-ov .sec-head h2{color:var(--accent)}.sec-ms .sec-head h2{color:#5eead4}.sec-gw .sec-head h2{color:#c7d2fe}
 .sec-rf .sec-head h2{color:#fda4af}.sec-pl .sec-head h2{color:#fdba74}
-@keyframes secGlow{0%,100%{text-shadow:0 0 6px rgba(14,165,233,.4)}50%{text-shadow:0 0 14px rgba(14,165,233,.8)}}
+@keyframes secGlow{0%,100%{text-shadow:0 0 6px var(--glow)}50%{text-shadow:0 0 14px var(--glow)}}
 /* 概览：TL;DR + 数据卡 */
 .tldr-line{font-size:15px;line-height:1.75;margin-bottom:18px}
-.tldr-line b{color:#7dd3fc;font-weight:700}
+.tldr-line b{color:var(--accent);font-weight:700}
 .stat-row{display:flex;gap:12px;flex-wrap:wrap}
-.stat-card{flex:1 1 160px;position:relative;background:rgba(14,165,233,.05);border:1px solid var(--border);
+.stat-card{flex:1 1 160px;position:relative;background:var(--tag-bg);border:1px solid var(--border);
   border-radius:6px;padding:16px 14px;min-width:140px;overflow:hidden;
   transition:transform .18s ease,box-shadow .18s ease}
 .stat-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.35)}
-.stat-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#38bdf8,#0ea5e9)}
+.stat-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--accent2),var(--accent))}
 .stat-num{font-size:28px;font-weight:900;letter-spacing:1px;
-  background:linear-gradient(90deg,#7dd3fc,#0ea5e9,#5eead4);-webkit-background-clip:text;background-clip:text;color:transparent}
+  background:var(--title-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .stat-label{font-size:12px;color:var(--muted);margin-top:6px}
 /* 里程碑时间线 */
 .timeline{position:relative;padding-left:26px}
-.timeline::before{content:'';position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,rgba(14,165,233,.5),rgba(20,184,166,.5))}
+.timeline::before{content:'';position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--glow),var(--glow-soft))}
 .tl-group{position:relative;margin-bottom:18px}
 .tl-node{position:absolute;left:-26px;top:0;width:16px;height:16px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;color:#fff}
@@ -91,15 +139,15 @@ body{
 .tl-node.q3{background:radial-gradient(circle at 30% 28%,#7dd9cf,#14b8a6 55%,#0d9488);box-shadow:0 0 10px rgba(20,184,166,.5)}
 .tl-node.q4{background:radial-gradient(circle at 30% 28%,#7dd3fc,#0ea5e9 55%,#0369a1);box-shadow:0 0 10px rgba(14,165,233,.5);animation:nodePulse 2.4s ease-in-out infinite}
 @keyframes nodePulse{0%,100%{box-shadow:0 0 8px rgba(14,165,233,.4)}50%{box-shadow:0 0 18px rgba(14,165,233,.8)}}
-.tl-q{font-size:12px;font-weight:700;color:#7dd3fc;letter-spacing:1px;margin-bottom:8px}
-.tl-item{position:relative;padding:10px 0 10px 16px;border-top:1px dashed rgba(14,165,233,.18)}
+.tl-q{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:1px;margin-bottom:8px}
+.tl-item{position:relative;padding:10px 0 10px 16px;border-top:1px dashed var(--border)}
 .tl-item::before{content:'';position:absolute;left:0;top:19px;width:5px;height:5px;border-radius:50%;background:rgba(94,234,212,.8);box-shadow:0 0 6px rgba(94,234,212,.5)}
 .tl-desc{font-size:15px;line-height:1.65}
 .tl-meta{font-size:12px;color:var(--muted);margin-top:4px}
-.tl-badge{display:inline-block;font-size:11px;color:var(--muted);border:1px solid rgba(14,165,233,.2);border-radius:999px;padding:1px 10px;margin-left:6px}
+.tl-badge{display:inline-block;font-size:11px;color:var(--muted);border:1px solid var(--border);border-radius:999px;padding:1px 10px;margin-left:6px}
 .tl-empty{font-size:13px;color:var(--muted);padding:6px 0 10px 16px}
 /* 柱图 */
-.cb-wrap{margin-top:18px;padding-top:14px;border-top:1px dashed rgba(14,165,233,.18)}
+.cb-wrap{margin-top:18px;padding-top:14px;border-top:1px dashed var(--border)}
 .cb-title{font-size:12px;color:var(--muted);margin-bottom:12px;letter-spacing:1px}
 .cb-chart{display:flex;align-items:flex-end;gap:8px;height:110px}
 .cb-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative}
@@ -108,7 +156,7 @@ body{
 .cb-col:hover .cb-bar{box-shadow:0 0 16px rgba(45,212,191,.6)}
 .cb-label{font-size:9px;color:var(--muted);margin-top:4px}
 .cb-tip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%) translateY(4px);
-  background:#0b1e37;border:1px solid rgba(14,165,233,.3);color:#bae6fd;font-size:10px;white-space:nowrap;
+  background:var(--panel-solid);border:1px solid var(--glow);color:var(--text);font-size:10px;white-space:nowrap;
   padding:3px 8px;border-radius:4px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:5}
 .cb-col:hover .cb-tip{opacity:1;transform:translateX(-50%) translateY(0)}
 /* 序号徽章 3D 球 */
@@ -127,10 +175,10 @@ body{
 .entry-head{display:flex;align-items:flex-start;gap:12px}
 .desc{font-size:15px;line-height:1.65}
 .meta{display:block;font-size:12px;color:var(--muted);margin-top:4px}
-.meta b{color:rgba(125,211,252,.9);font-weight:700}
+.meta b{color:var(--accent);font-weight:700}
 ol{list-style:none}
 li{display:flex;align-items:flex-start;gap:12px;padding:10px;border-radius:4px;transition:background .18s}
-li:hover{background:rgba(14,165,233,.06)}
+li:hover{background:var(--tag-bg)}
 li:hover .idx{transform:scale(1.18) rotate(-4deg);font-size:14px}
 li:hover .idx b{transform:rotate(-6deg)}
 /* 展望目标卡 */
@@ -140,15 +188,15 @@ li:hover .idx b{transform:rotate(-6deg)}
 .goal-desc{font-size:15px;line-height:1.65;margin-bottom:8px}
 .goal-desc b{color:#fdba74;font-weight:700}
 .goal-q{display:flex;flex-wrap:wrap;gap:6px}
-.q-chip{font-size:11px;color:var(--muted);border:1px solid rgba(14,165,233,.18);background:rgba(14,165,233,.05);
+.q-chip{font-size:11px;color:var(--muted);border:1px solid var(--border);background:var(--tag-bg);
   border-radius:999px;padding:2px 10px}
 /* 复制按钮 */
 .copy-wrap{display:flex;justify-content:center;margin:18px 0 0}
 .copy-btn{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;letter-spacing:2px;
-  background:linear-gradient(135deg,var(--cyan),#0284c7);border:none;border-radius:999px;padding:12px 38px;cursor:pointer;
-  box-shadow:0 0 30px rgba(14,165,233,.35);transition:transform .18s ease,box-shadow .18s ease;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:999px;padding:12px 38px;cursor:pointer;
+  box-shadow:0 0 30px var(--glow);transition:transform .18s ease,box-shadow .18s ease;
   font-family:inherit}
-.copy-btn:hover{transform:translateY(-2px);box-shadow:0 0 45px rgba(14,165,233,.5)}
+.copy-btn:hover{transform:translateY(-2px);box-shadow:0 0 45px var(--glow)}
 .copy-btn:active{transform:translateY(1px) scale(.98)}
 /* 页脚 */
 footer{text-align:center;font-size:10px;color:var(--muted);letter-spacing:1px;padding:8px 0 4px}
@@ -165,6 +213,26 @@ footer{text-align:center;font-size:10px;color:var(--muted);letter-spacing:1px;pa
 @keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
 /* 卡片 3D 微倾斜（仅 hover 卡片） */
 .section:hover{transform:perspective(900px) translateY(-2px) rotateY(calc(var(--mx,0)*2.5deg)) rotateX(calc(var(--my,0)*-2.5deg))}
+
+/* 主题换肤坞：右下角四色点随点随换，记忆上次选择；打印与截图模式隐藏 */
+.theme-dock{
+  position:fixed; right:18px; bottom:18px; z-index:1001;
+  display:flex; gap:8px; padding:8px 10px; border-radius:999px;
+  background:var(--panel-solid); border:1px solid var(--border);
+  box-shadow:0 4px 18px rgba(0,0,0,.3);
+}
+.theme-dock .th-dot{
+  width:22px; height:22px; border-radius:50%; cursor:pointer;
+  border:2px solid transparent; padding:0;
+  transition:transform .15s ease, border-color .15s ease;
+}
+.theme-dock .th-dot:hover{ transform:scale(1.18); }
+.theme-dock .th-dot.on{ border-color:var(--text); }
+.theme-dock .th-dot[data-theme="tech"]{ background:#0ea5e9; }
+.theme-dock .th-dot[data-theme="biz"]{ background:#2563eb; }
+.theme-dock .th-dot[data-theme="mono"]{ background:#111; }
+.theme-dock .th-dot[data-theme="warm"]{ background:#d97706; }
+@media print{ .theme-dock{ display:none; } }
 </style>
 </head>
 <body>
@@ -286,9 +354,9 @@ footer{text-align:center;font-size:10px;color:var(--muted);letter-spacing:1px;pa
       <h2>不足与反思</h2>
     </div>
     <ol>
-      <li><span class="idx rf"><b>1</b></span><div class="entry"><div class="desc">8 月节奏过载：单月 1154 次提交、8-08 单日 95 个版本。</div><div class="meta">影响：文档与代码同步滞后，质量债累积。</div><div class="meta" style="color:rgba(125,211,252,.85)"><b style="color:#7dd3fc">改进：</b>明年收敛为双周聚合发布、月度版本 ≤20 个。</div></div></li>
-      <li><span class="idx rf"><b>2</b></span><div class="entry"><div class="desc">生成物污染统计口径：code-graph 等生成物单文件数十万行噪音曾混入行数统计。</div><div class="meta">影响：工作量指标失真，误导投入判断。</div><div class="meta" style="color:rgba(125,211,252,.85)"><b style="color:#7dd3fc">改进：</b>统计前强制剔除生成物路径白名单。</div></div></li>
-      <li><span class="idx rf"><b>3</b></span><div class="entry"><div class="desc">发布颗粒度两端失衡：Q3 一日最多 95 个 tag，Q4 单次聚合最多 10 个版本。</div><div class="meta">影响：问题定位粒度在过细与过粗之间摇摆。</div><div class="meta" style="color:rgba(125,211,252,.85)"><b style="color:#7dd3fc">改进：</b>固定批次大小，每批 ≤10 版本聚合。</div></div></li>
+      <li><span class="idx rf"><b>1</b></span><div class="entry"><div class="desc">8 月节奏过载：单月 1154 次提交、8-08 单日 95 个版本。</div><div class="meta">影响：文档与代码同步滞后，质量债累积。</div><div class="meta" style="color:var(--accent)"><b style="color:var(--accent)">改进：</b>明年收敛为双周聚合发布、月度版本 ≤20 个。</div></div></li>
+      <li><span class="idx rf"><b>2</b></span><div class="entry"><div class="desc">生成物污染统计口径：code-graph 等生成物单文件数十万行噪音曾混入行数统计。</div><div class="meta">影响：工作量指标失真，误导投入判断。</div><div class="meta" style="color:var(--accent)"><b style="color:var(--accent)">改进：</b>统计前强制剔除生成物路径白名单。</div></div></li>
+      <li><span class="idx rf"><b>3</b></span><div class="entry"><div class="desc">发布颗粒度两端失衡：Q3 一日最多 95 个 tag，Q4 单次聚合最多 10 个版本。</div><div class="meta">影响：问题定位粒度在过细与过粗之间摇摆。</div><div class="meta" style="color:var(--accent)"><b style="color:var(--accent)">改进：</b>固定批次大小，每批 ≤10 版本聚合。</div></div></li>
     </ol>
   </section>
 
@@ -307,6 +375,15 @@ footer{text-align:center;font-size:10px;color:var(--muted);letter-spacing:1px;pa
 
   <footer>GENERATED BY SPECCORE TEAM · 2026</footer>
 </div>
+
+<!-- 主题换肤坞（四色点） -->
+<div class="theme-dock" id="themeDock">
+  <button class="th-dot" type="button" data-theme="tech" title="深蓝科技"></button>
+  <button class="th-dot" type="button" data-theme="biz" title="浅色商务"></button>
+  <button class="th-dot" type="button" data-theme="mono" title="极简黑白"></button>
+  <button class="th-dot" type="button" data-theme="warm" title="温暖渐变"></button>
+</div>
+
 <script>
 // 复制源 = txt 纯文本全文
 var TXT = "2026 研发年度总结\n\n生成时间：2026-11-09 17:03:01\n\n年度概览\nTL;DR：立项即狂奔的一年：SpecCore 规范驱动开发平台 7 月从零立项，4 个月 1889 次提交、576 个版本发布、代码库净增 19 万行，完成从单机 CLI 到流水线平台的蜕变。\n1、总提交数：1889 次（07-05 ~ 11-05）\n2、版本发布：576 个（v5.13.0 → v8.3.399）\n3、净增代码：+19.0 万行（+32.9 万 / -13.9 万）\n4、月度峰值：1154 次提交（8 月）\n\n核心成果与里程碑\n1、7 月立项首发：SpecCore CLI 完整功能落地，v5.13.0 首版发布（335 次提交、+5.4 万行）- Q3\n2、8 月密集攻坚：知识资产四层覆盖架构（TOC 目录/自动注入/RAG 检索/阅读清单）成形，月内 1154 次提交、+16.4 万行、发布 200+ 版本 - Q3\n3、9 月流水线成形：run 端到端流水线与迭代体系建立，+7.6 万行、328 次提交 - Q3\n4、10 月发布节奏收敛：v8.3 系列起跑，月度发布收紧至约 30 个版本，+1.8 万行 - Q4\n5、11-03 v8.3.370 累积发布：GLOBAL 治乱、反推域隔离、文档生成器升格、澄清链修复 - Q4\n6、11-04 v8.3.388：E2E 全链路深度检查 11 项修复 + execute 意图语义硬化 - Q4\n7、11-04 v8.3.394：反推链接力协议补全、全局分析默认纯技术、QA 环接力协议（exit 10）- Q4\n8、11-05 v8.3.399（截至当前）：用例核对闸开卷设闸——execute 收尾逐用例勾稽，未实现即入修复环 - Q4\n\n经验与成长\n1、沉淀了「四层知识资产架构」（TOC 目录/自动注入/RAG 检索/阅读清单），解决了 AI 对规范库看不见、记不住、找不回的三类可见性断层。\n2、掌握了 ask 引擎意图识别与 AI 接力协议（[SPECCORE_EXEC]/[SPECCORE_PROMPT]/[SPECCORE_CONTINUE] 标记链），人机协作可从任意断点续跑。\n3、建立了「聚合发布」节奏：小步高频提交 + 里程碑聚合 tag，兼顾问题定位粒度与交付速度。\n4、积累了质量门禁体系经验：骨架完成度自检、用例核对闸、QA 三阶段验证环，质量兜底不再依赖人肉复查。\n\n不足与反思\n1、8 月节奏过载：单月 1154 次提交、8-08 单日 95 个版本。\n影响：文档与代码同步滞后，质量债累积。\n改进：明年收敛为双周聚合发布、月度版本 ≤20 个。\n2、生成物污染统计口径：code-graph 等生成物单文件数十万行噪音曾混入行数统计。\n影响：工作量指标失真，误导投入判断。\n改进：统计前强制剔除生成物路径白名单。\n3、发布颗粒度两端失衡：Q3 一日最多 95 个 tag，Q4 单次聚合最多 10 个版本。\n影响：问题定位粒度在过细与过粗之间摇摆。\n改进：固定批次大小，每批 ≤10 版本聚合。\n\n新年展望与规划\n1、发布节奏工程化：双周聚合发布落地，2027 年版本发布总量 ≤120 个（Q1 建立节奏、Q2 稳定运行）。\n2、测试覆盖率跃升：核心链路自动化覆盖 ≥80%，用例核对闸覆盖全部命令（Q1 铺 E2E、Q3 达标）。\n3、生成物与体量治理：启动耗时降 30%、生成物目录隔离入白名单（Q2 完成隔离、Q4 验收性能）。\n4、生态落地：spec-once/流水线在 ≥3 个真实项目落地并沉淀案例（Q2 试点、Q4 案例库发布）。";
@@ -355,6 +432,23 @@ if (location.search.indexOf('shot=content') > -1) {
     el.style.animation = 'none'; el.style.opacity = '1';
   });
 }
+
+// 主题换肤：四套配色随点随换；记忆上次选择（localStorage，失败静默）；?shot 截图模式隐藏坞
+(function(){
+  var THEMES = ['tech','biz','mono','warm'];
+  var dock = document.getElementById('themeDock');
+  if (!dock) return;
+  if (location.search.indexOf('shot=') !== -1){ dock.style.display = 'none'; }
+  function apply(t){ document.documentElement.setAttribute('data-theme', t);
+    dock.querySelectorAll('.th-dot').forEach(function(d){ d.classList.toggle('on', d.getAttribute('data-theme') === t); });
+    try{ localStorage.setItem('sf-report-theme', t); }catch(e){} }
+  var cur = document.documentElement.getAttribute('data-theme');
+  var saved = null; try{ saved = localStorage.getItem('sf-report-theme'); }catch(e){}
+  if (saved && THEMES.indexOf(saved) !== -1 && saved !== cur){ apply(saved); }
+  else{ dock.querySelectorAll('.th-dot').forEach(function(d){ d.classList.toggle('on', d.getAttribute('data-theme') === (cur || 'tech')); }); }
+  dock.querySelectorAll('.th-dot').forEach(function(d){ d.addEventListener('click', function(){ apply(d.getAttribute('data-theme')); }); });
+})();
+
 </script>
 </body>
 </html>

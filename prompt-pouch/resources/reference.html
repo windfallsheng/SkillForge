@@ -1,25 +1,80 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="gold">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>锦囊 Prompt Pouch — 提示词管理台</title>
 <style>
 /* ============ 锦囊 · 深棕金配色 ============ */
-:root{
+:root, [data-theme="gold"]{ /* 暖棕金（默认） */
   --bg:#17110c; --bg2:#201710;
   --panel:#251b12; --panel2:#2c2015;
   --text:#f0e6d4; --muted:#9a8a72;
   --gold:#e8b04b; --gold2:#d98a3d; --gold-dim:rgba(232,176,75,.16);
   --border:rgba(232,176,75,.22);
   --tag-bg:rgba(232,176,75,.1);
-  --star:#f5c95c;
+  --star:#f7d9a0;
+  --glow:rgba(232,176,75,.35);
+  --btn-ink:#241505;
+  --bar-hi:rgba(23,17,12,.96); --bar-lo:rgba(23,17,12,.88);
+}
+[data-theme="tech"]{ /* 深蓝科技 */
+  --bg:#0a1929; --bg2:#0f2440;
+  --panel:#132f4c; --panel2:#1a3a5c;
+  --text:#e3f0ff; --muted:#8fa8c8;
+  --gold:#38bdf8; --gold2:#0ea5e9; --gold-dim:rgba(56,189,248,.16);
+  --border:rgba(56,189,248,.22);
+  --tag-bg:rgba(56,189,248,.1);
+  --star:#7dd3fc;
+  --glow:rgba(56,189,248,.35);
+  --btn-ink:#041018;
+  --bar-hi:rgba(10,25,41,.96); --bar-lo:rgba(10,25,41,.88);
+}
+/* ═══ mono 深黑极简：Linear 式黑画布 + 纯白强调 + 灰阶层次（黑底白字，货真价实的黑色主题） ═══ */
+[data-theme="mono"]{
+  --bg:#0a0a0b; --bg2:#121215;
+  --panel:#17171a; --panel2:#1e1e22;
+  --text:#f5f5f7; --muted:#9b9ba4;
+  --gold:#ffffff; --gold2:#d9d9de; --gold-dim:rgba(255,255,255,.09);
+  --border:rgba(255,255,255,.11);
+  --tag-bg:rgba(255,255,255,.07);
+  --star:#f5f5f7;
+  --glow:rgba(255,255,255,.16);
+  --btn-ink:#0a0a0b;
+  --bar-hi:rgba(10,10,11,.96); --bar-lo:rgba(10,10,11,.88);
+}
+/* mono 深黑组件适配：魔法棒黑白化、白标签、白星标、深色弹层、输入区半透明白、黑点白描边 */
+[data-theme="mono"] .lg{ filter:grayscale(1) brightness(.3); }
+[data-theme="mono"] .nav-item .icon,
+[data-theme="mono"] .search .kw{ filter:grayscale(1) brightness(1.35); }
+[data-theme="mono"] .tpl-badge{ color:#f5f5f7; background:rgba(255,255,255,.12); }
+[data-theme="mono"] .op.star-on{ color:#ffffff; border-color:rgba(255,255,255,.42); background:rgba(255,255,255,.15); }
+[data-theme="mono"] .gpop{ background:#1e1e22; border-color:rgba(255,255,255,.13); box-shadow:0 12px 32px rgba(0,0,0,.55); }
+[data-theme="mono"] .fp-preview,
+[data-theme="mono"] .fp-field input,
+[data-theme="mono"] .fp-field textarea,
+[data-theme="mono"] .fp-field select,
+[data-theme="mono"] .fp-live textarea,
+[data-theme="mono"] .bk-item,
+[data-theme="mono"] .detail-content{ background:rgba(255,255,255,.05); }
+[data-theme="mono"] .theme-dock .th-dot[data-theme="mono"]{ border:1.5px solid rgba(255,255,255,.5); }
+[data-theme="mint"]{ /* 薄荷绿 */
+  --bg:#0d1a12; --bg2:#12241a;
+  --panel:#182f22; --panel2:#1e3a2a;
+  --text:#e6f5ec; --muted:#8ab59a;
+  --gold:#4ade80; --gold2:#16a34a; --gold-dim:rgba(74,222,128,.16);
+  --border:rgba(74,222,128,.22);
+  --tag-bg:rgba(74,222,128,.1);
+  --star:#b9ffd8;
+  --glow:rgba(74,222,128,.35);
+  --btn-ink:#04150a;
+  --bar-hi:rgba(13,26,18,.96); --bar-lo:rgba(13,26,18,.88);
 }
 *{ box-sizing:border-box; margin:0; padding:0; }
 html,body{ height:100%; }
 body{
   background:
-    radial-gradient(1200px 500px at 70% -10%, rgba(232,176,75,.08), transparent 60%),
+    radial-gradient(1200px 500px at 70% -10%, var(--gold-dim), transparent 60%),
     repeating-linear-gradient(90deg, rgba(255,255,255,.012) 0 1px, transparent 1px 90px),
     linear-gradient(160deg, var(--bg) 0%, var(--bg2) 100%);
   color:var(--text);
@@ -29,7 +84,7 @@ body{
 /* ============ 顶栏 ============ */
 header{
   position:sticky; top:0; z-index:30;
-  background:linear-gradient(180deg, rgba(23,17,12,.96), rgba(23,17,12,.88));
+  background:linear-gradient(180deg, var(--bar-hi), var(--bar-lo));
   backdrop-filter:blur(8px);
   border-bottom:1px solid var(--border);
   padding:18px 28px 14px;
@@ -39,11 +94,11 @@ header{
   width:42px; height:42px; flex:0 0 auto; border-radius:12px;
   background:linear-gradient(135deg, var(--gold), var(--gold2));
   display:flex; align-items:center; justify-content:center;
-  font-size:22px; box-shadow:0 0 18px rgba(232,176,75,.35);
+  font-size:22px; box-shadow:0 0 18px var(--glow);
 }
 .title{
   font-size:22px; font-weight:900; letter-spacing:3px;
-  background:linear-gradient(90deg,#f7d9a0,var(--gold) 55%,var(--gold2));
+  background:linear-gradient(90deg,var(--star),var(--gold) 55%,var(--gold2));
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
 .sub{ font-size:12px; color:var(--muted); letter-spacing:1px; margin-top:2px; }
@@ -58,9 +113,22 @@ header{
 }
 .search .kw{ font-size:13px; color:var(--muted); }
 /* ============ 主体布局 ============ */
-.layout{ display:flex; gap:22px; padding:22px 28px 90px; max-width:1440px; margin:0 auto; }
+.layout{ display:flex; gap:22px; padding:22px 28px 64px; max-width:1440px; margin:0 auto; }
 /* 侧栏 */
-aside{ width:200px; flex:0 0 auto; }
+aside{ width:200px; flex:0 0 auto;
+  display:flex; flex-direction:column;
+  position:sticky; top:80px; align-self:flex-start;
+  max-height:calc(100vh - 100px);
+}
+/* 侧栏分组滚动区：收藏 + 全部分组局部滚动（「全部」与底部操作固定），窄滚动条 */
+.nav-scroll{
+  flex:1 1 auto; min-height:0; overflow-y:auto;
+  margin:0 -4px 0 0; padding-right:4px;
+  scrollbar-width:thin; scrollbar-color:var(--border) transparent;
+}
+.nav-scroll::-webkit-scrollbar{ width:5px; }
+.nav-scroll::-webkit-scrollbar-thumb{ background:var(--border); border-radius:999px; }
+.nav-scroll::-webkit-scrollbar-thumb:hover{ background:var(--muted); }
 .nav-item{
   display:flex; align-items:center; gap:10px;
   padding:10px 14px; border-radius:10px; cursor:pointer;
@@ -78,7 +146,7 @@ aside{ width:200px; flex:0 0 auto; }
   margin-left:auto; font-size:11px; color:var(--muted);
   background:var(--panel2); border-radius:999px; padding:2px 8px;
 }
-.nav-item.on .cnt{ color:var(--gold); background:rgba(232,176,75,.14); }
+.nav-item.on .cnt{ color:var(--gold); background:var(--gold-dim); }
 .side-tip{
   margin-top:16px; padding:12px 14px; border-radius:10px;
   border:1px dashed var(--border); font-size:11px; line-height:1.9; color:var(--muted);
@@ -110,13 +178,14 @@ main{ flex:1; min-width:0; }
   border:1px solid var(--border); background:var(--gold-dim); color:var(--gold);
   font-family:inherit; font-size:12px; letter-spacing:1px;
   padding:6px 14px; border-radius:999px; cursor:pointer; transition:all .18s ease;
+  white-space:nowrap; flex:0 0 auto;
 }
-.btn:hover{ background:rgba(232,176,75,.22); box-shadow:0 0 12px rgba(232,176,75,.2); }
+.btn:hover{ background:var(--border); box-shadow:0 0 12px var(--glow); }
 .btn.primary{
-  background:linear-gradient(135deg, var(--gold), var(--gold2)); color:#241505;
+  background:linear-gradient(135deg, var(--gold), var(--gold2)); color:var(--btn-ink);
   font-weight:900; border:none;
 }
-.btn.primary:hover{ box-shadow:0 0 16px rgba(232,176,75,.45); }
+.btn.primary:hover{ box-shadow:0 0 16px var(--glow); }
 .btn[disabled]{ opacity:.4; cursor:not-allowed; }
 /* 卡片列表 */
 .list{ display:grid; grid-template-columns:repeat(auto-fill,minmax(360px,1fr)); gap:14px; }
@@ -127,7 +196,9 @@ main{ flex:1; min-width:0; }
   transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
   cursor:grab; display:flex; flex-direction:column; gap:8px;
 }
-.card:hover{ transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.35); border-color:rgba(232,176,75,.4); }
+.card:hover{ transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.35); border-color:var(--glow); }
+[data-theme="mono"] .card{ box-shadow:0 1px 0 rgba(255,255,255,.05) inset; }
+[data-theme="mono"] .card:hover{ box-shadow:0 10px 30px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.09); }
 .card.dragging{ opacity:.35; cursor:grabbing; }
 .card.drop-target{ border-color:var(--gold); box-shadow:0 0 0 2px var(--gold-dim); }
 .card-top{ display:flex; align-items:center; gap:8px; }
@@ -139,6 +210,10 @@ main{ flex:1; min-width:0; }
   font-size:15px; font-weight:900; letter-spacing:1px; color:var(--text);
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
+
+/* 搜索命中高亮（四主题令牌适配） */
+mark.hl{ background:var(--gold-dim); color:var(--gold); border-radius:3px; padding:0 2px; font-weight:700; }
+.hl-note{ font-size:10px; color:var(--gold); background:var(--gold-dim); border:1px solid var(--border); border-radius:4px; padding:0 5px; line-height:16px; margin-left:6px; vertical-align:middle; }
 .gbadge{
   flex:0 0 auto; font-size:10px; letter-spacing:1px; color:var(--gold);
   background:var(--tag-bg); border:1px solid var(--border);
@@ -152,8 +227,15 @@ main{ flex:1; min-width:0; }
 .card.expanded .card-body{ display:block; }
 .card-expand{
   border:none; background:none; color:var(--gold); cursor:pointer;
-  font-family:inherit; font-size:11px; letter-spacing:1px; padding:0; align-self:flex-start;
+  font-family:inherit; font-size:11px; letter-spacing:1px; padding:0;
 }
+.card-meta{ display:flex; align-items:center; gap:8px; }
+.card-time{
+  margin-left:auto; flex:0 0 auto; font-size:10.5px; color:var(--muted);
+  letter-spacing:.5px; white-space:nowrap;
+  display:inline-flex; align-items:center; gap:4px;
+}
+.card-time .ct-ico{ color:var(--gold); flex:0 0 auto; }
 .card-foot{ display:flex; align-items:center; gap:8px; margin-top:2px; }
 .tag{
   font-size:10px; color:var(--muted); background:var(--panel2);
@@ -166,7 +248,7 @@ main{ flex:1; min-width:0; }
   background:var(--gold-dim); color:var(--gold); cursor:pointer;
   font-size:12px; display:flex; align-items:center; justify-content:center; transition:all .15s ease;
 }
-.op:hover{ background:rgba(232,176,75,.25); }
+.op:hover{ background:var(--border); }
 .op.star-on{ color:var(--star); border-color:rgba(245,201,92,.5); background:rgba(245,201,92,.12); }
 .gpop{
   display:none; position:fixed; z-index:300; min-width:180px; max-width:260px;
@@ -179,7 +261,7 @@ main{ flex:1; min-width:0; }
   font-size:13px; color:var(--text); padding:7px 10px; border-radius:8px; cursor:pointer;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
-.gpop-item:hover{ background:rgba(232,176,75,.15); }
+.gpop-item:hover{ background:var(--gold-dim); }
 .gpop-item.cur{ color:var(--muted); cursor:default; }
 .copy-feedback{
   position:absolute; right:14px; top:-10px; font-size:11px; color:var(--gold);
@@ -197,7 +279,7 @@ main{ flex:1; min-width:0; }
 }
 .modal-mask.open{ display:flex; }
 .fill-panel{
-  width:460px; max-width:92vw; max-height:84vh; display:flex; flex-direction:column;
+  width:540px; max-width:94vw; max-height:86vh; display:flex; flex-direction:column;
   background:linear-gradient(180deg, var(--panel) 0%, var(--panel2) 100%);
   border:1px solid var(--border); border-radius:16px; padding:22px 24px;
   box-shadow:0 20px 60px rgba(0,0,0,.5);
@@ -205,7 +287,7 @@ main{ flex:1; min-width:0; }
 .fp-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
 .fp-title{
   font-size:16px; font-weight:900; letter-spacing:2px;
-  background:linear-gradient(90deg,#f7d9a0,var(--gold));
+  background:linear-gradient(90deg,var(--star),var(--gold));
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
 .fp-count{ font-size:12px; color:var(--muted); }
@@ -236,20 +318,20 @@ main{ flex:1; min-width:0; }
   font-size:11px; color:var(--muted); margin-bottom:5px; letter-spacing:.5px;
 }
 .fp-live textarea{
-  width:100%; height:76px; resize:none; padding:9px 12px; border-radius:9px;
+  width:100%; height:96px; resize:none; padding:9px 12px; border-radius:9px;
   background:rgba(0,0,0,.25); border:1px solid var(--border); outline:none;
   color:var(--muted); font-family:inherit; font-size:12px; line-height:1.7;
 }
 .fp-ops{ display:flex; justify-content:flex-end; gap:10px; }
 /* 备份与数据安全 */
-.bk-wrap{ display:flex; align-items:center; gap:10px; }
+.bk-wrap{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
 .bk-status{ font-size:12px; color:var(--muted); letter-spacing:1px; }
 .cache-badge{
-  font-size:11px; letter-spacing:1px; color:#e8b04b;
-  background:rgba(232,176,75,.12); border:1px solid var(--border);
+  font-size:11px; letter-spacing:1px; color:var(--gold);
+  background:var(--gold-dim); border:1px solid var(--border);
   padding:4px 10px; border-radius:999px;
 }
-.bk-list{ display:flex; flex-direction:column; gap:8px; max-height:280px; overflow-y:auto; }
+.bk-list{ display:flex; flex-direction:column; gap:8px; max-height:340px; overflow-y:auto; }
 .bk-item{
   display:flex; align-items:center; gap:10px; padding:10px 12px;
   border:1px solid var(--border); border-radius:10px; background:rgba(0,0,0,.2);
@@ -258,20 +340,59 @@ main{ flex:1; min-width:0; }
 .bk-item-main b{ color:var(--gold); font-size:13px; }
 .bk-empty{ font-size:12px; color:var(--muted); padding:12px 4px; line-height:1.8; }
 .tpl-badge{
-  flex:0 0 auto; font-size:10px; letter-spacing:1px; color:#241505; font-weight:900;
+  flex:0 0 auto; font-size:10px; letter-spacing:1px; color:var(--btn-ink); font-weight:900;
   background:linear-gradient(135deg, var(--gold), var(--gold2));
   border-radius:999px; padding:2px 8px;
 }
-/* 底部提示条 */
+/* ═══ 底部帮助抽屉：默认收起为中央问号胶囊，点击展开条理化指南，ESC/× 收起；主题坞独立右下悬浮互不干扰 ═══ */
 footer{
   position:fixed; left:0; right:0; bottom:0; z-index:30;
-  background:linear-gradient(0deg, rgba(23,17,12,.97), rgba(23,17,12,.9));
-  backdrop-filter:blur(8px); border-top:1px solid var(--border);
-  padding:10px 28px; font-size:12px; color:var(--muted); letter-spacing:1px;
-  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+  pointer-events:none; /* 收起态不挡内容区滚动与点击 */
 }
-footer b{ color:var(--gold); }
-footer .sep{ opacity:.4; }
+.help-trigger{
+  pointer-events:auto; cursor:pointer; user-select:none;
+  display:flex; align-items:center; gap:7px;
+  padding:6px 18px 7px; border-radius:999px 999px 0 0;
+  background:linear-gradient(0deg, var(--bar-hi), var(--bar-lo));
+  backdrop-filter:blur(8px);
+  border:1px solid var(--border); border-bottom:none;
+  font-size:12px; letter-spacing:1px; color:var(--muted);
+  transition:color .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+.help-trigger:hover{ color:var(--gold); transform:translateY(-2px); box-shadow:0 -2px 12px var(--glow); }
+.help-trigger .ht-icon{
+  width:15px; height:15px; border-radius:50%; flex:0 0 auto;
+  border:1.5px solid currentColor; display:flex; align-items:center; justify-content:center;
+  font-size:10px; font-weight:900; line-height:1;
+}
+.help-trigger .ht-arrow{ font-size:9px; line-height:1; transition:transform .25s ease; }
+.help-panel{
+  pointer-events:auto; width:100%; max-width:1100px;
+  background:linear-gradient(0deg, var(--panel), var(--panel2));
+  border:1px solid var(--border); border-bottom:none; border-radius:16px 16px 0 0;
+  box-shadow:0 -10px 36px rgba(0,0,0,.2);
+  max-height:0; overflow:hidden; padding:0 24px;
+  transition:max-height .32s ease, padding .32s ease;
+}
+footer.open .help-panel{ max-height:320px; padding:18px 24px 16px; }
+footer.open .ht-arrow{ transform:rotate(180deg); }
+.hp-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.hp-head b{ font-size:13px; letter-spacing:2px; color:var(--gold); }
+.hp-close{
+  border:1px solid var(--border); background:var(--gold-dim); color:var(--gold);
+  width:24px; height:24px; border-radius:8px; cursor:pointer; font-size:13px; line-height:1;
+  display:flex; align-items:center; justify-content:center; transition:all .15s ease;
+}
+.hp-close:hover{ background:var(--border); }
+.hp-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px 20px; }
+.hp-item .hp-t{ font-size:12px; font-weight:900; letter-spacing:1px; color:var(--gold); margin-bottom:4px; }
+.hp-item .hp-d{ font-size:11.5px; line-height:1.85; color:var(--muted); }
+.hp-item .hp-d b{ color:var(--gold); }
+@media (max-width:820px){
+  .hp-grid{ grid-template-columns:1fr; }
+  footer.open .help-panel{ max-height:62vh; overflow-y:auto; }
+}
 /* 页面直写：侧栏分组管理 / 提示词表单 / toast */
 .nav-add{
   display:flex; align-items:center; justify-content:center; gap:6px;
@@ -280,7 +401,7 @@ footer .sep{ opacity:.4; }
   border:1px dashed var(--border); background:var(--gold-dim);
   transition:all .18s ease; user-select:none;
 }
-.nav-add:hover{ background:rgba(232,176,75,.2); box-shadow:0 0 12px rgba(232,176,75,.15); }
+.nav-add:hover{ background:var(--border); box-shadow:0 0 12px var(--glow); }
 .nav-item .g-name{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .nav-item .g-ops{ display:none; gap:4px; margin-left:6px; flex:0 0 auto; }
 .nav-item:hover .g-ops{ display:flex; }
@@ -292,7 +413,7 @@ footer .sep{ opacity:.4; }
 .nav-item .g-ops button:hover{ color:var(--gold); border-color:var(--gold); }
 .nav-item .g-ops .g-del:hover{ color:#e06c5b; border-color:#e06c5b; }
 .fp-field textarea{
-  width:100%; min-height:130px; resize:vertical; padding:9px 12px; border-radius:9px;
+  width:100%; min-height:170px; resize:vertical; padding:9px 12px; border-radius:9px;
   background:rgba(0,0,0,.25); border:1px solid var(--border); outline:none;
   color:var(--text); font-family:inherit; font-size:13px; line-height:1.7; transition:border-color .18s ease;
 }
@@ -306,8 +427,11 @@ footer .sep{ opacity:.4; }
 .op-del:hover{ color:#e06c5b; border-color:#e06c5b; background:rgba(224,108,91,.12); }
 /* 提示词详情弹窗 */
 .detail-panel{ width:660px; }
+/* 弹框尺寸：表单类加宽、内容区加高，避免局促 */
+#itemMask .fill-panel, #fillMask .fill-panel{ width:640px; }
+#bkMask .fill-panel{ width:560px; }
 .detail-content{
-  max-height:52vh; overflow-y:auto; padding:14px 16px; margin-bottom:10px;
+  max-height:56vh; overflow-y:auto; padding:14px 16px; margin-bottom:10px;
   background:rgba(0,0,0,.22); border:1px solid var(--border); border-radius:10px;
   font-size:13px; line-height:1.9; color:var(--text); white-space:pre-wrap; word-break:break-word;
 }
@@ -330,21 +454,35 @@ footer .sep{ opacity:.4; }
 .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 .toast.warn{ color:#e06c5b; border-color:rgba(224,108,91,.5); }
 @media (max-width:820px){
-  .layout{ flex-direction:column; padding:16px 16px 100px; }
-  aside{ width:100%; display:flex; flex-wrap:wrap; gap:6px; }
+  .layout{ flex-direction:column; padding:16px 16px 72px; }
+  aside{ width:100%; display:flex; flex-wrap:wrap; gap:6px; position:static; max-height:none; }
+  .nav-scroll{ display:contents; overflow:visible; }
   .nav-item{ margin-bottom:0; }
   .side-tip{ display:none; }
   .search{ min-width:0; width:100%; margin-left:0; }
   .list{ grid-template-columns:1fr; }
   .card-ops{ opacity:1; }
 }
+/* 主题换肤坞：右下角四色点随点随换，记忆上次选择；打印隐藏 */
+.theme-dock{ position:fixed; right:18px; bottom:18px; z-index:1001; display:flex; gap:8px;
+  padding:8px 10px; border-radius:999px; background:var(--panel2); border:1px solid var(--border);
+  box-shadow:0 4px 18px rgba(0,0,0,.3); }
+.theme-dock .th-dot{ width:22px; height:22px; border-radius:50%; cursor:pointer;
+  border:2px solid transparent; padding:0; transition:transform .15s ease, border-color .15s ease; }
+.theme-dock .th-dot:hover{ transform:scale(1.18); }
+.theme-dock .th-dot.on{ border-color:var(--text); }
+.theme-dock .th-dot[data-theme="gold"]{ background:#e8b04b; }
+.theme-dock .th-dot[data-theme="tech"]{ background:#0ea5e9; }
+.theme-dock .th-dot[data-theme="mono"]{ background:#111; }
+.theme-dock .th-dot[data-theme="mint"]{ background:#4ade80; }
+@media print{ .theme-dock{ display:none; } }
 </style>
 </head>
 <body>
 
 <header>
   <div class="hd-row">
-    <div class="logo">🪄</div>
+    <div class="logo"><span class="lg">🪄</span></div>
     <div>
       <div class="title">锦囊 · PROMPT POUCH</div>
       <div class="sub">妙计入囊 · 随取随用</div>
@@ -379,7 +517,7 @@ footer .sep{ opacity:.4; }
         <button class="btn" id="btnMarkSaved" style="display:none" title="把指令交给 AI 落盘后点此清除未保存标记">✓ 已落盘</button>
       </div>
       <div class="bk-wrap" id="bkWrap">
-        <span class="cache-badge" id="cacheBadge" style="display:none">⚠️ 缓存模式：prompts.json 读取失败，当前显示上次快照</span>
+        <span class="cache-badge" id="cacheBadge" style="display:none">⚠️ 缓存模式：cache/prompts.json 读取失败，当前显示上次快照</span>
         <button class="btn" id="btnBkEnable" style="display:none">💾 授权目录备份</button>
         <span class="bk-status" id="bkStatus">本地快照备份中</span>
         <button class="btn" id="btnBkChange" style="display:none">📂 换目录</button>
@@ -418,7 +556,7 @@ footer .sep{ opacity:.4; }
   <div class="fill-panel">
     <div class="fp-head">
       <div class="fp-title">从备份恢复</div>
-      <span class="fp-count">目录备份 pouch-backup*.json + 本地快照</span>
+      <span class="fp-count" id="bkMaskNote">backup/ 目录滚动备份 + 本地快照</span>
     </div>
     <div class="bk-list" id="bkList"></div>
     <div class="fp-ops">
@@ -432,7 +570,7 @@ footer .sep{ opacity:.4; }
   <div class="fill-panel">
     <div class="fp-head">
       <div class="fp-title" id="itemTitle">新增提示词</div>
-      <span class="fp-count">落盘 prompts.json · 刷新即见</span>
+      <span class="fp-count">落盘 cache/prompts.json · 刷新即见</span>
     </div>
     <div class="fp-fields">
       <div class="fp-field"><label for="itemName">标题</label><input id="itemName" placeholder="如：日报速写" /></div>
@@ -449,10 +587,10 @@ footer .sep{ opacity:.4; }
 
 <!-- 新建/编辑分组 -->
 <div class="modal-mask" id="groupMask">
-  <div class="fill-panel" style="width:360px;">
+  <div class="fill-panel" style="width:460px;">
     <div class="fp-head">
       <div class="fp-title" id="groupTitle">新建分组</div>
-      <span class="fp-count">落盘 prompts.json · 刷新即见</span>
+      <span class="fp-count">落盘 cache/prompts.json · 刷新即见</span>
     </div>
     <div class="fp-fields">
       <div class="fp-field"><label for="groupName">分组名</label><input id="groupName" placeholder="如：灵感" /></div>
@@ -486,10 +624,33 @@ footer .sep{ opacity:.4; }
 <div class="toast" id="toast"></div>
 
 <footer>
-  <b>怎么添加 / 修改提示词？</b>页面直接点 <b>「＋ 新增提示词」/「👁 详情」/「✎」/「🗑」</b>（授权目录即写即存），或对 AI 说 <b>「把 XX 加到锦囊的写作分组」</b>，AI 写入 prompts.json，刷新即见。
-  <span class="sep">|</span> 排序：默认最新添加在前，可切「最近使用 / 使用频率 / 手动顺序」；拖动卡片或点 ▲▼ 自动切回手动、点卡片 ⇄ 移到其它分组，点 <b>📋 复制变更指令</b> 交给 AI 落盘。
-  <span class="sep">|</span> 打开方式：HTTP 访问读 prompts.json（file:// 直开则回退到本地缓存快照）。
-  <span class="sep">|</span> 数据安全：收藏与排序存浏览器本地（IndexedDB）刷新不丢；备份默认自动——每次变更 2 秒内自动备份，首次变更会请求授权写 prompt-pouch.html 所在目录的 pouch-backup.json（滚动双备份，选一次浏览器就记住），未授权时自动降级为浏览器本地快照（保留最近 5 份）；「📂 换目录」可随时重配，↩ 一键恢复。
+  <div class="help-trigger" id="helpTrigger" title="使用帮助（点击展开 / 收起）">
+    <span class="ht-icon">?</span><span>使用帮助</span><span class="ht-arrow">∧</span>
+  </div>
+  <div class="help-panel" id="helpPanel">
+    <div class="hp-head">
+      <b>锦囊使用指南</b>
+      <button class="hp-close" id="helpClose" title="收起">×</button>
+    </div>
+    <div class="hp-grid">
+      <div class="hp-item">
+        <div class="hp-t">① 添加与修改</div>
+        <div class="hp-d">页面点 <b>「＋ 新增提示词」/「👁 详情」/「✎」/「🗑」</b>（授权目录即写即存），或对 AI 说 <b>「把 XX 加到锦囊的写作输出分组」</b>，AI 写入 cache/prompts.json，刷新即见。</div>
+      </div>
+      <div class="hp-item">
+        <div class="hp-t">② 排序与移动</div>
+        <div class="hp-d">默认最新添加在前，可切「最近使用 / 使用频率 / 手动顺序」；拖动卡片或点 ▲▼ 自动切回手动、点 ⇄ 移到其它分组，点 <b>📋 复制变更指令</b> 交给 AI 落盘。</div>
+      </div>
+      <div class="hp-item">
+        <div class="hp-t">③ 打开方式</div>
+        <div class="hp-d">HTTP 访问读 cache/prompts.json；file:// 直开则回退到本地缓存快照。</div>
+      </div>
+      <div class="hp-item">
+        <div class="hp-t">④ 数据安全</div>
+        <div class="hp-d">收藏与排序存浏览器本地（IndexedDB）刷新不丢；每次变更 2 秒内自动备份到 backup/pouch-backup.json（滚动双备份），未授权时降级本地快照（保留 5 份）；<b>「📂 换目录」</b> 可随时重配，↩ 一键恢复。</div>
+      </div>
+    </div>
+  </div>
 </footer>
 
 <script>
@@ -522,6 +683,43 @@ footer .sep{ opacity:.4; }
   var btnBkRestore = document.getElementById('btnBkRestore');
   var cacheBadge = document.getElementById('cacheBadge');
 
+  /* ---------- 底部帮助抽屉：点击开合，ESC 收起 ---------- */
+  var footerEl = document.querySelector('footer');
+  var helpTrigger = document.getElementById('helpTrigger');
+  var helpClose = document.getElementById('helpClose');
+  if (helpTrigger) helpTrigger.addEventListener('click', function(){ footerEl.classList.toggle('open'); });
+  if (helpClose) helpClose.addEventListener('click', function(){ footerEl.classList.remove('open'); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') footerEl.classList.remove('open'); });
+
+  /* ---------- 内置示例种子（仅兜底：prompts.json 读不到且本地无缓存快照时展示，file:// 直开也能看到示范数据；读到 prompts.json 即以文件为准） ---------- */
+  var DEFAULT_POUCH = {
+    version: 1,
+    groups: [
+      { id: 1762500000000101, name: '写作输出', icon: '✍️' },
+      { id: 1762500000000102, name: '沟通协作', icon: '💬' },
+      { id: 1762500000000103, name: '规划执行', icon: '📌' },
+      { id: 1762500000000104, name: '复盘成长', icon: '🔍' },
+      { id: 1762500000000105, name: '提问艺术', icon: '🎯' }
+    ],
+    prompts: [
+      { id: 1762500000123401, group: 1762500000000101, title: '日报速写', content: '帮我根据以下内容写一份工作日报。今日完成：{今日事项}；明日计划：{明日计划}；风险阻塞：{风险问题}。要求：简洁、量化优先、分点列出。', tags: ['日报', '汇报'], order: 1, favorite: false, createdAt: '2026-11-01' },
+      { id: 1762500000123402, group: 1762500000000101, title: '周报汇总', content: '帮我写一份本周周报。本周完成：{本周成果}；下周计划：{下周安排}；需要协调：{协调事项}。要求：突出数据结果，避免流水账。', tags: ['周报', '汇报'], order: 2, favorite: false, createdAt: '2026-11-01' },
+      { id: 1762500000123403, group: 1762500000000101, title: '工作汇报', content: '请根据以下材料起草一份向上级的工作汇报。进展：{工作进展}；成果数据：{量化数据}；所需支持：{支持需求}。要求：结论先行、语气专业。', tags: ['汇报', '沟通'], order: 3, favorite: false, createdAt: '2026-11-01' },
+      { id: 1762500000123404, group: 1762500000000102, title: '会议纪要', content: '帮我把这份会议记录整理成规范纪要。原始记录：{会议内容}。输出：会议主题、核心结论、待办事项（含负责人与截止时间）。', tags: ['会议', '纪要'], order: 1, favorite: false, createdAt: '2026-11-01' },
+      { id: 1762500000123405, group: 1762500000000102, title: '邮件润色', content: '帮我润色这封工作邮件，使其更专业得体。邮件原文：{邮件内容}。收件人身份：{收件人身份}。', tags: ['邮件', '沟通'], order: 2, favorite: false, createdAt: '2026-11-01' },
+      { id: 1762500000123406, group: 1762500000000102, title: '沟通话术', content: '帮我把这段话改得更委婉得体，用于跨部门沟通。原始表达：{原始表达}。沟通背景：{沟通背景}。', tags: ['沟通', '协作'], order: 3, favorite: false, createdAt: '2026-11-01' },
+      { id: 1762500000123407, group: 1762500000000103, title: '任务拆解', content: '帮我把这个目标拆解成可执行的任务清单。目标：{目标描述}；截止时间：{截止日期}。按优先级排序，每项给出验收标准。', tags: ['任务', '拆解'], order: 1, favorite: false, createdAt: '2026-11-01' },
+      { id: 1762500000123408, group: 1762500000000103, title: '计划安排', content: '帮我制定未来 {时间周期} 的工作计划。重点事项：{重点事项}；可用时间：{可用工时}。要求：安排到天、留出缓冲。', tags: ['计划', '排期'], order: 2, favorite: false, createdAt: '2026-11-01' },
+      { id: 1762500000123409, group: 1762500000000103, title: '优先级排序', content: '帮我给以下待办事项排序。待办清单：{待办清单}。按重要紧急四象限分类并说明理由。', tags: ['待办', '优先级'], order: 3, favorite: false, createdAt: '2026-11-01' },
+      { id: 1762500000123410, group: 1762500000000104, title: '项目复盘', content: '帮我做一次项目复盘。项目情况：{项目背景}；结果数据：{结果数据}；遇到的问题：{问题清单}。输出：亮点、不足、改进措施。', tags: ['复盘', '项目'], order: 1, favorite: false, createdAt: '2026-11-01' },
+      { id: 1762500000123411, group: 1762500000000104, title: '阶段总结', content: '帮我把以下工作记录提炼成阶段总结。工作记录：{工作记录}。要求：突出关键成果与量化指标。', tags: ['总结', '成长'], order: 2, favorite: false, createdAt: '2026-11-01' },
+      { id: 1762500000123412, group: 1762500000000104, title: '经验沉淀', content: '帮我把这次经验整理成可复用的方法论。事件经过：{事件描述}；我的做法：{处理方式}；结果：{最终结果}。输出：步骤化流程 + 注意事项。', tags: ['经验', '方法论'], order: 3, favorite: false, createdAt: '2026-11-01' },
+      { id: 1762500000123413, group: 1762500000000105, title: '需求澄清', content: '帮我把这段模糊需求拆解成可执行的具体要求。原始需求：{需求描述}。输出：目标、约束条件、交付物、验收标准；不确定处附追问清单，不要自行假设。', tags: ['需求', '澄清'], order: 1, favorite: false, createdAt: '2026-11-01' },
+      { id: 1762500000123414, group: 1762500000000105, title: '引导式提问', content: '请按「背景 → 现状 → 目标 → 障碍 → 已试过的办法」引导我逐步提供信息。我要解决的问题：{问题描述}。要求：一次只问一个问题，先别急着给答案。', tags: ['提问', '引导'], order: 2, favorite: false, createdAt: '2026-11-01' },
+      { id: 1762500000123415, group: 1762500000000105, title: '追问清单', content: '针对我的问题先列出 {数量} 个关键追问帮我理清思路，再基于我的回答给方案。我的问题：{问题描述}。追问要求：具体、可回答、按重要性排序。', tags: ['提问', '思考'], order: 3, favorite: false, createdAt: '2026-11-01' }
+    ]
+  };
+
   function showErr(msg){
     listEl.innerHTML = '<div class="empty">' + msg + '</div>';
   }
@@ -545,6 +743,16 @@ footer .sep{ opacity:.4; }
   function createdAtOf(p){
     if (p.createdAt){ var t = new Date(p.createdAt).getTime(); if (!isNaN(t)) return t; }
     return 0;
+  }
+  function fmtStamp(s){
+    if (!s) return '';
+    var str = String(s).trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+    var d = new Date(str.replace(' ', 'T'));
+    if (isNaN(d.getTime())) return str;
+    function p(n){ return (n < 10 ? '0' : '') + n; }
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate())
+      + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
   }
   function sortCmp(){
     switch (state.sortMode){
@@ -585,13 +793,15 @@ footer .sep{ opacity:.4; }
     var all = state.data.prompts.length;
     var favN = state.data.prompts.filter(function(p){ return p.favorite; }).length;
     html += '<div class="nav-item' + (state.curGroup==='all'?' on':'') + '" data-g="all"><span class="icon">🗂️</span>全部<span class="cnt">' + all + '</span></div>';
+    html += '<div class="nav-scroll">';
     html += '<div class="nav-item' + (state.curGroup==='fav'?' on':'') + '" data-g="fav"><span class="icon">⭐</span>收藏<span class="cnt">' + favN + '</span></div>';
     state.data.groups.forEach(function(g){
       var n = state.data.prompts.filter(function(p){ return p.group === g.id; }).length;
       html += '<div class="nav-item' + (state.curGroup===g.id?' on':'') + '" data-g="' + g.id + '"><span class="icon">' + g.icon + '</span><span class="g-name">' + escapeHtml(g.name) + '</span><span class="cnt">' + n + '</span><span class="g-ops"><button class="g-edit" title="编辑分组">✎</button><button class="g-del" title="删除分组">🗑</button></span></div>';
     });
+    html += '</div>';
     html += '<div class="nav-add" id="navAdd">＋ 新建分组</div>';
-    html += '<div class="side-tip"><b>锦囊用法</b><br>· 页面直接增删改：＋ 新建分组 / ＋ 新增提示词 / ✎ 编辑 / 🗑 删除（授权目录即写即存）<br>· 也可对 AI 说「把 XX 加到写作分组」<br>· 顶栏切换排序；⇄ 移组、拖卡片排序自动保存<br>· ⭐ 收藏常用 · 复制次数在卡片右上角</div>';
+    html += '<div class="side-tip"><b>锦囊用法</b><br>· 页面直接增删改：＋ 新建分组 / ＋ 新增提示词 / ✎ 编辑 / 🗑 删除（授权目录即写即存）<br>· 也可对 AI 说「把 XX 加到写作输出分组」<br>· 顶栏切换排序；⇄ 移组、拖卡片排序自动保存<br>· ⭐ 收藏常用 · 复制次数在卡片右上角</div>';
     sideNav.innerHTML = html;
     sideNav.querySelectorAll('.nav-item').forEach(function(el){
       el.addEventListener('click', function(){
@@ -639,7 +849,7 @@ footer .sep{ opacity:.4; }
       card.innerHTML =
         '<div class="card-top"><span class="card-title"></span>' + (isTpl ? '<span class="tpl-badge">模板</span>' : '') + '<span class="gbadge">' + (g ? g.icon + ' ' + g.name : '') + '</span><span class="usage-info"></span></div>' +
         '<div class="card-body"></div>' +
-        '<button class="card-expand">👁 详情</button>' +
+        '<div class="card-meta"><button class="card-expand">👁 详情</button><span class="card-time"><svg class="ct-ico" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><circle cx="8" cy="8" r="6.3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 4.6V8l2.5 1.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span class="ct-txt"></span></span></div>' +
         '<div class="card-foot"><span class="tags-wrap"></span>' +
         '<div class="card-ops">' +
         '<button class="op op-move" title="移到其它分组">⇄</button>' +
@@ -651,14 +861,23 @@ footer .sep{ opacity:.4; }
         '<button class="op op-del" title="删除">🗑</button>' +
         '</div></div>' +
         '<div class="copy-feedback">✓ 已复制</div>';
-      card.querySelector('.card-title').textContent = p.title;
+      card.querySelector('.card-title').innerHTML = hlHtml(p.title, state.query);
       var uu = state.usage[p.id];
       if (uu && uu.useCount > 0){
         card.querySelector('.usage-info').textContent = '⧉ ' + uu.useCount + ' 次 · ' + relTime(uu.lastUsed);
       }
-      card.querySelector('.card-body').textContent = p.content;
+      var cta = createdAtOf(p);
+      card.querySelector('.ct-txt').textContent = cta ? fmtStamp(p.createdAt) : '';
+      var qi = state.query ? p.content.toLowerCase().indexOf(state.query.toLowerCase()) : -1;
+      card.querySelector('.card-body').innerHTML = hlHtml(p.content, state.query);
+      if (qi >= 80){
+        var note = document.createElement('span');
+        note.className = 'hl-note';
+        note.textContent = '正文命中，详见详情';
+        card.querySelector('.card-top').appendChild(note);
+      }
       var tw = card.querySelector('.tags-wrap');
-      (p.tags || []).forEach(function(t){ tw.appendChild(Object.assign(document.createElement('span'), {className:'tag', textContent:t})); });
+      (p.tags || []).forEach(function(t){ tw.insertAdjacentHTML('beforeend', '<span class="tag">' + hlHtml(t, state.query) + '</span>'); });
 
       /* 详情弹窗 */
       card.querySelector('.card-expand').addEventListener('click', function(){ openDetail(p); });
@@ -868,6 +1087,16 @@ footer .sep{ opacity:.4; }
   /* ---------- 模板插值（{{变量}} / {变量}） ---------- */
   function escapeHtml(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function escReg(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+  /* 搜索命中高亮：按关键词分段后逐段转义（XSS 安全），命中段包 <mark class="hl"> */
+  function hlHtml(text, q){
+    if (!q) return escapeHtml(text);
+    var parts = String(text).split(new RegExp('(' + escReg(q) + ')', 'gi'));
+    var out = '';
+    for (var i = 0; i < parts.length; i++){
+      out += (i % 2 === 1) ? '<mark class="hl">' + escapeHtml(parts[i]) + '</mark>' : escapeHtml(parts[i]);
+    }
+    return out;
+  }
   var VAR_RE = /\{\{\s*([^{}]+?)\s*\}\}|\{\s*([\u4e00-\u9fa5A-Za-z][\u4e00-\u9fa5A-Za-z0-9_·]{1,19})\s*\}/g;
   function extractVars(text){
     var vars = []; var m;
@@ -972,10 +1201,11 @@ footer .sep{ opacity:.4; }
     } while (idExists(n));
     return n;
   }
-  function todayISO(){
+  function nowStamp(){
     var d = new Date();
     function p(n){ return (n < 10 ? '0' : '') + n; }
-    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate())
+      + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
   }
   var toastTimer = null;
   function toast(msg, warn){
@@ -1000,16 +1230,19 @@ footer .sep{ opacity:.4; }
         return false;
       }
       return writeBackupNow().then(function(){
-        return bkRead('prompts.json').then(function(text){
+        return readPouch().then(function(text){
           if (text) return JSON.parse(text);
-          return fetch('prompts.json', { cache: 'no-store' })
-            .then(function(r){ return r.json(); })
+          return fetch('cache/prompts.json', { cache: 'no-store' })
+            .then(function(r){ if (!r.ok) throw new Error('nf'); return r.json(); })
+            .catch(function(){
+              return fetch('prompts.json', { cache: 'no-store' }).then(function(r2){ return r2.json(); });
+            })
             .catch(function(){ return state.data; });
         });
       }).then(function(latest){
         var next = op.apply(latest);
         if (next === null) return false;
-        return bkWrite('prompts.json', JSON.stringify(next, null, 2)).then(function(){
+        return bkWrite('prompts.json', 'cache', JSON.stringify(next, null, 2)).then(function(){
           state.data = next;
           applyUserState();
           state.dirty = false; state.moves = [];
@@ -1018,7 +1251,7 @@ footer .sep{ opacity:.4; }
           return true;
         });
       }).catch(function(){
-        toast('写入 prompts.json 失败，请检查目录授权', true);
+        toast('写入 cache/prompts.json 失败，请检查目录授权', true);
         return false;
       });
     });
@@ -1026,10 +1259,13 @@ footer .sep{ opacity:.4; }
   /* 排序/移组直写：把内存 order/group 覆盖到最新文件（变更 2 秒后自动调用） */
   function flushData(){
     if (!state.dirty || !bkDirHandle) return Promise.resolve();
-    return bkRead('prompts.json').then(function(text){
+    return readPouch().then(function(text){
       if (text) return JSON.parse(text);
-      return fetch('prompts.json', { cache: 'no-store' })
-        .then(function(r){ return r.json(); })
+      return fetch('cache/prompts.json', { cache: 'no-store' })
+        .then(function(r){ if (!r.ok) throw new Error('nf'); return r.json(); })
+        .catch(function(){
+          return fetch('prompts.json', { cache: 'no-store' }).then(function(r2){ return r2.json(); });
+        })
         .catch(function(){ return state.data; });
     })
       .then(function(latest){
@@ -1039,7 +1275,7 @@ footer .sep{ opacity:.4; }
           var m = byId[p.id];
           if (m){ p.order = m.order; p.group = m.group; }
         });
-        return bkWrite('prompts.json', JSON.stringify(latest, null, 2)).then(function(){
+        return bkWrite('prompts.json', 'cache', JSON.stringify(latest, null, 2)).then(function(){
           state.data = latest;
           applyUserState();
           state.dirty = false; state.moves = [];
@@ -1062,20 +1298,20 @@ footer .sep{ opacity:.4; }
   function openDetail(p){
     detailTarget = p;
     var g = groupOf(p.group);
-    var meta = (g ? g.icon + ' ' + g.name : '');
-    if (p.tags && p.tags.length) meta += (meta ? ' · ' : '') + p.tags.join(' / ');
+    var meta = (g ? escapeHtml(g.icon + ' ' + g.name) : '');
+    if (p.tags && p.tags.length) meta += (meta ? ' · ' : '') + p.tags.map(function(t){ return hlHtml(t, state.query); }).join(' / ');
     var uu = state.usage[p.id];
     if (uu && uu.useCount > 0) meta += (meta ? ' · ' : '') + '⧉ ' + uu.useCount + ' 次';
-    document.getElementById('detailTitle').textContent = p.title;
-    document.getElementById('detailMeta').textContent = meta;
+    document.getElementById('detailTitle').innerHTML = hlHtml(p.title, state.query);
+    document.getElementById('detailMeta').innerHTML = meta;
     var times = [];
-    times.push('<span>📅 创建 ' + escapeHtml(p.createdAt || '—') + '</span>');
-    if (p.updatedAt && p.updatedAt !== p.createdAt) times.push('<span>✏ 修改 ' + escapeHtml(p.updatedAt) + '</span>');
+    times.push('<span>📅 创建 ' + (p.createdAt ? fmtStamp(p.createdAt) : '—') + '</span>');
+    if (p.updatedAt && p.updatedAt !== p.createdAt) times.push('<span>✏ 修改 ' + fmtStamp(p.updatedAt) + '</span>');
     if (uu && uu.lastUsed) times.push('<span>⧉ 最近使用 ' + relTime(uu.lastUsed) + '</span>');
     var tEl = document.getElementById('detailTimes');
     if (times.length){ tEl.style.display = 'flex'; tEl.innerHTML = times.join(''); }
     else { tEl.style.display = 'none'; }
-    document.getElementById('detailContent').textContent = p.content;
+    document.getElementById('detailContent').innerHTML = hlHtml(p.content, state.query);
     var vars = extractVars(p.content);
     var vEl = document.getElementById('detailVars');
     if (vars.length){
@@ -1151,11 +1387,11 @@ footer .sep{ opacity:.4; }
           var p = data.prompts.find(function(x){ return x.id === editId; });
           if (!p){ toast('该提示词已不存在，请刷新后重试', true); return null; }
           if (p.group !== gid){ p.order = maxOrder + 1; }
-          p.title = name; p.group = gid; p.content = content; p.tags = tags; p.updatedAt = todayISO();
+          p.title = name; p.group = gid; p.content = content; p.tags = tags; p.updatedAt = nowStamp();
         } else {
           data.prompts.push({
             id: snowflakeId(), group: gid, title: name, content: content,
-            tags: tags, order: maxOrder + 1, favorite: false, createdAt: todayISO()
+            tags: tags, order: maxOrder + 1, favorite: false, createdAt: nowStamp()
           });
         }
         return data;
@@ -1163,7 +1399,7 @@ footer .sep{ opacity:.4; }
       cmd: function(){
         var gname = groupOf(gid) ? groupOf(gid).name : '分组 ' + gid;
         if (editId){
-          return '请修改锦囊里 id 为 ' + editId + ' 的提示词：\n【新标题】' + name + '\n【新分组】' + gname + '\n【新标签】' + tags.join(', ') + '\n【新内容】\n' + content + '\n同时把 updatedAt 更新为当前日期';
+          return '请修改锦囊里 id 为 ' + editId + ' 的提示词：\n【新标题】' + name + '\n【新分组】' + gname + '\n【新标签】' + tags.join(', ') + '\n【新内容】\n' + content + '\n同时把 updatedAt 更新为当前时间（格式 YYYY-MM-DD HH:mm:ss，精确到秒）';
         }
         return '请把以下提示词加到锦囊「' + gname + '」分组：\n【标题】' + name + '\n【标签】' + tags.join(', ') + '\n【内容】\n' + content;
       }
@@ -1429,26 +1665,55 @@ footer .sep{ opacity:.4; }
       userState: snapshotUserState()
     };
   }
-  function bkWrite(name, text){
-    return bkDirHandle.getFileHandle(name, { create: true }).then(function(fh){
+  var subDirCache = {};
+  function subDir(dir){
+    if (!dir) return Promise.resolve(bkDirHandle);
+    if (subDirCache[dir]) return Promise.resolve(subDirCache[dir]);
+    return bkDirHandle.getDirectoryHandle(dir, { create: true }).then(function(h){
+      subDirCache[dir] = h;
+      return h;
+    });
+  }
+  /* 数据文件读：cache/prompts.json 优先，读不到回退根目录旧文件（旧目录结构兼容） */
+  function readPouch(){
+    return bkRead('prompts.json', 'cache').then(function(text){
+      if (text !== null) return text;
+      return bkRead('prompts.json');
+    });
+  }
+  /* 备份文件读：backup/ 优先，读不到回退根目录旧文件（旧目录结构兼容） */
+  function readBk(name){
+    return bkRead(name, 'backup').then(function(text){
+      if (text !== null) return text;
+      return bkRead(name);
+    });
+  }
+  function bkWrite(name, dir, text){
+    return subDir(dir).then(function(h){
+      if (!h) throw new Error('subdir unavailable');
+      return h.getFileHandle(name, { create: true });
+    }).then(function(fh){
       return fh.createWritable().then(function(w){
         return w.write(text).then(function(){ return w.close(); });
       });
     });
   }
-  function bkRead(name){
-    return bkDirHandle.getFileHandle(name, { create: false }).then(function(fh){
+  function bkRead(name, dir){
+    return subDir(dir).then(function(h){
+      if (!h) throw new Error('subdir unavailable');
+      return h.getFileHandle(name, { create: false });
+    }).then(function(fh){
       return fh.getFile().then(function(f){ return f.text(); });
     }).catch(function(){ return null; });
   }
   function writeBackupNow(){
     if (!bkDirHandle) return Promise.resolve(false);
     var snap = currentSnapshot();
-    return bkRead('pouch-backup.json').then(function(prev){
+    return readBk('pouch-backup.json').then(function(prev){
       var chain = Promise.resolve();
-      if (prev !== null) chain = bkWrite('pouch-backup.prev.json', prev);
+      if (prev !== null) chain = bkWrite('pouch-backup.prev.json', 'backup', prev);
       return chain.then(function(){
-        return bkWrite('pouch-backup.json', JSON.stringify(snap, null, 2));
+        return bkWrite('pouch-backup.json', 'backup', JSON.stringify(snap, null, 2));
       });
     }).then(function(){
       lastBackupTs = Date.now();
@@ -1504,7 +1769,7 @@ footer .sep{ opacity:.4; }
     pendingAuth = true; updateBkUI();
     return window.showDirectoryPicker({ id: 'pouch-backup', mode: 'readwrite' })
       .then(function(h){
-        bkDirHandle = h; pendingAuth = false; bkDeclined = false;
+        bkDirHandle = h; pendingAuth = false; bkDeclined = false; subDirCache = {};
         try{ localStorage.removeItem('pouch-bk-declined'); }catch(e){}
         idbSet('bkHandle', bkDirHandle);
         updateBkUI();
@@ -1533,10 +1798,11 @@ footer .sep{ opacity:.4; }
       btnBkEnable.textContent = '💾 授权目录备份';
       btnBkChange.style.display = 'none';
       btnBkRestore.style.display = '';
-      bkStatus.textContent = '本地快照备份中（保留最近 5 份）· 可授权目录写 pouch-backup.json';
+      bkStatus.textContent = '本地快照备份中（保留最近 5 份）· 可授权目录写 backup/pouch-backup.json';
       return;
     }
-    btnBkEnable.style.display = 'none';
+    btnBkEnable.style.display = '';
+    btnBkEnable.textContent = '💾 立即备份';
     btnBkChange.style.display = '';
     btnBkRestore.style.display = '';
     bkStatus.textContent = '备份已开启' + (lastBackupTs ? ' · 上次 ' + fmtTime(lastBackupTs) : '');
@@ -1554,6 +1820,10 @@ footer .sep{ opacity:.4; }
     }).catch(function(){});
   }
   btnBkEnable.addEventListener('click', function(){
+    if (bkDirHandle && !pendingAuth){
+      writeBackupNow().then(function(ok){ toast(ok ? '✓ 备份完成 · backup/pouch-backup.json' : '备份失败，请重新授权目录', !ok); });
+      return;
+    }
     if (!bkSupported()){
       alert('当前浏览器不支持「选择目录」授权（Chrome / Edge 可用）。\n本页已自动使用本地快照备份（保留最近 5 份，随浏览器数据走）；\n也可随时对 AI 说「导出锦囊数据」生成备份文件备用。');
       return;
@@ -1567,7 +1837,7 @@ footer .sep{ opacity:.4; }
     }
     window.showDirectoryPicker({ id: 'pouch-backup', mode: 'readwrite' })
       .then(function(h){
-        bkDirHandle = h; pendingAuth = false; bkDeclined = false;
+        bkDirHandle = h; pendingAuth = false; bkDeclined = false; subDirCache = {};
         try{ localStorage.removeItem('pouch-bk-declined'); }catch(e){}
         idbSet('bkHandle', bkDirHandle);
         updateBkUI();
@@ -1580,7 +1850,7 @@ footer .sep{ opacity:.4; }
     if (!window.confirm('更换备份目录\n\n建议仍选 prompt-pouch.html 所在目录：页面新增/编辑的分组与提示词、自动备份都写在这个目录，选别处会造成页面与数据文件不一致。\n\n确定继续选择目录？')) return;
     window.showDirectoryPicker({ id: 'pouch-backup', mode: 'readwrite' })
       .then(function(h){
-        bkDirHandle = h; pendingAuth = false; bkDeclined = false;
+        bkDirHandle = h; pendingAuth = false; bkDeclined = false; subDirCache = {};
         try{ localStorage.removeItem('pouch-bk-declined'); }catch(e){}
         idbSet('bkHandle', bkDirHandle);
         updateBkUI();
@@ -1590,13 +1860,16 @@ footer .sep{ opacity:.4; }
   });
   btnBkRestore.addEventListener('click', function(){
     document.getElementById('bkList').innerHTML = '<div class="bk-empty">读取备份清单…</div>';
+    document.getElementById('bkMaskNote').textContent = bkDirHandle
+      ? 'backup/ 目录滚动备份（当前 pouch-backup.json + 上一版 .prev.json）'
+      : '浏览器本地快照（保留最近 5 份，随浏览器数据走）';
     document.getElementById('bkMask').classList.add('open');
     if (bkDirHandle){
-      Promise.all([bkRead('pouch-backup.json'), bkRead('pouch-backup.prev.json')])
+      Promise.all([readBk('pouch-backup.json'), readBk('pouch-backup.prev.json')])
         .then(function(arr){
           renderBkList([
-            { name: 'pouch-backup.json', content: arr[0] },
-            { name: 'pouch-backup.prev.json', content: arr[1] }
+            { name: 'backup/pouch-backup.json · 当前', content: arr[0] },
+            { name: 'backup/pouch-backup.prev.json · 上一版', content: arr[1] }
           ]);
         });
       return;
@@ -1628,22 +1901,37 @@ footer .sep{ opacity:.4; }
     document.getElementById('bkList').innerHTML = html;
     document.querySelectorAll('.bk-restore').forEach(function(btn){
       btn.addEventListener('click', function(){
-        doRestore(list[parseInt(btn.getAttribute('data-i'), 10)].content, btn);
+        doRestore(list[parseInt(btn.getAttribute('data-i'), 10)].content);
       });
     });
   }
-  function doRestore(content, btn){
+  function doRestore(content){
     var snap;
     try{ snap = JSON.parse(content); }catch(e){ alert('备份文件损坏，无法恢复。'); return; }
+    if (!snap || !snap.data || !Array.isArray(snap.data.groups) || !Array.isArray(snap.data.prompts)){
+      alert('备份结构不完整，无法恢复。'); return;
+    }
+    var ok = window.confirm('将用这份备份覆盖当前数据：\n\n· 备份时间：' + fmtTime(snap.time)
+      + '\n· 内容：' + snap.counts.groups + ' 分组 / ' + snap.counts.prompts + ' 条提示词\n\n'
+      + '恢复前会先把当前数据自动另存一份新备份，可随时再恢复回来。\n\n确定恢复？');
+    if (!ok) return;
     // 先把当前状态固化进备份（目录备份滚入 .prev.json / 快照环记一份），再应用所选备份
     (bkDirHandle ? writeBackupNow() : writeSnapNow()).then(function(){
-      applyUserStateFrom(snap.userState);
+      state.data = snap.data;
+      applyUserStateFrom(snap.userState || {});
+      state.dirty = false; state.moves = [];
       persistUserState();
       renderNav(); render();
       document.getElementById('bkMask').classList.remove('open');
-      var old = btn.textContent;
-      btn.textContent = '✓ 已恢复';
-      setTimeout(function(){ btn.textContent = old; }, 2000);
+      if (bkDirHandle){
+        return bkWrite('prompts.json', JSON.stringify(snap.data, null, 2)).then(function(){
+          toast('✓ 已恢复并写入 prompts.json，刷新即见');
+        }).catch(function(){
+          toast('已恢复；写入 prompts.json 失败，请重新授权目录', true);
+        });
+      }
+      markDirty();
+      toast('✓ 已恢复；未授权目录——点「📋 复制变更指令」交给 AI 落盘，或先「💾 授权目录备份」');
     });
   }
   document.getElementById('bkCancelBtn').addEventListener('click', function(){
@@ -1665,10 +1953,17 @@ footer .sep{ opacity:.4; }
     renderNav();
     render();
     if (bootMode === 'cache') cacheBadge.style.display = '';
+    if (bootMode === 'demo'){
+      cacheBadge.textContent = '📌 示例模式：未读到 cache/prompts.json，当前展示系统自带示例提示词（file:// 直开或数据文件尚未生成）。经 HTTP 打开页面并生成数据文件后即为你的提示词，示例可随时删除。';
+      cacheBadge.style.display = '';
+    }
   }
   // 数据优先：fetch 主链不依赖本地存储，页面尽快可见
-  fetch('prompts.json', { cache: 'no-store' })
-    .then(function(r){ return r.json(); })
+  fetch('cache/prompts.json', { cache: 'no-store' })
+    .then(function(r){ if (!r.ok) throw new Error('nf'); return r.json(); })
+    .catch(function(){
+      return fetch('prompts.json', { cache: 'no-store' }).then(function(r2){ return r2.json(); });
+    })
     .then(function(data){
       state.data = data;
       idbSet('lastData', data);
@@ -1682,7 +1977,9 @@ footer .sep{ opacity:.4; }
           bootMode = 'cache';
           firstRender();
         } else {
-          showErr('⚠️ 无法读取 prompts.json，且本地无缓存快照：<br>请通过 HTTP 方式打开本页（如 python3 -m http.server），file:// 直开受浏览器安全策略限制。');
+          state.data = DEFAULT_POUCH;
+          bootMode = 'demo';
+          firstRender();
         }
       });
     });
@@ -1699,6 +1996,43 @@ footer .sep{ opacity:.4; }
       updateBkUI();
     });
 })();
+
+/* 主题换肤：四套配色随点随换；记忆上次选择（localStorage，失败静默） */
+(function(){
+  var THEMES = ['gold','tech','mono','mint'];
+  function init(){
+    var dock = document.getElementById('themeDock');
+    if (!dock) return;
+    function apply(t){
+      document.documentElement.setAttribute('data-theme', t);
+      dock.querySelectorAll('.th-dot').forEach(function(d){
+        d.classList.toggle('on', d.getAttribute('data-theme') === t);
+      });
+      try{ localStorage.setItem('sf-pouch-theme', t); }catch(e){}
+    }
+    var cur = document.documentElement.getAttribute('data-theme') || 'gold';
+    var saved = null;
+    try{ saved = localStorage.getItem('sf-pouch-theme'); }catch(e){}
+    if (saved && THEMES.indexOf(saved) !== -1 && saved !== cur){ apply(saved); }
+    else{
+      dock.querySelectorAll('.th-dot').forEach(function(d){
+        d.classList.toggle('on', d.getAttribute('data-theme') === cur);
+      });
+    }
+    dock.querySelectorAll('.th-dot').forEach(function(d){
+      d.addEventListener('click', function(){ apply(d.getAttribute('data-theme')); });
+    });
+  }
+  if (document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', init); }
+  else { init(); }
+})();
 </script>
+
+  <div class="theme-dock" id="themeDock">
+    <button class="th-dot" type="button" data-theme="gold" title="gold 暖棕金"></button>
+    <button class="th-dot" type="button" data-theme="tech" title="tech 深蓝科技"></button>
+    <button class="th-dot" type="button" data-theme="mono" title="mono 极简黑白"></button>
+    <button class="th-dot" type="button" data-theme="mint" title="mint 薄荷绿"></button>
+  </div>
 </body>
 </html>

@@ -1,7 +1,7 @@
 {
   "name": "skill-forge-hub",
-  "version": "0.4.0",
-  "description": "SkillForge (技能锻造坊) — a curated collection of AI craft skills. Install once, then pick skills interactively: daily/weekly reports, article-to-HTML, SpecCore document converters.",
+  "version": "0.5.0",
+  "description": "SkillForge (技能锻造坊) — a curated collection of AI craft skills. Install once, then pick skills interactively: daily/weekly/annual reports, article-to-HTML, magic-deck slides, deck-stage PPTX, prompt-pouch manager, Pandoc doc converters, meta-forge.",
   "bin": {
     "skill-forge": "cli.js"
   },
@@ -12,19 +12,31 @@
     "annual-report",
     "article-to-html",
     "magic-deck",
+    "deck-stage",
     "spec-doc2spec",
     "spec-spec2doc",
     "meta-forge",
-    "template"
+    "prompt-pouch",
+    "template",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
   ],
   "keywords": [
     "skillforge",
     "skills",
     "ai-agent",
     "claude-skills",
+    "skill-forge",
     "daily-report",
     "weekly-report",
-    "article-to-html"
+    "annual-report",
+    "article-to-html",
+    "magic-deck",
+    "deck-stage",
+    "prompt-pouch",
+    "pandoc",
+    "meta-forge"
   ],
   "license": "MIT",
   "engines": {

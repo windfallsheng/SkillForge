@@ -10,34 +10,134 @@
 html,body{ width:100%; height:100%; overflow:hidden;
   font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,'Microsoft YaHei',monospace; }
 button,select,input{ font-family:inherit; }
-/* ══════════ 1. 四主题 CSS 变量（8 变量齐备） ══════════ */
+/* ══════════ 1. 十六主题 CSS 变量（12 令牌 × 16 主题，默认 tech） ══════════ */
 :root, [data-theme="tech"]{
-  --bg:#0a1929; --bg2:#071525; --panel:rgba(11,30,55,.72); --panel-solid:#0b1e37;
+  --bg:#0a1929; --bg2:#071525; --panel:rgba(11,30,55,.9); --panel-solid:#0b1e37;
   --text:#bae6fd; --muted:#5b7fa5; --accent:#0ea5e9; --accent2:#14b8a6;
   --border:rgba(14,165,233,.18); --glow:rgba(14,165,233,.35);
   --title-grad:linear-gradient(90deg,#7dd3fc,#0ea5e9 45%,#818cf8);
   --tag-bg:rgba(14,165,233,.12);
+  --card-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 12px 32px rgba(1,6,16,.5),0 0 24px rgba(14,165,233,.15);
 }
 [data-theme="biz"]{
-  --bg:#f4f6fb; --bg2:#e9edf5; --panel:rgba(255,255,255,.85); --panel-solid:#ffffff;
+  --bg:#e8ecf5; --bg2:#dde3ef; --panel:rgba(255,255,255,.97); --panel-solid:#ffffff;
   --text:#1e293b; --muted:#64748b; --accent:#2563eb; --accent2:#0891b2;
   --border:rgba(37,99,235,.14); --glow:rgba(37,99,235,.18);
   --title-grad:linear-gradient(90deg,#1e40af,#2563eb 55%,#0891b2);
   --tag-bg:rgba(37,99,235,.08);
+  --card-shadow:0 1px 2px rgba(15,23,42,.05),0 10px 28px rgba(15,23,42,.12);
 }
 [data-theme="mono"]{
-  --bg:#fafafa; --bg2:#f0f0f0; --panel:rgba(255,255,255,.9); --panel-solid:#ffffff;
+  --bg:#f2f2f4; --bg2:#e4e4e8; --panel:rgba(255,255,255,.98); --panel-solid:#ffffff;
   --text:#16181d; --muted:#6b7280; --accent:#111111; --accent2:#4b5563;
   --border:rgba(17,17,17,.14); --glow:rgba(17,17,17,.08);
   --title-grad:linear-gradient(90deg,#111,#333 60%,#666);
   --tag-bg:rgba(17,17,17,.06);
+  --card-shadow:0 1px 2px rgba(0,0,0,.06),0 10px 28px rgba(0,0,0,.1);
 }
 [data-theme="warm"]{
-  --bg:#fdf3e7; --bg2:#f7e7d3; --panel:rgba(255,250,243,.85); --panel-solid:#fffaf3;
+  --bg:#f7ebd9; --bg2:#efe0c8; --panel:rgba(255,250,243,.97); --panel-solid:#fffaf3;
   --text:#43301f; --muted:#8a7565; --accent:#d97706; --accent2:#ea580c;
   --border:rgba(217,119,6,.18); --glow:rgba(217,119,6,.22);
   --title-grad:linear-gradient(90deg,#b45309,#d97706 50%,#ea580c);
   --tag-bg:rgba(217,119,6,.1);
+  --card-shadow:0 1px 2px rgba(120,72,24,.07),0 10px 28px rgba(120,72,24,.13);
+}
+[data-theme="aurora"]{ /* 极光紫（Linear 风） */
+  --bg:#0b0b10; --bg2:#08080d; --panel:rgba(30,30,46,.9); --panel-solid:#1e1e2e;
+  --text:#e8e8f0; --muted:#8a8aa3; --accent:#5e6ad2; --accent2:#9d8df2;
+  --border:rgba(94,106,210,.28); --glow:rgba(94,106,210,.4);
+  --title-grad:linear-gradient(90deg,#a8b3ff,#5e6ad2 45%,#9d8df2);
+  --tag-bg:rgba(94,106,210,.16);
+  --card-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 10px 28px rgba(0,0,10,.45),0 0 20px rgba(94,106,210,.18);
+}
+[data-theme="dracula"]{ /* 德古拉紫（Dracula 配色） */
+  --bg:#282a36; --bg2:#21222c; --panel:rgba(48,50,64,.9); --panel-solid:#303240;
+  --text:#f8f8f2; --muted:#6272a4; --accent:#bd93f9; --accent2:#ff79c6;
+  --border:rgba(189,147,249,.28); --glow:rgba(189,147,249,.35);
+  --title-grad:linear-gradient(90deg,#ff79c6,#bd93f9 50%,#8be9fd);
+  --tag-bg:rgba(189,147,249,.15);
+  --card-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 10px 28px rgba(0,0,0,.4),0 0 18px rgba(189,147,249,.15);
+}
+[data-theme="nord"]{ /* 北欧冰蓝（Nord 配色） */
+  --bg:#2e3440; --bg2:#272c36; --panel:rgba(59,66,82,.9); --panel-solid:#3b4252;
+  --text:#eceff4; --muted:#7e8aa0; --accent:#88c0d0; --accent2:#81a1c1;
+  --border:rgba(136,192,208,.25); --glow:rgba(136,192,208,.3);
+  --title-grad:linear-gradient(90deg,#8fbcbb,#88c0d0 45%,#81a1c1);
+  --tag-bg:rgba(136,192,208,.14);
+  --card-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 10px 28px rgba(0,0,0,.4),0 0 18px rgba(136,192,208,.15);
+}
+[data-theme="midnight"]{ /* 东京夜色（Tokyo Night） */
+  --bg:#1a1b26; --bg2:#16161e; --panel:rgba(31,33,48,.9); --panel-solid:#1f2130;
+  --text:#c0caf5; --muted:#565f89; --accent:#7aa2f7; --accent2:#bb9af7;
+  --border:rgba(122,162,247,.25); --glow:rgba(122,162,247,.32);
+  --title-grad:linear-gradient(90deg,#7dcfff,#7aa2f7 45%,#bb9af7);
+  --tag-bg:rgba(122,162,247,.14);
+  --card-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 10px 28px rgba(0,0,0,.42),0 0 18px rgba(122,162,247,.16);
+}
+[data-theme="matrix"]{ /* 终端荧光绿（Matrix） */
+  --bg:#0a0f0a; --bg2:#050a05; --panel:rgba(16,26,16,.9); --panel-solid:#101a10;
+  --text:#c8ffd8; --muted:#4f8a62; --accent:#00ff9c; --accent2:#3ddc84;
+  --border:rgba(0,255,156,.22); --glow:rgba(0,255,156,.32);
+  --title-grad:linear-gradient(90deg,#7dffc9,#00ff9c 50%,#3ddc84);
+  --tag-bg:rgba(0,255,156,.1);
+  --card-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 10px 28px rgba(0,0,0,.45),0 0 20px rgba(0,255,156,.14);
+}
+[data-theme="cyber"]{ /* 赛博霓虹（Cyberpunk） */
+  --bg:#0b0518; --bg2:#070210; --panel:rgba(24,12,44,.9); --panel-solid:#180c2c;
+  --text:#e8e6ff; --muted:#6f6a9e; --accent:#ff2d78; --accent2:#00e5ff;
+  --border:rgba(255,45,120,.3); --glow:rgba(255,45,120,.4);
+  --title-grad:linear-gradient(90deg,#ff2d78,#ff7ab8 40%,#00e5ff);
+  --tag-bg:rgba(255,45,120,.14);
+  --card-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 10px 28px rgba(0,0,10,.5),0 0 20px rgba(255,45,120,.18);
+}
+[data-theme="apple"]{ /* 苹果极简（Apple 官网） */
+  --bg:#eceef2; --bg2:#dde0e7; --panel:rgba(255,255,255,.97); --panel-solid:#ffffff;
+  --text:#1d1d1f; --muted:#6e6e73; --accent:#0071e3; --accent2:#42a5ff;
+  --border:rgba(0,113,227,.15); --glow:rgba(0,113,227,.2);
+  --title-grad:linear-gradient(90deg,#1d1d1f,#0071e3 55%,#42a5ff);
+  --tag-bg:rgba(0,113,227,.08);
+  --card-shadow:0 1px 2px rgba(0,0,0,.05),0 10px 28px rgba(0,0,0,.1);
+}
+[data-theme="stripe"]{ /* 条纹紫蓝（Stripe） */
+  --bg:#eef1f8; --bg2:#e2e6ee; --panel:rgba(255,255,255,.97); --panel-solid:#ffffff;
+  --text:#32325d; --muted:#6b7c93; --accent:#635bff; --accent2:#00d4ff;
+  --border:rgba(99,91,255,.2); --glow:rgba(99,91,255,.22);
+  --title-grad:linear-gradient(90deg,#635bff,#7a73ff 45%,#00d4ff);
+  --tag-bg:rgba(99,91,255,.08);
+  --card-shadow:0 1px 2px rgba(50,50,93,.06),0 10px 28px rgba(50,50,93,.12);
+}
+[data-theme="notion"]{ /* 纸感暖白（Notion） */
+  --bg:#faf9f6; --bg2:#e9e7e1; --panel:rgba(251,251,250,.98); --panel-solid:#fbfbfa;
+  --text:#37352f; --muted:#787774; --accent:#2383e2; --accent2:#0f9d8f;
+  --border:rgba(55,53,47,.14); --glow:rgba(35,131,226,.15);
+  --title-grad:linear-gradient(90deg,#37352f,#2383e2 55%,#0f9d8f);
+  --tag-bg:rgba(55,53,47,.06);
+  --card-shadow:0 1px 2px rgba(55,53,47,.07),0 10px 28px rgba(55,53,47,.11);
+}
+[data-theme="gruvbox"]{ /* 复古暖橙（Gruvbox） */
+  --bg:#282828; --bg2:#1d2021; --panel:rgba(50,48,47,.9); --panel-solid:#32302f;
+  --text:#ebdbb2; --muted:#a89984; --accent:#fe8019; --accent2:#b8bb26;
+  --border:rgba(254,128,25,.3); --glow:rgba(254,128,25,.32);
+  --title-grad:linear-gradient(90deg,#fabd2f,#fe8019 50%,#b8bb26);
+  --tag-bg:rgba(254,128,25,.12);
+  --card-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 10px 28px rgba(0,0,0,.4),0 0 18px rgba(254,128,25,.14);
+}
+[data-theme="gold"]{ /* 黑金奢华（发布会） */
+  --bg:#0d0b08; --bg2:#080604; --panel:rgba(30,24,14,.9); --panel-solid:#1e180e;
+  --text:#f3e9c8; --muted:#9c8a5c; --accent:#d4af37; --accent2:#f5d76e;
+  --border:rgba(212,175,55,.28); --glow:rgba(212,175,55,.35);
+  --title-grad:linear-gradient(90deg,#f9e08a,#d4af37 45%,#f5d76e);
+  --tag-bg:rgba(212,175,55,.12);
+  --card-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 12px 32px rgba(0,0,0,.5),0 0 22px rgba(212,175,55,.16);
+}
+[data-theme="ocean"]{ /* 深洋蓝（深海） */
+  --bg:#04121f; --bg2:#020a13; --panel:rgba(10,32,52,.9); --panel-solid:#0a2034;
+  --text:#d6e9ff; --muted:#5b8aad; --accent:#38bdf8; --accent2:#60a5fa;
+  --border:rgba(56,189,248,.25); --glow:rgba(56,189,248,.35);
+  --title-grad:linear-gradient(90deg,#7dd3fc,#38bdf8 45%,#60a5fa);
+  --tag-bg:rgba(56,189,248,.12);
+  --card-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 10px 28px rgba(0,0,0,.45),0 0 18px rgba(56,189,248,.16);
 }
 /* ══════════ 2. 背景装饰（舞台外围氛围层） ══════════ */
 .bg-glow{ position:fixed; inset:0; z-index:0;
@@ -69,24 +169,30 @@ button,select,input{ font-family:inherit; }
 .tag{ flex:0 0 auto; margin-left:auto; font-size:13px; padding:5px 14px; border-radius:999px;
   color:var(--accent); background:var(--tag-bg); border:1px solid var(--border); }
 .panel{ background:var(--panel); border:1px solid var(--border); border-radius:14px;
-  padding:22px 26px; backdrop-filter:blur(6px); }
+  padding:22px 26px; backdrop-filter:blur(6px); box-shadow:var(--card-shadow); }
 .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:22px; }
 .grid3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:22px; }
 .grid4{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
+.prof-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:8px; }
+.prof-demo{ padding:9px 4px; text-align:center; cursor:pointer; transition:border-color .15s ease, transform .15s ease; }
+.prof-demo:hover{ border-color:var(--accent); transform:translateY(-2px); }
+.prof-demo h4{ font-size:12.5px; margin:0; }
+.prof-demo .en{ display:block; font-size:10px; margin-top:2px; }
+.demo-tip{ margin-top:16px; font-size:12px; color:var(--muted); text-align:center; }
 .card{ background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:20px 22px;
-  transition:transform .2s ease, box-shadow .2s ease; }
-.card:hover{ transform:translateY(-4px); box-shadow:0 8px 24px var(--glow); }
+  box-shadow:var(--card-shadow); transition:transform .2s ease, box-shadow .2s ease; }
+.card:hover{ transform:translateY(-4px); box-shadow:var(--card-shadow),0 8px 24px var(--glow); }
 .card h4{ font-size:18px; font-weight:700; color:var(--text); margin-bottom:8px; }
 .card h4 .en{ font-size:12px; color:var(--muted); margin-left:8px; font-weight:400; }
 .card p{ font-size:14px; color:var(--muted); line-height:1.7; }
-.bignum{ background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:18px 20px; text-align:center; }
+.bignum{ background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:18px 20px; text-align:center; box-shadow:var(--card-shadow); }
 .bignum b{ display:block; font-size:52px; font-weight:900; background:var(--title-grad);
   -webkit-background-clip:text; background-clip:text; color:transparent; }
 .bignum span{ font-size:13px; color:var(--muted); }
 .toc{ display:flex; flex-direction:column; gap:14px; }
 .toc-item{ display:flex; align-items:center; gap:16px; padding:16px 22px; border-radius:12px;
   background:var(--panel); border:1px solid var(--border); cursor:pointer;
-  transition:transform .2s ease; }
+  box-shadow:var(--card-shadow); transition:transform .2s ease; }
 .toc-item:hover{ transform:translateX(8px); }
 .toc-item .no{ width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center;
   font-weight:800; color:var(--accent); background:var(--tag-bg); }
@@ -177,9 +283,125 @@ button,select,input{ font-family:inherit; }
 .tl-time{ font-size:24px; font-weight:800; color:var(--accent); }
 .tl-item h4{ font-size:18px; font-weight:700; color:var(--text); margin:6px 0; }
 .tl-item p{ font-size:14px; color:var(--muted); line-height:1.7; }
+
+/* T6 steps 流程步骤：卡片重排为箭头连接的步骤条（包装器生成 .st-wrap） */
+[data-template="steps"] .s-head h2{ font-size:34px; }
+.st-wrap{ display:flex; align-items:stretch; flex:1; margin-top:6px; }
+.st-step{ flex:1; position:relative; padding:24px 20px; background:var(--panel); border:1px solid var(--border); border-radius:14px; }
+.st-step + .st-step{ margin-left:34px; }
+.st-step::after{ content:'\2192'; position:absolute; right:-34px; top:50%; transform:translateY(-50%);
+  width:34px; text-align:center; font-size:22px; font-weight:700; color:var(--accent); }
+.st-step:last-child::after{ display:none; }
+.st-no{ display:flex; align-items:center; justify-content:center; width:42px; height:42px; border-radius:50%;
+  font-size:18px; font-weight:800; color:#fff; background:linear-gradient(135deg,var(--accent),var(--accent2));
+  box-shadow:0 0 14px var(--glow); }
+.st-step h4{ font-size:16px; font-weight:700; color:var(--text); margin:12px 0 6px; }
+.st-step p{ font-size:13px; color:var(--muted); line-height:1.7; }
+/* T7 poster 海报宣传：海报大标题 + clip-path 斜切色带（包装器生成 .pt-band） */
+[data-template="poster"] .s-title{ font-size:66px; letter-spacing:2px; line-height:1.2; }
+[data-template="poster"] .cover .s-title{ font-size:84px; }
+[data-template="poster"] .s-head h2{ font-size:40px; }
+.pt-band{ position:relative; margin:16px 0; padding:14px 30px; color:#fff; font-size:19px; font-weight:700;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  clip-path:polygon(0 0, 95% 0, 100% 50%, 95% 100%, 0 100%); }
+.pt-band:nth-child(odd){ clip-path:polygon(5% 0, 100% 0, 100% 100%, 5% 100%, 0 50%); text-align:right; }
+.pt-band span{ font-size:12px; font-weight:400; opacity:.85; margin-left:10px; }
+[data-template="poster"] .card{ background:transparent; border:none; padding:10px 6px; }
+[data-template="poster"] .card p{ font-size:15px; }
+[data-template="poster"] .card:hover{ transform:none; box-shadow:none; }
+/* T8 vintage 复古报纸：衬线字 + 双栏排印 + 虚线分隔 */
+[data-template="vintage"] .s-head h2,
+[data-template="vintage"] .s-title,
+[data-template="vintage"] .card h4{ font-family:Georgia,'Times New Roman','Songti SC','SimSun',serif; }
+[data-template="vintage"] .s-head h2{ font-size:38px; letter-spacing:1px; }
+[data-template="vintage"] .s-head{ border-bottom:3px double var(--text); padding-bottom:16px; margin-bottom:26px; }
+[data-template="vintage"] .s-head::before{ display:none; }
+.v-col{ column-count:2; column-gap:44px; column-rule:1px solid var(--border); flex:1; }
+.v-col .card{ break-inside:avoid; }
+[data-template="vintage"] .card{ background:transparent; border:none; border-bottom:1px dashed var(--border); border-radius:0; padding:12px 4px 16px; }
+[data-template="vintage"] .card:hover{ transform:none; box-shadow:none; }
+[data-template="vintage"] .card p{ font-size:13px; }
+[data-template="vintage"] .tag{ font-family:Georgia,'Times New Roman',serif; letter-spacing:3px; }
+[data-template="vintage"] .s-title{ font-size:52px; }
+/* T9 finance 金融报表：仪表环 + 竖线分隔的 KPI 大数字 */
+[data-template="finance"] .s-head{ border-bottom:2px solid var(--accent); padding-bottom:14px; }
+[data-template="finance"] .s-head h2{ font-size:30px; }
+[data-template="finance"] .bignum{ background:transparent; border:none; border-left:3px solid var(--accent); border-radius:0; text-align:left; padding:6px 18px; }
+[data-template="finance"] .bignum b{ font-size:42px; }
+[data-template="finance"] .bignum span{ letter-spacing:1px; }
+.fn-ring{ position:relative; width:150px; height:150px; border-radius:50%; margin:0 auto 12px;
+  background:conic-gradient(var(--accent) 0 var(--pn,64%), var(--border) var(--pn,64%) 100%);
+  display:flex; align-items:center; justify-content:center; }
+.fn-ring::before{ content:''; position:absolute; inset:16px; border-radius:50%; background:var(--bg); }
+.fn-ring b{ position:relative; font-size:30px; font-weight:900; background:var(--title-grad);
+  -webkit-background-clip:text; background-clip:text; color:transparent; }
+.fn-caption{ margin-top:10px; font-size:12px; color:var(--muted); text-align:center; letter-spacing:1px; }
+/* T10 blueprint 蓝图工程：制图网格卡片 + 坐标刻度标注 */
+[data-template="blueprint"] .slide{ background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:36px 36px; }
+[data-template="blueprint"] .card{ border-radius:0; border:1px solid var(--accent); position:relative; }
+[data-template="blueprint"] .card::before{ content:''; position:absolute; top:-7px; left:16px; width:52px; height:7px;
+  background:var(--panel); border:1px solid var(--accent); border-bottom:none; }
+[data-template="blueprint"] .card::after{ content:''; position:absolute; right:-7px; bottom:16px; width:7px; height:52px;
+  background:var(--panel); border:1px solid var(--accent); border-left:none; }
+[data-template="blueprint"] .card h4{ font-size:15px; text-transform:uppercase; letter-spacing:1px; }
+[data-template="blueprint"] .card p{ font-size:13px; }
+[data-template="blueprint"] .s-head::before{ border-radius:0; }
+[data-template="blueprint"] .tag{ border-radius:0; letter-spacing:2px; }
+[data-template="blueprint"] .bignum{ border-radius:0; }
+/* T11 education 教学板书：手写感下划线 + 强调要点 */
+[data-template="education"] .s-head::before{ display:none; }
+[data-template="education"] .s-head h2{ font-size:38px; padding-bottom:10px; border-bottom:4px solid var(--accent); }
+[data-template="education"] .s-head .tag{ border-radius:8px; }
+[data-template="education"] .card{ background:transparent; border:none; border-left:4px solid var(--accent2); border-radius:0; padding:8px 18px; }
+[data-template="education"] .card:hover{ transform:none; box-shadow:none; }
+[data-template="education"] .card h4{ font-size:20px; }
+/* T12 executive 高管简报：细线分隔 + 克制排版 */
+[data-template="executive"] .s-head{ border-bottom:1px solid var(--border); padding-bottom:18px; }
+[data-template="executive"] .s-head::before{ width:8px; height:44px; border-radius:2px; }
+[data-template="executive"] .card{ border:none; border-left:3px solid var(--accent); border-radius:2px; }
+[data-template="executive"] .card h4{ font-size:17px; }
+[data-template="executive"] .grid3, [data-template="executive"] .grid2{ gap:16px; }
+[data-template="executive"] .card p{ font-size:13px; }
+/* T13 metro 扁平磁贴：nth 多彩色块卡 */
+[data-template="metro"] .grid3, [data-template="metro"] .grid2{ gap:16px; }
+[data-template="metro"] .card{ border:none; border-radius:8px; padding:22px; }
+[data-template="metro"] .card:nth-child(4n+1){ background:var(--accent); }
+[data-template="metro"] .card:nth-child(4n+2){ background:var(--accent2); }
+[data-template="metro"] .card:nth-child(4n+3){ background:var(--muted); }
+[data-template="metro"] .card:nth-child(4n+4){ background:var(--accent); filter:brightness(.82); }
+[data-template="metro"] .card h4{ color:#fff; font-size:19px; }
+[data-template="metro"] .card h4 .en{ color:rgba(255,255,255,.72); }
+[data-template="metro"] .card p{ color:rgba(255,255,255,.88); }
+[data-template="metro"] .card:hover{ transform:none; box-shadow:none; }
+[data-template="metro"] .bignum{ border:none; border-radius:8px; }
+/* T14 bento 模块网格：首卡大格拼贴 */
+[data-template="bento"] .grid3{ grid-template-columns:1.5fr 1fr 1fr; grid-auto-rows:1fr; }
+[data-template="bento"] .grid2{ grid-template-columns:1.5fr 1fr; grid-auto-rows:1fr; }
+[data-template="bento"] .card:first-child{ grid-row:span 2; display:flex; flex-direction:column; justify-content:center; }
+[data-template="bento"] .card:first-child h4{ font-size:24px; }
+[data-template="bento"] .card:first-child p{ font-size:15px; }
+[data-template="bento"] .card{ border-radius:18px; }
+[data-template="bento"] .card h4 .en{ display:block; margin:4px 0 0; }
+/* T15 dark 暗夜深色：页面级反色变量（浅色主题下同样全黑） */
+[data-template="dark"]{ --bg:#0d1117; --bg2:#0a0c10; --panel:rgba(22,27,34,.88); --panel-solid:#161b22;
+  --text:#e6edf3; --muted:#8b949e; --accent:#58a6ff; --accent2:#7ee787;
+  --border:rgba(139,148,158,.22); --glow:rgba(88,166,255,.28);
+  --title-grad:linear-gradient(90deg,#a5d6ff,#58a6ff 50%,#7ee787);
+  --tag-bg:rgba(88,166,255,.12); }
+/* T16 nature 自然清新：有机圆润形状语言 */
+[data-template="nature"] .card{ border-radius:24px 8px 24px 8px; border-width:2px; }
+[data-template="nature"] .card:nth-child(even){ border-radius:8px 24px 8px 24px; }
+[data-template="nature"] .s-head::before{ width:16px; height:16px; border-radius:50% 50% 50% 0; transform:rotate(45deg); }
+[data-template="nature"] .tag{ border-radius:16px 4px 16px 4px; }
+[data-template="nature"] .bignum{ border-radius:50% 50% 8px 8px; }
+[data-template="nature"] .toc-item{ border-radius:18px 6px 18px 6px; }
+[data-template="nature"] .card:hover{ transform:translateY(-4px) rotate(-.6deg); }
+
 /* ══════════ 6. 操作元素（固定样式） ══════════ */
 .toolbar{ position:fixed; right:18px; top:14px; z-index:10;
-  display:flex; align-items:center; gap:10px; }
+  display:flex; align-items:center; gap:10px;
+  flex-wrap:wrap; justify-content:flex-end; max-width:calc(100vw - 36px); }
 .group{ display:flex; align-items:center; gap:8px; padding:4px 6px; border-radius:999px;
   background:var(--panel-solid); border:1px solid var(--border); box-shadow:0 4px 16px rgba(0,0,0,.18); }
 .tbtn{ display:inline-flex; align-items:center; justify-content:center; gap:6px;
@@ -188,12 +410,16 @@ button,select,input{ font-family:inherit; }
   white-space:nowrap; transition:all .15s ease; }
 .tbtn:hover{ border-color:var(--border); background:var(--tag-bg); }
 .tbtn.on{ color:#fff; background:var(--accent); border-color:var(--accent); }
-.tbtn.theme{ width:16px; height:16px; padding:0; border-radius:50%; border:2px solid rgba(255,255,255,.35); }
-.tbtn.theme.on{ outline:2px solid var(--accent); outline-offset:2px; }
-.tbtn.theme[data-theme="tech"]{ background:#0ea5e9; }
-.tbtn.theme[data-theme="biz"]{ background:#2563eb; }
-.tbtn.theme[data-theme="mono"]{ background:#111; }
-.tbtn.theme[data-theme="warm"]{ background:#d97706; }
+/* ═══ 主题切换面板（16 色点网格 + 全部/仅本页，即点即换） ═══ */
+.theme-panel{ width:560px; max-width:94vw; max-height:82vh; display:flex; flex-direction:column; padding:24px 26px;
+  border-radius:16px; background:var(--panel-solid); border:1px solid var(--border); color:var(--text); }
+.theme-panel h3{ font-size:18px; margin:0; }
+.theme-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:14px 0 6px; overflow-y:auto; padding:2px; }
+.th-item{ display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:10px;
+  background:var(--panel); border:1px solid var(--border); cursor:pointer; font-size:12px; transition:all .15s ease; }
+.th-item:hover{ border-color:var(--accent); }
+.th-item.on{ border-color:var(--accent); box-shadow:0 0 0 2px var(--tag-bg), 0 0 12px var(--glow); }
+.th-dot{ width:14px; height:14px; border-radius:50%; flex:0 0 auto; border:2px solid rgba(255,255,255,.35); }
 select.tbtn{ appearance:auto; padding:7px 10px; }
 label.tbtn{ cursor:pointer; }
 label.tbtn input[type=checkbox]{ width:14px; height:14px; margin:0; flex:0 0 auto; accent-color:var(--accent); }
@@ -212,7 +438,7 @@ body:hover .nav{ opacity:1; }
 .help-mask{ position:fixed; inset:0; z-index:20; display:none; align-items:center; justify-content:center;
   background:rgba(0,0,0,.55); backdrop-filter:blur(4px); }
 .help-mask.open{ display:flex; }
-.help-panel{ width:560px; max-height:70vh; overflow:auto; padding:30px 34px; border-radius:16px;
+.help-panel{ width:640px; max-width:94vw; max-height:70vh; overflow:auto; padding:30px 34px; border-radius:16px;
   background:var(--panel-solid); border:1px solid var(--border); color:var(--text); }
 .help-panel h3{ font-size:20px; margin-bottom:16px; }
 .help-panel table{ width:100%; border-collapse:collapse; font-size:13px; }
@@ -221,7 +447,7 @@ body:hover .nav{ opacity:1; }
   border:1px solid var(--border); font-family:inherit; }
 .help-note{ margin-top:14px; font-size:12px; color:var(--muted); line-height:1.8; }
 /* ═══ 选页复制面板 ═══ */
-.copy-panel{ width:430px; max-height:72vh; display:flex; flex-direction:column; padding:24px 26px;
+.copy-panel{ width:500px; max-width:94vw; max-height:72vh; display:flex; flex-direction:column; padding:24px 26px;
   border-radius:16px; background:var(--panel-solid); border:1px solid var(--border); color:var(--text); }
 .copy-panel h3{ font-size:18px; margin:0; }
 .cp-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
@@ -238,12 +464,19 @@ body:hover .nav{ opacity:1; }
 .cp-foot .tbtn{ border:1px solid var(--border); background:var(--tag-bg); cursor:pointer; }
 .cp-foot .tbtn.primary{ background:var(--accent); color:var(--bg); border-color:transparent; }
 /* ═══ 模板应用面板 ═══ */
-.tpl-panel{ width:520px; max-height:78vh; display:flex; flex-direction:column; padding:24px 26px;
+.tpl-panel{ width:760px; max-width:94vw; max-height:82vh; display:flex; flex-direction:column; padding:24px 26px;
   border-radius:16px; background:var(--panel-solid); border:1px solid var(--border); color:var(--text); }
 .tpl-panel h3{ font-size:18px; margin:0; }
+.tpl-tabs{ display:flex; gap:8px; }
+.tpl-tab{ border:1px solid var(--border); background:var(--bg2); color:var(--muted);
+  border-radius:999px; padding:5px 14px; font-size:12px; letter-spacing:1px;
+  cursor:pointer; font-family:inherit; }
+.tpl-tab.on{ background:var(--accent); color:var(--bg); border-color:var(--accent); font-weight:700; }
+.tpl-cat{ grid-column:1/-1; font-size:11px; color:var(--muted); letter-spacing:2px; margin:6px 0 -4px; }
+.tpl-card .nm .pg{ font-style:normal; font-size:10px; font-weight:400; color:var(--muted); margin-left:6px; letter-spacing:.5px; }
 .tpl-head-note{ font-size:12px; color:var(--muted); }
-.tpl-cards{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin:14px 0 12px; }
-.tpl-card{ display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:12px;
+.tpl-cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:14px 0 12px; overflow-y:auto; max-height:46vh; padding:2px; }
+.tpl-card{ display:flex; flex-direction:column; align-items:stretch; gap:7px; padding:9px; border-radius:12px;
   background:var(--panel); border:1px solid var(--border); cursor:pointer; transition:all .15s ease; text-align:left; }
 .tpl-card:hover{ border-color:var(--accent); }
 .tpl-card.on{ border-color:var(--accent); box-shadow:0 0 0 2px var(--tag-bg), 0 0 16px var(--glow); }
@@ -251,6 +484,8 @@ body:hover .nav{ opacity:1; }
   justify-content:center; font-size:16px; color:#fff; background:linear-gradient(135deg,var(--accent),var(--accent2)); }
 .tpl-card .nm{ display:block; font-size:14px; font-weight:700; }
 .tpl-card .ds{ display:block; font-size:11px; color:var(--muted); margin-top:2px; line-height:1.5; }
+.tpl-mini{ position:relative; height:46px; border-radius:7px; background:var(--bg2); border:1px solid var(--border); overflow:hidden; flex:0 0 auto; }
+.tpl-mini i{ position:absolute; display:block; font-style:normal; }
 .tpl-scope{ display:flex; gap:8px; margin:2px 0 12px; flex-wrap:wrap; }
 .tpl-scope label{ display:inline-flex; align-items:center; gap:6px; font-size:13px; cursor:pointer; padding:6px 12px;
   border-radius:999px; border:1px solid var(--border); color:var(--muted); }
@@ -258,6 +493,96 @@ body:hover .nav{ opacity:1; }
 .tpl-scope label.sel{ color:var(--accent); border-color:var(--accent); background:var(--tag-bg); }
 #tplList{ display:none; }
 #tplList.show{ display:block; }
+
+/* ═══ 页导航边栏（右侧缩略图，像专业 PPT 软件） ═══ */
+.sidepanel{ position:fixed; right:0; top:0; bottom:0; width:264px; z-index:11; /* 高于工具栏(10)：边栏打开时头部操作不被右上工具栏遮挡 */
+  display:flex; flex-direction:column; background:var(--panel-solid); border-left:1px solid var(--border);
+  transform:translateX(100%); transition:transform .25s ease; }
+.sidepanel.open{ transform:translateX(0); }
+.sp-head{ display:flex; align-items:center; justify-content:space-between; padding:10px 12px;
+  font-size:13px; font-weight:700; color:var(--text); border-bottom:1px solid var(--border); flex:0 0 auto; }
+.sp-head-ops{ display:flex; align-items:center; gap:8px; }
+.sp-add{ font-size:12px; padding:4px 10px; border-radius:999px; border:1px solid var(--border);
+  background:var(--tag-bg); color:var(--accent); cursor:pointer; }
+.sp-add:hover{ border-color:var(--accent); }
+.sp-close{ border:none; background:none; color:var(--muted); font-size:16px; cursor:pointer; padding:2px 6px; }
+.sp-close:hover{ color:var(--accent); }
+.sp-list{ flex:1; overflow-y:auto; padding:10px; display:flex; flex-direction:column; gap:10px; }
+.thumb{ position:relative; flex:0 0 auto; border:2px solid var(--border); border-radius:8px; cursor:pointer;
+  overflow:hidden; background:var(--bg); transition:border-color .15s ease, box-shadow .15s ease; }
+.thumb:hover{ border-color:var(--accent); }
+.thumb.cur{ border-color:var(--accent); box-shadow:0 0 12px var(--glow); }
+.thumb-no{ position:absolute; left:5px; top:5px; z-index:2; font-size:10px; font-weight:700; padding:1px 7px;
+  border-radius:999px; color:var(--accent); background:var(--panel-solid); border:1px solid var(--border); }
+.thumb-t{ position:absolute; left:5px; bottom:5px; z-index:2; max-width:calc(100% - 96px);
+  font-size:10px; color:var(--text); background:rgba(0,0,0,.55); padding:1px 7px; border-radius:999px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.thumb-ops{ position:absolute; right:4px; bottom:4px; z-index:3; display:none; gap:3px; }
+.thumb:hover .thumb-ops{ display:flex; }
+.thumb-ops button{ width:20px; height:20px; border-radius:5px; border:1px solid var(--border);
+  background:var(--panel-solid); color:var(--text); cursor:pointer; font-size:11px; line-height:1;
+  display:inline-flex; align-items:center; justify-content:center; padding:0; }
+.thumb-ops button:hover{ background:var(--accent); color:#fff; border-color:var(--accent); }
+.thumb-ops .op-del{ background:rgba(220,38,38,.88); color:#fff; border-color:transparent; }
+.thumb-ops .op-del:hover{ background:#dc2626; border-color:#dc2626; }
+.thumb-ops button:disabled{ opacity:.3; cursor:default; }
+.thumb-ops button:disabled:hover{ background:var(--panel-solid); color:var(--text); border-color:var(--border); }
+.thumb-ops .op-del:disabled:hover{ background:rgba(220,38,38,.88); }
+.thumb-wrap{ width:100%; aspect-ratio:16/9; position:relative; overflow:hidden; }
+.thumb-slide{ position:absolute !important; top:0 !important; left:0 !important; width:1280px !important; height:720px !important; transform-origin:0 0 !important;
+  padding:64px 80px !important; display:flex !important; flex-direction:column !important;
+  background:var(--bg) !important; overflow:hidden !important;
+  opacity:1 !important; visibility:visible !important; transition:none !important; pointer-events:none !important; }
+/* ═══ 侧边栏双 Tab（▤ 页面 / ⚙ 工具）与工具区 ═══ */
+.sp-tabs{ display:flex; align-items:center; gap:6px; padding:8px 10px; border-bottom:1px solid var(--border); flex:0 0 auto; }
+.sp-tab{ flex:1; padding:7px 0; border-radius:8px; border:1px solid transparent; background:none; color:var(--muted);
+  font-size:13px; font-weight:700; cursor:pointer; transition:all .15s ease; }
+.sp-tab:hover{ color:var(--text); background:var(--tag-bg); }
+.sp-tab.on{ color:var(--accent); background:var(--tag-bg); border-color:var(--border); }
+.sp-pane{ display:none; flex:1; flex-direction:column; min-height:0; }
+.sp-pane.on{ display:flex; }
+#paneTools{ overflow-y:auto; }
+.ts-sec{ padding:12px 12px 2px; border-bottom:1px solid var(--border); }
+.ts-sec:last-child{ border-bottom:none; }
+.ts-title{ display:flex; align-items:center; justify-content:space-between; font-size:12px; font-weight:700; color:var(--text); margin-bottom:8px; }
+.ts-check{ display:inline-flex; align-items:center; gap:5px; font-weight:400; font-size:12px; color:var(--muted); cursor:pointer; }
+.ts-check input{ margin:0; accent-color:var(--accent); }
+.ts-sub{ font-size:11px; color:var(--muted); margin:10px 0 6px; }
+.scope-seg{ display:flex; align-items:center; gap:6px; }
+.ts-lbl{ font-size:11px; color:var(--muted); }
+.seg-btn{ display:inline-flex; align-items:center; gap:4px; font-size:11px; padding:5px 9px; border-radius:999px;
+  border:1px solid var(--border); color:var(--muted); cursor:pointer; }
+.seg-btn input{ margin:0; accent-color:var(--accent); }
+.seg-btn.sel{ color:var(--accent); border-color:var(--accent); background:var(--tag-bg); }
+.tg-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:6px; }
+.tg-grid.col4{ grid-template-columns:repeat(4,1fr); }
+.tg-grid button{ padding:7px 4px; border-radius:8px; border:1px solid var(--border); background:var(--panel);
+  color:var(--text); font-size:12px; cursor:pointer; transition:all .15s ease; }
+.tg-grid button:hover{ border-color:var(--accent); color:var(--accent); }
+.tg-grid button.on{ border-color:var(--accent); color:var(--accent); background:var(--tag-bg); box-shadow:0 0 10px var(--glow); }
+.an-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:5px; }
+.an-grid button{ padding:6px 2px; border-radius:7px; border:1px solid var(--border); background:var(--panel);
+  color:var(--muted); font-size:11px; cursor:pointer; transition:all .15s ease; }
+.an-grid button:hover{ border-color:var(--accent); color:var(--accent); }
+.an-grid button.on{ border-color:var(--accent); color:var(--accent); background:var(--tag-bg); box-shadow:0 0 8px var(--glow); }
+.tools-ops{ display:grid; grid-template-columns:repeat(2,1fr); gap:6px; }
+.tools-ops button{ padding:8px 4px; border-radius:8px; border:1px solid var(--border); background:var(--panel);
+  color:var(--text); font-size:12px; cursor:pointer; transition:all .15s ease; }
+.tools-ops button:hover{ border-color:var(--accent); color:var(--accent); }
+.ts-note{ padding:10px 12px 14px; font-size:11px; color:var(--muted); line-height:1.65; }
+/* ═══ 新增页面板（选版式加页） ═══ */
+.add-panel{ width:600px; max-width:94vw; max-height:82vh; display:flex; flex-direction:column; padding:24px 26px;
+  border-radius:16px; background:var(--panel-solid); border:1px solid var(--border); color:var(--text); }
+.add-panel h3{ font-size:18px; margin:0; }
+.add-head-note{ font-size:12px; color:var(--muted); }
+.add-cards{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:16px 0 6px; overflow-y:auto; max-height:52vh; padding:2px; }
+.add-card{ padding:8px; border-radius:12px; background:var(--panel); border:1px solid var(--border); cursor:pointer; }
+.add-card:hover{ border-color:var(--accent); box-shadow:0 0 10px var(--glow); }
+.add-card .nm{ display:block; margin-top:6px; font-size:12px; font-weight:700; text-align:center; }
+/* ═══ 按钮禁用态（undo/redo 不可用时） ═══ */
+.tbtn[disabled]{ opacity:.35; cursor:default; }
+.tbtn[disabled]:hover{ border-color:transparent; background:transparent; }
+
 /* ══════════ 7. 全屏放映纯净模式（PPT 放映规范：黑底 + 幻灯充满画面） ══════════ */
 :root:fullscreen{ background:#000; } /* 放映黑底：与 PPT 软件放映一致，比例不匹配处补黑边，不带主题氛围边框 */
 :root:fullscreen .bg-glow,
@@ -266,7 +591,180 @@ body:hover .nav{ opacity:1; }
 :root:fullscreen .pageno,
 :root:fullscreen .hint,
 :root:fullscreen .nav,
+:root:fullscreen .sidepanel,
 :root:fullscreen .help-mask{ display:none !important; }
+
+/* ═══ 动画库：翻页八套（deck[data-transition]）+ 入场十二式（data-anim）+ 离场十二式（data-anim-leave）+ 强调八式（data-anim-emphasis）═══ */
+
+/* ── L1 翻页动画风格（slide-lr 为基础默认；以下七套覆盖）── */
+.deck[data-transition="fade"] .slide{ transform:none; }
+.deck[data-transition="fade"] .slide.active{ transform:none; }
+.deck[data-transition="fade"] .slide.dim{ transform:none; }
+.deck[data-transition="slide-ud"] .slide{ transform:translateY(44px); }
+.deck[data-transition="slide-ud"] .slide.active{ transform:translateY(0); }
+.deck[data-transition="slide-ud"] .slide.dim{ transform:translateY(-44px); }
+.deck[data-transition="zoom"] .slide{ transform:scale(1.07); }
+.deck[data-transition="zoom"] .slide.active{ transform:scale(1); }
+.deck[data-transition="zoom"] .slide.dim{ transform:scale(.93); }
+.deck[data-transition="flip"]{ perspective:1800px; }
+.deck[data-transition="flip"] .slide{ transform-origin:center center; backface-visibility:hidden; transition:opacity .5s ease, transform .6s cubic-bezier(.4,0,.2,1), visibility 0s linear .6s; }
+.deck[data-transition="flip"] .slide.active{ transform:rotateY(0deg); }
+.deck[data-transition="flip"] .slide.dim{ opacity:0; transform:rotateY(-90deg); }
+.deck[data-transition="cube"]{ perspective:1800px; }
+.deck[data-transition="cube"] .slide{ transform-origin:center center; backface-visibility:hidden; transition:opacity .5s ease, transform .7s cubic-bezier(.4,0,.2,1), visibility 0s linear .7s; }
+.deck[data-transition="cube"] .slide.active{ transform:rotateY(0deg); }
+.deck[data-transition="cube"] .slide.dim{ opacity:0; transform:rotateY(90deg); }
+.deck[data-transition="wipe"] .slide{ transform:translateX(100%); transition:opacity .45s ease, transform .55s cubic-bezier(.4,0,.2,1), visibility 0s linear .55s; }
+.deck[data-transition="wipe"] .slide.active{ transform:translateX(0); }
+.deck[data-transition="wipe"] .slide.dim{ transform:translateX(-100%); }
+.deck[data-transition="dissolve"] .slide{ transform:none; transition:opacity .5s ease, filter .5s ease, visibility 0s linear .5s; }
+.deck[data-transition="dissolve"] .slide.active{ filter:none; }
+.deck[data-transition="dissolve"] .slide.dim{ opacity:0; filter:blur(8px); }
+
+/* ── L2 元素入场动画（翻到该页自动播放；data-anim-delay 错落入场）── */
+.slide [data-anim]{ opacity:0; animation-fill-mode:both; }
+.slide [data-anim="none"]{ opacity:1 !important; animation:none !important; }
+.slide.active [data-anim="fade-up"]{ animation-name:md-fade-up; animation-duration:.6s; animation-timing-function:cubic-bezier(.22,.61,.36,1); }
+.slide.active [data-anim="fade-in"]{ animation-name:md-fade-in; animation-duration:.5s; animation-timing-function:ease; }
+.slide.active [data-anim="fade-down"]{ animation-name:md-fade-down; animation-duration:.6s; animation-timing-function:cubic-bezier(.22,.61,.36,1); }
+.slide.active [data-anim="zoom-in"]{ animation-name:md-zoom-in; animation-duration:.55s; animation-timing-function:cubic-bezier(.22,.61,.36,1); }
+.slide.active [data-anim="slide-left"]{ animation-name:md-slide-left; animation-duration:.6s; animation-timing-function:cubic-bezier(.22,.61,.36,1); }
+.slide.active [data-anim="slide-right"]{ animation-name:md-slide-right; animation-duration:.6s; animation-timing-function:cubic-bezier(.22,.61,.36,1); }
+.slide.active [data-anim="slide-up"]{ animation-name:md-slide-up; animation-duration:.6s; animation-timing-function:cubic-bezier(.22,.61,.36,1); }
+.slide.active [data-anim="slide-down"]{ animation-name:md-slide-down; animation-duration:.6s; animation-timing-function:cubic-bezier(.22,.61,.36,1); }
+.slide.active [data-anim="pop"]{ animation-name:md-pop; animation-duration:.5s; animation-timing-function:cubic-bezier(.34,1.56,.64,1); }
+.slide.active [data-anim="bounce-in"]{ animation-name:md-bounce-in; animation-duration:.7s; animation-timing-function:cubic-bezier(.34,1.56,.64,1); }
+.slide.active [data-anim="flip-in"]{ animation-name:md-flip-in; animation-duration:.65s; animation-timing-function:cubic-bezier(.22,.61,.36,1); }
+.slide.active [data-anim="blur"]{ animation-name:md-blur; animation-duration:.6s; animation-timing-function:ease; }
+.slide.active [data-anim-delay="60"]{ animation-delay:60ms; }
+.slide.active [data-anim-delay="120"]{ animation-delay:120ms; }
+.slide.active [data-anim-delay="180"]{ animation-delay:180ms; }
+.slide.active [data-anim-delay="240"]{ animation-delay:240ms; }
+.slide.active [data-anim-delay="300"]{ animation-delay:300ms; }
+.slide.active [data-anim-delay="400"]{ animation-delay:400ms; }
+.slide.active [data-anim-delay="500"]{ animation-delay:500ms; }
+.slide.active [data-anim-delay="600"]{ animation-delay:600ms; }
+
+/* ── L3 元素离场动画（翻离该页前 0.48s 窗口播放；.slide.leaving 由 JS 触发）── */
+.slide [data-anim-leave]{ animation-fill-mode:both; }
+.slide.leaving [data-anim-leave="fade-out"]{ animation:md-fade-out .45s ease both; }
+.slide.leaving [data-anim-leave="fade-up-out"]{ animation:md-fade-up-out .45s ease both; }
+.slide.leaving [data-anim-leave="fade-down-out"]{ animation:md-fade-down-out .45s ease both; }
+.slide.leaving [data-anim-leave="slide-left-out"]{ animation:md-slide-left-out .45s ease both; }
+.slide.leaving [data-anim-leave="slide-right-out"]{ animation:md-slide-right-out .45s ease both; }
+.slide.leaving [data-anim-leave="slide-up-out"]{ animation:md-slide-up-out .45s ease both; }
+.slide.leaving [data-anim-leave="slide-down-out"]{ animation:md-slide-down-out .45s ease both; }
+.slide.leaving [data-anim-leave="zoom-out"]{ animation:md-zoom-out .45s ease both; }
+.slide.leaving [data-anim-leave="zoom-big-out"]{ animation:md-zoom-big-out .45s ease both; }
+.slide.leaving [data-anim-leave="flip-out"]{ animation:md-flip-out .45s ease both; }
+.slide.leaving [data-anim-leave="drop-out"]{ animation:md-drop-out .5s cubic-bezier(.55,0,.8,.4) both; }
+.slide.leaving [data-anim-leave="blur-out"]{ animation:md-blur-out .45s ease both; }
+
+/* ── L4 元素强调动画（页面激活期间循环播放；与入场互斥，强调优先）── */
+.slide.active [data-anim-emphasis]{ opacity:1; }
+.slide.active [data-anim-emphasis="pulse"]{ animation:md-pulse 1.6s ease-in-out infinite; }
+.slide.active [data-anim-emphasis="swing"]{ animation:md-swing 1.8s ease-in-out infinite; transform-origin:top center; }
+.slide.active [data-anim-emphasis="shake"]{ animation:md-shake 1.4s ease-in-out infinite; }
+.slide.active [data-anim-emphasis="breathe"]{ animation:md-breathe 2.2s ease-in-out infinite; }
+.slide.active [data-anim-emphasis="flash"]{ animation:md-flash 1.8s ease-in-out infinite; }
+.slide.active [data-anim-emphasis="tada"]{ animation:md-tada 1.8s ease-in-out infinite; }
+.slide.active [data-anim-emphasis="spin"]{ animation:md-spin 1.8s linear infinite; }
+.slide.active [data-anim-emphasis="glow"]{ animation:md-glow 1.6s ease-in-out infinite; }
+
+/* ── L5 标题文字动画（运行时拆分 h1/h2/h3/.s-title 为 span，复用入场机制）── */
+.tchar, .tword{ display:inline-block; }
+.tline{ display:block; }
+
+/* ── 入场开关（deck[data-anim="off"] 全部停用）── */
+.deck[data-anim="off"] .slide [data-anim]{ opacity:1 !important; animation:none !important; }
+.deck[data-anim="off"] .slide [data-anim-emphasis]{ animation:none !important; }
+
+@keyframes md-fade-up{ from{ opacity:0; transform:translateY(24px); } to{ opacity:1; transform:none; } }
+@keyframes md-fade-in{ from{ opacity:0; } to{ opacity:1; } }
+@keyframes md-fade-down{ from{ opacity:0; transform:translateY(-24px); } to{ opacity:1; transform:none; } }
+@keyframes md-zoom-in{ from{ opacity:0; transform:scale(.9); } to{ opacity:1; transform:none; } }
+@keyframes md-slide-left{ from{ opacity:0; transform:translateX(-32px); } to{ opacity:1; transform:none; } }
+@keyframes md-slide-right{ from{ opacity:0; transform:translateX(32px); } to{ opacity:1; transform:none; } }
+@keyframes md-slide-up{ from{ opacity:0; transform:translateY(32px); } to{ opacity:1; transform:none; } }
+@keyframes md-slide-down{ from{ opacity:0; transform:translateY(-32px); } to{ opacity:1; transform:none; } }
+@keyframes md-pop{ 0%{ opacity:0; transform:scale(.6); } 70%{ transform:scale(1.05); } 100%{ opacity:1; transform:none; } }
+@keyframes md-bounce-in{ 0%{ opacity:0; transform:translateY(40px) scale(.9); } 55%{ opacity:1; transform:translateY(-12px) scale(1.03); } 78%{ transform:translateY(6px) scale(.99); } 100%{ opacity:1; transform:none; } }
+@keyframes md-flip-in{ from{ opacity:0; transform:perspective(900px) rotateY(-75deg); } to{ opacity:1; transform:none; } }
+@keyframes md-blur{ from{ opacity:0; filter:blur(10px); } to{ opacity:1; filter:none; } }
+@keyframes md-fade-out{ from{ opacity:1; } to{ opacity:0; } }
+@keyframes md-fade-up-out{ from{ opacity:1; transform:none; } to{ opacity:0; transform:translateY(-40px); } }
+@keyframes md-fade-down-out{ from{ opacity:1; transform:none; } to{ opacity:0; transform:translateY(40px); } }
+@keyframes md-slide-left-out{ from{ opacity:1; transform:none; } to{ opacity:0; transform:translateX(-64px); } }
+@keyframes md-slide-right-out{ from{ opacity:1; transform:none; } to{ opacity:0; transform:translateX(64px); } }
+@keyframes md-slide-up-out{ from{ opacity:1; transform:none; } to{ opacity:0; transform:translateY(-64px); } }
+@keyframes md-slide-down-out{ from{ opacity:1; transform:none; } to{ opacity:0; transform:translateY(64px); } }
+@keyframes md-zoom-out{ from{ opacity:1; transform:none; } to{ opacity:0; transform:scale(.82); } }
+@keyframes md-zoom-big-out{ from{ opacity:1; transform:none; } to{ opacity:0; transform:scale(1.28); } }
+@keyframes md-flip-out{ from{ opacity:1; transform:none; } to{ opacity:0; transform:perspective(900px) rotateY(70deg); } }
+@keyframes md-drop-out{ 0%{ opacity:1; transform:none; } 55%{ opacity:1; transform:translateY(12px); } 100%{ opacity:0; transform:translateY(120px); } }
+@keyframes md-blur-out{ from{ opacity:1; filter:none; } to{ opacity:0; filter:blur(10px); } }
+@keyframes md-pulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.06); } }
+@keyframes md-swing{ 0%,100%{ transform:rotate(0deg); } 20%{ transform:rotate(6deg); } 40%{ transform:rotate(-5deg); } 60%{ transform:rotate(4deg); } 80%{ transform:rotate(-3deg); } }
+@keyframes md-shake{ 0%,100%{ transform:translateX(0); } 12%{ transform:translateX(-6px); } 24%{ transform:translateX(6px); } 36%{ transform:translateX(-5px); } 48%{ transform:translateX(5px); } 60%{ transform:translateX(-3px); } 72%{ transform:translateX(3px); } 84%{ transform:translateX(-1px); } }
+@keyframes md-breathe{ 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:.82; transform:scale(1.045); } }
+@keyframes md-flash{ 0%,100%{ opacity:1; } 50%{ opacity:.3; } }
+@keyframes md-tada{ 0%{ transform:scale(1); } 25%{ transform:scale(1.16) rotate(-2.5deg); } 55%{ transform:scale(1.16) rotate(2.5deg); } 100%{ transform:scale(1); } }
+@keyframes md-spin{ from{ transform:rotate(0deg); } to{ transform:rotate(360deg); } }
+@keyframes md-glow{ 0%,100%{ box-shadow:0 0 6px var(--glow); } 50%{ box-shadow:0 0 26px var(--glow), 0 0 48px var(--glow); } }
+/* ═══ L6 图表组件与动画（bars/line/pie/ring/count 五式：柱状生长/折线描画/饼图扇入/仪表扫弧/数字滚动，
+   挂 data-anim-chart 容器，翻到页自动播放、翻离再翻回重放，与模板/主题正交；全部主题变量驱动不写死颜色） ═══ */
+.chart-card{ background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:18px 20px 16px; }
+.chart-card .cc-head{ display:flex; align-items:baseline; justify-content:space-between; gap:8px; margin-bottom:14px; }
+.chart-card .cc-head h4{ font-size:16px; color:var(--text); }
+.chart-card .cc-head .en{ font-size:11px; color:var(--muted); letter-spacing:.1em; }
+/* 柱状生长：柱高由 --h 内联控制，逐柱 --bi×100ms 错峰 */
+.chart-bars{ display:flex; align-items:flex-end; gap:14px; height:158px; }
+.chart-bars .bar{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:7px; height:100%; }
+.chart-bars .bar i{ display:block; width:100%; max-width:44px; border-radius:6px 6px 2px 2px;
+  background:linear-gradient(180deg,var(--accent),var(--accent2)); box-shadow:0 0 12px var(--glow);
+  height:var(--h,50%); transform:scaleY(0); transform-origin:bottom; }
+.chart-bars .bar b{ font-size:12px; color:var(--accent); font-weight:800; }
+.chart-bars .bar em{ font-style:normal; font-size:11px; color:var(--muted); }
+.slide.active [data-anim-chart="bars"] .bar i{ animation:md-bar-grow .85s cubic-bezier(.3,.8,.4,1) both; animation-delay:calc(var(--bi,0)*100ms); }
+@keyframes md-bar-grow{ from{ transform:scaleY(0); } to{ transform:scaleY(1); } }
+/* 折线描画：走线 dashoffset 归零后圆点按序浮现 */
+.chart-line svg{ width:100%; height:158px; display:block; }
+.chart-line .ln{ stroke:var(--accent); stroke-width:3; fill:none; stroke-linecap:round;
+  stroke-dasharray:600; stroke-dashoffset:600; filter:drop-shadow(0 0 5px var(--glow)); }
+.chart-line .pt{ fill:var(--accent2); opacity:0; }
+.slide.active [data-anim-chart="line"] .ln{ animation:md-line-draw 1.15s cubic-bezier(.4,0,.2,1) .12s both; }
+.slide.active [data-anim-chart="line"] .pt{ animation:md-pt-in .45s ease both; animation-delay:calc(.25s + var(--pi,0)*150ms); }
+@keyframes md-line-draw{ to{ stroke-dashoffset:0; } }
+@keyframes md-pt-in{ from{ opacity:0; } to{ opacity:1; } }
+/* 饼图扇入：弧段 dashoffset 从整周长扫入，transform rotate 定段起点，逐段 --pi×140ms 错峰 */
+.chart-pie{ display:flex; justify-content:center; align-items:center; }
+.chart-pie svg{ width:158px; height:158px; }
+.chart-pie .pc{ fill:none; stroke-width:24; transform-box:fill-box; transform-origin:center; }
+.chart-pie .pc.s1{ stroke:var(--accent); }
+.chart-pie .pc.s2{ stroke:var(--accent2); }
+.chart-pie .pc.s3{ stroke:#34d399; }
+.chart-pie .pc.s4{ stroke:#f59e0b; }
+.slide.active [data-anim-chart="pie"] .pc{ animation:md-pie-sweep .9s cubic-bezier(.4,0,.2,1) both; animation-delay:calc(var(--pi,0)*140ms); }
+@keyframes md-pie-sweep{ from{ stroke-dashoffset:var(--po,340); } to{ stroke-dashoffset:0; } }
+/* 仪表扫弧：单弧扫入 + 中心数字 count-up（data-count 由 JS 滚动） */
+.chart-ring{ position:relative; width:158px; height:158px; margin:0 auto; }
+.chart-ring svg{ width:158px; height:158px; }
+.chart-ring .rc-bg{ fill:none; stroke:var(--tag-bg); stroke-width:12; }
+.chart-ring .rc{ fill:none; stroke:var(--accent); stroke-width:12; stroke-linecap:round;
+  transform-box:fill-box; transform-origin:center; transform:rotate(-90deg); filter:drop-shadow(0 0 6px var(--glow)); }
+.chart-ring .rc-val{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; }
+.chart-ring .rc-val b{ font-size:32px; font-weight:900; color:var(--text); line-height:1; }
+.chart-ring .rc-val span{ font-size:11px; color:var(--muted); }
+.slide.active [data-anim-chart="ring"] .rc{ animation:md-pie-sweep 1.15s cubic-bezier(.4,0,.2,1) .2s both; }
+@media (prefers-reduced-motion:reduce){
+  .slide, .slide.active, .slide.dim{ transition:none; }
+  .slide [data-anim], .slide.active [data-anim], .slide [data-anim-emphasis], .slide.leaving [data-anim-leave]{ opacity:1 !important; animation:none !important; }
+  .slide [data-anim-chart] .bar i{ transform:none !important; animation:none !important; }
+  .slide [data-anim-chart] .ln{ stroke-dashoffset:0 !important; }
+  .slide [data-anim-chart] .pc, .slide [data-anim-chart] .rc{ stroke-dashoffset:0 !important; }
+  .slide [data-anim-chart] .pt{ opacity:1 !important; }
+}
+
 </style>
 </head>
 <body>
@@ -277,14 +775,19 @@ body:hover .nav{ opacity:1; }
 </div>
 <div class="toolbar">
   <div class="group">
-    <button class="tbtn" id="btnTemplate" title="五套版式模板：可应用到全部页面 / 仅本页 / 勾选页面，标题自动映射">🎨 模板</button>
+    <button class="tbtn" id="btnTemplate" title="十六套版式模板：可应用到全部页面 / 仅本页 / 勾选页面，支持预览本页，标题自动映射">🎨 模板</button>
+    <button class="tbtn" id="btnTheme" title="十六套主题配色面板：色点即点即换，范围可选全部页面或仅本页">🎨 主题</button>
   </div>
-  <div class="group" title="主题：点色点整份换肤，点「仅本页」后只改当前页">
-    <button class="tbtn theme" data-theme="tech" title="tech 深蓝科技"></button>
-    <button class="tbtn theme" data-theme="biz" title="biz 浅色商务"></button>
-    <button class="tbtn theme" data-theme="mono" title="mono 极简黑白"></button>
-    <button class="tbtn theme" data-theme="warm" title="warm 温暖渐变"></button>
-    <button class="tbtn" id="btnScope" title="开启后主题只作用于当前页">⭮ 仅本页</button>
+  <div class="group" title="编辑：撤销 / 重做（支持模板应用、增删页、换主题等所有编辑操作）">
+    <button class="tbtn" id="btnUndo" title="撤销上一步（Ctrl+Z）" disabled>↶ 撤销</button>
+    <button class="tbtn" id="btnRedo" title="重做（Ctrl+Shift+Z / Ctrl+Y）" disabled>↷ 重做</button>
+  </div>
+  <div class="group" title="页面管理：右侧缩略图边栏（新页 / 复页 / 排序 / 删页 / 跳转）">
+    <button class="tbtn" id="btnPages" title="右侧边栏：▤ 页面管理 / ⚙ 动画与工具（G 开关）">▤ 页导航</button>
+  </div>
+  
+  <div class="group" title="动画库与复制截图已收纳到右侧边栏 ⚙ 工具 Tab">
+    <button class="tbtn" id="btnTools" title="右侧边栏 ⚙ 工具 Tab：动画库（翻页八套 / 入场离场强调 / 标题文字动画）+ 复制与截图">⚙ 工具</button>
   </div>
   <div class="group">
     <button class="tbtn" id="btnPlay">▶ 自动播放</button>
@@ -298,26 +801,121 @@ body:hover .nav{ opacity:1; }
     <label class="tbtn"><input type="checkbox" id="chkFromStart" checked>从头</label>
   </div>
   <div class="group">
-    <button class="tbtn" id="btnCopy">⧉ 复制本页</button>
-    <button class="tbtn" id="btnCopyMulti">▦ 选页复制</button>
-    <button class="tbtn" id="btnShot">📷 截图本页</button>
-    <button class="tbtn" id="btnShotMulti">▦ 选页截图</button>
     <button class="tbtn" id="btnFull">⛶ 全屏</button>
     <button class="tbtn help" id="btnHelp">?</button>
   </div>
 </div>
 <div class="pageno" id="pageNo"><b>1</b> / 9</div>
-<div class="hint">← → 翻页 · 空格下一页 · P 播放 · S 截图 · C 复制 · F 全屏 · ? 操作说明</div>
+<div class="hint">← → 翻页 · P 播放 · F 全屏 · G 页面/工具 · Ctrl+Z 撤销 · ? 操作说明</div>
 <button class="nav prev" id="btnPrev">‹</button>
 <button class="nav next" id="btnNext">›</button>
-<main class="stage"><div class="deck" id="deck">
+<aside class="sidepanel" id="sidePanel">
+  <div class="sp-tabs">
+    <button class="sp-tab on" data-tab="pages" title="页面管理：缩略图跳页、新页、复页、排序、删页">▤ 页面</button>
+    <button class="sp-tab" data-tab="tools" title="动画库与页面工具：翻页八套、入场/离场/强调、标题文字动画、复制与截图">⚙ 工具</button>
+    <button class="sp-close" id="spClose" title="收起（G）">✕</button>
+  </div>
+  <div class="sp-pane on" id="panePages">
+    <div class="sp-head"><span>页面导航</span>
+      <span class="sp-head-ops">
+        <button class="sp-add" id="spAdd" title="新增页面：16 版式任选，插在当前页之后">＋ 新页</button>
+      </span>
+    </div>
+    <div class="sp-list" id="spList"></div>
+  </div>
+  <div class="sp-pane" id="paneTools">
+    <div class="ts-sec">
+      <div class="ts-title">翻页切换</div>
+      <div class="tg-grid col4" id="tgGrid">
+        <button data-tg="slide-lr">⇢ 滑移</button>
+        <button data-tg="fade">◌ 淡入</button>
+        <button data-tg="slide-ud">⇣ 上下</button>
+        <button data-tg="zoom">◉ 缩放</button>
+        <button data-tg="flip">◱ 3D 翻页</button>
+        <button data-tg="cube">▦ 立方</button>
+        <button data-tg="wipe">▬ 擦除</button>
+        <button data-tg="dissolve">✦ 溶解</button>
+      </div>
+    </div>
+    <div class="ts-sec">
+      <div class="ts-title">元素动画 <label class="ts-check"><input type="checkbox" id="chkAnim" checked>开启</label></div>
+      <div class="scope-seg">
+        <span class="ts-lbl">应用范围</span>
+        <label class="seg-btn sel"><input type="radio" name="animScope" value="all" checked>全部页面</label>
+        <label class="seg-btn"><input type="radio" name="animScope" value="current">仅本页</label>
+      </div>
+      <div class="ts-sub">入场 12 式 · 点选即用（作用于带入场标记的元素）</div>
+      <div class="an-grid" id="enterGrid">
+        <button data-a="none">无</button>
+        <button data-a="fade-in">淡入</button>
+        <button data-a="fade-up">上浮</button>
+        <button data-a="fade-down">下沉</button>
+        <button data-a="slide-left">左滑</button>
+        <button data-a="slide-right">右滑</button>
+        <button data-a="slide-up">上滑</button>
+        <button data-a="slide-down">下滑</button>
+        <button data-a="zoom-in">缩放</button>
+        <button data-a="pop">弹跳</button>
+        <button data-a="bounce-in">弹入</button>
+        <button data-a="flip-in">翻转</button>
+        <button data-a="blur">模糊</button>
+      </div>
+      <div class="ts-sub">离场 12 式 · 翻离该页前自动播放</div>
+      <div class="an-grid" id="leaveGrid">
+        <button data-l="none">无</button>
+        <button data-l="fade-out">淡出</button>
+        <button data-l="fade-up-out">上飘</button>
+        <button data-l="fade-down-out">坠下</button>
+        <button data-l="slide-left-out">左出</button>
+        <button data-l="slide-right-out">右出</button>
+        <button data-l="slide-up-out">上出</button>
+        <button data-l="slide-down-out">下出</button>
+        <button data-l="zoom-out">缩小</button>
+        <button data-l="zoom-big-out">放大</button>
+        <button data-l="flip-out">翻转</button>
+        <button data-l="drop-out">坠落</button>
+        <button data-l="blur-out">模糊</button>
+      </div>
+      <div class="ts-sub">强调 8 式 · 循环播放（与入场二选一）</div>
+      <div class="an-grid" id="emphGrid">
+        <button data-e="none">无</button>
+        <button data-e="pulse">脉冲</button>
+        <button data-e="swing">摇摆</button>
+        <button data-e="shake">抖动</button>
+        <button data-e="breathe">呼吸</button>
+        <button data-e="flash">闪烁</button>
+        <button data-e="tada">弹跳</button>
+        <button data-e="spin">旋转</button>
+        <button data-e="glow">辉光</button>
+      </div>
+      <div class="ts-sub">标题文字（默认无动画）</div>
+      <div class="tg-grid col4" id="textGrid">
+        <button data-ta="none">无动画</button>
+        <button data-ta="char">逐字</button>
+        <button data-ta="word">逐词</button>
+        <button data-ta="line">逐行</button>
+      </div>
+    </div>
+    <div class="ts-sec">
+      <div class="ts-title">页面操作</div>
+      <div class="tools-ops">
+        <button id="btnCopy" title="复制本页文字到剪贴板（C）">⧉ 复制本页</button>
+        <button id="btnCopyMulti" title="勾选多页批量复制文字">▦ 选页复制</button>
+        <button id="btnShot" title="截图本页为 PNG 2x（S）">📷 截图本页</button>
+        <button id="btnShotMulti" title="勾选多页逐张下载 PNG">▦ 选页截图</button>
+      </div>
+    </div>
+    <div class="ts-note">动画点选即应用（范围：全部页面 / 仅本页）并自动记忆；入场与强调作用于带入场标记的元素；标题文字动画将标题拆为字 / 词 / 行错落入场。离场动画在翻离该页前播放。</div>
+  </div>
+</aside>
+<main class="stage"><div class="deck" id="deck" data-transition="slide-lr" data-anim="on">
 
   <!-- 页 1 封面（classic 模板） -->
   <section class="slide cover active" data-title="封面">
-    <div class="logo"></div>
-    <div class="s-title">魔法幻灯<br>Magic Deck</div>
-    <div class="sub">HTML 形态 · PPT 体验 · 单文件离线放映</div>
-    <div class="sign">GENERATED BY SKILLFORGE</div>
+    <div class="logo" data-anim="pop"></div>
+    <div class="s-title" data-anim="fade-up">魔法幻灯<br>Magic Deck</div>
+    <div class="sub" data-anim="fade-up" data-anim-delay="120">HTML 形态 · PPT 体验 · 单文件离线放映</div>
+    <div class="sign" data-anim="fade-in" data-anim-delay="300">GENERATED BY SKILLFORGE</div>
   </section>
 
   <!-- 页 2 目录 -->
@@ -329,6 +927,9 @@ body:hover .nav{ opacity:1; }
       <div class="toc-item" data-goto="4"><span class="no">03</span><span class="t">杂志画册版式</span><span class="pg">第 5 页</span></div>
       <div class="toc-item" data-goto="5"><span class="no">04</span><span class="t">黑金发布版式</span><span class="pg">第 6 页</span></div>
       <div class="toc-item" data-goto="6"><span class="no">05</span><span class="t">时间线叙事版式</span><span class="pg">第 7 页</span></div>
+      <div class="toc-item" data-goto="8"><span class="no">06</span><span class="t">更多版式演示</span><span class="pg">第 9-12 页</span></div>
+      <div class="toc-item" data-goto="12"><span class="no">07</span><span class="t">图表动画演示</span><span class="pg">第 13 页</span></div>
+      <div class="toc-item" data-goto="13"><span class="no">08</span><span class="t">领域模板库</span><span class="pg">第 14 页</span></div>
     </div>
   </section>
 
@@ -374,7 +975,7 @@ body:hover .nav{ opacity:1; }
   <section class="slide" data-title="时间线叙事" data-template="timeline">
     <div class="s-head"><h2>里程碑</h2><span class="tag">TIMELINE</span></div>
     <div class="grid3">
-      <div class="card"><h4>立项与架构<span class="en">2026 Q1</span></h4><p>完成技术选型与四主题变量体系。</p></div>
+      <div class="card"><h4>立项与架构<span class="en">2026 Q1</span></h4><p>完成技术选型与十六主题变量体系。</p></div>
       <div class="card"><h4>模板库建设<span class="en">2026 Q2</span></h4><p>五套版式骨架与主题正交组合。</p></div>
       <div class="card"><h4>单页换肤<span class="en">2026 Q3</span></h4><p>整份或单页自由切换主题。</p></div>
     </div>
@@ -391,7 +992,126 @@ body:hover .nav{ opacity:1; }
     </div>
   </section>
 
-  <!-- 页 9 结束页 -->
+  <!-- 页 9 steps 流程步骤（箭头步骤条由包装器生成） -->
+  <section class="slide" data-title="流程步骤" data-template="steps">
+    <div class="s-head"><h2>发布流程四步走</h2><span class="tag">STEPS</span></div>
+    <div class="grid4">
+      <div class="card"><h4>撰写内容<span class="en">Draft</span></h4><p>结构与文案一气呵成。</p></div>
+      <div class="card"><h4>套用版式<span class="en">Layout</span></h4><p>十六套版式任意切换。</p></div>
+      <div class="card"><h4>细节打磨<span class="en">Polish</span></h4><p>主题配色逐页微调。</p></div>
+      <div class="card"><h4>发布放映<span class="en">Publish</span></h4><p>全屏放映或分享 HTML。</p></div>
+    </div>
+  </section>
+
+  <!-- 页 10 vintage 复古报纸（双栏报纸结构由包装器生成） -->
+  <section class="slide" data-title="复古报纸" data-template="vintage">
+    <div class="s-head"><h2>行业快讯</h2><span class="tag">VINTAGE</span></div>
+    <div class="grid2">
+      <div class="card"><h4>双栏排印<span class="en">Columns</span></h4><p>报纸式双栏，虚线分隔，衬线标题，刊头气质。</p></div>
+      <div class="card"><h4>复古气质<span class="en">Retro</span></h4><p>适合文化、历史与人文主题的叙事表达。</p></div>
+    </div>
+  </section>
+
+  <!-- 页 11 poster 海报宣传（斜切色带由包装器生成） -->
+  <section class="slide" data-title="海报宣传" data-template="poster">
+    <div class="s-head"><h2>年度盛典</h2><span class="tag">POSTER</span></div>
+    <ul class="points">
+      <li>主会场 · 主题演讲</li>
+      <li>分论坛 · 产品发布</li>
+      <li>晚宴 · 颁奖典礼</li>
+    </ul>
+  </section>
+
+  <!-- 页 12 finance 金融报表（仪表环由包装器生成） -->
+  <section class="slide" data-title="金融报表" data-template="finance">
+    <div class="s-head"><h2>经营指标</h2><span class="tag">FINANCE</span></div>
+    <div class="grid3">
+      <div class="bignum"><b>86%</b><span>毛利率</span></div>
+      <div class="bignum"><b>42%</b><span>增长率</span></div>
+      <div class="bignum"><b>9.8</b><span>客户评分</span></div>
+    </div>
+  </section>
+
+  <!-- 页 14 图表动画（bars/line/pie/ring 四式，翻到本页自动播放，翻离再翻回重放） -->
+  <section class="slide" data-title="图表动画">
+    <div class="s-head"><h2>图表动画</h2><span class="tag">CHARTS</span></div>
+    <div class="grid2">
+      <div class="chart-card" data-anim-chart="bars">
+        <div class="cc-head"><h4>季度销售额</h4><span class="en">BARS GROW</span></div>
+        <div class="chart-bars">
+          <div class="bar" style="--bi:0"><b>128</b><i style="--h:42%"></i><em>Q1</em></div>
+          <div class="bar" style="--bi:1"><b>186</b><i style="--h:61%"></i><em>Q2</em></div>
+          <div class="bar" style="--bi:2"><b>243</b><i style="--h:80%"></i><em>Q3</em></div>
+          <div class="bar" style="--bi:3"><b>298</b><i style="--h:97%"></i><em>Q4</em></div>
+        </div>
+      </div>
+      <div class="chart-card" data-anim-chart="line">
+        <div class="cc-head"><h4>用户增长趋势</h4><span class="en">LINE DRAW</span></div>
+        <div class="chart-line">
+          <svg viewBox="0 0 300 158" preserveAspectRatio="none">
+            <polyline class="ln" points="0,130 60,112 120,98 180,66 240,42 300,20"/>
+            <circle class="pt" style="--pi:0" cx="0" cy="130" r="4"/>
+            <circle class="pt" style="--pi:1" cx="60" cy="112" r="4"/>
+            <circle class="pt" style="--pi:2" cx="120" cy="98" r="4"/>
+            <circle class="pt" style="--pi:3" cx="180" cy="66" r="4"/>
+            <circle class="pt" style="--pi:4" cx="240" cy="42" r="4"/>
+            <circle class="pt" style="--pi:5" cx="300" cy="20" r="4"/>
+          </svg>
+        </div>
+      </div>
+      <div class="chart-card" data-anim-chart="pie">
+        <div class="cc-head"><h4>渠道占比</h4><span class="en">PIE SWEEP</span></div>
+        <div class="chart-pie">
+          <svg viewBox="0 0 150 150">
+            <circle class="pc s1" cx="75" cy="75" r="56" style="--po:351.86; --pi:0" stroke-dasharray="158.3 193.6" transform="rotate(0)"/>
+            <circle class="pc s2" cx="75" cy="75" r="56" style="--po:351.86; --pi:1" stroke-dasharray="105.6 246.3" transform="rotate(162)"/>
+            <circle class="pc s3" cx="75" cy="75" r="56" style="--po:351.86; --pi:2" stroke-dasharray="88 263.9" transform="rotate(270)"/>
+          </svg>
+        </div>
+      </div>
+      <div class="chart-card" data-anim-chart="ring">
+        <div class="cc-head"><h4>年度达成率</h4><span class="en">RING SWEEP</span></div>
+        <div class="chart-ring">
+          <svg viewBox="0 0 150 150">
+            <circle class="rc-bg" cx="75" cy="75" r="62"/>
+            <circle class="rc" cx="75" cy="75" r="62" style="--po:389.56" stroke-dasharray="280.5 109.1"/>
+          </svg>
+          <div class="rc-val"><b data-count="72" data-count-dec="0">0</b><span>目标达成</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页 15 领域模板库（二十一套领域 / 业务成套模板，点卡片直达面板生成整套页面） -->
+  <section class="slide" data-title="领域模板">
+    <div class="s-head"><h2>领域模板库 · 二十一套</h2><span class="tag">DOMAIN</span></div>
+    <div class="prof-grid">
+      <div class="card prof-demo" data-prof="thesis" data-anim="fade-up" data-anim-delay="40"><h4>毕业答辩<span class="en">Thesis</span></h4></div>
+      <div class="card prof-demo" data-prof="proposal" data-anim="fade-up" data-anim-delay="65"><h4>开题报告<span class="en">Proposal</span></h4></div>
+      <div class="card prof-demo" data-prof="teaching" data-anim="fade-up" data-anim-delay="90"><h4>教学课件<span class="en">Teaching</span></h4></div>
+      <div class="card prof-demo" data-prof="report" data-anim="fade-up" data-anim-delay="115"><h4>年终汇报<span class="en">Report</span></h4></div>
+      <div class="card prof-demo" data-prof="competition" data-anim="fade-up" data-anim-delay="140"><h4>竞聘述职<span class="en">Competition</span></h4></div>
+      <div class="card prof-demo" data-prof="plan" data-anim="fade-up" data-anim-delay="165"><h4>商业计划书<span class="en">BizPlan</span></h4></div>
+      <div class="card prof-demo" data-prof="hiring" data-anim="fade-up" data-anim-delay="190"><h4>求职简历<span class="en">Resume</span></h4></div>
+      <div class="card prof-demo" data-prof="product" data-anim="fade-up" data-anim-delay="215"><h4>产品发布<span class="en">Product</span></h4></div>
+      <div class="card prof-demo" data-prof="tech" data-anim="fade-up" data-anim-delay="240"><h4>科技发布<span class="en">Tech</span></h4></div>
+      <div class="card prof-demo" data-prof="marketing" data-anim="fade-up" data-anim-delay="265"><h4>营销方案<span class="en">Marketing</span></h4></div>
+      <div class="card prof-demo" data-prof="training" data-anim="fade-up" data-anim-delay="290"><h4>企业培训<span class="en">Training</span></h4></div>
+      <div class="card prof-demo" data-prof="ceremony" data-anim="fade-up" data-anim-delay="315"><h4>年会盛典<span class="en">Ceremony</span></h4></div>
+      <div class="card prof-demo" data-prof="finance" data-anim="fade-up" data-anim-delay="340"><h4>金融分析<span class="en">Finance</span></h4></div>
+      <div class="card prof-demo" data-prof="medical" data-anim="fade-up" data-anim-delay="365"><h4>医疗科普<span class="en">Medical</span></h4></div>
+      <div class="card prof-demo" data-prof="law" data-anim="fade-up" data-anim-delay="390"><h4>法律合规<span class="en">Legal</span></h4></div>
+      <div class="card prof-demo" data-prof="gov" data-anim="fade-up" data-anim-delay="415"><h4>政务汇报<span class="en">Government</span></h4></div>
+      <div class="card prof-demo" data-prof="party" data-anim="fade-up" data-anim-delay="440"><h4>党建汇报<span class="en">Party</span></h4></div>
+      <div class="card prof-demo" data-prof="food" data-anim="fade-up" data-anim-delay="465"><h4>餐饮品牌<span class="en">Food</span></h4></div>
+      <div class="card prof-demo" data-prof="travel" data-anim="fade-up" data-anim-delay="490"><h4>旅游攻略<span class="en">Travel</span></h4></div>
+      <div class="card prof-demo" data-prof="festival" data-anim="fade-up" data-anim-delay="515"><h4>节日庆典<span class="en">Festival</span></h4></div>
+      <div class="card prof-demo" data-prof="charity" data-anim="fade-up" data-anim-delay="540"><h4>公益慈善<span class="en">Charity</span></h4></div>
+    </div>
+    <div class="demo-tip">点任意卡片，直接打开模板面板并选中该套模板，一键「生成成套页面」——封面 · 目录 · 内容页 · 图表页整份生成，可撤销</div>
+  </section>
+
+  <!-- 页 13 结束页 -->
   <section class="slide endpage" data-title="结束">
     <div class="s-title">谢谢观看</div>
     <p>按 F 全屏放映 · 按 ? 查看全部热键</p>
@@ -410,19 +1130,25 @@ body:hover .nav{ opacity:1; }
       <tr><td><kbd>F</kbd></td><td>全屏放映（操作元素自动退场）</td></tr>
       <tr><td><kbd>1</kbd>-<kbd>9</kbd></td><td>数字直达对应页</td></tr>
       <tr><td><kbd>Home</kbd> / <kbd>End</kbd></td><td>首页 / 末页</td></tr>
+      <tr><td><kbd>G</kbd></td><td>右侧边栏：▤ 页面 / ⚙ 动画与工具</td></tr>
+      <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd></td><td>撤销 / 重做</td></tr>
       <tr><td><kbd>Esc</kbd></td><td>关弹层 / 退全屏</td></tr>
     </table>
-    <div class="help-note">工具栏色点=整份换主题；点「⭮ 仅本页」后色点只改当前页，再点恢复整份。「🎨 模板」=五套版式模板应用到全部页/仅本页/勾选页，标题自动映射，切回经典商务即恢复原排版。截图与复制只含主体内容，绝不包含工具栏/页码/箭头等操作元素；「▦ 选页复制 / 选页截图」可勾选任意页批量执行，截图逐张下载 PNG。</div>
+    <div class="help-note">「🎨 主题」面板 16 套配色即点即换，范围可选全部页面或仅本页。「🎨 模板」=十六套版式模板应用到全部页/仅本页/勾选页，支持「预览本页」先看效果，标题自动映射，切回经典商务即恢复原排版。右侧边栏双 Tab：「▤ 页面」缩略图跳页、悬停操作条复页/上移/下移/删页，头部「＋新页」选版式插页；「⚙ 工具」收纳动画库（翻页八套 + 入场十二式 + 离场十二式 + 强调八式 + 标题文字逐字/逐词/逐行，可设全部页面/仅本页范围）与复制截图（本页/选页批量，只含主体内容，截图逐张下载 PNG），点选即应用并自动记忆。「↶/↷」撤销重做（Ctrl+Z）。</div>
   </div>
 </div>
 <div class="help-mask" id="tplMask">
   <div class="tpl-panel">
     <div class="cp-head">
       <h3>应用模板</h3>
-      <span class="tpl-head-note">模板只改版式，内容与配色不动</span>
+      <div class="tpl-tabs">
+        <button type="button" class="tpl-tab on" id="tabLayout">🎨 版式</button>
+        <button type="button" class="tpl-tab" id="tabProf">💼 领域</button>
+      </div>
+      <span class="tpl-head-note" id="tplHeadNote">模板只改版式，内容与配色不动；先「预览本页」看效果，满意再应用</span>
     </div>
     <div class="tpl-cards" id="tplCards"></div>
-    <div class="tpl-scope">
+    <div class="tpl-scope" id="tplScopeRow">
       <label class="sel"><input type="radio" name="tplScope" value="all" checked>全部页面</label>
       <label><input type="radio" name="tplScope" value="current">仅本页</label>
       <label><input type="radio" name="tplScope" value="selected">选择页面</label>
@@ -430,9 +1156,27 @@ body:hover .nav{ opacity:1; }
     <div class="cp-list" id="tplList"></div>
     <div class="cp-foot">
       <button class="tbtn" id="tplCancel">取消</button>
+      <button class="tbtn" id="tplPreview">👁 预览本页</button>
       <button class="tbtn primary" id="tplDo">应用模板</button>
     </div>
     <div class="help-note">标题自动映射到模板固定位置：timeline 取卡片标题做节点、keynote 取页标题做大观点、magazine 左文右图分栏，切回「经典商务」即恢复原始排版，内容一条不丢。模板与主题正交——换模板后配色保持不变。</div>
+  </div>
+</div>
+<div class="help-mask" id="themeMask">
+  <div class="theme-panel">
+    <div class="cp-head">
+      <h3>切换主题</h3>
+      <span class="tpl-head-note">点色点立即生效，可连点对比效果；Esc 或 ✕ 关闭</span>
+    </div>
+    <div class="tpl-scope">
+      <label class="sel"><input type="radio" name="thScope" value="all" checked>全部页面</label>
+      <label><input type="radio" name="thScope" value="current">仅本页</label>
+    </div>
+    <div class="theme-grid" id="themeGrid"></div>
+    <div class="cp-foot">
+      <button class="tbtn" id="thClose">✕ 关闭</button>
+    </div>
+    <div class="help-note">主题与模板正交：换主题不动版式与内容。「仅本页」时色点只改当前页；整份切换会统一覆盖所有页面配色。</div>
   </div>
 </div>
 <div class="help-mask" id="copyMask">
@@ -462,14 +1206,26 @@ body:hover .nav{ opacity:1; }
     <div class="help-note">逐张下载 PNG（2560×1440 两倍清晰度）；浏览器首次会询问「下载多个文件」的许可，点允许即可。</div>
   </div>
 </div>
+<div class="help-mask" id="addMask">
+  <div class="add-panel">
+    <div class="cp-head">
+      <h3>新增页面</h3>
+      <span class="add-head-note">选择版式，插在当前页之后</span>
+    </div>
+    <div class="add-cards" id="addCards"></div>
+    <div class="cp-foot">
+      <button class="tbtn" id="addCancel">取消</button>
+    </div>
+    <div class="help-note">新页自带版式占位内容，落盘后直接改文字即可。所有编辑操作（套模板、增删页、换主题）都支持撤销 / 重做（Ctrl+Z / Ctrl+Shift+Z）。</div>
+  </div>
+</div>
 <script>
-var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+var slides = Array.prototype.slice.call(document.querySelectorAll('#deck .slide'));
 var N = slides.length;
 var cur = 0, timer = null, playing = false;
 var progFill = document.getElementById('progFill');
 var pageNo = document.getElementById('pageNo');
 var btnPlay = document.getElementById('btnPlay');
-var btnScope = document.getElementById('btnScope');
 var selInterval = document.getElementById('selInterval');
 var chkLoop = document.getElementById('chkLoop');
 var chkFromStart = document.getElementById('chkFromStart');
@@ -482,10 +1238,30 @@ function go(i){
   });
   progFill.style.width = ((cur + 1) / N * 100) + '%';
   pageNo.innerHTML = '<b>' + (cur + 1) + '</b> / ' + N;
+  thumbCur();
+  /* 入场动画重播：翻到当前页时重置其 [data-anim] 元素，错落入场重新播放 */
+  var curEl = slides[cur];
+  if (curEl) curEl.querySelectorAll('[data-anim]').forEach(function(el){
+    el.style.animation = 'none';
+    void el.offsetWidth;
+    el.style.animation = '';
+  });
+  /* 图表数字滚动：翻到页时数字从 0 滚到目标值（data-count），与图表动画同源重放 */
+  if (curEl) curEl.querySelectorAll('[data-count]').forEach(function(el){
+    var target = parseFloat(el.getAttribute('data-count'));
+    var dec = parseInt(el.getAttribute('data-count-dec') || '0', 10);
+    if (!isFinite(target)) return;
+    var t0 = performance.now(), dur = 900;
+    (function tick(t){
+      var k = Math.min(1, (t - t0) / dur); k = 1 - Math.pow(1 - k, 3);
+      el.textContent = (target * k).toFixed(dec);
+      if (k < 1) requestAnimationFrame(tick);
+    })(t0);
+  });
   if (location.hash !== '#/' + (cur + 1)) history.replaceState(null, '', '#/' + (cur + 1));
 }
-function next(){ if (cur < N - 1) go(cur + 1); else if (chkLoop.checked) go(0); }
-function prev(){ if (cur > 0) go(cur - 1); else if (chkLoop.checked) go(N - 1); }
+function next(){ if (cur < N - 1) leaveThenGo(cur + 1); else if (chkLoop.checked) leaveThenGo(0); }
+function prev(){ if (cur > 0) leaveThenGo(cur - 1); else if (chkLoop.checked) leaveThenGo(N - 1); }
 function stopPlay(){ if (timer){ clearInterval(timer); timer = null; } playing = false; btnPlay.classList.remove('on'); btnPlay.textContent = '▶ 自动播放'; }
 function startPlay(){
   var sec = parseInt(selInterval.value, 10); if (!isFinite(sec) || sec < 1) sec = 5;
@@ -493,12 +1269,18 @@ function startPlay(){
   stopPlay();
   playing = true; btnPlay.classList.add('on'); btnPlay.textContent = '⏸ 暂停';
   timer = setInterval(function(){
-    if (cur < N - 1) go(cur + 1); else if (chkLoop.checked) go(0); else stopPlay();
+    if (cur < N - 1) leaveThenGo(cur + 1); else if (chkLoop.checked) leaveThenGo(0); else stopPlay();
   }, sec * 1000);
 }
 btnPlay.addEventListener('click', function(){ playing ? stopPlay() : startPlay(); });
 
-/* ── 主题切换（整份 / 仅本页） ── */
+/* ── 主题切换（🎨 主题面板：16 色点网格即点即换，范围全部 / 仅本页） ── */
+var THEMES = [
+  ['tech','深蓝科技','#0ea5e9'], ['biz','浅色商务','#2563eb'], ['mono','极简黑白','#111111'], ['warm','温暖渐变','#d97706'],
+  ['aurora','极光紫','#5e6ad2'], ['dracula','德古拉紫','#bd93f9'], ['nord','北欧冰蓝','#88c0d0'], ['midnight','东京夜色','#7aa2f7'],
+  ['matrix','终端荧光绿','#00ff9c'], ['cyber','赛博霓虹','#ff2d78'], ['apple','苹果极简','#0071e3'], ['stripe','条纹紫蓝','#635bff'],
+  ['notion','纸感暖白','#2383e2'], ['gruvbox','复古暖橙','#fe8019'], ['gold','黑金奢华','#d4af37'], ['ocean','深洋蓝','#38bdf8']
+];
 function setGlobalTheme(name){
   document.documentElement.setAttribute('data-theme', name);
   slides.forEach(function(s){ s.removeAttribute('data-theme'); });
@@ -506,27 +1288,378 @@ function setGlobalTheme(name){
 function setSlideTheme(name){
   slides[cur].setAttribute('data-theme', name);
 }
-Array.prototype.slice.call(document.querySelectorAll('.tbtn.theme')).forEach(function(b){
-  b.addEventListener('click', function(){
-    btnScope.classList.contains('on') ? setSlideTheme(b.dataset.theme) : setGlobalTheme(b.dataset.theme);
-    Array.prototype.slice.call(document.querySelectorAll('.tbtn.theme')).forEach(function(x){ x.classList.remove('on'); });
-    b.classList.add('on');
+var themeMask = document.getElementById('themeMask');
+var themeGrid = document.getElementById('themeGrid');
+function activeThemeName(){
+  var sc = themeMask.querySelector('input[name="thScope"]:checked');
+  if (sc && sc.value === 'current'){
+    var st = slides[cur].getAttribute('data-theme');
+    if (st) return st;
+  }
+  return document.documentElement.getAttribute('data-theme') || 'tech';
+}
+function renderThemeDots(){
+  var active = activeThemeName();
+  var html = '';
+  THEMES.forEach(function(t){
+    html += '<div class="th-item' + (t[0] === active ? ' on' : '') + '" data-theme="' + t[0] + '">'
+      + '<span class="th-dot" style="background:' + t[2] + '"></span><span>' + t[1] + '</span></div>';
   });
+  themeGrid.innerHTML = html;
+}
+function openThemePanel(){
+  renderThemeDots();
+  closeCopyPanel(); closeShotPanel(); closeTplPanel(); addMask.classList.remove('open');
+  themeMask.classList.add('open');
+}
+function closeThemePanel(){ themeMask.classList.remove('open'); }
+document.getElementById('btnTheme').addEventListener('click', openThemePanel);
+document.getElementById('thClose').addEventListener('click', closeThemePanel);
+themeMask.addEventListener('click', function(e){ if (e.target === themeMask) closeThemePanel(); });
+themeMask.addEventListener('change', function(e){
+  if (e.target.name === 'thScope'){
+    Array.prototype.forEach.call(themeMask.querySelectorAll('.tpl-scope label'), function(l){
+      l.classList.toggle('sel', l.querySelector('input') === e.target);
+    });
+    renderThemeDots();
+  }
 });
-btnScope.addEventListener('click', function(){
-  btnScope.classList.toggle('on');
-  btnScope.textContent = btnScope.classList.contains('on') ? '⭮ 本页模式' : '⭮ 仅本页';
+themeGrid.addEventListener('click', function(e){
+  var it = e.target.closest('.th-item');
+  if (!it) return;
+  pushUndo();
+  var sc = themeMask.querySelector('input[name="thScope"]:checked');
+  if (sc && sc.value === 'current') setSlideTheme(it.getAttribute('data-theme'));
+  else setGlobalTheme(it.getAttribute('data-theme'));
+  renderThemeDots();
+  buildThumbs();
 });
 
 
 /* ── 模板应用（全部/本页/选页；标题自动映射到模板固定位置，内容不丢） ── */
 var TPLS = [
-  { id:'classic', name:'经典商务', ic:'▦', ds:'左色条标题 + 卡片栅格，稳重大方' },
-  { id:'minimal', name:'极简留白', ic:'▫', ds:'居中大标题 + 无边框要点，安静克制' },
-  { id:'magazine', name:'杂志画册', ic:'▤', ds:'超大标题跨版 + 左文右图 + 大数字带' },
-  { id:'keynote', name:'黑金发布', ic:'◉', ds:'每页一个核心观点，大字居中 + 环形进度' },
-  { id:'timeline', name:'时间线叙事', ic:'☰', ds:'竖线时间轴 + 节点卡片，适合历程回顾' }
+  { id:'classic', name:'经典商务', ic:'▦', ds:'左色条标题 + 卡片栅格，稳重大方',
+    mini:'<i style="left:5%;top:18%;width:2.5%;height:64%;background:var(--accent)"></i><i style="left:11%;top:18%;width:34%;height:12%;background:var(--text);opacity:.8"></i><i style="left:11%;top:40%;right:6%;height:42%;border:1px solid var(--border);background:var(--panel)"></i><i style="left:14%;top:48%;width:22%;height:10%;background:var(--accent);opacity:.25"></i>' },
+  { id:'minimal', name:'极简留白', ic:'▫', ds:'居中大标题 + 无边框要点，安静克制',
+    mini:'<i style="left:30%;top:20%;width:40%;height:8%;background:var(--text);opacity:.85"></i><i style="left:14%;top:40%;width:72%;height:5%;background:var(--border)"></i><i style="left:14%;top:56%;width:60%;height:5%;background:var(--border)"></i><i style="left:14%;top:72%;width:68%;height:5%;background:var(--border)"></i>' },
+  { id:'magazine', name:'杂志画册', ic:'▤', ds:'超大标题跨版 + 左文右图 + 大数字带',
+    mini:'<i style="left:5%;top:14%;width:56%;height:18%;background:var(--text);opacity:.85"></i><i style="left:5%;top:40%;width:34%;height:8%;background:var(--muted);opacity:.6"></i><i style="left:5%;top:54%;width:42%;height:8%;background:var(--muted);opacity:.6"></i><i style="left:68%;top:14%;width:27%;height:48%;background:linear-gradient(135deg,var(--accent),var(--accent2));opacity:.75"></i>' },
+  { id:'keynote', name:'黑金发布', ic:'◉', ds:'每页一个核心观点，大字居中 + 环形进度',
+    mini:'<i style="left:42%;top:10%;width:16%;height:34%;border-radius:50%;background:conic-gradient(var(--accent) 0 70%, var(--border) 70% 100%)"></i><i style="left:30%;top:52%;width:40%;height:10%;background:var(--text);opacity:.85"></i><i style="left:36%;top:72%;width:28%;height:6%;background:var(--border)"></i>' },
+  { id:'timeline', name:'时间线叙事', ic:'☰', ds:'竖线时间轴 + 节点卡片，适合历程回顾',
+    mini:'<i style="left:16%;top:8%;width:1.5%;height:84%;background:var(--accent)"></i><i style="left:10%;top:10%;width:9%;height:20%;border-radius:50%;background:var(--accent)"></i><i style="left:24%;top:10%;width:70%;height:14%;background:var(--panel);border:1px solid var(--border)"></i><i style="left:10%;top:40%;width:9%;height:20%;border-radius:50%;background:var(--accent)"></i><i style="left:24%;top:40%;width:70%;height:14%;background:var(--panel);border:1px solid var(--border)"></i><i style="left:10%;top:70%;width:9%;height:20%;border-radius:50%;background:var(--accent)"></i><i style="left:24%;top:70%;width:70%;height:14%;background:var(--panel);border:1px solid var(--border)"></i>' },
+  { id:'steps', name:'流程步骤', ic:'⇢', ds:'箭头连接的步骤条，适合流程与方法论',
+    mini:'<i style="left:5%;top:26%;width:24%;height:48%;border-radius:6px;background:var(--panel);border:1px solid var(--accent)"></i><i style="left:38%;top:26%;width:24%;height:48%;border-radius:6px;background:var(--panel);border:1px solid var(--accent)"></i><i style="left:71%;top:26%;width:24%;height:48%;border-radius:6px;background:var(--panel);border:1px solid var(--accent)"></i><i style="left:30%;top:42%;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid var(--accent)"></i><i style="left:63%;top:42%;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid var(--accent)"></i>' },
+  { id:'poster', name:'海报宣传', ic:'▰', ds:'海报大字 + 斜切色带，适合活动与品牌',
+    mini:'<i style="left:5%;top:12%;width:70%;height:14%;background:linear-gradient(90deg,var(--accent),var(--accent2));clip-path:polygon(0 0,94% 0,100% 50%,94% 100%,0 100%)"></i><i style="left:25%;top:40%;width:70%;height:14%;background:linear-gradient(90deg,var(--accent2),var(--accent));clip-path:polygon(6% 0,100% 0,100% 100%,6% 100%,0 50%)"></i><i style="left:5%;top:70%;width:60%;height:14%;background:linear-gradient(90deg,var(--accent),var(--accent2));clip-path:polygon(0 0,94% 0,100% 50%,94% 100%,0 100%)"></i>' },
+  { id:'vintage', name:'复古报纸', ic:'❧', ds:'衬线刊头 + 双栏排印，文化人文气质',
+    mini:'<i style="left:5%;top:10%;width:50%;height:10%;background:var(--text);opacity:.9"></i><i style="left:5%;top:26%;width:40%;height:4%;background:var(--muted);opacity:.7"></i><i style="left:5%;top:38%;width:44%;height:4%;background:var(--muted);opacity:.5"></i><i style="left:5%;top:50%;width:38%;height:4%;background:var(--muted);opacity:.5"></i><i style="left:58%;top:10%;width:1%;height:80%;background:var(--border)"></i><i style="left:66%;top:26%;width:30%;height:4%;background:var(--muted);opacity:.7"></i><i style="left:66%;top:38%;width:26%;height:4%;background:var(--muted);opacity:.5"></i><i style="left:66%;top:50%;width:30%;height:4%;background:var(--muted);opacity:.5"></i>' },
+  { id:'finance', name:'金融报表', ic:'◔', ds:'仪表环 + 竖线 KPI，数据一目了然',
+    mini:'<i style="left:38%;top:6%;width:24%;height:52%;border-radius:50%;background:conic-gradient(var(--accent) 0 62%, var(--border) 62% 100%)"></i><i style="left:45%;top:20%;width:10%;height:24%;border-radius:50%;background:var(--bg2)"></i><i style="left:8%;top:72%;width:20%;height:8%;background:var(--accent)"></i><i style="left:38%;top:72%;width:20%;height:8%;background:var(--accent)"></i><i style="left:68%;top:72%;width:20%;height:8%;background:var(--accent)"></i>' },
+  { id:'blueprint', name:'蓝图工程', ic:'⌗', ds:'制图网格 + 坐标标注，工程严谨感',
+    mini:'<i style="left:8%;top:14%;width:38%;height:58%;border:1px solid var(--accent);background:repeating-linear-gradient(0deg,transparent 0 3px,var(--border) 3px 4px),repeating-linear-gradient(90deg,transparent 0 3px,var(--border) 3px 4px)"></i><i style="left:54%;top:14%;width:38%;height:58%;border:1px solid var(--accent);background:repeating-linear-gradient(0deg,transparent 0 3px,var(--border) 3px 4px),repeating-linear-gradient(90deg,transparent 0 3px,var(--border) 3px 4px)"></i><i style="left:20%;top:26%;width:14%;height:6%;background:var(--accent);opacity:.7"></i><i style="left:66%;top:26%;width:14%;height:6%;background:var(--accent);opacity:.7"></i>' },
+  { id:'education', name:'教学板书', ic:'✎', ds:'粉笔下划线 + 要点条，讲解演示',
+    mini:'<i style="left:14%;top:16%;width:32%;height:14%;background:var(--text);opacity:.85"></i><i style="left:14%;top:42%;width:24%;height:5%;background:var(--accent2)"></i><i style="left:14%;top:56%;width:28%;height:5%;background:var(--accent2)"></i><i style="left:60%;top:14%;width:3px;height:40%;background:var(--accent2)"></i>' },
+  { id:'executive', name:'高管简报', ic:'▐', ds:'粗色条 + 细分隔线，结论优先',
+    mini:'<i style="left:5%;top:12%;width:4%;height:76%;background:var(--accent)"></i><i style="left:14%;top:12%;width:46%;height:12%;background:var(--text);opacity:.85"></i><i style="left:14%;top:32%;width:80%;height:3%;background:var(--border)"></i><i style="left:14%;top:44%;width:70%;height:3%;background:var(--border)"></i><i style="left:14%;top:56%;width:76%;height:3%;background:var(--border)"></i>' },
+  { id:'metro', name:'扁平磁贴', ic:'▣', ds:'多彩色块磁贴，界面风与应用展示',
+    mini:'<i style="left:5%;top:10%;width:28%;height:38%;border-radius:4px;background:var(--accent)"></i><i style="left:37%;top:10%;width:28%;height:38%;border-radius:4px;background:var(--accent2)"></i><i style="left:69%;top:10%;width:26%;height:38%;border-radius:4px;background:var(--muted)"></i><i style="left:5%;top:52%;width:28%;height:38%;border-radius:4px;background:var(--accent2)"></i><i style="left:37%;top:52%;width:28%;height:38%;border-radius:4px;background:var(--muted)"></i><i style="left:69%;top:52%;width:26%;height:38%;border-radius:4px;background:var(--accent)"></i>' },
+  { id:'bento', name:'模块网格', ic:'▦', ds:'大小格拼贴，信息层级分明',
+    mini:'<i style="left:5%;top:10%;width:36%;height:80%;border-radius:8px;background:var(--accent);opacity:.75"></i><i style="left:46%;top:10%;width:24%;height:36%;border-radius:8px;background:var(--panel);border:1px solid var(--border)"></i><i style="left:74%;top:10%;width:21%;height:36%;border-radius:8px;background:var(--panel);border:1px solid var(--border)"></i><i style="left:46%;top:52%;width:49%;height:38%;border-radius:8px;background:var(--panel);border:1px solid var(--border)"></i>' },
+  { id:'dark', name:'暗夜深色', ic:'◐', ds:'页面级反色，浅色主题下也全黑',
+    mini:'<i style="left:0;top:0;width:100%;height:100%;background:#0d1117"></i><i style="left:8%;top:20%;width:40%;height:10%;background:#58a6ff;opacity:.85"></i><i style="left:8%;top:44%;width:60%;height:6%;background:#30363d"></i><i style="left:8%;top:60%;width:50%;height:6%;background:#30363d"></i><i style="left:74%;top:18%;width:16%;height:34%;border-radius:50%;background:conic-gradient(#58a6ff 0 60%,#30363d 60% 100%)"></i>' },
+  { id:'nature', name:'自然清新', ic:'❀', ds:'圆润有机形状，教育与生活主题',
+    mini:'<i style="left:8%;top:16%;width:30%;height:64%;border-radius:40% 15% 40% 15%;border:2px solid var(--accent)"></i><i style="left:44%;top:16%;width:26%;height:40%;border-radius:15% 40% 15% 40%;border:2px solid var(--accent2)"></i><i style="left:76%;top:26%;width:10%;height:22%;border-radius:50%;background:var(--accent)"></i>' }
 ];
+
+/* ── 成套模板生成器：领域 / 业务 21 式（面板「💼 领域」Tab 一键生成整套页面） ── */
+var P = (function(){
+  function pad2(n){ return ('0' + n).slice(-2); }
+  function sec(title, tpl, inner){ return '<section class="slide" data-title="' + title + '"' + (tpl ? ' data-template="' + tpl + '"' : '') + '>' + inner + '</section>'; }
+  function head(h2, tag){ return '<div class="s-head"><h2>' + h2 + '</h2><span class="tag">' + tag + '</span></div>'; }
+  return {
+    cover: function(title, sub){
+      return '<section class="slide cover" data-title="封面"><div class="logo" data-anim="pop"></div><div class="s-title" data-anim="fade-up">' + title + '</div><div class="sub" data-anim="fade-up" data-anim-delay="120">' + sub + '</div><div class="sign" data-anim="fade-in" data-anim-delay="300">GENERATED BY SKILLFORGE</div></section>';
+    },
+    toc: function(title, items){
+      var inner = head(title, 'CONTENTS') + '<div class="toc">';
+      items.forEach(function(t, i){
+        inner += '<div class="toc-item" data-goto="' + (2 + i) + '"><span class="no">' + pad2(i + 1) + '</span><span class="t">' + t + '</span><span class="pg">第 ' + (3 + i) + ' 页</span></div>';
+      });
+      inner += '</div>';
+      return sec('目录', '', inner);
+    },
+    points: function(title, tag, tpl, pts){
+      var inner = head(title, tag) + '<ul class="points">';
+      pts.forEach(function(p){ inner += '<li>' + p + '</li>'; });
+      inner += '</ul>';
+      return sec(title, tpl, inner);
+    },
+    cards: function(title, tag, tpl, list){
+      var g = list.length <= 2 ? 'grid2' : (list.length === 3 ? 'grid3' : 'grid4');
+      var inner = head(title, tag) + '<div class="' + g + '">';
+      list.forEach(function(c){ inner += '<div class="card"><h4>' + c.h + (c.en ? '<span class="en">' + c.en + '</span>' : '') + '</h4><p>' + c.p + '</p></div>'; });
+      inner += '</div>';
+      return sec(title, tpl, inner);
+    },
+    nums: function(title, tag, tpl, list){
+      var inner = head(title, tag) + '<div class="grid4">';
+      list.forEach(function(n){ inner += '<div class="bignum"><b>' + n.b + '</b><span>' + n.s + '</span></div>'; });
+      inner += '</div>';
+      return sec(title, tpl, inner);
+    },
+    chartHtml: function(kind, spec){
+      var h = '';
+      if (kind === 'bars'){
+        var max = 1;
+        spec.forEach(function(d){ if (d.v > max) max = d.v; });
+        h = '<div class="chart-bars">';
+        spec.forEach(function(d, i){
+          h += '<div class="bar" style="--bi:' + i + '"><b>' + d.v + '</b><i style="--h:' + Math.round(d.v / max * 100) + '%"></i><em>' + d.n + '</em></div>';
+        });
+        h += '</div>';
+      } else if (kind === 'line'){
+        var n = spec.length, pts = '', xs = [], ys = [];
+        spec.forEach(function(d, i){
+          var x = n === 1 ? 150 : Math.round(i * 300 / (n - 1));
+          var y = Math.round(150 - d.v / 100 * 130);
+          xs.push(x); ys.push(y);
+          pts += (pts ? ' ' : '') + x + ',' + y;
+        });
+        h = '<div class="chart-line"><svg viewBox="0 0 300 158" preserveAspectRatio="none"><polyline class="ln" points="' + pts + '"/>';
+        xs.forEach(function(x, i){ h += '<circle class="pt" style="--pi:' + i + '" cx="' + x + '" cy="' + ys[i] + '" r="4"/>'; });
+        h += '</svg></div>';
+      } else if (kind === 'pie'){
+        var C = 351.86, total = 0, acc = 0;
+        spec.forEach(function(d){ total += d.v; });
+        h = '<div class="chart-pie"><svg viewBox="0 0 150 150">';
+        spec.forEach(function(d, i){
+          var L = Math.round(C * d.v / total);
+          var rot = Math.round(acc / total * 360);
+          h += '<circle class="pc s' + (i + 1) + '" cx="75" cy="75" r="56" style="--po:351.86; --pi:' + i + '" stroke-dasharray="' + L + ' ' + Math.round(C - L) + '" transform="rotate(' + rot + ')"/>';
+          acc += d.v;
+        });
+        h += '</svg></div>';
+      } else if (kind === 'ring'){
+        var CC = 389.56, L2 = Math.round(CC * spec[0].pct / 100);
+        h = '<div class="chart-ring"><svg viewBox="0 0 150 150"><circle class="rc-bg" cx="75" cy="75" r="62"/><circle class="rc" cx="75" cy="75" r="62" style="--po:389.56" stroke-dasharray="' + L2 + ' ' + Math.round(CC - L2) + '"/></svg><div class="rc-val"><b data-count="' + spec[0].pct + '" data-count-dec="0">0</b><span>' + spec[0].s + '</span></div></div>';
+      }
+      return h;
+    },
+    chart: function(title, tag, tpl, kind, spec, noteH, notes){
+      var inner = head(title, tag) + '<div class="grid2"><div class="chart-card" data-anim-chart="' + kind + '"><div class="cc-head"><h4>' + spec.t + '</h4><span class="en">' + spec.en + '</span></div>' + P.chartHtml(kind, spec.data) + '</div><div class="card"><h4>' + noteH + '</h4><ul class="points">';
+      notes.forEach(function(n2){ inner += '<li>' + n2 + '</li>'; });
+      inner += '</ul></div></div>';
+      return sec(title, tpl, inner);
+    },
+    end: function(){
+      return '<section class="slide endpage" data-title="结束"><div class="s-title">谢谢观看</div><p>按 F 全屏放映 · 按 ? 查看全部热键</p><p class="sign">GENERATED BY SKILLFORGE</p></section>';
+    }
+  };
+})();
+
+/* 领域 / 业务分类 */
+var PROF_CATS = [
+  { id:'edu', name:'教育学术' },
+  { id:'biz', name:'职场商务' },
+  { id:'corp', name:'企业运营' },
+  { id:'pro', name:'专业领域' },
+  { id:'gov', name:'党政政务' },
+  { id:'life', name:'生活场景' }
+];
+
+/* 二十一套成套模板：pages = 封面 + 目录 + 内容页 + 图表页 + 结束页，一键整份替换 */
+var PROF = [
+  { id:'thesis', cat:'edu', name:'毕业答辩', ds:'课题研究 · 方法创新 · 成果致谢', main:'minimal', pages:[
+    P.cover('毕业答辩<br>基于深度学习的图像分割方法研究', '答辩人：张三 · 指导教师：李四教授 · 2026 年 6 月'),
+    P.toc('目录', ['研究背景', '研究方法', '关键创新', '实验结果']),
+    P.points('研究背景', 'RESEARCH', 'minimal', ['传统分割方法依赖人工设计特征，泛化能力有限', '医学影像标注成本高昂，可用样本稀缺', '实时分割场景对推理速度要求严苛']),
+    P.points('研究方法', 'METHOD', 'minimal', ['提出多尺度特征融合的编码器-解码器结构', '引入注意力机制抑制背景噪声干扰', '采用混合损失函数缓解类别不平衡问题']),
+    P.cards('关键创新', 'NOVELTY', 'minimal', [{h:'多尺度融合', en:'Fusion', p:'深浅层特征双向融合，兼顾细节与语义'}, {h:'注意力机制', en:'Attention', p:'通道-空间双重注意力，聚焦目标区域'}, {h:'轻量化设计', en:'Light', p:'模型压缩 4 倍，推理提速 60%'}]),
+    P.chart('实验结果', 'RESULT', 'minimal', 'bars', {t:'不同方法 mIoU 对比', en:'BARS GROW', data:[{n:'FCN', v:62}, {n:'U-Net', v:71}, {n:'DeepLab', v:78}, {n:'本文方法', v:86}]}, '实验结论', ['在公开数据集上 mIoU 达 86%，优于主流方法', '单帧推理耗时 18ms，满足实时要求', '未来探索小样本与自监督学习方向']),
+    P.end()
+  ]},
+  { id:'proposal', cat:'edu', name:'开题报告', ds:'选题背景 · 研究内容 · 进度安排', main:'executive', pages:[
+    P.cover('开题报告<br>城市智慧停车调度系统设计与实现', '汇报人：王五 · 导师：赵六教授 · 2026 年 3 月'),
+    P.toc('目录', ['选题背景', '研究内容', '技术路线', '进度安排']),
+    P.points('选题背景', 'MOTIVE', 'executive', ['城市停车难问题突出，车位平均利用率不足 40%', '现有调度系统缺乏全局优化视角，找位耗时', '智慧城市政策推动，智慧停车被列为重点工程']),
+    P.cards('研究内容', 'SCOPE', 'executive', [{h:'车位状态感知', en:'Sensing', p:'地磁 + 视频融合，车位占用实时检测'}, {h:'调度算法设计', en:'Algorithm', p:'基于强化学习的全局车位调度策略'}, {h:'平台系统实现', en:'Platform', p:'小程序 + 后台管理 + 数据大屏一体'}]),
+    P.points('技术路线', 'ROUTE', 'executive', ['调研分析：实地考察 12 个停车场现状', '建模求解：构建停车需求预测模型', '算法验证：仿真环境对比 4 种调度策略', '系统落地：试点 3 个停车场评估效果']),
+    P.chart('进度安排', 'PLAN', 'executive', 'ring', {t:'课题总体完成度', en:'RING SWEEP', data:[{pct:35, s:'总体进度'}]}, '里程碑', ['文献调研与技术选型已完成', '算法设计与仿真实验进行中', '预计 12 月完成系统开发与论文撰写']),
+    P.end()
+  ]},
+  { id:'teaching', cat:'edu', name:'教学课件', ds:'学习目标 · 知识讲解 · 课堂练习', main:'education', pages:[
+    P.cover('人教版 · 小学语文五年级<br>《草船借箭》', '授课教师：陈老师 · 第三单元 · 共 2 课时'),
+    P.toc('目录', ['学习目标', '生字词', '课文精讲', '课堂练习']),
+    P.points('学习目标', 'GOALS', 'education', ['认识 11 个生字，会写 8 个字', '理解诸葛亮神机妙算的深层原因', '感受古典名著的魅力，激发阅读兴趣']),
+    P.cards('生字词', 'WORDS', 'education', [{h:'擂鼓', en:'léi gǔ', p:'击鼓助威，古代军中号令'}, {h:'都督', en:'dū du', p:'古代军事长官，课文指周瑜'}, {h:'妒忌', en:'dù jì', p:'因别人胜过自己而心怀怨恨'}]),
+    P.points('课文精讲', 'TEXT', 'education', ['起因：周瑜妒忌，令诸葛亮十日造十万支箭', '经过：大雾漫天，草船逼近曹营水寨', '结果：借箭十万，周瑜自叹不如']),
+    P.chart('课堂练习', 'QUIZ', 'education', 'bars', {t:'随堂检测正确率', en:'BARS GROW', data:[{n:'识字', v:92}, {n:'词语', v:88}, {n:'理解', v:85}, {n:'拓展', v:78}]}, '练习小结', ['生字听写全班平均正确率 92%', '人物性格分析环节讨论热烈', '课后推荐阅读《三国演义》原著节选']),
+    P.end()
+  ]},
+  { id:'report', cat:'biz', name:'年终汇报', ds:'年度总览 · 重点项目 · 明年规划', main:'executive', pages:[
+    P.cover('2026 年度工作汇报', '汇报人：产品总监 · 张三 · 2026 年 12 月'),
+    P.toc('目录', ['年度总览', '重点项目', '关键数据', '团队建设', '明年规划']),
+    P.nums('年度总览', 'OVERVIEW', 'executive', [{b:'12', s:'项重点项目'}, {b:'3.2亿', s:'全年 GMV'}, {b:'98%', s:'按期交付率'}, {b:'40', s:'人团队规模'}]),
+    P.cards('重点项目', 'PROJECTS', 'executive', [{h:'智能推荐 2.0', en:'Recommend', p:'转化率提升 26%，GMV 贡献 1.2 亿'}, {h:'会员体系重构', en:'Membership', p:'付费会员破 80 万，续费率 72%'}, {h:'性能优化专项', en:'Performance', p:'首屏时间 1.8s → 0.9s，崩溃率降 60%'}]),
+    P.chart('关键数据', 'DATA', 'executive', 'line', {t:'全年 GMV 走势（亿元）', en:'LINE DRAW', data:[{n:'Q1', v:38}, {n:'Q2', v:52}, {n:'Q3', v:66}, {n:'Q4', v:85}]}, '数据解读', ['Q4 同比增长 40%，创历史新高', '大促期间峰值日 GMV 突破 5000 万', '客单价同比提升 12%']),
+    P.points('团队建设', 'TEAM', 'executive', ['校招补充 15 人，全员完成职级晋升答辩', '建立双周复盘机制，问题闭环率 95%', '组织内部技术分享 24 场']),
+    P.cards('明年规划', 'PLAN', 'executive', [{h:'出海业务探索', en:'Global', p:'东南亚市场试点，组建本地化团队'}, {h:'数据中台建设', en:'Data', p:'统一指标口径，赋能精细化运营'}, {h:'组织效能提升', en:'Efficiency', p:'推进 OKR 落地，人均产出提升 20%'}]),
+    P.end()
+  ]},
+  { id:'competition', cat:'biz', name:'竞聘述职', ds:'个人经历 · 核心业绩 · 任职规划', main:'timeline', pages:[
+    P.cover('竞聘述职 · 产品总监', '竞聘人：李四 · 2026 年 11 月'),
+    P.toc('目录', ['个人经历', '核心业绩', '能力模型', '任职规划']),
+    P.cards('个人经历', 'CAREER', 'timeline', [{h:'产品专员', en:'2019', p:'从 0 到 1 搭建用户反馈体系'}, {h:'高级产品经理', en:'2022', p:'主导 3 条核心产品线迭代'}, {h:'产品组长', en:'2025', p:'带领 8 人团队，年度考核 S'}]),
+    P.nums('核心业绩', 'RESULTS', 'timeline', [{b:'15', s:'条产品线'}, {b:'240%', s:'用户增长'}, {b:'9.2', s:'团队评分'}, {b:'6', s:'次年度优秀'}]),
+    P.points('能力模型', 'SKILLS', 'timeline', ['战略规划：从业务目标倒推产品路线图', '团队管理：辅导 12 名成员晋升', '数据分析：以数据驱动关键决策']),
+    P.chart('任职规划', 'PLAN', 'timeline', 'ring', {t:'年度目标达成承诺', en:'RING SWEEP', data:[{pct:96, s:'目标达成'}]}, '三步走', ['首季度完成组织梳理与流程优化', '半年内上线两条新业务线', '全年营收增长 50%，团队扩至 20 人']),
+    P.end()
+  ]},
+  { id:'plan', cat:'biz', name:'商业计划书', ds:'市场分析 · 商业模式 · 财务预测', main:'finance', pages:[
+    P.cover('商业计划书<br>智能养老服务平台', '星海科技 · 2026 年 10 月'),
+    P.toc('目录', ['市场分析', '商业模式', '产品方案', '财务预测']),
+    P.points('市场分析', 'MARKET', 'finance', ['银发经济规模将突破 30 万亿元', '居家养老需求占比超 90%，供给不足', '适老化产品渗透率不足 15%，空间巨大']),
+    P.cards('商业模式', 'MODEL', 'finance', [{h:'平台服务费', en:'Service', p:'撮合服务订单，抽取 10%-15% 佣金'}, {h:'智能硬件销售', en:'Hardware', p:'智能手环 + 一键呼救设备'}, {h:'增值服务', en:'Plus', p:'健康管理、陪诊、适老化改造'}]),
+    P.nums('产品方案', 'PRODUCT', 'finance', [{b:'4', s:'大产品模块'}, {b:'120', s:'项养老服务'}, {b:'500+', s:'合作机构'}, {b:'7×24', s:'全天响应'}]),
+    P.chart('财务预测', 'FINANCE', 'finance', 'pie', {t:'收入结构占比', en:'PIE SWEEP', data:[{n:'平台服务', v:45}, {n:'硬件销售', v:30}, {n:'增值服务', v:25}]}, '盈利展望', ['首年营收目标 1200 万元', '第三年实现盈亏平衡', '本轮融资需求 800 万元']),
+    P.end()
+  ]},
+  { id:'hiring', cat:'biz', name:'求职简历', ds:'教育经历 · 项目成果 · 技能特长', main:'timeline', pages:[
+    P.cover('个人简历 · 全栈工程师', '张三 · 5 年经验 · 期望职位：高级工程师'),
+    P.toc('目录', ['工作经历', '项目成果', '技能特长']),
+    P.cards('工作经历', 'EXPERIENCE', 'timeline', [{h:'某科技公司 · 技术负责人', en:'2024-今', p:'带领 10 人团队，负责核心系统架构'}, {h:'某互联网公司 · 全栈工程师', en:'2021-2024', p:'从 0 到 1 搭建交易中台'}, {h:'某软件公司 · 前端工程师', en:'2019-2021', p:'负责企业级管理后台开发'}]),
+    P.nums('项目成果', 'PROJECTS', 'timeline', [{b:'8', s:'个核心项目'}, {b:'99.99%', s:'系统可用性'}, {b:'40%', s:'性能提升'}, {b:'3', s:'项技术专利'}]),
+    P.points('技能特长', 'SKILLS', 'timeline', ['精通 Vue / React / Node.js 全栈技术体系', '熟悉微服务架构与容器化部署', '具备 10 人团队管理与项目推进经验']),
+    P.end()
+  ]},
+  { id:'product', cat:'corp', name:'产品发布', ds:'行业洞察 · 产品亮点 · 增长数据', main:'keynote', pages:[
+    P.cover('新一代智能协作平台 3.0<br>发布会', '让协作回归简单 · 2026 秋季'),
+    P.toc('目录', ['行业洞察', '产品亮点', '核心数据', '用户增长']),
+    P.points('行业洞察', 'INSIGHT', 'keynote', ['远程办公常态化，协作工具市场年增 25%', '用户苦于工具割裂与信息过载', '团队需要「一个入口，完成所有协作」']),
+    P.cards('产品亮点', 'HIGHLIGHTS', 'keynote', [{h:'AI 会议纪要', en:'AI Notes', p:'自动转写、摘要、待办一条龙'}, {h:'知识库联动', en:'Knowledge', p:'文档、聊天、任务打通互链'}, {h:'全端实时同步', en:'Sync', p:'多设备毫秒级状态同步'}]),
+    P.nums('核心数据', 'DATA', 'keynote', [{b:'10ms', s:'平均响应'}, {b:'99.99%', s:'可用性'}, {b:'500万', s:'注册用户'}, {b:'200+', s:'生态应用'}]),
+    P.chart('用户增长', 'GROWTH', 'keynote', 'line', {t:'内测至今用户数（万）', en:'LINE DRAW', data:[{n:'3月', v:12}, {n:'5月', v:35}, {n:'7月', v:70}, {n:'9月', v:150}, {n:'11月', v:300}]}, '增长密码', ['内测转正率 68%，远超行业平均', '次日留存 55%，周留存 38%', '公测预约已突破 50 万人']),
+    P.end()
+  ]},
+  { id:'tech', cat:'corp', name:'科技发布会', ds:'技术架构 · 性能指标 · 生态布局', main:'blueprint', pages:[
+    P.cover('苍穹 AI 大模型发布会', '多模态 · 千亿参数 · 开放平台'),
+    P.toc('目录', ['技术架构', '核心能力', '性能指标', '评测对比']),
+    P.points('技术架构', 'ARCH', 'blueprint', ['千亿参数 MoE 稀疏专家架构', '多模态统一编码，一图多文全覆盖', '训推一体，推理成本降低 60%']),
+    P.cards('核心能力', 'CAPABILITY', 'blueprint', [{h:'多轮对话', en:'Chat', p:'长上下文记忆，连续 50 轮不掉线'}, {h:'图像理解', en:'Vision', p:'图表、文档、场景一图读懂'}, {h:'代码生成', en:'Code', p:'支持 60+ 语言，一键生成可运行代码'}]),
+    P.nums('性能指标', 'BENCHMARK', 'blueprint', [{b:'85.6', s:'权威评测分'}, {b:'3.2s', s:'平均响应'}, {b:'60%', s:'成本降低'}, {b:'128K', s:'上下文窗口'}]),
+    P.chart('评测对比', 'RESULT', 'blueprint', 'bars', {t:'主流基准测试得分', en:'BARS GROW', data:[{n:'模型 A', v:78}, {n:'模型 B', v:82}, {n:'苍穹', v:91}]}, '评测结论', ['中文理解能力业界领先', '复杂推理能力提升显著', '开放 API 即日起可申请试用']),
+    P.end()
+  ]},
+  { id:'marketing', cat:'corp', name:'营销方案', ds:'市场洞察 · 策略路径 · 预算分配', main:'poster', pages:[
+    P.cover('618 年中大促<br>整合营销方案', '全渠道 · 全场景 · 全人群'),
+    P.toc('目录', ['市场洞察', '策略路径', '渠道排布', '预算分配']),
+    P.points('市场洞察', 'INSIGHT', 'poster', ['目标人群 Z 世代占比 62%，偏好内容种草', '竞品大促集中在价格战，缺乏体验创新', '私域流量红利仍在，复购提升空间大']),
+    P.cards('策略路径', 'STRATEGY', 'poster', [{h:'内容种草', en:'Content', p:'300+ KOL 矩阵，提前 30 天蓄水'}, {h:'直播引爆', en:'Live', p:'大促当日 42 场直播同时开播'}, {h:'私域沉淀', en:'Private', p:'社群 + 会员体系承接复购'}]),
+    P.nums('渠道排布', 'CHANNELS', 'poster', [{b:'6', s:'大平台联动'}, {b:'42', s:'场直播'}, {b:'300+', s:'位 KOL'}, {b:'1000万', s:'目标曝光'}]),
+    P.chart('预算分配', 'BUDGET', 'poster', 'pie', {t:'营销预算结构', en:'PIE SWEEP', data:[{n:'内容投放', v:40}, {n:'直播渠道', v:35}, {n:'活动让利', v:25}]}, '预算与目标', ['营销总预算 500 万元', '预期 ROI 达到 1:3.5', '大促 GMV 目标 2 亿元']),
+    P.end()
+  ]},
+  { id:'training', cat:'corp', name:'企业培训', ds:'公司概况 · 制度规范 · 成长路径', main:'education', pages:[
+    P.cover('新员工入职培训<br>走进星海科技', '人力资源部 · 2026 年第 3 期'),
+    P.toc('目录', ['公司概况', '组织架构', '制度规范', '成长路径']),
+    P.nums('公司概况', 'OVERVIEW', 'education', [{b:'2016', s:'年成立'}, {b:'800+', s:'员工'}, {b:'12', s:'个城市'}, {b:'3', s:'条业务线'}]),
+    P.cards('组织架构', 'ORG', 'education', [{h:'产品研发中心', en:'R&D', p:'产品、设计、研发、测试四大团队'}, {h:'市场运营中心', en:'Market', p:'市场、销售、客户成功协同作战'}, {h:'职能支撑中心', en:'Support', p:'人力、财务、行政、法务保驾护航'}]),
+    P.points('制度规范', 'RULES', 'education', ['考勤与假期：弹性工作制，年假 10 天起', '报销与采购：线上流程，48 小时内到账', '信息安全：数据分级管理，严禁外发']),
+    P.chart('成长路径', 'GROWTH', 'education', 'ring', {t:'新员工培训完成度', en:'RING SWEEP', data:[{pct:100, s:'课程完成'}]}, '培养计划', ['导师一对一辅导 3 个月', '第 90 天进行转正答辩', '晋升通道每半年开放一次']),
+    P.end()
+  ]},
+  { id:'ceremony', cat:'corp', name:'年会盛典', ds:'年度回顾 · 荣誉时刻 · 节目抽奖', main:'poster', pages:[
+    P.cover('星海科技 2026 年度盛典', '拾光而行 · 感谢有你'),
+    P.toc('目录', ['年度回顾', '荣誉时刻', '节目单', '幸运抽奖']),
+    P.nums('年度回顾', 'REVIEW', 'poster', [{b:'3亿', s:'年度营收'}, {b:'500万', s:'用户规模'}, {b:'120', s:'项专利'}, {b:'40', s:'座行业奖项'}]),
+    P.cards('荣誉时刻', 'HONOR', 'poster', [{h:'年度之星', en:'10 人', p:'在各自岗位做出突出贡献'}, {h:'五年陈', en:'25 人', p:'与公司共同成长的伙伴'}, {h:'最佳团队', en:'5 支', p:'协同作战、业绩斐然的团队'}]),
+    P.points('节目单', 'SHOW', 'poster', ['开场歌舞《星河》——产品研发中心', '小品《加班那点事》——技术部', '大合唱《明天会更好》——全员']),
+    P.chart('幸运抽奖', 'LUCKY', 'poster', 'pie', {t:'奖项设置', en:'PIE SWEEP', data:[{n:'特等奖', v:2}, {n:'一等奖', v:10}, {n:'二等奖', v:50}, {n:'三等奖', v:200}]}, '抽奖说明', ['阳光普照奖人手一份', '现场扫码参与抽奖', '祝大家好运连连']),
+    P.end()
+  ]},
+  { id:'finance', cat:'pro', name:'金融分析', ds:'宏观环境 · 行业配置 · 组合策略', main:'finance', pages:[
+    P.cover('2026 年第三季度<br>投资策略报告', '资产配置 · 行业轮动 · 风险控制'),
+    P.toc('目录', ['宏观环境', '行业配置', '组合策略', '风险提示']),
+    P.points('宏观环境', 'MACRO', 'finance', ['经济温和复苏，制造业景气度回升', '流动性合理充裕，利率中枢下移', '海外扰动边际减弱，风险偏好修复']),
+    P.cards('行业配置', 'SECTOR', 'finance', [{h:'科技成长', en:'Tech', p:'AI 算力与半导体国产替代'}, {h:'高端制造', en:'Manufacture', p:'机器人与工业自动化'}, {h:'消费复苏', en:'Consume', p:'出行链与健康消费'}]),
+    P.chart('组合策略', 'STRATEGY', 'finance', 'line', {t:'模拟组合净值走势', en:'LINE DRAW', data:[{n:'1月', v:100}, {n:'3月', v:112}, {n:'5月', v:128}, {n:'7月', v:135}, {n:'9月', v:152}]}, '组合表现', ['年化收益 21%，跑赢沪深 300 指数', '最大回撤控制在 6% 以内', '建议股债比例 6:4，攻守兼备']),
+    P.points('风险提示', 'RISK', 'finance', ['地缘政治与海外政策存在不确定性', '行业监管政策可能发生变化', '市场波动可能超预期，注意仓位管理']),
+    P.end()
+  ]},
+  { id:'medical', cat:'pro', name:'医疗科普', ds:'健康数据 · 预防建议 · 就医指引', main:'metro', pages:[
+    P.cover('心血管健康科普<br>别让血管悄悄变老', '健康管理中心 · 公益科普讲座'),
+    P.toc('目录', ['认识心血管', '危险因素', '预防指南', '就医指引']),
+    P.nums('认识心血管', 'FACTS', 'metro', [{b:'3.3亿', s:'患者人数'}, {b:'45%', s:'致死原因占比'}, {b:'30岁', s:'年轻化趋势'}, {b:'80%', s:'可以预防'}]),
+    P.cards('危险因素', 'RISKS', 'metro', [{h:'高血压', en:'BP', p:'血压 ≥140/90 需及时干预'}, {h:'高血脂', en:'Lipid', p:'LDL 超标加速动脉硬化'}, {h:'吸烟酗酒', en:'Tobacco', p:'血管内皮损伤的重要元凶'}, {h:'缺乏运动', en:'Sedentary', p:'久坐不动，代谢持续走低'}]),
+    P.points('预防指南', 'PREVENT', 'metro', ['每周 150 分钟中等强度运动', '少盐少油，多吃蔬果与全谷物', '定期体检，监测血压血脂血糖']),
+    P.chart('就医指引', 'FIRST-AID', 'metro', 'ring', {t:'4 分钟内心肺复苏存活率', en:'RING SWEEP', data:[{pct:70, s:'黄金救援'}]}, '急救要点', ['胸痛持续 15 分钟立即就医', '拨打 120 说明症状与准确地址', '学习心肺复苏，关键时刻能救命']),
+    P.end()
+  ]},
+  { id:'law', cat:'pro', name:'法律合规', ds:'合规形势 · 体系建设 · 重点工作', main:'executive', pages:[
+    P.cover('企业数据合规<br>体系建设方案', '法务合规部 · 2026 年度'),
+    P.toc('目录', ['合规形势', '体系建设', '重点工作', '保障措施']),
+    P.points('合规形势', 'TREND', 'executive', ['《个人信息保护法》执法力度持续加大', '数据出境安全评估成为企业刚需', '违规成本显著上升，最高罚上年营业额 5%']),
+    P.cards('体系建设', 'SYSTEM', 'executive', [{h:'制度体系', en:'Policy', p:'制定 12 项数据管理制度'}, {h:'技术防线', en:'Tech', p:'加密、脱敏、审计四道防线'}, {h:'审计监督', en:'Audit', p:'季度自查 + 年度第三方审计'}]),
+    P.points('重点工作', 'FOCUS', 'executive', ['隐私政策与授权链路全面梳理', '数据分类分级与加密存储落地', '年度合规培训覆盖率 100%']),
+    P.nums('保障措施', 'GUARD', 'executive', [{b:'4', s:'道技术防线'}, {b:'12', s:'项核心制度'}, {b:'100%', s:'培训覆盖'}, {b:'0', s:'起重大违规'}]),
+    P.end()
+  ]},
+  { id:'gov', cat:'gov', name:'政务汇报', ds:'总体情况 · 重点工作 · 数字政府', main:'executive', pages:[
+    P.cover('2026 年上半年<br>重点工作汇报', '市数据管理局 · 2026 年 7 月'),
+    P.toc('目录', ['总体情况', '重点工作', '数字政府', '下一步打算']),
+    P.nums('总体情况', 'SUMMARY', 'executive', [{b:'68', s:'项重点任务'}, {b:'95%', s:'按期完成率'}, {b:'30万', s:'服务事项'}, {b:'99.9%', s:'群众满意度'}]),
+    P.cards('重点工作', 'FOCUS', 'executive', [{h:'一网通办 2.0', en:'Online', p:'千项政务服务全程网办'}, {h:'城市大脑升级', en:'City Brain', p:'城市运行一屏统览'}, {h:'数据共享攻坚', en:'Data', p:'打通 45 个部门数据壁垒'}]),
+    P.chart('数字政府', 'DIGITAL', 'executive', 'bars', {t:'网上办事率（%）', en:'BARS GROW', data:[{n:'2024', v:62}, {n:'2025', v:78}, {n:'2026', v:92}]}, '建设成效', ['全程网办事项占比 92%', '办事材料平均精简 55%', '平均办事时限压缩 70%']),
+    P.points('下一步打算', 'NEXT', 'executive', ['深化数据要素市场化配置改革', '推进 AI 政务大模型试点应用', '建设一体化数据资源底座']),
+    P.end()
+  ]},
+  { id:'party', cat:'gov', name:'党建汇报', ds:'政治建设 · 组织建设 · 作风建设', main:'executive', pages:[
+    P.cover('2026 年度党建工作汇报', '中共星海科技党委 · 2026 年 12 月'),
+    P.toc('目录', ['政治建设', '组织建设', '作风建设', '明年展望']),
+    P.points('政治建设', 'POLITICS', 'executive', ['深入学习贯彻党的创新理论', '开展主题教育专题学习 12 场次', '党委理论学习中心组学习 24 次']),
+    P.nums('组织建设', 'ORG', 'executive', [{b:'36', s:'个党支部'}, {b:'850', s:'名党员'}, {b:'42', s:'名新发展党员'}, {b:'100%', s:'三会一课落实'}]),
+    P.points('作风建设', 'STYLE', 'executive', ['落实中央八项规定精神常态化长效化', '开展警示教育 6 场，覆盖全员', '党员群众满意度持续提升']),
+    P.chart('明年展望', 'VISION', 'executive', 'ring', {t:'党建品牌创建进度', en:'RING SWEEP', data:[{pct:80, s:'品牌创建'}]}, '创建目标', ['打造 3 个党建示范点', '推动党建与业务深度融合', '党员志愿服务常态化开展']),
+    P.end()
+  ]},
+  { id:'food', cat:'life', name:'餐饮品牌', ds:'品牌故事 · 招牌菜单 · 口碑数据', main:'magazine', pages:[
+    P.cover('山野食堂<br>一家有故事的云南菜馆', '从食材到餐桌 · 四季的味道'),
+    P.toc('目录', ['品牌故事', '招牌菜单', '食材溯源', '口碑数据']),
+    P.points('品牌故事', 'STORY', 'magazine', ['创立于 2016 年，名字取自云南的山野', '坚持「不时不食」，只做当季菜', '每一道菜背后都有一位手艺人']),
+    P.cards('招牌菜单', 'MENU', 'magazine', [{h:'汽锅鸡', en:'Steam Pot', p:'古法汽锅，原汁原味'}, {h:'野生菌火锅', en:'Mushroom', p:'当季鲜菌，山珍荟萃'}, {h:'鲜花饼', en:'Flower Cake', p:'现烤现卖，玫瑰馅料'}]),
+    P.points('食材溯源', 'SOURCE', 'magazine', ['清晨 5 点直采，当日送达门店', '与 27 家农户签订直供协议', '扫码即可查看每一份食材的产地故事']),
+    P.chart('口碑数据', 'REPUTATION', 'magazine', 'bars', {t:'各平台评分', en:'BARS GROW', data:[{n:'大众点评', v:92}, {n:'美团', v:90}, {n:'小红书', v:95}, {n:'抖音', v:88}]}, '经营表现', ['人均客单价 128 元', '全年客流 40 万人次', '顾客复购率 58%']),
+    P.end()
+  ]},
+  { id:'travel', cat:'life', name:'旅游攻略', ds:'行程总览 · 景点美食 · 预算构成', main:'magazine', pages:[
+    P.cover('云南七日<br>从昆明到大理丽江', '自由行攻略 · 人均预算 3500 元'),
+    P.toc('目录', ['行程总览', '景点推荐', '美食地图', '预算构成']),
+    P.cards('行程总览', 'ROUTE', 'magazine', [{h:'DAY 1-2 昆明', en:'Kunming', p:'滇池海鸥 · 石林奇观'}, {h:'DAY 3-4 大理', en:'Dali', p:'洱海骑行 · 古城慢生活'}, {h:'DAY 5-7 丽江', en:'Lijiang', p:'玉龙雪山 · 束河古镇'}]),
+    P.points('景点推荐', 'SPOTS', 'magazine', ['洱海环湖骑行，看日出与日落', '玉龙雪山，提前三天订大索道票', '束河古镇，比大研更安静惬意']),
+    P.points('美食地图', 'FOOD', 'magazine', ['昆明：过桥米线、汽锅鸡', '大理：酸辣鱼、烤乳扇', '丽江：腊排骨、鸡豆凉粉']),
+    P.chart('预算构成', 'BUDGET', 'magazine', 'pie', {t:'人均花费占比', en:'PIE SWEEP', data:[{n:'交通', v:35}, {n:'住宿', v:30}, {n:'餐饮', v:20}, {n:'门票娱乐', v:15}]}, '省钱贴士', ['人均总预算 3500 元', '机票提前 1 个月订最划算', '古城内住宿节假日价格翻倍']),
+    P.end()
+  ]},
+  { id:'festival', cat:'life', name:'节日庆典', ds:'活动主题 · 氛围布置 · 节目安排', main:'poster', pages:[
+    P.cover('中秋国庆双节<br>活动策划方案', '团圆月 · 家国情 · 2026'),
+    P.toc('目录', ['活动主题', '节目安排', '氛围布置']),
+    P.points('活动主题', 'THEME', 'poster', ['主视觉以「月亮与城市剪影」为核心元素', '双节同庆，营造家国同梦的氛围', '覆盖全年龄层，人人皆可参与']),
+    P.cards('节目安排', 'SHOW', 'poster', [{h:'中秋游园会', en:'Garden', p:'猜灯谜、做月饼、赏月会'}, {h:'国庆升旗仪式', en:'Ceremony', p:'晨光中同唱一首歌'}, {h:'亲子手作市集', en:'Market', p:'花灯、纸鸢、非遗体验'}]),
+    P.nums('氛围布置', 'DECOR', 'poster', [{b:'500米', s:'主题灯带'}, {b:'80', s:'组花灯'}, {b:'12', s:'处打卡点'}, {b:'30', s:'名志愿者'}]),
+    P.end()
+  ]},
+  { id:'charity', cat:'life', name:'公益慈善', ds:'项目背景 · 行动方案 · 参与方式', main:'minimal', pages:[
+    P.cover('一束光公益计划<br>乡村儿童阅读行动', '让每一本书都有人读'),
+    P.toc('目录', ['项目背景', '行动方案', '预期成效', '如何参与']),
+    P.points('项目背景', 'BACKGROUND', 'minimal', ['乡村学校藏书量不足城市学校的 1/5', '超 60% 乡村儿童课外阅读量偏少', '阅读是打破认知差距的最低成本方式']),
+    P.cards('行动方案', 'ACTION', 'minimal', [{h:'捐建图书角', en:'Library', p:'100 所学校落地标准图书角'}, {h:'陪伴共读', en:'Reading', p:'线上共读会每周一场'}, {h:'教师培训', en:'Training', p:'阅读指导方法进乡村课堂'}]),
+    P.nums('预期成效', 'IMPACT', 'minimal', [{b:'100', s:'所学校'}, {b:'5万', s:'本图书'}, {b:'1万+', s:'儿童受益'}, {b:'200', s:'名志愿者'}]),
+    P.points('如何参与', 'JOIN', 'minimal', ['捐一本书，写一句寄语', '成为线上共读志愿者', '企业冠名捐赠图书角']),
+    P.end()
+  ]}
+];
+
 function tplOf(s){ return s.getAttribute('data-template') || 'classic'; }
 function ensureOrigin(s){ if (!s._origin) s._origin = s.innerHTML; }
 function isSpecialPage(s){
@@ -623,14 +1756,98 @@ function wrapMagazine(s){
   while (s.firstChild) s.removeChild(s.firstChild);
   s.appendChild(mw);
 }
+function wrapSteps(s){
+  var cards = s.querySelectorAll('.card');
+  if (!cards.length) return;
+  var host = cards[0].parentNode;
+  var st = document.createElement('div'); st.className = 'st-wrap';
+  Array.prototype.forEach.call(cards, function(card, k){
+    var step = document.createElement('div'); step.className = 'st-step';
+    var no = document.createElement('div'); no.className = 'st-no'; no.textContent = k + 1;
+    step.appendChild(no);
+    var h4 = card.querySelector('h4');
+    if (h4){
+      var t4 = document.createElement('h4');
+      t4.textContent = h4.childNodes[0] ? h4.childNodes[0].textContent.trim() : h4.textContent.trim();
+      step.appendChild(t4);
+    }
+    var p = card.querySelector('p');
+    if (p){ var np = document.createElement('p'); np.textContent = p.textContent; step.appendChild(np); }
+    st.appendChild(step);
+  });
+  host.parentNode.insertBefore(st, host);
+  host.parentNode.removeChild(host);
+}
+function wrapPoster(s){
+  var items = s.querySelectorAll('.points li, .card');
+  if (!items.length) return;
+  var host = items[0].parentNode;
+  var band = document.createElement('div');
+  Array.prototype.forEach.call(items, function(it){
+    var b = document.createElement('div'); b.className = 'pt-band';
+    var h4 = it.querySelector('h4');
+    var main = h4 && h4.childNodes[0] ? h4.childNodes[0].textContent.trim() : it.textContent.trim().split('\n')[0];
+    b.appendChild(document.createTextNode(main));
+    var sub = it.querySelector('p') || it.querySelector('.en');
+    if (sub && sub.textContent.trim()){
+      var sp = document.createElement('span'); sp.textContent = sub.textContent.trim(); b.appendChild(sp);
+    }
+    band.appendChild(b);
+  });
+  host.parentNode.insertBefore(band, host);
+  host.parentNode.removeChild(host);
+}
+function wrapVintage(s){
+  var cards = s.querySelectorAll('.card');
+  if (!cards.length) return;
+  var host = cards[0].parentNode;
+  var vc = document.createElement('div'); vc.className = 'v-col';
+  Array.prototype.forEach.call(cards, function(card){ vc.appendChild(card); });
+  host.parentNode.insertBefore(vc, host);
+  host.parentNode.removeChild(host);
+}
+function wrapFinance(s){
+  var nums = s.querySelectorAll('.bignum');
+  if (!nums.length) return;
+  var host = nums[0].parentNode;
+  var row = document.createElement('div');
+  row.style.cssText = 'display:flex;justify-content:space-around;align-items:center;flex:1;gap:20px;';
+  Array.prototype.forEach.call(nums, function(n){
+    var b = n.querySelector('b');
+    var cap = n.querySelector('span');
+    var bt = b ? b.textContent.trim() : '';
+    var m = bt.match(/^(\d+(?:\.\d+)?)\s*%$/);
+    if (m){
+      var pct = Math.max(4, Math.min(100, parseFloat(m[1])));
+      var cell = document.createElement('div'); cell.style.textAlign = 'center';
+      var ring = document.createElement('div'); ring.className = 'fn-ring';
+      ring.style.setProperty('--pn', pct + '%');
+      var rb = document.createElement('b'); rb.textContent = bt; ring.appendChild(rb);
+      cell.appendChild(ring);
+      if (cap){ var cp = document.createElement('div'); cp.className = 'fn-caption'; cp.textContent = cap.textContent.trim(); cell.appendChild(cp); }
+      row.appendChild(cell);
+    } else {
+      row.appendChild(n);
+    }
+  });
+  host.parentNode.insertBefore(row, host);
+  host.parentNode.removeChild(host);
+}
 function applyTpl(s, tpl){
   ensureOrigin(s);
   s.innerHTML = s._origin;
   if (tpl === 'classic'){ s.removeAttribute('data-template'); return; }
   s.setAttribute('data-template', tpl);
+  /* 图表页保护：含 chart-card 的页面跳过重排包装器（timeline/keynote/magazine/steps/poster
+     会替换容器或清空整页，吞掉图表），保留语义结构，图表动画照常触发 */
+  if (s.querySelector('[data-anim-chart]')) return;
   if (tpl === 'timeline') wrapTimeline(s);
   else if (tpl === 'keynote' && !isSpecialPage(s)) wrapKeynote(s);
   else if (tpl === 'magazine' && !isSpecialPage(s)) wrapMagazine(s);
+  else if (tpl === 'steps' && !isSpecialPage(s)) wrapSteps(s);
+  else if (tpl === 'vintage' && !isSpecialPage(s)) wrapVintage(s);
+  else if (tpl === 'poster' && !isSpecialPage(s)) wrapPoster(s);
+  else if (tpl === 'finance' && !isSpecialPage(s)) wrapFinance(s);
 }
 function applyScope(tpl, scope, selected){
   var n = 0;
@@ -647,12 +1864,86 @@ var tplList = document.getElementById('tplList');
 var tplDo = document.getElementById('tplDo');
 var btnTemplate = document.getElementById('btnTemplate');
 var selTpl = 'classic';
-function closeTplPanel(){ tplMask.classList.remove('open'); }
+var previewSnap = null;
+var tplPreview = document.getElementById('tplPreview');
+var tabLayout = document.getElementById('tabLayout');
+var tabProf = document.getElementById('tabProf');
+var tplScopeRow = document.getElementById('tplScopeRow');
+var tplHeadNote = document.getElementById('tplHeadNote');
+var tplTab = 'layout';
+var selProf = null;
+var profArmed = false;
+function tplById(id){ return TPLS.filter(function(x){ return x.id === id; })[0] || TPLS[0]; }
+function renderTplCards(){
+  var html = '';
+  TPLS.forEach(function(tp){
+    html += '<div class="tpl-card' + (tp.id === selTpl ? ' on' : '') + '" data-tpl="' + tp.id + '">'
+      + '<span class="tpl-mini">' + (tp.mini || '') + '</span>'
+      + '<span class="nm">' + tp.name + '</span><span class="ds">' + tp.ds + '</span></div>';
+  });
+  tplCards.innerHTML = html;
+}
+function renderProfCards(){
+  var html = '';
+  PROF_CATS.forEach(function(cat){
+    var list = PROF.filter(function(p){ return p.cat === cat.id; });
+    if (!list.length) return;
+    html += '<div class="tpl-cat">' + cat.name + '</div>';
+    list.forEach(function(pr){
+      var tp = tplById(pr.main);
+      html += '<div class="tpl-card prof' + (pr.id === selProf ? ' on' : '') + '" data-prof="' + pr.id + '">'
+        + '<span class="tpl-mini">' + (tp.mini || '') + '</span>'
+        + '<span class="nm">' + pr.name + '<i class="pg">' + pr.pages.length + ' 页</i></span>'
+        + '<span class="ds">' + pr.ds + '</span></div>';
+    });
+  });
+  tplCards.innerHTML = html;
+}
+function setTplTab(tab){
+  tplTab = tab;
+  tabLayout.classList.toggle('on', tab === 'layout');
+  tabProf.classList.toggle('on', tab === 'prof');
+  tplScopeRow.style.display = (tab === 'layout') ? '' : 'none';
+  tplList.classList.remove('show');
+  tplPreview.style.display = (tab === 'layout') ? '' : 'none';
+  tplHeadNote.textContent = (tab === 'layout')
+    ? '模板只改版式，内容与配色不动；先「预览本页」看效果，满意再应用'
+    : '领域 / 业务成套模板：一键生成整套通用页面（封面 · 目录 · 内容页 · 图表页），原页面替换为模板骨架，可撤销';
+  if (previewSnap){
+    var s0 = slides[cur];
+    s0.innerHTML = previewSnap.html;
+    setTplAttr(s0, previewSnap.tpl);
+    previewSnap = null;
+    tplPreview.textContent = '👁 预览本页';
+  }
+  if (tab === 'prof') renderProfCards();
+  else renderTplCards();
+  updateTplBtn();
+}
+tabLayout.addEventListener('click', function(){ setTplTab('layout'); });
+tabProf.addEventListener('click', function(){ setTplTab('prof'); });
+function closeTplPanel(){
+  if (previewSnap){
+    var s = slides[cur];
+    s.innerHTML = previewSnap.html;
+    setTplAttr(s, previewSnap.tpl);
+    previewSnap = null;
+    tplPreview.textContent = '👁 预览本页';
+  }
+  tplMask.classList.remove('open');
+}
 function updateTplListVis(){
   var sc = tplMask.querySelector('input[name="tplScope"]:checked');
   tplList.classList.toggle('show', !!(sc && sc.value === 'selected'));
 }
 function updateTplBtn(){
+  if (tplTab === 'prof'){
+    var pr = PROF.filter(function(x){ return x.id === selProf; })[0];
+    tplDo.textContent = profArmed
+      ? '⚠ 确认：整份替换为「' + pr.name + '」（可撤销）'
+      : (pr ? '生成成套页面（' + pr.pages.length + ' 页）' : '生成成套页面');
+    return;
+  }
   var sc = tplMask.querySelector('input[name="tplScope"]:checked');
   var n = N;
   if (sc && sc.value === 'selected') n = tplMask.querySelectorAll('.tpl-check:checked').length;
@@ -661,13 +1952,8 @@ function updateTplBtn(){
 }
 function openTplPanel(){
   selTpl = tplOf(slides[cur]);
-  var html = '';
-  TPLS.forEach(function(tp){
-    html += '<div class="tpl-card' + (tp.id === selTpl ? ' on' : '') + '" data-tpl="' + tp.id + '">'
-      + '<span class="ic">' + tp.ic + '</span>'
-      + '<span><span class="nm">' + tp.name + '</span><span class="ds">' + tp.ds + '</span></span></div>';
-  });
-  tplCards.innerHTML = html;
+  selProf = null;
+  profArmed = false;
   var pageHtml = '';
   for (var i = 0; i < N; i++) {
     pageHtml += '<label class="cp-item"><input type="checkbox" class="tpl-check" value="' + i + '" checked>'
@@ -677,11 +1963,30 @@ function openTplPanel(){
   tplList.innerHTML = pageHtml;
   tplMask.querySelector('input[name="tplScope"][value="all"]').checked = true;
   updateTplListVis();
-  updateTplBtn();
-  closeCopyPanel(); closeShotPanel();
+  closeCopyPanel(); closeShotPanel(); closeThemePanel();
+  setTplTab(tplTab || 'layout');
   tplMask.classList.add('open');
 }
+function applyProf(){
+  var pr = PROF.filter(function(x){ return x.id === selProf; })[0];
+  if (!pr) return;
+  if (!profArmed){ profArmed = true; updateTplBtn(); return; }
+  profArmed = false;
+  pushUndo();
+  deck.innerHTML = pr.pages.join('');
+  refreshSlides();
+  slides.forEach(function(s){
+    var tp = tplOf(s);
+    if (tp !== 'classic' && !isSpecialPage(s)) applyTpl(s, tp);
+  });
+  buildThumbs();
+  closeTplPanel();
+  cur = 0; go(0);
+  btnTemplate.textContent = '✓ 已套用「' + pr.name + '」';
+  setTimeout(function(){ btnTemplate.textContent = '🎨 模板'; }, 1500);
+}
 function doApplyTpl(){
+  if (tplTab === 'prof'){ applyProf(); return; }
   var sc = tplMask.querySelector('input[name="tplScope"]:checked');
   if (!sc) return;
   var selected = [];
@@ -689,7 +1994,16 @@ function doApplyTpl(){
     Array.prototype.forEach.call(tplMask.querySelectorAll('.tpl-check:checked'), function(box){ selected.push(parseInt(box.value, 10)); });
     if (!selected.length) return;
   }
+  if (previewSnap){
+    var s0 = slides[cur];
+    s0.innerHTML = previewSnap.html;
+    setTplAttr(s0, previewSnap.tpl);
+    previewSnap = null;
+    tplPreview.textContent = '👁 预览本页';
+  }
+  pushUndo();
   var n = applyScope(selTpl, sc.value, selected);
+  buildThumbs();
   closeTplPanel();
   btnTemplate.textContent = '✓ 已应用 ' + n + ' 页';
   setTimeout(function(){ btnTemplate.textContent = '🎨 模板'; }, 1500);
@@ -697,12 +2011,22 @@ function doApplyTpl(){
 btnTemplate.addEventListener('click', openTplPanel);
 document.getElementById('tplCancel').addEventListener('click', closeTplPanel);
 tplDo.addEventListener('click', doApplyTpl);
+tplPreview.addEventListener('click', previewTpl);
 tplCards.addEventListener('click', function(e){
   var c = e.target.closest('.tpl-card');
   if (!c) return;
+  if (c.hasAttribute('data-prof')){
+    selProf = c.getAttribute('data-prof');
+    profArmed = false;
+    Array.prototype.forEach.call(tplCards.querySelectorAll('.tpl-card'), function(x){ x.classList.remove('on'); });
+    c.classList.add('on');
+    updateTplBtn();
+    return;
+  }
   selTpl = c.getAttribute('data-tpl');
-  Array.prototype.forEach.call(tplCards.children, function(x){ x.classList.remove('on'); });
+  Array.prototype.forEach.call(tplCards.querySelectorAll('.tpl-card'), function(x){ x.classList.remove('on'); });
   c.classList.add('on');
+  if (previewSnap) applyTpl(slides[cur], selTpl);
 });
 tplMask.addEventListener('change', function(e){
   if (e.target.name === 'tplScope'){
@@ -715,37 +2039,248 @@ tplMask.addEventListener('change', function(e){
 });
 tplMask.addEventListener('click', function(e){ if (e.target === tplMask) closeTplPanel(); });
 
+/* ── 撤销 / 重做（deck 快照 + 每页元信息；所有编辑操作可回退） ── */
+var deck = document.getElementById('deck');
+var undoStack = [], redoStack = [];
+/* 演示页领域卡点击：打开模板面板并选中对应成套模板 */
+deck.addEventListener('click', function(e){
+  var c = e.target.closest('.prof-demo');
+  if (!c) return;
+  openTplPanel();
+  setTplTab('prof');
+  selProf = c.getAttribute('data-prof');
+  profArmed = false;
+  renderProfCards();
+  updateTplBtn();
+});
+var btnUndo = document.getElementById('btnUndo');
+var btnRedo = document.getElementById('btnRedo');
+function snap(){
+  return {
+    html: deck.innerHTML,
+    cur: cur,
+    metas: slides.map(function(s){
+      return { o: s._origin || null, t: s.getAttribute('data-template'), th: s.getAttribute('data-theme') };
+    })
+  };
+}
+function pushUndo(){
+  undoStack.push(snap());
+  if (undoStack.length > 20) undoStack.shift();
+  redoStack = [];
+  updateUndoBtns();
+}
+function restore(sn){
+  deck.innerHTML = sn.html;
+  refreshSlides();
+  slides.forEach(function(s, k){
+    var m = sn.metas[k];
+    if (!m) return;
+    if (m.o) s._origin = m.o;
+    if (m.t) s.setAttribute('data-template', m.t);
+    if (m.th) s.setAttribute('data-theme', m.th);
+  });
+  buildThumbs();
+  updateUndoBtns();
+  go(Math.min(sn.cur, N - 1));
+}
+function undo(){ if (!undoStack.length) return; redoStack.push(snap()); restore(undoStack.pop()); }
+function redo(){ if (!redoStack.length) return; undoStack.push(snap()); restore(redoStack.pop()); }
+function updateUndoBtns(){
+  btnUndo.disabled = !undoStack.length;
+  btnRedo.disabled = !redoStack.length;
+}
+btnUndo.addEventListener('click', undo);
+btnRedo.addEventListener('click', redo);
+function anyMaskOpen(){
+  return tplMask.classList.contains('open') || copyMask.classList.contains('open')
+    || shotMask.classList.contains('open') || addMask.classList.contains('open')
+    || helpMask.classList.contains('open') || themeMask.classList.contains('open');
+}
+
+/* ── 预览本页：临时套模板看效果，不落 data-template，取消自动还原 ── */
+function setTplAttr(s, tpl){
+  if (tpl === 'classic') s.removeAttribute('data-template');
+  else s.setAttribute('data-template', tpl);
+}
+function previewTpl(){
+  var s = slides[cur];
+  if (previewSnap){
+    s.innerHTML = previewSnap.html;
+    setTplAttr(s, previewSnap.tpl);
+    previewSnap = null;
+    tplPreview.textContent = '👁 预览本页';
+    return;
+  }
+  previewSnap = { tpl: tplOf(s), html: s.innerHTML };
+  applyTpl(s, selTpl);
+  tplPreview.textContent = '👁 还原本页';
+}
+
+/* ── 页面管理边栏（缩略图浏览 / 点击跳转 / 复页 / 排序 / 删页 / 新页） ── */
+var sidePanel = document.getElementById('sidePanel');
+var spList = document.getElementById('spList');
+function refreshSlides(){
+  slides = Array.prototype.slice.call(deck.querySelectorAll('.slide'));
+  N = slides.length;
+}
+function buildThumbs(){
+  var html = '';
+  slides.forEach(function(s, k){
+    var t = s.getAttribute('data-title') || ('第 ' + (k + 1) + ' 页');
+    html += '<div class="thumb' + (k === cur ? ' cur' : '') + '" data-i="' + k + '">'
+      + '<span class="thumb-no">' + (k + 1) + '</span>'
+      + '<span class="thumb-t">' + escapeHtml(t) + '</span>'
+      + '<div class="thumb-ops">'
+      +   '<button data-act="dup" title="复制本页为副本（插在其后）">⧉</button>'
+      +   '<button data-act="up" title="上移" ' + (k === 0 ? 'disabled' : '') + '>↑</button>'
+      +   '<button data-act="down" title="下移" ' + (k === N - 1 ? 'disabled' : '') + '>↓</button>'
+      +   '<button class="op-del" data-act="del" title="删除本页" ' + (N === 1 ? 'disabled' : '') + '>🗑</button>'
+      + '</div>'
+      + '<div class="thumb-wrap">' + s.outerHTML + '</div></div>';
+  });
+  spList.innerHTML = html;
+  Array.prototype.forEach.call(spList.querySelectorAll('.thumb-wrap .slide'), function(cl){
+    cl.className = 'thumb-slide';
+    var w = cl.parentNode.clientWidth || 180;
+    cl.style.transform = 'scale(' + (w / 1280) + ')';
+  });
+}
+function thumbCur(){
+  Array.prototype.forEach.call(spList.children, function(t, k){ t.classList.toggle('cur', k === cur); });
+}
+spList.addEventListener('click', function(e){
+  var act = e.target.closest('[data-act]');
+  if (act){
+    var i = parseInt(act.closest('.thumb').getAttribute('data-i'), 10);
+    var a = act.getAttribute('data-act');
+    if (a === 'del' && N > 1){ pushUndo(); deletePage(i); }
+    else if (a === 'dup'){ pushUndo(); dupPage(i); }
+    else if (a === 'up'){ pushUndo(); movePage(i, -1); }
+    else if (a === 'down'){ pushUndo(); movePage(i, 1); }
+    return;
+  }
+  var th = e.target.closest('.thumb');
+  if (th) leaveThenGo(parseInt(th.getAttribute('data-i'), 10));
+});
+document.getElementById('btnPages').addEventListener('click', function(){ toggleSide(); });
+document.getElementById('btnTools').addEventListener('click', function(){ toggleSide('tools'); });
+document.getElementById('spAdd').addEventListener('click', openAddPanel);
+document.getElementById('spClose').addEventListener('click', function(){ sidePanel.classList.remove('open'); });
+
+/* ── 新增 / 删除页面 ── */
+function blankSlideHtml(tpl){
+  var tp = TPLS.filter(function(x){ return x.id === tpl; })[0] || TPLS[0];
+  return '<section class="slide" data-title="新页面"' + (tpl === 'classic' ? '' : ' data-template="' + tpl + '"') + '>'
+    + '<div class="s-head"><h2>新页面标题</h2><span class="tag">' + tp.name + '</span></div>'
+    + '<div class="grid2">'
+    + '<div class="card"><h4>要点一<span class="en">Point 1</span></h4><p>在这里写下要点内容，然后按 F 放映。</p></div>'
+    + '<div class="card"><h4>要点二<span class="en">Point 2</span></h4><p>支持全部 16 套版式与 16 套主题。</p></div>'
+    + '</div></section>';
+}
+function addPage(tpl){
+  var div = document.createElement('div');
+  div.innerHTML = blankSlideHtml(tpl);
+  var s = div.firstChild;
+  deck.insertBefore(s, slides[cur].nextSibling);
+  refreshSlides();
+  var tp = tplOf(s);
+  if (tp !== 'classic' && !isSpecialPage(s)) applyTpl(s, tp);
+  buildThumbs();
+  go(cur + 1);
+}
+function deletePage(i){
+  if (N <= 1) return;
+  deck.removeChild(slides[i]);
+  refreshSlides();
+  buildThumbs();
+  if (cur >= N) cur = N - 1;
+  go(cur);
+}
+function dupPage(i){
+  var src = slides[i];
+  var cp = src.cloneNode(true);
+  cp.classList.remove('active');
+  deck.insertBefore(cp, src.nextSibling);
+  refreshSlides();
+  buildThumbs();
+  go(i + 1);
+}
+function movePage(i, dir){
+  var j = i + dir;
+  if (j < 0 || j >= N) return;
+  var s = slides[i];
+  if (dir < 0) deck.insertBefore(s, slides[j]);
+  else deck.insertBefore(s, slides[j].nextSibling);
+  refreshSlides();
+  buildThumbs();
+  go(j);
+}
+
+/* ── 新增页面板（16 版式任选，插在当前页之后） ── */
+var addMask = document.getElementById('addMask');
+var addCards = document.getElementById('addCards');
+function openAddPanel(){
+  themeMask.classList.remove('open');
+  var html = '';
+  TPLS.forEach(function(tp){
+    html += '<div class="add-card" data-tpl="' + tp.id + '">'
+      + '<div class="tpl-mini">' + (tp.mini || '') + '</div>'
+      + '<span class="nm">' + tp.name + '</span></div>';
+  });
+  addCards.innerHTML = html;
+  addMask.classList.add('open');
+}
+document.getElementById('addCancel').addEventListener('click', function(){ addMask.classList.remove('open'); });
+addMask.addEventListener('click', function(e){ if (e.target === addMask) addMask.classList.remove('open'); });
+addCards.addEventListener('click', function(e){
+  var c = e.target.closest('.add-card');
+  if (!c) return;
+  pushUndo();
+  addPage(c.getAttribute('data-tpl'));
+  addMask.classList.remove('open');
+});
+
 /* ── 翻页 / 键盘 ── */
 document.getElementById('btnPrev').addEventListener('click', prev);
 document.getElementById('btnNext').addEventListener('click', next);
 document.addEventListener('keydown', function(e){
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+  if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z')){
+    if (!anyMaskOpen()) (e.shiftKey ? redo() : undo());
+    e.preventDefault(); return;
+  }
+  if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || e.key === 'Y')){
+    if (!anyMaskOpen()) redo();
+    e.preventDefault(); return;
+  }
   if (e.repeat) return;
   switch (e.key) {
     case 'ArrowRight': case 'ArrowDown': case 'PageDown': next(); e.preventDefault(); break;
     case 'ArrowLeft': case 'ArrowUp': case 'PageUp': prev(); e.preventDefault(); break;
     case ' ': next(); e.preventDefault(); break;
-    case 'Home': go(0); break;
-    case 'End': go(N - 1); break;
+    case 'Home': leaveThenGo(0); break;
+    case 'End': leaveThenGo(N - 1); break;
     case 'p': case 'P': playing ? stopPlay() : startPlay(); break;
     case 's': case 'S': shotPage(); break;
     case 'c': case 'C': copyPage(); break;
     case 'f': case 'F': toggleFull(); break;
+    case 'g': case 'G': toggleSide(); break;
     case '?': helpMask.classList.add('open'); break;
-    case 'Escape': helpMask.classList.remove('open'); copyMask.classList.remove('open'); shotMask.classList.remove('open'); tplMask.classList.remove('open'); if (document.fullscreenElement) document.exitFullscreen(); break;
+    case 'Escape': helpMask.classList.remove('open'); closeCopyPanel(); closeShotPanel(); closeTplPanel(); closeThemePanel(); addMask.classList.remove('open'); sidePanel.classList.remove('open'); if (document.fullscreenElement) document.exitFullscreen(); break;
     default:
-      if (/^[1-9]$/.test(e.key) && parseInt(e.key, 10) <= N) go(parseInt(e.key, 10) - 1);
+      if (/^[1-9]$/.test(e.key) && parseInt(e.key, 10) <= N) leaveThenGo(parseInt(e.key, 10) - 1);
   }
 });
 
 /* ── 页内连接 / 外部链接 / hash 定位 ── */
 document.getElementById('deck').addEventListener('click', function(e){
   var t = e.target.closest('[data-goto]');
-  if (t) go(parseInt(t.getAttribute('data-goto'), 10));
+  if (t) leaveThenGo(parseInt(t.getAttribute('data-goto'), 10));
 });
 window.addEventListener('hashchange', function(){
   var m = location.hash.match(/^#\/(\d+)$/);
-  if (m) go(parseInt(m[1], 10) - 1);
+  if (m) leaveThenGo(parseInt(m[1], 10) - 1);
 });
 
 /* ── 全屏 ── */
@@ -785,6 +2320,7 @@ function pagePreview(i){
   return line.length > 26 ? line.slice(0, 26) + '…' : line;
 }
 function openCopyPanel(){
+  themeMask.classList.remove('open');
   var html = '';
   for (var i = 0; i < N; i++) {
     html += '<label class="cp-item"><input type="checkbox" class="cp-check" value="' + i + '" checked>'
@@ -819,6 +2355,7 @@ function copySelectedPages(){
   } else { fallbackCopy(all); done(); }
 }
 btnCopyMulti.addEventListener('click', openCopyPanel);
+document.getElementById('btnCopy').addEventListener('click', copyPage);
 document.getElementById('cpCancel').addEventListener('click', closeCopyPanel);
 cpDo.addEventListener('click', copySelectedPages);
 cpAll.addEventListener('change', function(){
@@ -840,20 +2377,25 @@ copyMask.addEventListener('click', function(e){ if (e.target === copyMask) close
 /* ── 截图（SVG foreignObject → Canvas → PNG 2x，只含主体）：单页 + 选页批量共用 renderShot ── */
 function renderShot(i, cb){
   var clone = slides[i].cloneNode(true);
-  clone.classList.remove('dim');
+  clone.classList.remove('dim'); clone.classList.add('active', 'shot-clone');
   clone.style.position = 'relative'; clone.style.inset = 'auto';
   clone.style.padding = '64px 80px'; clone.style.display = 'flex';
   clone.style.opacity = '1'; clone.style.visibility = 'visible';
   clone.style.transform = 'none'; clone.style.transition = 'none';
   var styleText = Array.prototype.slice.call(document.querySelectorAll('style')).map(function(x){ return x.textContent; }).join('\n');
+  styleText += '\n.shot-clone [data-anim], .shot-clone [data-anim-emphasis], .shot-clone [data-anim-leave]{ opacity:1 !important; animation:none !important; }';
   var wrap = document.createElement('div');
   wrap.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') || 'tech');
   wrap.style.width = '1280px'; wrap.style.height = '720px';
   wrap.style.background = 'var(--bg)';
   wrap.appendChild(clone);
+  /* foreignObject 内要求 XHTML 良构：空标签自闭合（<br>/<img> 等），否则 SVG 无法解析 */
+  var shotHtml = wrap.outerHTML.replace(/<(br|hr|img|input|meta|link|source|wbr|col)\b([^>]*)>/gi, function(m, tag, rest){
+    return '<' + tag + rest.replace(/\/\s*$/, '') + '/>';
+  });
   var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">'
     + '<foreignObject width="1280" height="720">'
-    + '<div xmlns="http://www.w3.org/1999/xhtml"><style>' + styleText + '</style>' + wrap.outerHTML + '</div>'
+    + '<div xmlns="http://www.w3.org/1999/xhtml"><style>' + styleText + '</style>' + shotHtml + '</div>'
     + '</foreignObject></svg>';
   var img = new Image();
   img.onload = function(){
@@ -883,6 +2425,7 @@ var spAll = document.getElementById('spAll');
 var spDo = document.getElementById('spDo');
 var btnShotMulti = document.getElementById('btnShotMulti');
 function openShotPanel(){
+  themeMask.classList.remove('open');
   var html = '';
   for (var i = 0; i < N; i++) {
     html += '<label class="cp-item"><input type="checkbox" class="sp-check" value="' + i + '" checked>'
@@ -921,6 +2464,7 @@ function shotSelectedPages(){
   step();
 }
 btnShotMulti.addEventListener('click', openShotPanel);
+document.getElementById('btnShot').addEventListener('click', shotPage);
 document.getElementById('spCancel').addEventListener('click', closeShotPanel);
 spDo.addEventListener('click', shotSelectedPages);
 spAll.addEventListener('change', function(){
@@ -967,7 +2511,184 @@ if (shotParam && shotParam !== 'all' && /^\d+$/.test(shotParam)){
   if (p >= 1 && p <= N){ go(p - 1); jumped = true; }
 }
 fit();
+buildThumbs();
 if (!jumped) go(0);
+
+/* ═══ 动画控制：翻页八套 + 入场/离场/强调 + 标题文字动画 + 应用范围（localStorage 记忆，失败静默）═══ */
+var deckEl = document.getElementById('deck');
+var TRANS_LIST = ['slide-lr','fade','slide-ud','zoom','flip','cube','wipe','dissolve'];
+var sideTabSaved = null; try{ sideTabSaved = localStorage.getItem('md-deck-side-tab'); }catch(e){}
+var leaving = false;
+
+function openSideTab(name){
+  Array.prototype.forEach.call(document.querySelectorAll('.sp-tab'), function(b){
+    b.classList.toggle('on', b.getAttribute('data-tab') === name);
+  });
+  document.getElementById('panePages').classList.toggle('on', name === 'pages');
+  document.getElementById('paneTools').classList.toggle('on', name === 'tools');
+}
+function openSide(name){
+  buildThumbs();
+  var t = name || sideTabSaved || 'pages';
+  if (t !== 'pages' && t !== 'tools') t = 'pages';
+  openSideTab(t);
+  sidePanel.classList.add('open');
+}
+function toggleSide(name){
+  if (sidePanel.classList.contains('open')){ sidePanel.classList.remove('open'); return; }
+  openSide(name);
+}
+
+/* ── 离场引擎：翻离当前页前先播元素离场动画（0.48s 窗口），再切页 ── */
+function leaveThenGo(i){
+  if (leaving) return;
+  i = Math.max(0, Math.min(N - 1, i));
+  if (i === cur){ go(i); return; }
+  var s = slides[cur];
+  var nodes = s ? s.querySelectorAll('[data-anim-leave]:not([data-anim-leave="none"])') : [];
+  if (nodes.length === 0 || deckEl.getAttribute('data-anim') === 'off'){ go(i); return; }
+  leaving = true;
+  s.classList.add('leaving');
+  Array.prototype.forEach.call(nodes, function(el){
+    el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+  });
+  setTimeout(function(){
+    s.classList.remove('leaving');
+    leaving = false;
+    go(i);
+  }, 480);
+}
+
+/* ── 工具 Tab：动画库 / 应用范围 / 标题文字 ── */
+(function(){
+  /* 应用范围：全部页面 / 仅本页 */
+  var scope = 'all';
+  var savedScope = null; try{ savedScope = localStorage.getItem('md-deck-anim-scope'); }catch(e){}
+  if (savedScope === 'current' || savedScope === 'all') scope = savedScope;
+  var scopeRadios = Array.prototype.slice.call(document.querySelectorAll('input[name="animScope"]'));
+  function syncScope(){
+    scopeRadios.forEach(function(r){
+      var sel = (r.value === scope);
+      r.checked = sel;
+      if (r.closest('label')) r.closest('label').classList.toggle('sel', sel);
+    });
+  }
+  syncScope();
+  scopeRadios.forEach(function(r){ r.addEventListener('change', function(){
+    if (r.checked){ scope = r.value; try{ localStorage.setItem('md-deck-anim-scope', scope); }catch(e){} syncScope(); }
+  }); });
+  function animSlides(){ return scope === 'all' ? slides : [slides[cur]]; }
+  function animEls(s){
+    return s.querySelectorAll('[data-anim]:not(.tchar):not(.tword):not(.tline), [data-anim-emphasis], [data-anim-leave]');
+  }
+
+  /* 翻页风格：八套按钮网格 */
+  var tgBtns = Array.prototype.slice.call(document.querySelectorAll('#tgGrid [data-tg]'));
+  function setTransition(v){
+    deckEl.setAttribute('data-transition', v);
+    tgBtns.forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-tg') === v); });
+    try{ localStorage.setItem('md-deck-transition', v); }catch(e){}
+  }
+  var savedT = null; try{ savedT = localStorage.getItem('md-deck-transition'); }catch(e){}
+  if (savedT && TRANS_LIST.indexOf(savedT) !== -1){ setTransition(savedT); }
+  else { setTransition(deckEl.getAttribute('data-transition') || 'slide-lr'); }
+  tgBtns.forEach(function(b){ b.addEventListener('click', function(){ setTransition(b.getAttribute('data-tg')); }); });
+
+  /* 入场开关 */
+  var chkA = document.getElementById('chkAnim');
+  function setAnim(v){
+    deckEl.setAttribute('data-anim', v ? 'on' : 'off');
+    try{ localStorage.setItem('md-deck-anim', v ? 'on' : 'off'); }catch(e){}
+  }
+  var savedA = null; try{ savedA = localStorage.getItem('md-deck-anim'); }catch(e){}
+  if (savedA === 'off' || savedA === 'on'){ setAnim(savedA === 'on'); chkA.checked = savedA === 'on'; }
+  else { chkA.checked = deckEl.getAttribute('data-anim') !== 'off'; }
+  chkA.addEventListener('change', function(){ setAnim(chkA.checked); });
+
+  /* 入场 / 离场 / 强调：点选即应用到范围内带标记的元素 */
+  var enterBtns = Array.prototype.slice.call(document.querySelectorAll('#enterGrid [data-a]'));
+  var leaveBtns = Array.prototype.slice.call(document.querySelectorAll('#leaveGrid [data-l]'));
+  var emphBtns = Array.prototype.slice.call(document.querySelectorAll('#emphGrid [data-e]'));
+  function mark(btns, v, attr){ btns.forEach(function(b){ b.classList.toggle('on', b.getAttribute(attr) === v); }); }
+  function applyEnter(v){
+    animSlides().forEach(function(s){ animEls(s).forEach(function(el){
+      el.setAttribute('data-anim', v);
+      if (v === 'none') el.removeAttribute('data-anim-delay');
+      el.removeAttribute('data-anim-emphasis');
+    }); });
+    mark(enterBtns, v, 'data-a');
+  }
+  function applyLeave(v){
+    animSlides().forEach(function(s){ animEls(s).forEach(function(el){
+      if (v === 'none') el.removeAttribute('data-anim-leave');
+      else el.setAttribute('data-anim-leave', v);
+    }); });
+    mark(leaveBtns, v, 'data-l');
+  }
+  function applyEmph(v){
+    animSlides().forEach(function(s){ animEls(s).forEach(function(el){
+      if (v === 'none') el.removeAttribute('data-anim-emphasis');
+      else { el.setAttribute('data-anim-emphasis', v); el.removeAttribute('data-anim'); el.removeAttribute('data-anim-delay'); }
+    }); });
+    mark(emphBtns, v, 'data-e');
+  }
+  enterBtns.forEach(function(b){ b.addEventListener('click', function(){ applyEnter(b.getAttribute('data-a')); }); });
+  leaveBtns.forEach(function(b){ b.addEventListener('click', function(){ applyLeave(b.getAttribute('data-l')); }); });
+  emphBtns.forEach(function(b){ b.addEventListener('click', function(){ applyEmph(b.getAttribute('data-e')); }); });
+
+  /* 标题文字动画：拆 h1/h2/h3/.s-title 为字 / 词 / 行，复用入场错落；data-md-orig 保存原文可还原 */
+  var textBtns = Array.prototype.slice.call(document.querySelectorAll('#textGrid [data-ta]'));
+  function restoreText(el){
+    if (el.hasAttribute('data-md-orig')){ el.innerHTML = el.getAttribute('data-md-orig'); el.removeAttribute('data-md-orig'); }
+  }
+  function splitText(el, mode){
+    var raw = el.getAttribute('data-md-orig') || el.innerHTML;
+    if (!el.hasAttribute('data-md-orig')) el.setAttribute('data-md-orig', raw);
+    var lines = raw.split(/<br\s*\/?>/i);
+    var out = '';
+    for (var li = 0; li < lines.length; li++){
+      var plain = lines[li].replace(/<[^>]*>/g, '');
+      var pieces;
+      if (mode === 'char') pieces = plain.split('');
+      else if (mode === 'word') pieces = plain.split(/\s+/).filter(function(x){ return x.length > 0; });
+      else pieces = [plain];
+      for (var pi = 0; pi < pieces.length; pi++){
+        if (pieces[pi] === ' ') { out += ' '; continue; }
+        var cls = mode === 'char' ? 'tchar' : (mode === 'word' ? 'tword' : 'tline');
+        out += '<span class="' + cls + '" data-anim="fade-up" style="animation-delay:' + Math.min(pi * 60, 600) + 'ms">' + escapeHtml(pieces[pi]) + '</span>';
+        if (mode === 'word' && pi < pieces.length - 1) out += ' ';
+      }
+      if (li < lines.length - 1) out += '<br>';
+    }
+    el.innerHTML = out;
+  }
+  function applyText(mode){
+    animSlides().forEach(function(s){
+      s.querySelectorAll('h1,h2,h3,.s-title').forEach(function(el){
+        restoreText(el);
+        if (mode !== 'none') splitText(el, mode);
+      });
+    });
+    mark(textBtns, mode, 'data-ta');
+  }
+  var savedTA = null; try{ savedTA = localStorage.getItem('md-deck-text-anim'); }catch(e){}
+  if (savedTA === 'char' || savedTA === 'word' || savedTA === 'line'){ applyText(savedTA); }
+  else { mark(textBtns, 'none', 'data-ta'); }
+  textBtns.forEach(function(b){ b.addEventListener('click', function(){
+    var m = b.getAttribute('data-ta');
+    applyText(m);
+    try{ localStorage.setItem('md-deck-text-anim', m); }catch(e){}
+  }); });
+
+  /* 双 Tab 切换 */
+  Array.prototype.forEach.call(document.querySelectorAll('.sp-tab'), function(b){
+    b.addEventListener('click', function(){
+      openSideTab(b.getAttribute('data-tab'));
+      try{ localStorage.setItem('md-deck-side-tab', b.getAttribute('data-tab')); }catch(e){}
+    });
+  });
+  openSideTab(sideTabSaved === 'tools' ? 'tools' : 'pages');
+})();
 </script>
 </body>
 </html>
