@@ -27,12 +27,12 @@ disable-model-invocation: false
 
 - **TEMPLATE**：海报布局模板，classic 经典舞台（默认，徽章+渐变巨字+三列要点卡）/ minimal 极简留白（瑞士平面，衬线巨字+编号竖排要点）/ magazine 杂志社论（刊头通栏线+左文右栏+首字下沉金句）/ hero 巨幕大字（电影海报式巨型关键词+底部要点横条）/ timeline 时间叙事（中央竖线+要点左右交替卡片）/ grid 卡片栅格（2×2 大圆角卡片+描边编号角标）/ dashboard 数据仪表（KPI 环形图+要点进度条）/ brutalist 新粗野（撞色块+4px 粗框+硬阴影）/ swiss 瑞士国际（红黑极简+网格对齐）/ bauhaus 包豪斯（圆方三角几何+三原色）/ mondrian 蒙德里安（黑粗线网格+红黄蓝色块）/ editorial 编辑刊（刊头双线+首字下沉+双栏）/ typo 大字报（巨型标题撑满+要点三列）/ memphis 孟菲斯（波点+撞色徽章+卡片微斜）/ exhibit 展览（展签卡片+硬影微斜）/ window 视窗（不对称 2:1 网格开窗）；newspaper 报纸新闻（报头双线+通栏标题+首字下沉+双栏）/ popart 波普艺术（网点底纹+描边大字+硬影卡片）/ opart 欧普艺术（放射纹+同心框视觉震荡）/ artnouveau 新艺术（拱形框+卷草饰线+慕夏气质）/ acid 酸性设计（液态金属 blob+斜切徽章）/ glitch 故障艺术（RGB 错位影+阶梯裁切）/ vaporwave 蒸汽波（落日渐变+透视地平线）/ cyber 赛博霓虹（切角框+霓虹辉光）/ academic 学术会议（横幅+三栏摘要+图表位）/ recruit 招聘（岗位巨字+标签+投递按钮）/ invitation 邀请函（烫金双线框）/ notice 通知公告（红头大字+正文缩进）；生成时写 `<html data-template="TEMPLATE值">` 定默认，页面顶部模板坞二十八标签按六组流派分组随点随换（现代主义/编辑出版/数据商务/艺术流派/先锋实验/场景专用）、与二十五主题正交组合出 700 种版式（localStorage 记忆，键按页内嵌唯一 ID 隔离、多份产物互不串台、改名/移动目录记忆不丢；生成时头部写 `<meta name="poster-id" content="<UUID>">`，每次 crypto.randomUUID() 生成标准 UUID v4（8-4-4-4-12 十六进制，禁止手写变体、禁止沿用占位与旧值）；落盘写文件前顺扫落盘目录下本技能命名的 html，读各文件 id meta 查重，撞号重掷至不重复）
 - **THEME**：海报主题，tech 深蓝科技（默认）/ biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变 / ink 水墨国风 / jade 翡翠绿 / rose 玫瑰金 / midnight 午夜金 / violet 霓虹紫 / swiss 瑞士红黑 / bauhaus 包豪斯三原色 / memphis 孟菲斯撞色 / morandi 莫兰迪 / nordic 北欧 / artdeco 装饰艺术 / noir 黑白电影 / classicblue 经典蓝 / pop 波普 / retro 复古胶片 / coral 珊瑚橙 / acid 酸性荧光 / cyber 赛博霓虹 / cream 奶油纸 / academic 学术蓝；生成时写 `<html data-theme="THEME值">` 定默认，页面右下角主题坞二十五色点 5×5 随点随换（记忆与隔离机制同 TEMPLATE）
-- **TPL_DIR**：用户模板库目录，auto = `~/.skillforge/user-templates`（Windows 下 `%USERPROFILE%\.skillforge\user-templates`，也可写绝对路径）；目录内的 *.html 模板文件生成海报时自动内嵌（格式见 `resources/user-template-example.html` 三段式注释约定），模板坞出现「我的模板」分组可随点随切；目录在技能目录之外，升级技能不覆盖
+- **TPL_DIR**：用户模板库目录，auto = 与海报库根目录平级的 `user-templates/`（DIR: auto 时 = 当前工作目录 `user-templates/`；DIR 写绝对路径如 `~/MyWork/posters` 时 = `~/MyWork/user-templates/`），所有海报产物共用这一处模板库，也可写绝对路径自定义；目录内的 *.html 模板文件生成海报时自动内嵌（格式见 `resources/user-template-example.html` 三段式注释约定），模板坞出现「我的模板」分组可随点随切；目录在技能目录之外，升级技能不覆盖
 - **DIR**：海报库根目录，auto = 当前工作目录 `posters/`（也可写绝对路径）；每张海报一个 slug 子目录——`<DIR>/<主题slug>/` 内 `poster.html` + `poster.md`（内容底稿）+ `poster.png`（SHOT 截图）三件套成组，互不混杂、整目录即一版海报，复制分享/清理删除都以目录为单位
 
 ## 配置版本机制（升级保护）
 
-本 skill 当前配置版本为 `3`（对应 user-config.md 中的 `CONFIG_VERSION`）。执行时若发现 user-config.md 的 CONFIG_VERSION 与本节声明不一致：
+本 skill 当前配置版本为 `4`（对应 user-config.md 中的 `CONFIG_VERSION`）。执行时若发现 user-config.md 的 CONFIG_VERSION 与本节声明不一致：
 
 1. 先将旧 user-config.md 备份为 `user-config.bak-<时间戳>.md`（同目录，绝不删除旧值）
 2. 按本节「配置升级规则」迁移字段：新增字段补默认值、改名字段按映射改写、删除字段的值保留在备份中并在对话提示用户手动确认
@@ -42,6 +42,8 @@ disable-model-invocation: false
 迁移规则（v1 → v2）：新增 `TEMPLATE` 字段，默认 `classic`，其余字段不变。
 
 迁移规则（v2 → v3）：新增 `TPL_DIR` 字段，默认 `auto`，其余字段不变。
+
+迁移规则（v3 → v4）：TPL_DIR 的 auto 落点从 `~/.skillforge/user-templates` 改为与海报库根目录平级的 `user-templates/`；执行时若发现旧位置（~/.skillforge/user-templates）存在模板文件而新平级位置为空，自动把旧模板移入新位置并在对话中告知；用户已写绝对路径的不动。
 
 升级本 skill 时，配置结构如有变化必须同步更新本节的当前版本号与迁移说明；禁止在未声明版本变更的情况下静默修改配置语义。
 ## 文档同步自检纪律（维护者必读）

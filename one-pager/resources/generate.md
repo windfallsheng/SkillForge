@@ -2,7 +2,7 @@
 
 ## 用户模板内嵌（TPL_DIR 非空时，先于三处替换）
 
-读 user-config.md 的 `TPL_DIR`（auto = `~/.skillforge/user-templates`，Windows 下 `%USERPROFILE%\.skillforge\user-templates`）。若目录存在且有 *.html 文件，按 `resources/user-template-example.html` 三段式约定逐份解析，内嵌进 reference.html 副本四处：
+读 user-config.md 的 `TPL_DIR`（auto = 与海报库根目录平级的 `user-templates/`：DIR: auto 时 = 当前工作目录 `user-templates/`，DIR 为绝对路径时 = 其父目录下的 `user-templates/`；也可写绝对路径）。若目录存在且有 *.html 文件，按 `resources/user-template-example.html` 三段式约定逐份解析，内嵌进 reference.html 副本四处：
 
 1. **TPL_CSS 块**（原样）：插到 CSS 内嵌点注释（`/* ▼ 用户模板 CSS 内嵌点`）**之前**
 2. **TPL_FN 块**（原样）：插到 FN 内嵌点注释（`/* ▼ 用户模板渲染函数内嵌点`）**之后**

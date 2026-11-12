@@ -22,7 +22,7 @@
 - `THEME`：默认主题（tech 深蓝科技 / biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变 / ink 水墨国风 / jade 翡翠绿 / rose 玫瑰金 / midnight 午夜金 / violet 霓虹紫 / swiss 瑞士红黑 / bauhaus 包豪斯三原色 / memphis 孟菲斯撞色 / morandi 莫兰迪 / nordic 北欧 / artdeco 装饰艺术 / noir 黑白电影 / classicblue 经典蓝 / pop 波普 / retro 复古胶片 / coral 珊瑚橙 / acid 酸性荧光 / cyber 赛博霓虹 / cream 奶油纸 / academic 学术蓝）
 - `ASPECT`：截图纵横比（3:4 竖版 / 1:1 方版 / 16:9 横版）
 - `SHOT`：是否顺带截 PNG
-- `TPL_DIR`：你的专属模板库目录（默认 ~/.skillforge/user-templates）；把你的模板文件放进去，以后生成海报时模板坞自动出现「我的模板」分组
+- `TPL_DIR`：你的专属模板库目录，默认与海报库根目录平级（如 `posters/` 旁的 `user-templates/`），所有海报产物共用；也可写绝对路径自定义；把你的模板文件放进去，以后生成海报时模板坞自动出现「我的模板」分组
 - `DIR`：海报库根目录（默认 posters/，可写绝对路径）；每张海报一个 slug 子目录，三件套成组互不混杂
 
 ## 用户模板库（DIY 专属模板）
