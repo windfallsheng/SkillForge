@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="sf-template" content="prompt-pouch@6">
+<meta name="sf-template" content="prompt-pouch@7">
 <meta name="pouch-id" content="REF-POUCH-0000">
 <title>锦囊 Prompt Pouch — 提示词管理台</title>
 <style>
@@ -200,12 +200,13 @@ header{
 /* 侧栏 */
 aside{ width:200px; flex:0 0 auto;
   display:flex; flex-direction:column;
-  position:sticky; top:80px; align-self:flex-start;
-  height:calc(100vh - 128px); /* 占满侧栏在视口中的剩余高度并稍留底余量：初始流位置在 sticky 顶栏与版心 padding 之下（约 104px），多留 28px 保证「＋ 新建分组」完整在屏 */
+  align-self:flex-start; /* 自然流式随页面整体滚动：说明卡完整展示，页面滚到底即可读完 */
 }
-/* 侧栏分组滚动区：收藏 + 分组局部滚动——滚动区最大高度 = 视口剩余高度减去「全部」行与底部「锦囊用法」说明卡的可见高度，分组再多说明卡也常驻侧栏底部露出；窄滚动条 */
+/* 侧栏分组滚动区：收藏 + 分组局部滚动——滚动区最大高度 = 视口高度减去顶栏、「全部」行与底部「锦囊用法」说明卡（完整展示不裁剪），分组再多说明卡也完整可见；窄滚动条 */
 .nav-scroll{
-  flex:1 1 auto; min-height:0; overflow-y:auto;
+  flex:0 0 auto; min-height:0;
+  max-height:calc(100vh - 360px);
+  overflow-y:auto;
   margin:0 -4px 0 0; padding-right:4px;
   scrollbar-width:thin; scrollbar-color:var(--border) transparent;
 }
@@ -231,14 +232,9 @@ aside{ width:200px; flex:0 0 auto;
 }
 .nav-item.on .cnt{ color:var(--gold); background:var(--gold-dim); }
 .side-tip{
-  flex:0 0 auto; /* 固定侧栏底部常驻：分组滚动区让出本卡可见高度，卡片永远露出顶部一部分 */
-  max-height:98px; overflow:hidden; position:relative;
-  margin:12px 0 0 0; padding:12px 14px 18px; border-radius:10px;
+  flex:0 0 auto; /* 完整展示不裁剪：分组滚动区为其留出空间，侧栏随页面整体滚动即可读完 */
+  margin:12px 0 0 0; padding:12px 14px 14px; border-radius:10px;
   border:1px dashed var(--border); font-size:11px; line-height:1.9; color:var(--muted);
-}
-.side-tip::after{ /* 底部渐隐：暗示下方还有内容 */
-  content:''; position:absolute; left:0; right:0; bottom:0; height:26px; pointer-events:none;
-  background:linear-gradient(180deg, transparent, var(--bg));
 }
 .side-tip b{ color:var(--gold); font-weight:700; }
 /* 主区 */
@@ -1453,6 +1449,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
         if (next === null) return false;
         return bkWrite('prompts.json', 'data', JSON.stringify(next, null, 2)).then(function(){
           state.data = next;
+          syncMirror(next);
           applyUserState();
           state.dirty = false; state.moves = [];
           persistUserState(); refreshDirtyUI();
@@ -1489,6 +1486,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
         });
         return bkWrite('prompts.json', 'data', JSON.stringify(latest, null, 2)).then(function(){
           state.data = latest;
+          syncMirror(latest);
           applyUserState();
           state.dirty = false; state.moves = [];
           persistUserState(); refreshDirtyUI();
@@ -2035,6 +2033,19 @@ if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(POUC
       });
     });
   }
+  /* 数据镜像：localStorage 存全量数据快照（file:// 下 IndexedDB 偶发不可用时兜底恢复，键按 pouch-id 隔离） */
+  function syncMirror(data){
+    try{ localStorage.setItem(SF_NS + '-mirror', JSON.stringify(data)); }catch(e){}
+  }
+  function readMirror(){
+    try{
+      var raw = localStorage.getItem(SF_NS + '-mirror');
+      if (!raw) return null;
+      var d = JSON.parse(raw);
+      if (d && d.groups && d.prompts) return d;
+    }catch(e){}
+    return null;
+  }
   /* 备份文件读：backup/ 优先，读不到回退根目录旧文件（旧目录结构兼容） */
   function readBk(name){
     return bkRead(name, 'backup').then(function(text){
@@ -2182,12 +2193,34 @@ if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(POUC
       var data = JSON.parse(text);
       state.data = data;
       idbSet('lastData', data);
+      syncMirror(data);
       bootMode = 'live';
       cacheBadge.style.display = 'none';
       applyUserState();
       renderNav(); render();
       toast('✓ 已直读 data/prompts.json，你的分组与提示词已载入');
     }).catch(function(){});
+  }
+  /* 「🔓 恢复数据」：已授权过目录但刷新后权限需重新确认（file:// 权限不跨会话持久）→ 一键 requestPermission 后直读，免重新选目录 */
+  function restoreAuth(){
+    if (!bkDirHandle || typeof bkDirHandle.requestPermission !== 'function') return;
+    bkDirHandle.requestPermission({ mode: 'readwrite' }).then(function(st){
+      if (st === 'granted'){
+        pendingAuth = false; updateBkUI();
+        reloadFromDirIfNeeded();
+      } else {
+        toast('未获授权：点「💾 授权目录」重新选择目录', true);
+      }
+    }).catch(function(){ toast('权限恢复失败，请重新授权目录', true); });
+  }
+  function updateBootBadge(){
+    if (bootMode === 'live' || !bkDirHandle || !bootRendered) return;
+    var link = ' <a id="bootRestore" style="cursor:pointer;text-decoration:underline">🔓 恢复数据</a>';
+    cacheBadge.innerHTML = (bootMode === 'cache'
+      ? '⚠️ 快照模式：当前显示上次快照，目录权限需确认后直读最新数据'
+      : '📌 示例模式：检测到曾授权过目录，点击确认权限即可载入你的数据') + link;
+    cacheBadge.style.display = '';
+    document.getElementById('bootRestore').addEventListener('click', restoreAuth);
   }
   btnBkEnable.addEventListener('click', function(){
     if (bkDirHandle && !pendingAuth){
@@ -2290,6 +2323,7 @@ if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(POUC
     // 先把当前状态固化进备份（目录备份滚入 .prev.json / 快照环记一份），再应用所选备份
     (bkDirHandle ? writeBackupNow() : writeSnapNow()).then(function(){
       state.data = snap.data;
+      syncMirror(snap.data);
       applyUserStateFrom(snap.userState || {});
       state.dirty = false; state.moves = [];
       persistUserState();
@@ -2342,6 +2376,7 @@ if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(POUC
     .then(function(data){
       state.data = data;
       idbSet('lastData', data);
+      syncMirror(data);
       bootMode = 'live';
       firstRender();
     })
@@ -2355,6 +2390,7 @@ if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(POUC
       }).then(function(data){
         state.data = data;
         idbSet('lastData', data);
+        syncMirror(data);
         bootMode = 'live';
         firstRender();
       }).catch(function(){
@@ -2364,9 +2400,16 @@ if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(POUC
             bootMode = 'cache';
             firstRender();
           } else {
-            state.data = DEFAULT_POUCH;
-            bootMode = 'demo';
-            firstRender();
+            var mirror = readMirror();
+            if (mirror){
+              state.data = mirror;
+              bootMode = 'cache';
+              firstRender();
+            } else {
+              state.data = DEFAULT_POUCH;
+              bootMode = 'demo';
+              firstRender();
+            }
           }
         });
       });
@@ -2383,6 +2426,7 @@ if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(POUC
       refreshDirtyUI();
       if (bootRendered){ renderNav(); render(); }
       updateBkUI();
+      updateBootBadge();
     });
 })();
 
