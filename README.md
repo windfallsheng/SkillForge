@@ -12,12 +12,12 @@
 
 | 分类 | Category | 说明 | 收录技能 |
 |:---|:---|:---|:---|
-| 报表汇演 | Reports | 多源数据整理（一段文字 / 文件里的描述 / 图片与素材 / 口头补充，什么材料都能成稿），按周期产出报告（日报 / 周报 / 月报 / 年报） | daily-report、weekly-report、monthly-report、annual-report |
+| 报表汇演 | Reports | 多源数据整理（一段文字 / 文件里的描述 / 图片与素材 / 口头补充，什么材料都能成稿），按周期产出报告（日报 / 周报 / 月报 / 季报 / 年报） | daily-report、weekly-report、monthly-report、quarterly-report、annual-report |
 | 文档装裱 | Documents | 文档转换与美化：Word / Markdown / 纯文本 → 精美 HTML + 逐章截图 | article-to-html |
 | 工程提效 | Engineering | 基于 Pandoc 的文档 ↔ 规格互转（需求文档切片 / 规格导出 Word·PDF），Pandoc 机械转换 + AI 校对防错 | spec-doc2spec、spec-spec2doc |
 | 演示汇演 | Slides | 从内容到演示：HTML 形态的魔法幻灯（放映 + 模板 + 主题）与 .pptx 登台文稿（原生可编辑页 + 封面截图） | magic-deck、deck-stage |
 | 数据整备 | Data | Excel / CSV / 图表、数据清洗与模板整理 | （规划中） |
-| 沟通协作 | Communication | 提示词管理（锦囊本地管理台） | prompt-pouch |
+| 沟通协作 | Communication | 会议纪要（行动项带负责人与截止时间，汇报链源头）与提示词管理（锦囊本地管理台） | meeting-minutes、prompt-pouch |
 | 技能自造 | Meta | 锻造技能本身的元技能（创建技能 / 插件） | meta-forge |
 
 ## 技能清单
@@ -28,12 +28,14 @@
 | weekly-report | 报表汇演 | [weekly-report/](weekly-report/) | 多源数据生成周报（本周结论 + 本周任务进度/下周计划/风险阻塞点 + 本周概览卡），数据来源同日报；周结束日可配置（默认周五，可改周日等），支持自然语言周定位（本周/上周/10月第2周/节假日锚定） |
 | monthly-report | 报表汇演 | [monthly-report/](monthly-report/) | 多源数据生成月报（四段式：月度概览/本月关键成果/问题与改进/下月计划）：一段文字、文件里的描述、图片或口头补充皆可成稿，开发类用户可聚合当月 git 提交；12 行业职业词典，支持自定义模板与自然语言月份定位（这个月/上个月/近一个月） |
 | annual-report | 报表汇演 | [annual-report/](annual-report/) | 多源数据生成年度总结（五段式：年度概览/核心成果/经验成长/不足反思/新年规划）：一段文字、文件里的描述、图片或口头补充皆可成稿；12 行业职业词典，支持自定义模板与自然语言年度定位 |
+| quarterly-report | 报表汇演 | [quarterly-report/](quarterly-report/) | 多源数据生成季度总结（四段式：季度概览/季度关键成果/问题与改进/下季度计划）：核心数据卡带环比（较上季度）+ 同比（较去年同期）双基准，概览附 Q1-Q4 季度走势图；成果段按 M1/M2/M3 月时间线（支持全年 Q1-Q4 回顾模式）；12 行业职业词典，支持自定义模板与自然语言季度定位（这个季度/上季度/Q3/近三个月） |
 | article-to-html | 文档装裱 | [article-to-html/](article-to-html/) | Word / Markdown / 纯文本 → 精美独立 HTML（思源黑体 + Roboto 商用免费字体，图表 HTML/CSS 重绘），逐章截图（Retina 2x）；现成 HTML 可直接截图或先美化 |
 | spec-doc2spec | 工程提效 | [spec-doc2spec/](spec-doc2spec/) | Word / Markdown 需求文档转结构化需求切片（薄入口 + resources 分册）；自动检测 Pandoc，未装引导跨系统安装 |
 | spec-spec2doc | 工程提效 | [spec-spec2doc/](spec-spec2doc/) | Markdown 规格导出为 Word / PDF 交付文档；自动检测 Pandoc，未装引导跨系统安装；PDF 双路径（xelatex / Chrome 打印兜底） |
 | magic-deck | 演示汇演 | [magic-deck/](magic-deck/) | 内容 → 单文件 HTML 幻灯（16:9 舞台 + 播放引擎 + 十六套版式模板 + 十七套主题 + 领域成套模板 21 套 + 图表动画五式 + 动画库 + 全屏放映纯净模式）：自动播放/循环/间隔、键盘热键、页内连接、逐页 PNG 截图与主体复制（不含操作元素） |
 | deck-stage | 演示汇演 | [deck-stage/](deck-stage/) | 报告/素材 → 专业 .pptx 登台文稿：三问交互（素材 → 页骨架表 → 成片方式），常规页原生可编辑（数据卡/时间线/柱图/饼图/折线），封面与结尾页 HTML 截图保真，每页可带演讲备注；视觉与报表同源（tech/biz/mono/light/warm 五主题，mono 为 IDEA 黑亮、light 为 IDEA 白亮） |
 | meta-forge | 技能自造 | [meta-forge/](meta-forge/) | 元技能：从需求出发锻造完整技能包（薄入口 + resources 拆分 + user-config），自动植入四大机制（CONFIG_VERSION 钥匙 / user-config 抽离 / reference 双轨 / 自检纪律），入仓库时自动登记 README 与 cli.js 分类表 |
+| meeting-minutes | 沟通协作 | [meeting-minutes/](meeting-minutes/) | 多源材料生成会议纪要（五段式：会议信息/会议结论/议题讨论/决议与行动项/下次会议）：行动项带负责人与截止时间（汇报链源头，可被日报/周报/月报/季报引用）；内置 12 类会议类型词典，支持自定义模板 |
 | prompt-pouch | 沟通协作 | [prompt-pouch/](prompt-pouch/) | 锦囊提示词管理台：生成并维护本地 HTML 管理页面（分组侧栏/搜索/拖拽与按钮排序/收藏/{变量}插值/一键复制/标签全交互（点击过滤·悬停删·快捷加，AI 批量整理智能打标）/导入导出 JSON 备份/分组 emoji 快捷面板），数据存 data/prompts.json、滚动备份在 backup/ 子目录，页面与数据分离，双笔协作（页面直写 + AI 代笔） |
 
 ## 安装
@@ -60,12 +62,12 @@ skill-forge init --target ~/.claude/skills --skills daily-report,weekly-report
 将技能目录复制到你所用的 AI 助手的技能目录（支持 SKILL.md 格式、本地加载技能的助手均可）：
 
 ```bash
-cp -R daily-report weekly-report monthly-report annual-report <你的 AI 助手技能目录>/
+cp -R daily-report weekly-report monthly-report quarterly-report annual-report <你的 AI 助手技能目录>/
 cp -R magic-deck prompt-pouch <你的 AI 助手技能目录>/
 cp -R spec-doc2spec spec-spec2doc <你的 AI 助手技能目录>/
 ```
 
-复制后直接说「写日报」「写周报」「写月报」或丢给它一个文档即可触发；问「日报怎么用 / 周报怎么用 / 登台怎么用」输出使用说明。
+复制后直接说「写日报」「写周报」「写月报」「写季报」「记会议」或丢给它一个文档即可触发；问「日报怎么用 / 周报怎么用 / 月报怎么用 / 季报怎么用 / 会议纪要怎么用 / 登台怎么用」输出使用说明。
 
 ## 命令参考
 
@@ -117,7 +119,7 @@ cp -R spec-doc2spec spec-spec2doc <你的 AI 助手技能目录>/
 │   ├── design-system.md         # 设计系统（字体 / 配色 / 排版 / 图表重绘）
 │   ├── user-config.md           # ⚙️ 用户配置（THEME 等，升级不覆盖）
 │   └── scripts/                 # 字体安装 / docx 抽取 / 字体内联脚本
-├── daily-report/（weekly-report / monthly-report / annual-report 同构）
+├── daily-report/（weekly-report / monthly-report / quarterly-report / annual-report 同构）
 │   ├── SKILL.md                 # 薄入口：frontmatter + 生成流程 + 规则速览
 │   ├── user-config.md           # ⚙️ 用户配置（CONFIG_VERSION + 默认配置 + 自定义模板）
 │   └── resources/               # 重内容按生成阶段拆分，AI 按需读取
@@ -155,6 +157,19 @@ cp -R spec-doc2spec spec-spec2doc <你的 AI 助手技能目录>/
 │   ├── user-config.md           # ⚙️ 用户配置
 │   └── resources/               # 分册：checklist 校对清单 / images 图片处理 /
 │                                #   structure 目录组织 / pdf-path PDF 双路径 / usage-guide
+├── quarterly-report/
+│   ├── SKILL.md
+│   ├── user-config.md
+│   └── resources/               # 结构同 daily-report，季报专属差异：
+│                                #   环比/同比双基准 / Q1-Q4 走势图 / M1-M3 月时间线
+├── meeting-minutes/
+│   ├── SKILL.md                 # 薄入口：五段式纪要生成流程 + 规则速览
+│   ├── user-config.md           # ⚙️ 用户配置（CONFIG_VERSION + 默认配置 + 自定义模板）
+│   └── resources/               # 会议纪要专属：
+│       ├── usage-guide.md       # 📖 使用说明（咨询应答的原样输出源）
+│       ├── content-rules.md     # ✍️ 内容规则（五段式 / 行动项三要素 / 写作风格）
+│       ├── meeting-type-dictionary.md # 🏷 会议类型词典（12 类会议）
+│       └── disk-and-html.md     # 💾 本地落盘 / HTML 五段卡样式 / content-png 截图规范
 └── weekly-report/
     ├── SKILL.md
     ├── user-config.md

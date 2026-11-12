@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="tech">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026-Q4 研发季度总结</title>
+<style>
+
+/* ═══ 五主题令牌：12 核心契约 + 报告扩展；html[data-theme] 运行时切换，THEME 生成时定默认 ═══ */
+:root, [data-theme="tech"]{
+  --bg:#0a1929; --bg2:#071525; --panel:rgba(11,30,55,.9); --panel-solid:#0b1e37;
+  --text:#bae6fd; --muted:#5b7fa5; --accent:#0ea5e9; --accent2:#14b8a6;
+  --border:rgba(14,165,233,.18); --glow:rgba(14,165,233,.35); --glow-soft:rgba(14,165,233,.15);
+  --title-grad:linear-gradient(90deg,#7dd3fc,#0ea5e9 45%,#818cf8);
+  --tag-bg:rgba(14,165,233,.12);
+  --card-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 12px 32px rgba(1,6,16,.5),0 0 24px rgba(14,165,233,.15);
+  --scan:rgba(0,240,255,.2); --scan-dim:rgba(0,240,255,.05);
+  --heat:rgba(14,165,233,.55);
+  --green:#14b8a6; --orange:#f97316; --rose:#f43f5e;
+}
+[data-theme="biz"]{
+  --bg:#e8ecf5; --bg2:#dde3ef; --panel:rgba(255,255,255,.97); --panel-solid:#ffffff;
+  --text:#1e293b; --muted:#64748b; --accent:#2563eb; --accent2:#0891b2;
+  --border:rgba(37,99,235,.14); --glow:rgba(37,99,235,.18); --glow-soft:rgba(37,99,235,.12);
+  --title-grad:linear-gradient(90deg,#1e40af,#2563eb 55%,#0891b2);
+  --tag-bg:rgba(37,99,235,.08);
+  --card-shadow:0 1px 2px rgba(15,23,42,.05),0 10px 28px rgba(15,23,42,.12);
+  --scan:rgba(37,99,235,.14); --scan-dim:rgba(37,99,235,.04);
+  --heat:rgba(37,99,235,.55);
+  --green:#0d9488; --orange:#ea580c; --rose:#e11d48;
+}
+[data-theme="mono"]{
+  --bg:#1e1f22; --bg2:#2b2d30; --panel:rgba(43,45,48,.95); --panel-solid:#2b2d30;
+  --card-shadow:0 1px 0 rgba(255,255,255,.06) inset, 0 12px 32px rgba(0,0,0,.5), 0 0 24px rgba(53,116,240,.16);
+  --text:#dfe1e5; --muted:#9aa0a6; --accent:#3574f0; --accent2:#5e9aff;
+  --border:rgba(53,116,240,.26); --glow:rgba(53,116,240,.3); --glow-soft:rgba(53,116,240,.13);
+  --title-grad:linear-gradient(90deg,#dfe1e5,#5e9aff 50%,#3574f0);
+  --tag-bg:rgba(53,116,240,.13);
+  --scan:rgba(223,225,229,.18); --scan-dim:rgba(223,225,229,.07);
+  --heat:rgba(53,116,240,.55);
+  --green:#4da36b; --orange:#d09645; --rose:#d85f73;
+}
+[data-theme="light"]{
+  --bg:#ffffff; --bg2:#f2f2f2; --panel:rgba(255,255,255,.98); --panel-solid:#ffffff;
+  --card-shadow:0 1px 2px rgba(30,31,34,.06), 0 10px 28px rgba(30,31,34,.12);
+  --text:#1e1f22; --muted:#6e7781; --accent:#2675bf; --accent2:#4a9be0;
+  --border:rgba(38,117,191,.18); --glow:rgba(38,117,191,.2); --glow-soft:rgba(38,117,191,.1);
+  --title-grad:linear-gradient(90deg,#1e5f9f,#2675bf 55%,#4a9be0);
+  --tag-bg:rgba(38,117,191,.08);
+  --scan:rgba(38,117,191,.12); --scan-dim:rgba(38,117,191,.04);
+  --heat:rgba(38,117,191,.55);
+  --green:#2f8a5b; --orange:#d97706; --rose:#d6336c;
+}
+[data-theme="warm"]{
+  --bg:#f7ebd9; --bg2:#efe0c8; --panel:rgba(255,250,243,.97); --panel-solid:#fffaf3;
+  --text:#43301f; --muted:#8a7565; --accent:#d97706; --accent2:#ea580c;
+  --border:rgba(217,119,6,.18); --glow:rgba(217,119,6,.22); --glow-soft:rgba(217,119,6,.14);
+  --title-grad:linear-gradient(90deg,#b45309,#d97706 50%,#ea580c);
+  --tag-bg:rgba(217,119,6,.1);
+  --card-shadow:0 1px 2px rgba(120,72,24,.07),0 10px 28px rgba(120,72,24,.13);
+  --scan:rgba(217,119,6,.16); --scan-dim:rgba(217,119,6,.04);
+  --heat:rgba(217,119,6,.55);
+  --green:#0d9488; --orange:#c2410c; --rose:#be123c;
+}
+[data-theme="biz"] .stars, [data-theme="light"] .stars, [data-theme="warm"] .stars{ opacity:.28; }
+[data-theme="mono"] .stars{ background:radial-gradient(1px 1px at 12% 22%,rgba(223,225,229,.32),transparent),radial-gradient(1px 1px at 28% 68%,rgba(223,225,229,.28),transparent),radial-gradient(1.5px 1.5px at 45% 15%,rgba(223,225,229,.24),transparent),radial-gradient(1px 1px at 62% 78%,rgba(223,225,229,.26),transparent),radial-gradient(1px 1px at 78% 32%,rgba(223,225,229,.3),transparent),radial-gradient(1.5px 1.5px at 88% 58%,rgba(223,225,229,.28),transparent),radial-gradient(1px 1px at 8% 85%,rgba(223,225,229,.26),transparent),radial-gradient(1px 1px at 55% 45%,rgba(223,225,229,.24),transparent)}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--bg)}
+body{
+  font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,'PingFang SC','Microsoft YaHei',monospace;
+  color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+.grid-pattern{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(var(--scan-dim) 1px,transparent 1px),linear-gradient(90deg,var(--scan-dim) 1px,transparent 1px);
+  background-size:60px 60px}
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(1px 1px at 12% 22%,rgba(255,255,255,.4),transparent),radial-gradient(1px 1px at 28% 68%,rgba(0,240,255,.5),transparent),radial-gradient(1.5px 1.5px at 45% 15%,rgba(168,85,247,.4),transparent),radial-gradient(1px 1px at 62% 78%,rgba(0,255,136,.4),transparent),radial-gradient(1px 1px at 78% 32%,rgba(255,255,255,.35),transparent),radial-gradient(1.5px 1.5px at 88% 58%,rgba(0,240,255,.45),transparent),radial-gradient(1px 1px at 8% 85%,rgba(255,255,255,.3),transparent),radial-gradient(1px 1px at 55% 45%,rgba(0,240,255,.35),transparent)}
+.scanlines{position:fixed;inset:0;z-index:999;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,var(--scan-dim) 2px,var(--scan-dim) 4px)}
+.scanband{position:fixed;left:0;right:0;height:150px;z-index:998;pointer-events:none;
+  background:linear-gradient(180deg,transparent,var(--scan-dim) 50%,transparent);
+  animation:scanMove 11s linear infinite}
+@keyframes scanMove{from{top:-22%}to{top:112%}}
+.wrap{width:clamp(640px, 60%, 1200px); margin:0 auto; position:relative; z-index:1; padding:40px 0}
+.header-card{position:relative;overflow:hidden;background:var(--panel-solid);border:1px solid var(--border);border-radius:6px;
+  padding:34px 28px 26px;text-align:center;margin-bottom:18px;
+  box-shadow:var(--card-shadow);
+  background-image:repeating-linear-gradient(180deg, rgba(255,255,255,.012) 0 1px, transparent 1px 8px)}
+.header-card h1{font-size:26px;letter-spacing:2px;margin-bottom:8px;
+  background:var(--title-grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:titleGlow 3s ease-in-out infinite}
+@keyframes titleGlow{0%,100%{text-shadow:0 0 8px var(--glow),0 0 22px var(--glow-soft)}50%{text-shadow:0 0 14px var(--glow),0 0 34px var(--glow-soft)}}
+.header-sub{font-size:12px;color:var(--muted);letter-spacing:1px;margin-bottom:12px}
+.header-badge{display:inline-block;font-size:11px;color:var(--accent);border:1px solid var(--glow);border-radius:999px;padding:4px 14px}
+.card-glow{position:absolute;inset:-40% -20% auto;height:70%;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 10%,var(--glow),transparent 70%);
+  animation:cardGlow 3s ease-in-out infinite;transform-origin:top center;opacity:.5}
+@keyframes cardGlow{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.6)}}
+.scanline-el{position:absolute;pointer-events:none}
+.scan-x{top:0;left:0;height:1px;width:100%;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:scanX 3s linear infinite}
+.scan-y{top:0;right:0;width:1px;height:100%;background:linear-gradient(180deg,transparent,var(--accent),transparent);animation:scanY 3s linear infinite}
+.scan-x-rev{bottom:0;left:0;height:1px;width:100%;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:scanXRev 3s linear infinite}
+.scan-y-rev{top:0;left:0;width:1px;height:100%;background:linear-gradient(180deg,transparent,var(--accent),transparent);animation:scanYRev 3s linear infinite}
+@keyframes scanX{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+@keyframes scanY{from{transform:translateY(-100%)}to{transform:translateY(100%)}}
+@keyframes scanXRev{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+@keyframes scanYRev{from{transform:translateY(100%)}to{transform:translateY(-100%)}}
+.section{position:relative;overflow:hidden;background:var(--panel-solid);border:1px solid var(--border);border-radius:6px;
+  padding:22px 24px 22px 32px;margin-bottom:18px;
+  box-shadow:var(--card-shadow);
+  background-image:repeating-linear-gradient(180deg, rgba(255,255,255,.012) 0 1px, transparent 1px 8px);
+  transition:transform .18s ease,box-shadow .18s ease}
+.section:hover{transform:translateY(-2px);box-shadow:var(--card-shadow),inset 0 0 22px var(--glow-soft)}
+.sec-bar{position:absolute;left:0;top:0;bottom:0;width:8px}
+.sec-ov .sec-bar{background:linear-gradient(180deg,var(--accent2),var(--accent));box-shadow:0 0 12px var(--glow)}
+.sec-ms .sec-bar{background:linear-gradient(180deg,#5eead4,#14b8a6);box-shadow:0 0 12px rgba(20,184,166,.3)}
+.sec-pi .sec-bar{background:linear-gradient(180deg,#fda4af,#e11d48);box-shadow:0 0 12px rgba(244,63,94,.3)}
+.sec-nm .sec-bar{background:linear-gradient(180deg,#fdba74,#f97316);box-shadow:0 0 12px rgba(249,115,22,.3)}
+.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.sec-head svg{flex:0 0 auto}
+.sec-head h2{font-size:18px;letter-spacing:1px;animation:secGlow 3s ease-in-out infinite}
+.sec-ov .sec-head h2{color:var(--accent)}.sec-ms .sec-head h2{color:#5eead4}
+.sec-pi .sec-head h2{color:#fda4af}.sec-nm .sec-head h2{color:#fdba74}
+@keyframes secGlow{0%,100%{text-shadow:0 0 6px var(--glow)}50%{text-shadow:0 0 14px var(--glow)}}
+.tldr-line{font-size:15px;line-height:1.75;margin-bottom:18px}
+.tldr-line b{color:var(--accent);font-weight:700}
+.stat-row{display:flex;gap:12px;flex-wrap:wrap}
+.stat-card{flex:1 1 160px;position:relative;background:var(--tag-bg);border:1px solid var(--border);
+  border-radius:6px;padding:16px 14px;min-width:140px;overflow:hidden;
+  transition:transform .18s ease,box-shadow .18s ease}
+.stat-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.35)}
+.stat-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--accent2),var(--accent))}
+.stat-num{font-size:28px;font-weight:900;letter-spacing:1px;
+  background:var(--title-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat-label{font-size:12px;color:var(--muted);margin-top:6px}
+.stat-cmp{font-size:11.5px;margin-top:3px}
+.stat-cmp.up{color:var(--green)}
+.stat-cmp.down{color:var(--rose)}
+.timeline{position:relative;padding-left:26px}
+.timeline::before{content:'';position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--glow),var(--glow-soft))}
+.tl-group{position:relative;margin-bottom:18px}
+.tl-node{position:absolute;left:-26px;top:0;width:16px;height:16px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;color:#fff}
+.tl-node.m1,.tl-node.m2,.tl-node.q1,.tl-node.q2,.tl-node.q3{background:radial-gradient(circle at 30% 28%,#64748b,#475569 60%,#334155);box-shadow:0 0 8px rgba(100,116,139,.3)}
+.tl-node.m3,.tl-node.q4{background:radial-gradient(circle at 30% 28%,#7dd3fc,#0ea5e9 55%,#0369a1);box-shadow:0 0 10px rgba(14,165,233,.5);animation:nodePulse 2.4s ease-in-out infinite}
+@keyframes nodePulse{0%,100%{box-shadow:0 0 8px rgba(14,165,233,.4)}50%{box-shadow:0 0 18px rgba(14,165,233,.8)}}
+.tl-q{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:1px;margin-bottom:8px}
+.tl-item{position:relative;padding:10px 0 10px 16px;border-top:1px dashed var(--border)}
+.tl-item::before{content:'';position:absolute;left:0;top:19px;width:5px;height:5px;border-radius:50%;background:rgba(94,234,212,.8);box-shadow:0 0 6px rgba(94,234,212,.5)}
+.tl-desc{font-size:15px;line-height:1.65}
+.tl-meta{font-size:12px;color:var(--muted);margin-top:4px}
+.tl-badge{display:inline-block;font-size:11px;color:var(--muted);border:1px solid var(--border);border-radius:999px;padding:1px 10px;margin-left:6px}
+.tl-empty{font-size:13px;color:var(--muted);padding:6px 0 10px 16px}
+.cb-wrap{margin-top:18px;padding-top:14px;border-top:1px dashed var(--border)}
+.cb-title{font-size:12px;color:var(--muted);margin-bottom:12px;letter-spacing:1px}
+.ech{width:100%;height:200px}
+.ech-off{display:flex;align-items:center;justify-content:center}
+.ech-off::after{content:attr(data-off);font-size:11px;color:var(--muted);text-align:center;line-height:1.6;padding:0 10px}
+.idx{flex:0 0 auto;width:28px;height:28px;border-radius:50%;position:relative;
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  font-size:12px;font-weight:900;margin-top:2px;transition:transform .2s ease,font-size .2s ease}
+.idx.pi{background:radial-gradient(circle at 30% 28%,#fdaab4,#f43f5e 55%,#be123c);
+  box-shadow:0 2px 4px rgba(0,0,0,.25),0 0 8px rgba(244,63,94,.4),inset -3px -4px 6px rgba(0,0,0,.3),inset 1px 2px 3px rgba(255,255,255,.25)}
+.idx::before{content:'';position:absolute;top:5px;left:7px;width:8px;height:6px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.7),rgba(255,255,255,0));transform:rotate(-28deg);pointer-events:none}
+.idx b{display:inline-block;transition:transform .2s ease}
+.entry{flex:1;min-width:0}
+.entry-head{display:flex;align-items:flex-start;gap:12px}
+.desc{font-size:15px;line-height:1.65}
+.meta{display:block;font-size:12px;color:var(--muted);margin-top:4px}
+.meta b{color:var(--accent);font-weight:700}
+ol{list-style:none}
+li{display:flex;align-items:flex-start;gap:12px;padding:10px;border-radius:4px;transition:background .18s}
+li:hover{background:var(--tag-bg)}
+li:hover .idx{transform:scale(1.18) rotate(-4deg);font-size:14px}
+li:hover .idx b{transform:rotate(-6deg)}
+.goal{background:rgba(249,115,22,.04);border:1px solid rgba(249,115,22,.18);border-radius:6px;
+  padding:14px 16px;margin-bottom:12px;transition:transform .18s ease,box-shadow .18s ease}
+.goal:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.3)}
+.goal-desc{font-size:15px;line-height:1.65;margin-bottom:8px}
+.goal-desc b{color:#fdba74;font-weight:700}
+.goal-q{display:flex;flex-wrap:wrap;gap:6px}
+.q-chip{font-size:11px;color:var(--muted);border:1px solid var(--border);background:var(--tag-bg);
+  border-radius:999px;padding:2px 10px}
+.copy-wrap{display:flex;justify-content:center;margin:18px 0 0}
+.copy-btn{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;letter-spacing:2px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:999px;padding:12px 38px;cursor:pointer;
+  box-shadow:0 0 30px var(--glow);transition:transform .18s ease,box-shadow .18s ease;
+  font-family:inherit}
+.copy-btn:hover{transform:translateY(-2px);box-shadow:0 0 45px var(--glow)}
+.copy-btn:active{transform:translateY(1px) scale(.98)}
+footer{text-align:center;font-size:10px;color:var(--muted);letter-spacing:1px;padding:8px 0 4px}
+.header-card{animation:fadeDown .6s ease-out backwards}
+.sec-ov{animation:riseIn .5s ease-out .13s backwards}
+.sec-ms{animation:riseIn .5s ease-out .26s backwards}
+.sec-pi{animation:riseIn .5s ease-out .4s backwards}
+.sec-nm{animation:riseIn .5s ease-out .54s backwards}
+.copy-wrap{animation:popIn .4s ease-out .8s backwards}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+@keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+.section:hover{transform:perspective(900px) translateY(-2px) rotateY(calc(var(--mx,0)*2.5deg)) rotateX(calc(var(--my,0)*-2.5deg))}
+.theme-dock{
+  position:fixed; right:18px; bottom:18px; z-index:1001;
+  display:flex; gap:8px; padding:8px 10px; border-radius:999px;
+  background:var(--panel-solid); border:1px solid var(--border);
+  box-shadow:0 4px 18px rgba(0,0,0,.3);
+}
+.theme-dock .th-dot{
+  width:22px; height:22px; border-radius:50%; cursor:pointer;
+  border:2px solid transparent; padding:0;
+  transition:transform .15s ease, border-color .15s ease;
+}
+.theme-dock .th-dot:hover{ transform:scale(1.18); }
+.theme-dock .th-dot.on{ border-color:var(--text); }
+.theme-dock .th-dot[data-theme="tech"]{ background:#0ea5e9; }
+.theme-dock .th-dot[data-theme="biz"]{ background:#2563eb; }
+.theme-dock .th-dot[data-theme="mono"]{ background:#1e1f22; }
+.theme-dock .th-dot[data-theme="light"]{ background:#ffffff; }
+.theme-dock .th-dot[data-theme="warm"]{ background:#d97706; }
+@media print{ .theme-dock{ display:none; } .rv{ opacity:1 !important; translate:none !important; } }
+html.js .rv{ opacity:0; translate:0 16px; transition:opacity .5s ease-out, translate .5s ease-out; }
+html.js .rv.in{ opacity:1; translate:0 0; }
+@media (max-width:680px){
+  body{ padding:24px 12px 32px; }
+  .wrap{ width:100%; max-width:none; }
+  .header-card{ padding:26px 18px 20px; }
+  .header-card h1{ font-size:26px; }
+}
+</style>
+</head>
+<body>
+<div class="grid-pattern"></div>
+<div class="stars"></div>
+<div class="scanband"></div>
+<div class="scanlines"></div>
+<div class="wrap">
+  <header class="header-card" id="headerCard">
+    <span class="scanline-el scan-x"></span>
+    <span class="scanline-el scan-y"></span>
+    <span class="scanline-el scan-x-rev"></span>
+    <span class="scanline-el scan-y-rev"></span>
+    <div class="card-glow"></div>
+    <h1>2026-Q4 研发季度总结</h1>
+    <div class="header-sub">全栈开发工程师 · 2026-10-01 ~ 2026-11-12（截至 11-12）</div>
+    <span class="header-badge">生成时间 2026-11-12 19:10:38</span>
+    <div class="copy-wrap">
+      <button class="copy-btn" id="copyBtn" type="button">
+        <svg id="copyIcon" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4">
+          <rect x="5.5" y="5.5" width="8.5" height="8.5" rx="1.5"/>
+          <path d="M10.5 5.5V4a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 4v5A1.5 1.5 0 0 0 4 10.5h1.5"/>
+        </svg>
+        <span id="copyText">一键复制</span>
+      </button>
+    </div>
+  </header>
+
+  <section class="section sec-ov">
+    <div class="sec-bar"></div>
+    <div class="card-glow"></div>
+    <div class="sec-head">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15l4-5M8 15l4-5"/><circle cx="12" cy="14" r="8"/><path d="M12 14l4-5"/></svg>
+      <h2>季度概览</h2>
+    </div>
+    <div class="tldr-line"><b>TL;DR：</b>收敛与沉淀的一季：双周聚合发布全面落地，季度版本数从上季度 42 个收敛到 25 个，质量门禁覆盖全部命令族，SpecCore 进入稳定迭代期。</div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-num">256</div><div class="stat-label">季度提交数（10-01 ~ 11-12）</div><div class="stat-cmp up">较上季度：+12%</div><div class="stat-cmp up">较去年同期：+35%</div></div>
+      <div class="stat-card"><div class="stat-num">25</div><div class="stat-label">版本发布（v8.3.377 → v8.3.412）</div><div class="stat-cmp down">较上季度：-40%（主动收敛）</div><div class="stat-cmp up">较去年同期：+8%</div></div>
+      <div class="stat-card"><div class="stat-num">+4.6万</div><div class="stat-label">净增代码行（+6.2万 / -1.6万）</div><div class="stat-cmp up">较上季度：+5%</div><div class="stat-cmp up">较去年同期：+20%</div></div>
+      <div class="stat-card"><div class="stat-num">96%</div><div class="stat-label">质量门禁通过率（季度全量）</div><div class="stat-cmp up">较上季度：+11%</div><div class="stat-cmp up">较去年同期：+24%</div></div>
+    </div>
+    <div class="cb-wrap">
+      <div class="cb-title">Q1-Q4 季度走势（提交数）</div>
+      <div class="ech" id="quarterChart" data-off="图表需联网加载 echarts，离线环境不显示"></div>
+    </div>
+  </section>
+
+  <section class="section sec-ms">
+    <div class="sec-bar"></div>
+    <div class="card-glow"></div>
+    <div class="sec-head">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#5eead4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12v3a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V4z"/><path d="M12 11v4M9 17h6v3H9z"/></svg>
+      <h2>季度关键成果</h2>
+    </div>
+    <div class="timeline">
+      <div class="tl-group">
+        <span class="tl-node m1">M1</span>
+        <div class="tl-q">第 1 月 · 10 月（10-01 ~ 10-31）</div>
+        <div class="tl-item"><div class="tl-desc">1、双周聚合发布机制上线：v8.3.377 起按双周批次发布，单批 ≤10 版本</div><div class="tl-meta">82 次提交 · +1.9 万行<span class="tl-badge">M1 · 10 月</span></div></div>
+        <div class="tl-item"><div class="tl-desc">2、SpecProt v0.4.0 发布：WebAuthn 破局发布认证，CI 自动建仓通道打通</div><div class="tl-meta">18 个版本<span class="tl-badge">M1 · 10 月</span></div></div>
+        <div class="tl-item"><div class="tl-desc">3、反推域隔离上线：global from-source 与 global analyze 职责彻底分离</div><div class="tl-meta">36 次提交<span class="tl-badge">M1 · 10 月</span></div></div>
+      </div>
+      <div class="tl-group">
+        <span class="tl-node m2">M2</span>
+        <div class="tl-q">第 2 月 · 11 月（11-01 ~ 11-30，截至当前）</div>
+        <div class="tl-item"><div class="tl-desc">4、质量门禁补全：execute 用例核对闸覆盖全部命令族，error 拦截率 100%</div><div class="tl-meta">52 次提交 · +1.1 万行<span class="tl-badge">M2 · 11 月</span></div></div>
+        <div class="tl-item"><div class="tl-desc">5、v8.3.412 累积发布：文档生成器升格、澄清链修复、SpecTest CLI v0.1.0 首发</div><div class="tl-meta">12 个版本<span class="tl-badge">M2 · 11 月</span></div></div>
+        <div class="tl-item"><div class="tl-desc">6、季报技能孵化：Q1-Q4 时间线 + 环比/同比双基准，汇报链补全五选一</div><div class="tl-meta">SkillForge 仓库<span class="tl-badge">M2 · 11 月</span></div></div>
+      </div>
+      <div class="tl-group">
+        <span class="tl-node m3">M3</span>
+        <div class="tl-q">第 3 月 · 12 月（12-01 ~ 12-31）</div>
+        <div class="tl-empty">尚未开始（示例占位）</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section sec-pi">
+    <div class="sec-bar"></div>
+    <div class="card-glow"></div>
+    <div class="sec-head">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fda4af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+      <h2>问题与改进</h2>
+    </div>
+    <ol>
+      <li><span class="idx pi"><b>1</b></span><div class="entry"><div class="desc">版本发布节奏季度内波动明显：10 月 18 个版本、11 月仅 12 个，双周批次粒度仍需校准。</div><div class="meta">影响：回归验证耗时拖慢交付节奏，季度后半程发力不均。</div><div class="meta" style="color:var(--accent)"><b style="color:var(--accent)">改进：</b>Q1 起固定单批 ≤6 版本，验证前置到开发期，季度内月度版本数波动控制在 ±30% 内。</div></div></li>
+      <li><span class="idx pi"><b>2</b></span><div class="entry"><div class="desc">季度数据画像不完整：热力图仅覆盖主仓库，辅助仓库提交未纳入统计。</div><div class="meta">影响：季度工作量画像与环比/同比口径偏窄，双基准可比性打折。</div><div class="meta" style="color:var(--accent)"><b style="color:var(--accent)">改进：</b>数据收集层支持多仓合并去重，本季度内上线，下季度双基准全面覆盖。</div></div></li>
+    </ol>
+  </section>
+
+  <section class="section sec-nm">
+    <div class="sec-bar"></div>
+    <div class="card-glow"></div>
+    <div class="sec-head">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fdba74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>
+      <h2>下季度计划</h2>
+    </div>
+    <div class="goal"><div class="goal-desc">1、<b>发布节奏固化</b>：单批 ≤6 版本、双周一档，季度版本发布总量 ≤20 个</div><div class="goal-q"><span class="q-chip">M1 建立模板</span><span class="q-chip">M2 稳定运行</span><span class="q-chip">M3 季度复盘</span></div></div>
+    <div class="goal"><div class="goal-desc">2、<b>多仓数据画像</b>：数据收集层多仓合并去重上线，双基准口径全覆盖</div><div class="goal-q"><span class="q-chip">M1 开发</span><span class="q-chip">M2 上线</span></div></div>
+    <div class="goal"><div class="goal-desc">3、<b>质量门禁全覆盖</b>：全部命令族门禁通过率 ≥95%，季度内无重大回退</div><div class="goal-q"><span class="q-chip">M2 补齐</span><span class="q-chip">M3 验收</span></div></div>
+  </section>
+
+  <footer>GENERATED BY SPECCORE TEAM · 2026-Q4</footer>
+</div>
+
+<div class="theme-dock" id="themeDock">
+  <button class="th-dot" type="button" data-theme="tech" title="深蓝科技"></button>
+  <button class="th-dot" type="button" data-theme="biz" title="浅色商务"></button>
+  <button class="th-dot" type="button" data-theme="mono" title="IDEA 黑亮"></button>
+  <button class="th-dot" type="button" data-theme="light" title="IDEA 白亮"></button>
+  <button class="th-dot" type="button" data-theme="warm" title="温暖渐变"></button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+<script>
+// 复制源 = txt 纯文本全文
+var TXT = "2026-Q4 研发季度总结\n\n生成时间：2026-11-12 19:10:38\n\n季度概览\nTL;DR：收敛与沉淀的一季：双周聚合发布全面落地，季度版本数从上季度 42 个收敛到 25 个，质量门禁覆盖全部命令族，SpecCore 进入稳定迭代期。\n1、季度提交数：256 次（10-01 ~ 11-12，较上季度 +12%，较去年同期 +35%）\n2、版本发布：25 个（v8.3.377 → v8.3.412，较上季度 -40% 主动收敛，较去年同期 +8%）\n3、净增代码：+4.6 万行（+6.2 万 / -1.6 万，较上季度 +5%，较去年同期 +20%）\n4、质量门禁通过率：96%（较上季度 +11%，较去年同期 +24%）\n\n季度关键成果\n1、双周聚合发布机制上线：v8.3.377 起按双周批次发布，单批 ≤10 版本（82 次提交、+1.9 万行）- M1 · 10 月\n2、SpecProt v0.4.0 发布：WebAuthn 破局发布认证，CI 自动建仓通道打通（18 个版本）- M1 · 10 月\n3、反推域隔离上线：global from-source 与 global analyze 职责彻底分离（36 次提交）- M1 · 10 月\n4、质量门禁补全：execute 用例核对闸覆盖全部命令族，error 拦截率 100%（52 次提交、+1.1 万行）- M2 · 11 月\n5、v8.3.412 累积发布：文档生成器升格、澄清链修复、SpecTest CLI v0.1.0 首发（12 个版本）- M2 · 11 月\n6、季报技能孵化：Q1-Q4 时间线 + 环比/同比双基准，汇报链补全五选一（SkillForge 仓库）- M2 · 11 月\n\n问题与改进\n1、版本发布节奏季度内波动明显：10 月 18 个版本、11 月仅 12 个，双周批次粒度仍需校准。\n影响：回归验证耗时拖慢交付节奏，季度后半程发力不均。\n改进：Q1 起固定单批 ≤6 版本，验证前置到开发期，季度内月度版本数波动控制在 ±30% 内。\n2、季度数据画像不完整：热力图仅覆盖主仓库，辅助仓库提交未纳入统计。\n影响：季度工作量画像与环比/同比口径偏窄，双基准可比性打折。\n改进：数据收集层支持多仓合并去重，本季度内上线，下季度双基准全面覆盖。\n\n下季度计划\n1、发布节奏固化：单批 ≤6 版本、双周一档，季度版本发布总量 ≤20 个（M1 建立模板、M2 稳定运行、M3 季度复盘）。\n2、多仓数据画像：数据收集层多仓合并去重上线，双基准口径全覆盖（M1 开发、M2 上线）。\n3、质量门禁全覆盖：全部命令族门禁通过率 ≥95%，季度内无重大回退（M2 补齐、M3 验收）。";
+
+// 一键复制
+var btn = document.getElementById('copyBtn');
+var icon = document.getElementById('copyIcon');
+var txt = document.getElementById('copyText');
+btn.addEventListener('click', function(){
+  function done(){ icon.innerHTML = '<path d="M2.5 8.5l3.5 3.5 7-7.5"/>'; txt.textContent = '已复制'; setTimeout(function(){ icon.innerHTML = '<rect x="5.5" y="5.5" width="8.5" height="8.5" rx="1.5"/><path d="M10.5 5.5V4a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 4v5A1.5 1.5 0 0 0 4 10.5h1.5"/>'; txt.textContent = '一键复制'; }, 1600); }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(TXT).then(done, function(){ fallback(); });
+  } else { fallback(); }
+  function fallback(){
+    var ta = document.createElement('textarea');
+    ta.value = TXT; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); done(); } catch(e){}
+    document.body.removeChild(ta);
+  }
+});
+
+// 卡片级 3D 微倾斜（仅 hover 卡片）
+document.querySelectorAll('.section').forEach(function(card){
+  card.addEventListener('mousemove', function(e){
+    var r = card.getBoundingClientRect();
+    var mx = (e.clientX - r.left) / r.width * 2 - 1;
+    var my = (e.clientY - r.top) / r.height * 2 - 1;
+    card.style.setProperty('--mx', mx.toFixed(3));
+    card.style.setProperty('--my', my.toFixed(3));
+  });
+  card.addEventListener('mouseleave', function(){
+    card.style.setProperty('--mx', 0);
+    card.style.setProperty('--my', 0);
+  });
+});
+
+// ?shot=content：内容区截图模式
+if (location.search.indexOf('shot=content') > -1) {
+  document.getElementById('headerCard').style.display = 'none';
+  document.querySelector('.copy-wrap').style.display = 'none';
+  document.querySelector('footer').style.display = 'none';
+  document.querySelector('.wrap').style.padding = '40px';
+  document.querySelectorAll('.header-card,.section,.copy-wrap').forEach(function(el){
+    el.style.animation = 'none'; el.style.opacity = '1';
+  });
+}
+
+// Q1-Q4 季度走势图（echarts CDN 渲染；离线时容器降级提示；?shot 截图模式停动画——headless 虚拟时间下动画帧不推进会停在初始帧）
+(function(){
+  var el = document.getElementById('quarterChart');
+  if (!el) return;
+  if (typeof echarts === 'undefined'){ el.classList.add('ech-off'); return; }
+  var noAnim = location.search.indexOf('shot=') !== -1;
+  var chart = echarts.init(el);
+  var QVALS = [['Q1',68],['Q2',81],['Q3',96],['Q4',112]];
+  var CURQ = 'Q4';
+  function tokens(){
+    var s = getComputedStyle(document.documentElement);
+    return {
+      accent:s.getPropertyValue('--accent').trim(), accent2:s.getPropertyValue('--accent2').trim(),
+      muted:s.getPropertyValue('--muted').trim(), text:s.getPropertyValue('--text').trim(),
+      border:s.getPropertyValue('--border').trim(), panel:s.getPropertyValue('--panel-solid').trim(),
+      tagBg:s.getPropertyValue('--tag-bg').trim()
+    };
+  }
+  function option(){
+    var t = tokens();
+    return {
+      animation: !noAnim,
+      grid:{ top:22, left:6, right:6, bottom:6, containLabel:true },
+      tooltip:{ backgroundColor:t.panel, borderColor:t.border,
+        textStyle:{ color:t.text, fontSize:11 },
+        formatter:function(p){ return p.name + ' · ' + p.value + ' 次提交'; } },
+      xAxis:{ type:'category', data:QVALS.map(function(d){ return d[0]; }),
+        axisLine:{ lineStyle:{ color:t.border } },
+        axisTick:{ show:false },
+        axisLabel:{ fontSize:11, color:t.muted } },
+      yAxis:{ type:'value', splitLine:{ lineStyle:{ color:t.border } }, axisLabel:{ fontSize:10, color:t.muted } },
+      series:[{ type:'bar', barWidth:44,
+        itemStyle:{ borderRadius:[6,6,0,0] },
+        data:QVALS.map(function(d){
+          return { value:d[1], name:d[0],
+            itemStyle:{ color: d[0] === CURQ ? t.accent : t.tagBg,
+              borderColor: d[0] === CURQ ? t.accent2 : t.border, borderWidth:1 } };
+        }) }]
+    };
+  }
+  chart.setOption(option());
+  window.__sfEchartsTheme = function(){ chart.setOption(option()); };
+  window.addEventListener('resize', function(){ chart.resize(); });
+})();
+// 主题换肤：五套配色随点随换；记忆上次选择（localStorage，失败静默）；?shot 截图模式隐藏坞
+(function(){
+  var THEMES = ['tech','biz','mono','light','warm'];
+  var dock = document.getElementById('themeDock');
+  if (!dock) return;
+  if (location.search.indexOf('shot=') !== -1){ dock.style.display = 'none'; }
+  function apply(t){ document.documentElement.setAttribute('data-theme', t);
+    dock.querySelectorAll('.th-dot').forEach(function(d){ d.classList.toggle('on', d.getAttribute('data-theme') === t); });
+    try{ localStorage.setItem('sf-report-theme', t); }catch(e){}
+    if (window.__sfEchartsTheme) window.__sfEchartsTheme(); }
+  var cur = document.documentElement.getAttribute('data-theme');
+  var saved = null; try{ saved = localStorage.getItem('sf-report-theme'); }catch(e){}
+  if (saved && THEMES.indexOf(saved) !== -1 && saved !== cur){ apply(saved); }
+  else{ dock.querySelectorAll('.th-dot').forEach(function(d){ d.classList.toggle('on', d.getAttribute('data-theme') === (cur || 'tech')); }); }
+  dock.querySelectorAll('.th-dot').forEach(function(d){ d.addEventListener('click', function(){ apply(d.getAttribute('data-theme')); }); });
+})();
+
+/* 滚动入场：初始视口外的卡片滚到视口才上浮渐显（首屏卡维持加载错峰动画）；无 JS 时 html.js 不生效全显 */
+(function(){
+  if (location.search.indexOf('shot=') !== -1) return;
+  document.documentElement.classList.add('js');
+  if (!('IntersectionObserver' in window)) return;
+  var els = Array.prototype.slice.call(document.querySelectorAll('.header-card,.overview,.section'));
+  var rvs = [];
+  els.forEach(function(el){
+    if (el.getBoundingClientRect().top < innerHeight * 0.92) return;
+    el.classList.add('rv');
+    rvs.push(el);
+  });
+  if (!rvs.length) return;
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08 });
+  rvs.forEach(function(el, i){
+    el.addEventListener('transitionend', function h(ev){
+      if (ev.target !== el) return;
+      el.style.transitionDelay = '';
+      el.removeEventListener('transitionend', h);
+    });
+    el.style.transitionDelay = Math.min(i * 70, 280) + 'ms';
+    io.observe(el);
+  });
+  setTimeout(function(){
+    document.querySelectorAll('.rv:not(.in)').forEach(function(el){ el.classList.add('in'); });
+  }, 2000);
+})();
+</script>
+</body>
+</html>

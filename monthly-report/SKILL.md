@@ -11,6 +11,7 @@ disable-model-invocation: false
 
 ## 生成流程
 
+0.5 **周期歧义分流**：用户说「写总结/工作总结/写个汇报/做一份总结」等未言明周期的词 → AskUserQuestion 五选一（日报/周报/月报/季报/年报）确认周期再继续，不擅自默认
 0. **读用户配置**（DISK/FORMATS/DIR/OPEN_HTML/TEMPLATE/ROLE/CONFIRM、自定义模板）→ 先 Read 同目录 `user-config.md`
 1. **解析月份**（自然语言 → 目标月份区间）→ 读 `resources/date-parsing.md`
 2. **收集数据**（git 当月提交聚合 + 会话口述 + 口头补充，合并去重）→ 读 `resources/data-collection.md`

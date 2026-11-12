@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="tech">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SpecCore 周例会纪要</title>
+<style>
+
+/* ═══ 五主题令牌：12 核心契约 + 会议纪要扩展；html[data-theme] 运行时切换，THEME 生成时定默认 ═══ */
+:root, [data-theme="tech"]{
+  --bg:#0a1929; --bg2:#071525; --panel:rgba(11,30,55,.9); --panel-solid:#0b1e37;
+  --text:#bae6fd; --muted:#5b7fa5; --accent:#0ea5e9; --accent2:#14b8a6;
+  --border:rgba(14,165,233,.18); --glow:rgba(14,165,233,.35); --glow-soft:rgba(14,165,233,.15);
+  --title-grad:linear-gradient(90deg,#7dd3fc,#0ea5e9 45%,#818cf8);
+  --tag-bg:rgba(14,165,233,.12);
+  --card-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 12px 32px rgba(1,6,16,.5),0 0 24px rgba(14,165,233,.15);
+  --scan:rgba(0,240,255,.2); --scan-dim:rgba(0,240,255,.05);
+  --heat:rgba(14,165,233,.55);
+  --green:#14b8a6; --orange:#f97316; --rose:#f43f5e;
+}
+[data-theme="biz"]{
+  --bg:#e8ecf5; --bg2:#dde3ef; --panel:rgba(255,255,255,.97); --panel-solid:#ffffff;
+  --text:#1e293b; --muted:#64748b; --accent:#2563eb; --accent2:#0891b2;
+  --border:rgba(37,99,235,.14); --glow:rgba(37,99,235,.18); --glow-soft:rgba(37,99,235,.12);
+  --title-grad:linear-gradient(90deg,#1e40af,#2563eb 55%,#0891b2);
+  --tag-bg:rgba(37,99,235,.08);
+  --card-shadow:0 1px 2px rgba(15,23,42,.05),0 10px 28px rgba(15,23,42,.12);
+  --scan:rgba(37,99,235,.14); --scan-dim:rgba(37,99,235,.04);
+  --heat:rgba(37,99,235,.55);
+  --green:#0d9488; --orange:#ea580c; --rose:#e11d48;
+}
+[data-theme="mono"]{
+  --bg:#1e1f22; --bg2:#2b2d30; --panel:rgba(43,45,48,.95); --panel-solid:#2b2d30;
+  --card-shadow:0 1px 0 rgba(255,255,255,.06) inset, 0 12px 32px rgba(0,0,0,.5), 0 0 24px rgba(53,116,240,.16);
+  --text:#dfe1e5; --muted:#9aa0a6; --accent:#3574f0; --accent2:#5e9aff;
+  --border:rgba(53,116,240,.26); --glow:rgba(53,116,240,.3); --glow-soft:rgba(53,116,240,.13);
+  --title-grad:linear-gradient(90deg,#dfe1e5,#5e9aff 50%,#3574f0);
+  --tag-bg:rgba(53,116,240,.13);
+  --scan:rgba(223,225,229,.18); --scan-dim:rgba(223,225,229,.07);
+  --heat:rgba(53,116,240,.55);
+  --green:#4da36b; --orange:#d09645; --rose:#d85f73;
+}
+[data-theme="light"]{
+  --bg:#ffffff; --bg2:#f2f2f2; --panel:rgba(255,255,255,.98); --panel-solid:#ffffff;
+  --card-shadow:0 1px 2px rgba(30,31,34,.06), 0 10px 28px rgba(30,31,34,.12);
+  --text:#1e1f22; --muted:#6e7781; --accent:#2675bf; --accent2:#4a9be0;
+  --border:rgba(38,117,191,.18); --glow:rgba(38,117,191,.2); --glow-soft:rgba(38,117,191,.1);
+  --title-grad:linear-gradient(90deg,#1e5f9f,#2675bf 55%,#4a9be0);
+  --tag-bg:rgba(38,117,191,.08);
+  --scan:rgba(38,117,191,.12); --scan-dim:rgba(38,117,191,.04);
+  --heat:rgba(38,117,191,.55);
+  --green:#2f8a5b; --orange:#d97706; --rose:#d6336c;
+}
+[data-theme="warm"]{
+  --bg:#f7ebd9; --bg2:#efe0c8; --panel:rgba(255,250,243,.97); --panel-solid:#fffaf3;
+  --text:#43301f; --muted:#8a7565; --accent:#d97706; --accent2:#ea580c;
+  --border:rgba(217,119,6,.18); --glow:rgba(217,119,6,.22); --glow-soft:rgba(217,119,6,.14);
+  --title-grad:linear-gradient(90deg,#b45309,#d97706 50%,#ea580c);
+  --tag-bg:rgba(217,119,6,.1);
+  --card-shadow:0 1px 2px rgba(120,72,24,.07),0 10px 28px rgba(120,72,24,.13);
+  --scan:rgba(217,119,6,.16); --scan-dim:rgba(217,119,6,.04);
+  --heat:rgba(217,119,6,.55);
+  --green:#0d9488; --orange:#c2410c; --rose:#be123c;
+}
+[data-theme="biz"] .stars, [data-theme="light"] .stars, [data-theme="warm"] .stars{ opacity:.28; }
+[data-theme="mono"] .stars{ background:radial-gradient(1px 1px at 12% 22%,rgba(223,225,229,.32),transparent),radial-gradient(1px 1px at 28% 68%,rgba(223,225,229,.28),transparent),radial-gradient(1.5px 1.5px at 45% 15%,rgba(223,225,229,.24),transparent),radial-gradient(1px 1px at 62% 78%,rgba(223,225,229,.26),transparent),radial-gradient(1px 1px at 78% 32%,rgba(223,225,229,.3),transparent),radial-gradient(1.5px 1.5px at 88% 58%,rgba(223,225,229,.28),transparent),radial-gradient(1px 1px at 8% 85%,rgba(223,225,229,.26),transparent),radial-gradient(1px 1px at 55% 45%,rgba(223,225,229,.24),transparent)}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--bg)}
+body{
+  font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,'PingFang SC','Microsoft YaHei',monospace;
+  color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+.grid-pattern{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(var(--scan-dim) 1px,transparent 1px),linear-gradient(90deg,var(--scan-dim) 1px,transparent 1px);
+  background-size:60px 60px}
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(1px 1px at 12% 22%,rgba(255,255,255,.4),transparent),radial-gradient(1px 1px at 28% 68%,rgba(0,240,255,.5),transparent),radial-gradient(1.5px 1.5px at 45% 15%,rgba(168,85,247,.4),transparent),radial-gradient(1px 1px at 62% 78%,rgba(0,255,136,.4),transparent),radial-gradient(1px 1px at 78% 32%,rgba(255,255,255,.35),transparent),radial-gradient(1.5px 1.5px at 88% 58%,rgba(0,240,255,.45),transparent),radial-gradient(1px 1px at 8% 85%,rgba(255,255,255,.3),transparent),radial-gradient(1px 1px at 55% 45%,rgba(0,240,255,.35),transparent)}
+.scanlines{position:fixed;inset:0;z-index:999;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,var(--scan-dim) 2px,var(--scan-dim) 4px)}
+.scanband{position:fixed;left:0;right:0;height:150px;z-index:998;pointer-events:none;
+  background:linear-gradient(180deg,transparent,var(--scan-dim) 50%,transparent);
+  animation:scanMove 11s linear infinite}
+@keyframes scanMove{from{top:-22%}to{top:112%}}
+.wrap{width:clamp(640px, 60%, 1200px); margin:0 auto; position:relative; z-index:1; padding:40px 0}
+.header-card{position:relative;overflow:hidden;background:var(--panel-solid);border:1px solid var(--border);border-radius:6px;
+  padding:34px 28px 26px;text-align:center;margin-bottom:18px;
+  box-shadow:var(--card-shadow);
+  background-image:repeating-linear-gradient(180deg, rgba(255,255,255,.012) 0 1px, transparent 1px 8px)}
+.header-card h1{font-size:26px;letter-spacing:2px;margin-bottom:8px;
+  background:var(--title-grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:titleGlow 3s ease-in-out infinite}
+@keyframes titleGlow{0%,100%{text-shadow:0 0 8px var(--glow),0 0 22px var(--glow-soft)}50%{text-shadow:0 0 14px var(--glow),0 0 34px var(--glow-soft)}}
+.header-sub{font-size:12px;color:var(--muted);letter-spacing:1px;margin-bottom:12px}
+.header-badge{display:inline-block;font-size:11px;color:var(--accent);border:1px solid var(--glow);border-radius:999px;padding:4px 14px}
+.card-glow{position:absolute;inset:-40% -20% auto;height:70%;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 10%,var(--glow),transparent 70%);
+  animation:cardGlow 3s ease-in-out infinite;transform-origin:top center;opacity:.5}
+@keyframes cardGlow{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.6)}}
+.scanline-el{position:absolute;pointer-events:none}
+.scan-x{top:0;left:0;height:1px;width:100%;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:scanX 3s linear infinite}
+.scan-y{top:0;right:0;width:1px;height:100%;background:linear-gradient(180deg,transparent,var(--accent),transparent);animation:scanY 3s linear infinite}
+.scan-x-rev{bottom:0;left:0;height:1px;width:100%;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:scanXRev 3s linear infinite}
+.scan-y-rev{top:0;left:0;width:1px;height:100%;background:linear-gradient(180deg,transparent,var(--accent),transparent);animation:scanYRev 3s linear infinite}
+@keyframes scanX{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+@keyframes scanY{from{transform:translateY(-100%)}to{transform:translateY(100%)}}
+@keyframes scanXRev{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+@keyframes scanYRev{from{transform:translateY(100%)}to{transform:translateY(-100%)}}
+.section{position:relative;overflow:hidden;background:var(--panel-solid);border:1px solid var(--border);border-radius:6px;
+  padding:22px 24px 22px 32px;margin-bottom:18px;
+  box-shadow:var(--card-shadow);
+  background-image:repeating-linear-gradient(180deg, rgba(255,255,255,.012) 0 1px, transparent 1px 8px);
+  transition:transform .18s ease,box-shadow .18s ease}
+.section:hover{transform:translateY(-2px);box-shadow:var(--card-shadow),inset 0 0 22px var(--glow-soft)}
+.sec-bar{position:absolute;left:0;top:0;bottom:0;width:8px}
+.sec-if .sec-bar{background:linear-gradient(180deg,var(--accent2),var(--accent));box-shadow:0 0 12px var(--glow)}
+.sec-su .sec-bar{background:linear-gradient(180deg,#5eead4,#14b8a6);box-shadow:0 0 12px rgba(20,184,166,.3)}
+.sec-tp .sec-bar{background:linear-gradient(180deg,#c4b5fd,#818cf8);box-shadow:0 0 12px rgba(129,140,248,.3)}
+.sec-ac .sec-bar{background:linear-gradient(180deg,#fda4af,#e11d48);box-shadow:0 0 12px rgba(244,63,94,.3)}
+.sec-nx .sec-bar{background:linear-gradient(180deg,#fdba74,#f97316);box-shadow:0 0 12px rgba(249,115,22,.3)}
+.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.sec-head svg{flex:0 0 auto}
+.sec-head h2{font-size:18px;letter-spacing:1px;animation:secGlow 3s ease-in-out infinite}
+.sec-if .sec-head h2{color:var(--accent)}.sec-su .sec-head h2{color:#5eead4}
+.sec-tp .sec-head h2{color:#c4b5fd}.sec-ac .sec-head h2{color:#fda4af}.sec-nx .sec-head h2{color:#fdba74}
+@keyframes secGlow{0%,100%{text-shadow:0 0 6px var(--glow)}50%{text-shadow:0 0 14px var(--glow)}}
+.tldr-line{font-size:15px;line-height:1.75;margin-bottom:16px}
+.tldr-line b{color:var(--accent);font-weight:700}
+.info-grid{display:grid;grid-template-columns:86px 1fr;gap:8px 14px;align-items:baseline}
+.info-k{font-size:11px;color:var(--muted);letter-spacing:2px}
+.info-v{font-size:13px;line-height:1.7}
+.ppl-chips{display:flex;flex-wrap:wrap;gap:6px}
+.ppl-chip{font-size:12px;color:var(--text);background:var(--tag-bg);border:1px solid var(--border);border-radius:999px;padding:2px 12px}
+.decision-row{display:flex;align-items:flex-start;gap:10px;padding:7px 0}
+.decision-row::before{content:'';flex:0 0 auto;width:6px;height:6px;border-radius:50%;background:rgba(94,234,212,.85);box-shadow:0 0 6px rgba(94,234,212,.5);margin-top:8px}
+.decision-txt{font-size:14.5px;line-height:1.65}
+.topic-card{background:var(--tag-bg);border:1px solid var(--border);border-radius:6px;
+  padding:14px 16px;margin-bottom:12px;transition:transform .18s ease,box-shadow .18s ease}
+.topic-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.3)}
+.topic-name{font-size:15px;font-weight:700;color:var(--accent);margin-bottom:8px}
+.topic-concl{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.65;margin-bottom:8px}
+.topic-concl .ck{flex:0 0 auto;font-size:11px;font-weight:700;border-radius:4px;padding:1px 8px;margin-top:2px}
+.ck.done{color:var(--accent2);background:rgba(20,184,166,.12);border:1px solid rgba(20,184,166,.3)}
+.ck.open{color:var(--orange);background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.3)}
+.topic-pts{margin:0;padding-left:0;list-style:none}
+.topic-pts li{font-size:12.5px;color:var(--muted);line-height:1.7;padding:2px 0 2px 14px;position:relative}
+.topic-pts li::before{content:'';position:absolute;left:0;top:10px;width:4px;height:4px;border-radius:50%;background:var(--accent)}
+.act-table{width:100%;border-collapse:collapse}
+.act-table th{font-size:11px;color:var(--muted);letter-spacing:1px;text-align:left;padding:6px 10px;border-bottom:1px solid var(--border);font-weight:400}
+.act-table td{font-size:13.5px;padding:10px;border-bottom:1px dashed var(--border);vertical-align:top;line-height:1.6}
+.act-table tr:last-child td{border-bottom:none}
+.owner{display:inline-block;font-size:12px;color:var(--text);background:var(--tag-bg);border:1px solid var(--border);border-radius:999px;padding:1px 12px}
+.owner.tbd{color:var(--orange);background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.3)}
+.ddl{font-size:12.5px;color:var(--muted);white-space:nowrap}
+.st{display:inline-block;font-size:11px;font-weight:700;border-radius:999px;padding:2px 12px;white-space:nowrap}
+.st.done{color:var(--green);background:rgba(20,184,166,.12);border:1px solid rgba(20,184,166,.3)}
+.st.doing{color:var(--accent);background:rgba(14,165,233,.12);border:1px solid rgba(14,165,233,.3)}
+.st.todo{color:var(--muted);background:rgba(91,127,165,.1);border:1px solid var(--border)}
+.next-line{display:flex;align-items:baseline;gap:14px;padding:6px 0}
+.next-k{flex:0 0 auto;font-size:11px;color:var(--muted);letter-spacing:2px}
+.next-v{font-size:14px;line-height:1.7}
+.copy-wrap{display:flex;justify-content:center;margin:18px 0 0}
+.copy-btn{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;letter-spacing:2px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:999px;padding:12px 38px;cursor:pointer;
+  box-shadow:0 0 30px var(--glow);transition:transform .18s ease,box-shadow .18s ease;
+  font-family:inherit}
+.copy-btn:hover{transform:translateY(-2px);box-shadow:0 0 45px var(--glow)}
+.copy-btn:active{transform:translateY(1px) scale(.98)}
+footer{text-align:center;font-size:10px;color:var(--muted);letter-spacing:1px;padding:8px 0 4px}
+.header-card{animation:fadeDown .6s ease-out backwards}
+.sec-if{animation:riseIn .5s ease-out .13s backwards}
+.sec-su{animation:riseIn .5s ease-out .26s backwards}
+.sec-tp{animation:riseIn .5s ease-out .4s backwards}
+.sec-ac{animation:riseIn .5s ease-out .54s backwards}
+.sec-nx{animation:riseIn .5s ease-out .68s backwards}
+.copy-wrap{animation:popIn .4s ease-out .9s backwards}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+@keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+.section:hover{transform:perspective(900px) translateY(-2px) rotateY(calc(var(--mx,0)*2.5deg)) rotateX(calc(var(--my,0)*-2.5deg))}
+.theme-dock{
+  position:fixed; right:18px; bottom:18px; z-index:1001;
+  display:flex; gap:8px; padding:8px 10px; border-radius:999px;
+  background:var(--panel-solid); border:1px solid var(--border);
+  box-shadow:0 4px 18px rgba(0,0,0,.3);
+}
+.theme-dock .th-dot{
+  width:22px; height:22px; border-radius:50%; cursor:pointer;
+  border:2px solid transparent; padding:0;
+  transition:transform .15s ease, border-color .15s ease;
+}
+.theme-dock .th-dot:hover{ transform:scale(1.18); }
+.theme-dock .th-dot.on{ border-color:var(--text); }
+.theme-dock .th-dot[data-theme="tech"]{ background:#0ea5e9; }
+.theme-dock .th-dot[data-theme="biz"]{ background:#2563eb; }
+.theme-dock .th-dot[data-theme="mono"]{ background:#1e1f22; }
+.theme-dock .th-dot[data-theme="light"]{ background:#ffffff; }
+.theme-dock .th-dot[data-theme="warm"]{ background:#d97706; }
+@media print{ .theme-dock{ display:none; } .rv{ opacity:1 !important; translate:none !important; } }
+html.js .rv{ opacity:0; translate:0 16px; transition:opacity .5s ease-out, translate .5s ease-out; }
+html.js .rv.in{ opacity:1; translate:0 0; }
+@media (max-width:680px){
+  body{ padding:24px 12px 32px; }
+  .wrap{ width:100%; max-width:none; }
+  .header-card{ padding:26px 18px 20px; }
+  .header-card h1{ font-size:26px; }
+  .section{ padding:20px 14px 20px 22px; }
+  .act-table th:nth-child(2), .act-table td:nth-child(2){ display:none; }
+}
+</style>
+</head>
+<body>
+<div class="grid-pattern"></div>
+<div class="stars"></div>
+<div class="scanlines"></div>
+<div class="scanband"></div>
+<div class="wrap">
+
+  <div class="header-card">
+    <div class="scanline-el scan-x"></div><div class="scanline-el scan-y"></div>
+    <div class="scanline-el scan-x-rev"></div><div class="scanline-el scan-y-rev"></div>
+    <div class="card-glow"></div>
+    <h1>SpecCore 周例会纪要</h1>
+    <div class="header-sub">2026-11-11 周三 · 14:00 ~ 14:45 · 线上会议</div>
+    <div class="header-badge">周例会</div>
+  </div>
+
+  <section class="section sec-if rv">
+    <div class="sec-bar"></div>
+    <div class="sec-head">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#7dd3fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      <h2>会议信息</h2>
+    </div>
+    <div class="info-grid">
+      <span class="info-k">主题</span><span class="info-v">SpecCore 双周发布节奏与季报技能进展</span>
+      <span class="info-k">日期</span><span class="info-v">2026-11-11 周三</span>
+      <span class="info-k">时间</span><span class="info-v">14:00 ~ 14:45</span>
+      <span class="info-k">地点</span><span class="info-v">线上会议</span>
+      <span class="info-k">主持人</span><span class="info-v">张工</span>
+      <span class="info-k">参会人</span><span class="info-v"><div class="ppl-chips"><span class="ppl-chip">李工</span><span class="ppl-chip">王工</span><span class="ppl-chip">赵工</span><span class="ppl-chip">刘工</span></div></span>
+    </div>
+  </section>
+
+  <section class="section sec-su rv">
+    <div class="sec-bar"></div>
+    <div class="sec-head">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#5eead4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l4 4L20 6"/></svg>
+      <h2>会议结论</h2>
+    </div>
+    <div class="tldr-line">TL;DR：<b>双周聚合发布节奏正式确认</b>——单批 ≤6 版本、双周一档，11-25 前完成验证前置改造；季报技能本周收尾，汇报链升级为五选一分流。</div>
+    <div class="decision-row"><div class="decision-txt">1、发布节奏定档：单批 ≤6 版本、双周一档，版本总量季度 ≤20 个</div></div>
+    <div class="decision-row"><div class="decision-txt">2、验证前置改造 11-25 完成，回归时长压到 2 小时内</div></div>
+    <div class="decision-row"><div class="decision-txt">3、季报技能本周上线，「写总结」分流升级五选一（日报/周报/月报/季报/年报）</div></div>
+    <div class="decision-row"><div class="decision-txt">4、会议纪要技能同步孵化，作为汇报链源头（行动项可被日报/周报/月报/季报引用）</div></div>
+  </section>
+
+  <section class="section sec-tp rv">
+    <div class="sec-bar"></div>
+    <div class="sec-head">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#c4b5fd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M12 7v5l3 2"/><path d="M12 7c0-1.5 1-2.5 2.5-2.5"/></svg>
+      <h2>议题讨论</h2>
+    </div>
+    <div class="topic-card">
+      <div class="topic-name">议题一：双周发布节奏确认</div>
+      <div class="topic-concl"><span class="ck done">已决</span><span>按双周批次发布，单批 ≤6 版本，验证前置到开发期，回归控制在 2 小时内。</span></div>
+      <ul class="topic-pts">
+        <li>10 月 18 个版本、11 月 12 个，节奏波动大，回归耗时拖慢交付</li>
+        <li>大版本集中在月中发布，验证压力峰值明显</li>
+        <li>双周固定批次后月度版本数波动可控制在 ±30% 内</li>
+      </ul>
+    </div>
+    <div class="topic-card">
+      <div class="topic-name">议题二：季报技能与分流升级</div>
+      <div class="topic-concl"><span class="ck done">已决</span><span>季报技能按四段式 + 环比/同比双基准 + Q1-Q4 走势图实现，本周完成并升级分流为五选一。</span></div>
+      <ul class="topic-pts">
+        <li>季报成果段按 M1/M2/M3 月时间线，全季报按 Q1-Q4 季度时间线</li>
+        <li>概览数据卡必须带「较上季度」「较去年同期」双基准小字</li>
+        <li>日报/周报/年报的分流句需同步升级，月报已是五选一</li>
+      </ul>
+    </div>
+    <div class="topic-card">
+      <div class="topic-name">议题三：会议纪要技能孵化</div>
+      <div class="topic-concl"><span class="ck open">进行中</span><span>纪要五段式结构已定，行动项带负责人与截止时间，定位为汇报链源头。</span></div>
+      <ul class="topic-pts">
+        <li>行动项三要素：事项 + 负责人 + 截止时间，缺失标「待定」</li>
+        <li>日报/周报/月报/季报的 DATA_SOURCES 已支持会议纪要文件作为素材</li>
+        <li>下周例会前完成 HTML 五段卡版式与收编</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section sec-ac rv">
+    <div class="sec-bar"></div>
+    <div class="sec-head">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fda4af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      <h2>决议与行动项</h2>
+    </div>
+    <table class="act-table">
+      <tr><th>事项</th><th>负责人</th><th>截止时间</th><th>状态</th></tr>
+      <tr><td>1、发布节奏固化：单批 ≤6 版本、双周一档写入发布规范</td><td><span class="owner">李工</span></td><td class="ddl">2026-11-14</td><td><span class="st done">已完成</span></td></tr>
+      <tr><td>2、验证前置改造：回归用例前置到开发期，目标 ≤2 小时</td><td><span class="owner">王工</span></td><td class="ddl">2026-11-25</td><td><span class="st doing">进行中</span></td></tr>
+      <tr><td>3、季报技能收尾：盘落 + 分流五选一升级 + 收编 README/cli.js</td><td><span class="owner">赵工</span></td><td class="ddl">2026-11-13</td><td><span class="st doing">进行中</span></td></tr>
+      <tr><td>4、会议纪要技能上线：五段式 + 行动项表格版式 + 汇报链联动</td><td><span class="owner">赵工</span></td><td class="ddl">2026-11-15</td><td><span class="st todo">待办</span></td></tr>
+      <tr><td>5、多仓数据画像：数据收集层多仓合并去重方案评审</td><td><span class="owner">刘工</span></td><td class="ddl">2026-11-20</td><td><span class="st todo">待办</span></td></tr>
+    </table>
+  </section>
+
+  <section class="section sec-nx rv">
+    <div class="sec-bar"></div>
+    <div class="sec-head">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fdba74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>
+      <h2>下次会议</h2>
+    </div>
+    <div class="next-line"><span class="next-k">时间</span><span class="next-v">2026-11-18 周三 14:00</span></div>
+    <div class="next-line"><span class="next-k">主题</span><span class="next-v">季报/会议纪要技能上线复盘 + 验证前置改造进展</span></div>
+    <div class="next-line"><span class="next-k">地点</span><span class="next-v">线上会议</span></div>
+  </section>
+
+  <div class="copy-wrap rv">
+    <button class="copy-btn" id="copyBtn">
+      <svg id="copyIcon" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5.5" y="5.5" width="8.5" height="8.5" rx="1.5"/><path d="M10.5 5.5V4a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 4v5A1.5 1.5 0 0 0 4 10.5h1.5"/></svg>
+      <span id="copyText">一键复制</span>
+    </button>
+  </div>
+
+  <footer>GENERATED BY SPECCORE TEAM · 2026-11-11</footer>
+</div>
+
+<div class="theme-dock" id="themeDock">
+  <button class="th-dot" type="button" data-theme="tech" title="深蓝科技"></button>
+  <button class="th-dot" type="button" data-theme="biz" title="浅色商务"></button>
+  <button class="th-dot" type="button" data-theme="mono" title="IDEA 黑亮"></button>
+  <button class="th-dot" type="button" data-theme="light" title="IDEA 白亮"></button>
+  <button class="th-dot" type="button" data-theme="warm" title="温暖渐变"></button>
+</div>
+
+<script>
+// 复制源 = txt 纯文本全文
+var TXT = "SpecCore 周例会纪要\n\n生成时间：2026-11-12 19:10:38\n\n会议信息\n主题：SpecCore 双周发布节奏与季报技能进展\n日期：2026-11-11 周三\n时间：14:00 ~ 14:45\n地点：线上会议\n主持人：张工\n参会人：李工、王工、赵工、刘工\n\n会议结论\nTL;DR：双周聚合发布节奏正式确认——单批 ≤6 版本、双周一档，11-25 前完成验证前置改造；季报技能本周收尾，汇报链升级为五选一分流。\n1、发布节奏定档：单批 ≤6 版本、双周一档，版本总量季度 ≤20 个\n2、验证前置改造 11-25 完成，回归时长压到 2 小时内\n3、季报技能本周上线，「写总结」分流升级五选一（日报/周报/月报/季报/年报）\n4、会议纪要技能同步孵化，作为汇报链源头（行动项可被日报/周报/月报/季报引用）\n\n议题讨论\n议题一：双周发布节奏确认\n结论：按双周批次发布，单批 ≤6 版本，验证前置到开发期，回归控制在 2 小时内。\n- 10 月 18 个版本、11 月 12 个，节奏波动大，回归耗时拖慢交付\n- 大版本集中在月中发布，验证压力峰值明显\n- 双周固定批次后月度版本数波动可控制在 ±30% 内\n议题二：季报技能与分流升级\n结论：季报技能按四段式 + 环比/同比双基准 + Q1-Q4 走势图实现，本周完成并升级分流为五选一。\n- 季报成果段按 M1/M2/M3 月时间线，全季报按 Q1-Q4 季度时间线\n- 概览数据卡必须带「较上季度」「较去年同期」双基准小字\n- 日报/周报/年报的分流句需同步升级，月报已是五选一\n议题三：会议纪要技能孵化\n结论：纪要五段式结构已定，行动项带负责人与截止时间，定位为汇报链源头。\n- 行动项三要素：事项 + 负责人 + 截止时间，缺失标「待定」\n- 日报/周报/月报/季报的 DATA_SOURCES 已支持会议纪要文件作为素材\n- 下周例会前完成 HTML 五段卡版式与收编\n\n决议与行动项\n1、发布节奏固化：单批 ≤6 版本、双周一档写入发布规范（负责人：李工，截止 2026-11-14，已完成）\n2、验证前置改造：回归用例前置到开发期，目标 ≤2 小时（负责人：王工，截止 2026-11-25，进行中）\n3、季报技能收尾：盘落 + 分流五选一升级 + 收编 README/cli.js（负责人：赵工，截止 2026-11-13，进行中）\n4、会议纪要技能上线：五段式 + 行动项表格版式 + 汇报链联动（负责人：赵工，截止 2026-11-15，待办）\n5、多仓数据画像：数据收集层多仓合并去重方案评审（负责人：刘工，截止 2026-11-20，待办）\n\n下次会议\n时间：2026-11-18 周三 14:00\n主题：季报/会议纪要技能上线复盘 + 验证前置改造进展\n地点：线上会议";
+
+// 一键复制
+var btn = document.getElementById('copyBtn');
+var icon = document.getElementById('copyIcon');
+var txt = document.getElementById('copyText');
+btn.addEventListener('click', function(){
+  function done(){ icon.innerHTML = '<path d="M2.5 8.5l3.5 3.5 7-7.5"/>'; txt.textContent = '已复制'; setTimeout(function(){ icon.innerHTML = '<rect x="5.5" y="5.5" width="8.5" height="8.5" rx="1.5"/><path d="M10.5 5.5V4a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 4v5A1.5 1.5 0 0 0 4 10.5h1.5"/>'; txt.textContent = '一键复制'; }, 1600); }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(TXT).then(done, function(){ fallback(); });
+  } else { fallback(); }
+  function fallback(){
+    var ta = document.createElement('textarea');
+    ta.value = TXT;
+    ta.style.cssText = 'position:fixed;left:-9999px;top:0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch(e){}
+    document.body.removeChild(ta);
+  }
+});
+
+// 换肤坞
+(function(){
+  var dock = document.getElementById('themeDock');
+  if (!dock) return;
+  var saved = null;
+  try { saved = localStorage.getItem('theme'); } catch(e){}
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+  var dots = dock.querySelectorAll('.th-dot');
+  function mark(){ dots.forEach(function(d){ d.classList.toggle('on', d.getAttribute('data-theme') === document.documentElement.getAttribute('data-theme')); }); }
+  mark();
+  dots.forEach(function(d){
+    d.addEventListener('click', function(){
+      var t = d.getAttribute('data-theme');
+      document.documentElement.setAttribute('data-theme', t);
+      try { localStorage.setItem('theme', t); } catch(e){}
+      mark();
+    });
+  });
+})();
+
+// 截图模式 + 滚动入场 + 3D 微倾斜
+(function(){
+  document.documentElement.classList.add('js');
+  var shot = /[?&]shot=content/.test(location.search);
+  if (shot){
+    var hc = document.querySelector('.header-card'), ft = document.querySelector('footer'), dock = document.getElementById('themeDock');
+    if (hc) hc.style.display = 'none';
+    if (ft) ft.style.display = 'none';
+    if (dock) dock.style.display = 'none';
+    var cw = document.querySelector('.copy-wrap');
+    if (cw) cw.style.display = 'none';
+    document.body.style.padding = '40px';
+  }
+  var rvs = document.querySelectorAll('.rv');
+  if (!('IntersectionObserver' in window)){ rvs.forEach(function(el){ el.classList.add('in'); }); return; }
+  var io2 = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){ if (en.isIntersecting){ en.target.classList.add('in'); io2.unobserve(en.target); } });
+  }, { threshold: 0.12 });
+  rvs.forEach(function(el){ io2.observe(el); });
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){ rvs.forEach(function(el){ el.classList.add('in'); }); }
+  var secs = document.querySelectorAll('.section');
+  secs.forEach(function(s){
+    s.addEventListener('mousemove', function(e){
+      var r = s.getBoundingClientRect();
+      s.style.setProperty('--mx', ((e.clientX - r.left) / r.width - .5).toFixed(3));
+      s.style.setProperty('--my', ((e.clientY - r.top) / r.height - .5).toFixed(3));
+    });
+  });
+})();
+</script>
+</body>
+</html>
