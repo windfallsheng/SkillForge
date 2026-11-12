@@ -6,11 +6,14 @@ meta-forge 是「造 skill 的 skill」：把一段重复劳作，按 SkillForge
 
 - 一句话起造：「做一个 XX 技能」「把 XX 流程固化成技能」
 - 产出完整技能包：薄入口 SKILL.md + 按阶段拆分的 resources/ + 用户配置 user-config.md + 咨询应答 usage-guide.md
-- 自动植入四大机制（工坊标准，缺一不可）：
+- 自动植入机制体系（工坊标准，缺一不可）：
   1. CONFIG_VERSION 钥匙——配置结构带版本号，升级时自动备份迁移，不丢用户设置
   2. user-config 抽离——用户可改配置全部出站到 user-config.md，升级永不覆盖
   3. reference 双轨——技能含 HTML 输出时，reference.html 是定稿样式真相源，改样式三处同步
-  4. 自检纪律——改任一文件 grep 全仓核对关键词，旧词零残留
+  4. 多文件隔离——页面有 localStorage 记忆时，键按页面路径命名空间，多份产物互不串台
+  5. 零侵权离线——品牌字体零出现、禁 CDN，页面离线双击可开
+  6. 自检纪律——改任一文件 grep 全仓核对关键词，旧词零残留
+- 交付前跑验证环（偏差必被发现）：静态门禁逐项 grep + 含 HTML 时 Playwright 实测（零 JS 错误 / 键带路径 / 刷新恢复 / 多文件隔离），验证证据随交付报告附上
 - 技能入 SkillForge 仓库时，自动登记 README 技能分类表/技能清单/目录结构与 cli.js CATEGORIES
 
 ## 怎么用
@@ -36,6 +39,6 @@ meta-forge 是「造 skill 的 skill」：把一段重复劳作，按 SkillForge
 
 ## 常见问题
 
-- **和宿主自带的 create-skill / create-plugin 有什么区别？** 它们是宿主通用指引；meta-forge 是工坊专属流水线，产出直接符合 SkillForge 拆分规范与四大机制，可被 skill-forge CLI 安全升级
+- **和宿主自带的 create-skill / create-plugin 有什么区别？** 它们是宿主通用指引；meta-forge 是工坊专属流水线，产出直接符合 SkillForge 拆分规范与机制体系，经验证环实测后交付，可被 skill-forge CLI 安全升级
 - **生成后怎么用？** 技能包落盘到 DIR 配置的目录；要安装到 AI 助手，跑 `skill-forge init --skills <技能名>`
 - **已有技能怎么升级？** 官方配置结构变化时 CONFIG_VERSION 递增并写明迁移规则，`skill-forge update` 与 AI 执行时都会按版本备份迁移

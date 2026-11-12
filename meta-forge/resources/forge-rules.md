@@ -1,6 +1,6 @@
 # 锻造规范（forge-rules）
 
-造一个新技能要过的全部关口：澄清清单 → 结构规范 → 四大机制 → 校验清单 → 仓库登记。本文档是 meta-forge 的规范真相源，SKILL.md 流程节点与 template/ 模板均与本文档对齐。
+造一个新技能要过的全部关口：澄清清单 → 结构规范 → 机制体系 → 验证环 → 仓库登记。本文档是 meta-forge 的规范真相源，SKILL.md 流程节点与 template/ 模板均与本文档对齐。
 
 ## 一、澄清清单（开造前必问）
 
@@ -11,7 +11,8 @@
 3. **产出形态**：对话输出？落盘文件（哪些格式）？HTML？截图？浏览器打开？
 4. **可配置项**：哪些行为用户会想改？→ 全部进 user-config.md
 5. **是否含 HTML 输出**：是 → 必须建 reference.html 双轨机制（机制三）；否 → 无此要求
-6. **归属**：入 SkillForge 仓库（需登记）还是独立技能（不登记）？
+6. **页面是否有 localStorage 记忆**（含 HTML 时必问：主题/偏好/用户数据等）：是 → 机制六（多文件隔离）必植入
+7. **归属**：入 SkillForge 仓库（需登记）还是独立技能（不登记）？
 
 ## 二、结构规范（薄入口 + resources 拆分）
 
@@ -28,7 +29,7 @@
 - **resources/ 一文件一职责**：按生成阶段拆分；每份独立可读，不互相引用；SKILL.md 流程节点标注 `读 resources/xxx.md`
 - **咨询应答**：用户只问用法不要求生成时，读 resources/usage-guide.md 原样输出（首行标题按技能改为「XX使用指南」），不执行任何生成动作
 
-## 三、四大机制（缺一不可）
+## 三、机制体系（缺一不可）
 
 ### 机制一：CONFIG_VERSION 钥匙（配置版本机制）
 
@@ -63,15 +64,45 @@
 - CLI 升级时清单内文件永不覆盖；官方版内容有更新时另存 `.upstream` 对照，供手动合并
 - 纯官方资源（resources/ 下 AI 只读不改的文件）不进清单；user-config.md 由 CLI 内置名单保护，无需声明
 
-## 四、校验清单（交付前全过）
+### 机制六：多文件隔离（HTML 产出技能，页面有 localStorage 记忆时必植入）
+
+背景坑：Chrome/Safari 下 file:// 与 localhost 共享同源存储，所有本地文件共用一块 localStorage——固定键名会让用户多份产物互相串台（A 产物切了主题，B 产物跟着变；用户数据类镜像还会互相覆盖）。
+
+- 所有 localStorage 键必须带页面路径命名空间：`var NS = '<技能前缀>:' + location.pathname;`，读写键形如 `NS + '-theme'`（键名禁止裸通用词 theme/settings/data/tab）
+- 命名空间变量声明位置 = 所有使用它的代码块的**公共作用域**：页面含多个独立 `<script>`/IIFE 时，每个作用域各自声明（IIFE 内的 var 是局部变量，IIFE 外够不到；引用不可见会 ReferenceError、被 catch 静默吞掉 → 机制静默失效）
+- 用户数据类镜像需要「文件改名/移动后自愈」时用双键：路径键（隔离主键）+ 固定键（最近快照兜底），恢复时路径键优先、无则固定键
+- 文件改名/移动则主题/偏好记忆重置——合理预期，写入样式文档与 SKILL.md 说明
+
+### 机制七：零侵权与离线纪律（HTML 产出技能必植入）
+
+- 字体白名单：Roboto + Source Han Sans SC（商用免费）或系统字体栈；品牌字体（PingFang/YaHei/苹方/雅黑/apple-system 等）在 CSS 与 HTML 全文零出现
+- 禁止 CDN 与外部网络引用（@import、外链 CSS/JS/图片/网络字体），页面必须离线双击可开；确需外部库（如 echarts）时声明唯一例外 + 加载失败降级提示（data-off 文字），其余零外部依赖
+- 交付前跑字体扫描 grep 验证（品牌字体零残留才算通过）
+
+## 四、验证环（交付前全过，偏差必被发现）
+
+### A. 静态门禁（grep 自动核验，逐项过）
 
 1. frontmatter：name 与目录名一致且非占位符 skill-name；description 含触发词
 2. resource 引用可达：SKILL.md 每个 `读 resources/xxx.md` 的文件真实存在
-3. 配置抽离完整：SKILL.md 无内嵌配置值；user-config.md 含 CONFIG_VERSION: 1
-4. 四大机制四节齐全：配置节 / 配置版本机制节 / 自检纪律节 / usage-guide 接线
-4b. 用户可改官方文件已声明：含半定制资产（设计系统/模板底稿）时 .preserve 清单存在且列全
-5. 旧词零残留：全文 grep 无占位符、无废弃字段名
-6. 语言一致：正文中文；技术术语保留原文
+3. 配置标准：user-config.md 含 CONFIG_VERSION: 1 + 头部「升级不会被覆盖」声明 + .upstream 对照说明；SKILL.md 无内嵌配置值
+4. 机制节齐全：配置节 / 配置版本机制节 / 自检纪律节 / usage-guide 接线
+5. 半定制资产已声明：含设计系统/模板底稿时 .preserve 清单存在且列全
+6. 旧词零残留：全文 grep 无占位符、无废弃字段名
+7. 多文件隔离（含 HTML 且页面有 localStorage 记忆的技能）：grep 所有 localStorage.setItem/getItem/removeItem，键名全部带命名空间拼接，固定键零残留
+8. 字体零侵权（含 HTML 的技能）：grep 品牌字体（PingFang/YaHei/苹方/雅黑/apple-system 等）零出现
+9. 语言一致：正文中文；技术术语保留原文
+
+### B. 运行时实测（含 HTML 的技能必做，Playwright headless channel="chrome"）
+
+1. 页面加载零 JS 错误（pageerror 监听 + 控制台检查）
+2. 关键交互实测：主题/状态切换 → localStorage 键带路径 → 刷新恢复
+3. 多文件隔离实测：复制 HTML 到第二路径 → 两份各自读写键互不干扰
+
+### C. 验证证据（交付报告必附）
+
+- 静态门禁逐项结果 + 运行时实测摘要（键名样例 / 刷新恢复结果 / 隔离结果）
+- 任一未过：修复后重跑整个验证环，禁止跳过直接交付；验证发现的偏差必须回修机制与文档后重新验证
 
 ## 五、仓库登记（技能入 SkillForge 时）
 
