@@ -178,8 +178,8 @@ body::before{
 .item .line.risk{color:var(--rose)}
 .empty{color:var(--muted);font-size:13px;text-align:center;padding:28px 0}
 footer{text-align:center;color:var(--muted);font-size:10px;margin-top:26px}
-.theme-dock{position:fixed;top:14px;right:14px;z-index:9;display:flex;gap:8px;background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:7px 10px}
-.th-dot{width:14px;height:14px;border-radius:50%;border:1.5px solid rgba(127,127,127,.35);cursor:pointer;padding:0;transition:transform .15s ease}
+.theme-dock{position:fixed;right:18px;bottom:18px;z-index:1001;display:flex;gap:8px;background:var(--panel-solid);border:1px solid var(--border);border-radius:999px;padding:8px 10px;box-shadow:0 4px 18px rgba(0,0,0,.3)}
+.th-dot{width:22px;height:22px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0;transition:transform .15s ease,border-color .15s ease}
 .th-dot:hover{transform:scale(1.18)}
 .th-dot.on{border-color:var(--text)}
 .th-dot[data-theme="tech"]{background:#0ea5e9}

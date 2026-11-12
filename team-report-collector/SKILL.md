@@ -23,7 +23,7 @@ disable-model-invocation: false
 
 **执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（TEAM/TITLE/DIR/OPEN_HTML/THEME/REPORT_DATE）都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留；官方更新配置时另存 `user-config.md.upstream` 对照文件，可按需手动合并新配置点。
 
-- **THEME**：收集台页面主题，dark 深夜青绿（默认）/ light 浅色纸张；生成时写 `<html data-theme="THEME值">` 定默认，页面右上角主题按钮随点随换（localStorage 记忆，键按页内嵌唯一 ID 隔离、多份产物互不串台、改名/移动目录记忆不丢；生成时头部写 `<meta name="trc-id" content="<UUID>">`，每次 crypto.randomUUID() 生成标准 UUID v4（8-4-4-4-12 十六进制，禁止手写变体、禁止沿用占位与旧值）；落盘写文件前顺扫落盘目录下本技能命名的 html，读各文件 id meta 查重，撞号重掷至不重复）
+- **THEME**：收集台页面主题，tech 深蓝科技（默认）/ biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变；生成时写 `<html data-theme="THEME值">` 定默认，页面右下角换肤坞五色点随点随换（localStorage 记忆，键按页内嵌唯一 ID 隔离、多份产物互不串台、改名/移动目录记忆不丢；生成时头部写 `<meta name="trc-id" content="<UUID>">`，每次 crypto.randomUUID() 生成标准 UUID v4（8-4-4-4-12 十六进制，禁止手写变体、禁止沿用占位与旧值）；落盘写文件前顺扫落盘目录下本技能命名的 html，读各文件 id meta 查重，撞号重掷至不重复）
 
 ## 配置版本机制（升级保护）
 

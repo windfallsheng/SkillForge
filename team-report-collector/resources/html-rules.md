@@ -4,7 +4,7 @@
 
 ## 版式总览
 
-- 五主题令牌：tech（深蓝科技，默认）/ biz（浅色商务）/ mono（IDEA 黑亮）/ light（IDEA 白亮）/ warm（温暖渐变），色值与 daily-report 同一套 12 核心契约（另含收集台扩展 --panel2 列表条目底、--input-bg 表单输入底）；`html[data-theme]` 运行时切换；右上角换肤坞五色点随点随换、localStorage 记忆（键 `trc:<ID>-theme`，ID = 页内嵌 trc-id meta，多份产物互不串台、改名/移动目录记忆不丢）
+- 五主题令牌：tech（深蓝科技，默认）/ biz（浅色商务）/ mono（IDEA 黑亮）/ light（IDEA 白亮）/ warm（温暖渐变），色值与 daily-report 同一套 12 核心契约（另含收集台扩展 --panel2 列表条目底、--input-bg 表单输入底）；`html[data-theme]` 运行时切换；右下角换肤坞五色点随点随换、localStorage 记忆（键 `trc:<ID>-theme`，ID = 页内嵌 trc-id meta，多份产物互不串台、改名/移动目录记忆不丢）
 - 字体全用系统本地字体栈（ui-monospace/'SF Mono'/SFMono-Regular/Menlo/Consolas/system-ui，品牌字体 PingFang/YaHei/apple-system 零出现），禁止 CDN、@import、外链 CSS/JS/图片/网络字体——页面离线双击可开
 - 三张卡：标题卡（团队名 + 日期徽章 + 统计三数：成员数/日报条数/风险条数）+ 表单卡（姓名/日期/进展/计划/风险五字段 + 保存按钮）+ 汇总列表卡（按日期分组的成员条目 + 导出 JSON / 导入 JSON 按钮）
 - 多文件隔离（必植）：头部写 `<meta name="trc-id" content="<UUID>">`（crypto.randomUUID() 标准 UUID v4）；localStorage 键一律 `trc:<ID>-xxx`（xxx 为具体用途后缀 theme/reports），禁止裸通用键名；页面 JS 启动时校验 id meta——非法或缺失（占位残留/手写变体/误沿用旧值）时按路径键（`'sf-heal:' + location.pathname`）自愈为 crypto.randomUUID() 标准 v4 并回写 meta，console.warn 显性报警；路径键持久化保证同文件跨打开稳定复用；合法 UUID 原样放行
