@@ -1,5 +1,7 @@
 # CHANGELOG
 
+[English](CHANGELOG.en.md)
+
 SkillForge（技能锻造坊）npm 包 `skill-forge-hub`（命令名 `skill-forge`）版本变更记录。
 
 ## 1.0.6（2026-11-12）

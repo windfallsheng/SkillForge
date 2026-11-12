@@ -24,7 +24,9 @@
     "docs",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "README.en.md",
+    "CHANGELOG.en.md"
   ],
   "keywords": [
     "skillforge",

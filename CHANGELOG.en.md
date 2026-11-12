@@ -1,0 +1,187 @@
+# CHANGELOG
+
+[中文](CHANGELOG.md)
+
+Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
+
+## 1.0.6 (2026-11-12)
+
+**meta-forge spec & template alignment: three real-world lessons codified + template modernization**
+
+- template/ aligned with the new forge-rules spec: SKILL.md rewritten (step 0 reads user-config, config-version mechanism section, output-reforge section (conditional), doc-sync self-check section, pre-delivery self-check hard gate); new template/user-config.md (CONFIG_VERSION: 1 + protection declaration) and template/resources/usage-guide.md (usage-answer template); README drops the outdated "config must stay in SKILL.md" sentence — config now moves out
+- forge-rules mechanism 3 gains the entry-animation fallback: reference.html with scroll-entry animations (IntersectionObserver + JS gating) must carry a 2s fallback setTimeout that forces everything visible — in environments where IO never fires (headless capture / print preview / PDF export / embedded webviews), cards must never stay permanently hidden (the meeting-minutes 1.0.5 blank-screenshot lesson, codified)
+- forge-rules mechanism 6 gains page-level self-healing: when the id meta is invalid/missing, heal it to a standard UUID v4 via a path key (sf-heal: + pathname) and write it back to the meta, with a console.warn alert — the third line of defense at the execution layer, codified
+- forge-rules mechanism 8 gains user-data specifics: deep-upgrade rebuilds must keep the page's original stable ID meta value (a new ID = data loss), data files are never touched
+- validation ring expanded: static gates gain item 13 (entry-animation fallback check); runtime tests gain item 4 (headless capture proves content complete — a blank capture fails)
+- meta-forge self-alignment: SKILL.md description / flow step 3 / rules summary gain the preserve list and mechanism conditions (HTML gains mechanisms 3-7-8, localStorage memory gains 6, semi-custom assets gain 5); usage-guide mechanism list aligned to the eight forge-rules numbers; user-config.md fixes the newline bug where the CONFIG_VERSION end-of-line comment swallowed the DIR line
+
+## 1.0.5 (2026-11-12)
+
+**monthly-report joins the forge: four-way report-family disambiguation + deck-stage monthly mapping**
+
+- New monthly-report skill: four-section monthly report (monthly overview / key achievements / problems & improvements / next month's plan), differentiated assets — data cards with QoQ subtext (vs last month ±x%, green up red down), W1-W4 week timeline, monthly calendar heatmap (echarts calendar heatmap, CSS-variable-driven five-theme skinning); data collection supports monthly git aggregation + same-caliber last-month comparison + daily heatmap statistics; natural-language month targeting (this month / last month / last 30 days / 2026-10); isomorphic with the three report skills: 12-industry dictionary, custom templates, five-theme deep-blue panel, content-png captures
+- Disambiguation upgrade: daily/weekly/annual SKILL.md cycle-ambiguity routing three-way → four-way (daily / weekly / monthly / annual)
+- deck-stage linkage: report four-piece mapping gains the monthly segment (overview→overview, achievements→timeline W1-W4, problems/plan→bullets, calendar heatmap→chart-heatmap); usage-guide examples gain monthly
+- CLI & docs: cli.js CATEGORIES report showcase includes monthly-report; README category row / skill table / install command synced
+- Real-device: monthly reference.html headless rendering of the four section cards + calendar heatmap + skin dock all pass; content-capture height formula calibrated on real captures (~2020px at 760px width baseline + linear item scaling), fixing the old formula's underestimation truncation
+
+**Minutes-series grouping + article save governance + ID uniqueness hardening + four exam fixes + bilingual docs**
+
+- Minutes-series grouping: meeting-minutes gains SERIES_GROUP three-state (auto extracts series names into meetings/{series}/, series always uses series dirs, off flat months); series-name extraction rules + illegal-character dir-name cleaning + rename mechanism ("call this series XX" applies now / "always call this series XX" persists) + one-shot organizing command (scan all old minutes → move-plan confirmation → three-part report, empty month dirs kept); CONFIG_VERSION 1→2
+- article-to-html save governance: captures isolated per article as 文章截图/<title-slug>/C00-cover.png (the redundant "chapter captures" layer removed, same-name articles across different docs no longer overwrite each other); DIR configurable (DIR: auto + DIR_MAC default ~/articles + DIR_WIN, nonexistent dir falls back to the user home); same-name different-article slugs append -2/-3; CONFIG_VERSION 1→2
+- ID uniqueness, two hardenings: ① format locked — crypto.randomUUID() standard UUID v4 (8-4-4-4-12 lowercase hex), handwritten variants / reusing placeholders or old values forbidden; ② pre-write collision check — before writing a file, scan the save directory for this skill's html files and read their id metas, re-roll on collision. Three lines of defense: generation rules in 8 SKILL.mds + the "format self-heal block" in 9 reference.html files (invalid/missing meta heals to a valid v4 via a path key, stable reuse across opens on the same path, console.warn alert) + meta-forge forge-rules mechanism sentence & validation ring; Playwright 9/9 real-device pass
+- Four exam fixes: ① quarterly-report user-config CONFIG_VERSION 1→3 (content was already v3-shaped, the version number was never bumped); ② prompt-pouch gains the sf-template@2 version stamp + the SKILL.md "output upgrade (reforge)" section (deep-upgrade rebuilds must keep the original page pouch-id — IndexedDB user data is namespaced by pouch-id, a new ID = data loss; prompts.json data files never touched); ③ package.json files gains monthly-report/meeting-minutes/quarterly-report (the npm package was missing these three skills); ④ meeting-minutes gains the 2s entry-animation fallback setTimeout (environments where IntersectionObserver never fires — headless capture / print preview — suffered permanently hidden cards; aligned with the rest of the report family) + version stamp @2→@3
+- Bilingual docs rework: README rebuilt as a full bilingual mirror + new "output gallery" (6 real screenshots of skill outputs, richly illustrated); split out docs/install.md (both install methods / command reference / upgrade & config-protection mechanics in depth) + docs/architecture.md (directory layout / skill anatomy / four mechanisms / splitting conventions), all Chinese-English mirrored
+
+## 1.0.4 (2026-11-11)
+
+**Charts echarts-ized + data sources generalized + upgrade mechanism strengthened**
+
+- Charts echarts-ized: the weekly/annual four chart types (monthly commit bars / daily commit bars / ring chart / heatmap) switched to CDN echarts rendering (jsdelivr 5.5.1) — five-theme linked skinning, animations stopped in shot capture mode, offline auto-degradation notice (.ech-off hint); fixed the weekly overview DOM nesting (ov-bento nine-child structure restored) and ring center text overflow
+- Data sources generalized: the three reports gain a DATA_SOURCES source list (git repo aggregation / file directory / remote source, three type examples, mac/win dual fields); default templates no longer show real machine paths (~/reports, %USERPROFILE%\reports generic path templates); CONFIG_VERSION 2→3; deck-stage/prompt-pouch template values generalized too; zero real addresses left anywhere in the repo
+- Upgrade mechanism strengthened: ① new .installed-manifest install list — upgrades only clean files the manifest shows the official version deleted, plus now-empty directories; user-created files are never touched (older installs without a manifest skip cleanup and get it written after upgrade); ② article-to-html embeds the .preserve list (design-system.md never overwritten, official updates saved as .upstream companions); ③ meta-forge mechanism 5 — conditional .preserve list embedding spec + validation-list item 4b
+- Verified: upgrade-mechanism three-scenario real-device test, 12 assertions all pass (old-version-no-manifest upgrade / official-file-deletion precise cleanup / user-created & customized file protection)
+
+## 1.0.3 (2026-11-11)
+
+**Narrow-screen responsive adaptation + default chart animations**
+
+- Narrow-screen: the three reports converge at <680px breakpoints (wrap full-width flow, tightened margins, unified 26px h1, clamp 640px floor — no more horizontal overflow); annual monthly-commit chart 12 columns flex-shrink + tip layer first/last column anchoring; weekly daily-commit chart tip long-text wrap width limit; cover page <1280px viewport proportional zoom preview (calc division length÷length type-correct; captures use headless 1280×720, unaffected)
+- Default chart animations: annual monthly-commit bars gain cbGrow growth animation (aligned with weekly); weekly ring chart gains ringSweep sweep stroke (--ring-offset data-driven, animation stops exactly at the target); weekly heatmap gains hmOn staggered lighting (morning/afternoon/evening three batches)
+- Verified: nine viewports (1920→390) zero overflow; cover right edge pixel-precise per viewport; animation timing sampled + mid-state captures accepted; zero pageerrors
+
+## 1.0.2 (2026-11-11)
+
+**Three reports scroll-entry: off-screen cards float in as they scroll into view**
+
+- Scroll-entry: cards initially outside the viewport float up and fade in as they scroll into view (first-screen cards keep the staggered load animation; IntersectionObserver + html.js gating, always fully visible in no-JS / print / capture modes)
+- translate as an independent property, not touching transform — zero conflict with hover 3D tilt; transition-delay cleared after entry so hover stays snappy; stagger 70ms capped at 280ms; 2s fallback force-show
+
+## 1.0.1 (2026-11-11)
+
+**Post-release triple fix: three reports mono ambience reskin + prompt-pouch four-layer tech ambience + daily/weekly noise fade-out**
+
+- Daily/weekly/annual mono ambience reskin: stripes retained in the black theme, colors de-saturated — star dots become neutral gray-white, grid/scan-line/light-band follow --scan-dim using IDEA text-color low-opacity gray-white, body solid #1e1f22 no longer polluted by the blue ambience (previously bluish (38,45,60); after reskin the pure background recovers pixel-perfect (30,31,34), stripe rows gray-white neutral); tech/biz/light/warm ambience unchanged
+- Daily/weekly mono noise layer fade-out: body::before grayscale grain hidden in mono (annual/pouch never had noise), pure background pixel-identical with annual; colored themes keep the noise
+- Prompt-pouch gains four-layer tech ambience: grid/stars/scan-line/light-band from the same source as the three reports (opacity one half-step lighter so reading stays comfortable), cards gain 8px fine horizontal stripes, mono reskinned gray-white
+
+## 1.0.0 (2026-11-11)
+
+**1.0.0 official release**: through a dozen versions from 0.1.x to 0.5.x, nine skills + the upgrade-protection CLI + the five-theme system are all stable — officially promoted. This release closes three big changes: whole-forge exam with three fixes, CLI init/update mechanism review & repair, prompt-pouch continued forging (two-stage confirmation / full tag interactions / emoji panel / dialog enlargement / background renaming).
+
+**Whole-forge exam, three fixes: intent routing + usage guidance + three prompt-pouch features**
+
+- Intent routing ①: magic-deck (HTML web slides) and deck-stage (.pptx editable files) gain an "intent boundary" section — when "make a PPT" doesn't specify the form, AskUserQuestion two-way choice, no more two-skill collision; also fixed the magic-deck description's stale "sixteen themes" → "seventeen"
+- Intent routing ②: daily/weekly/annual gain "0.5 cycle-ambiguity routing" — "write a summary / work summary" without a stated cycle triggers an AskUserQuestion three-way choice, never silently defaults
+- Intent routing ③: spec-doc2spec / spec-spec2doc descriptions gain usage-query trigger words (asking "how to use / usage" routes to the usage-guide answer instead of missing the trigger)
+- Usage guidance: article-to-html's usage instructions extracted from SKILL.md into a standalone resources/usage-guide.md ("Article Mounting Master Usage Guide"), aligned with the other 8 forge skills
+- Three prompt-pouch features: ① import/export — top-bar "⤓ export" downloads a full JSON backup (timestamped), "⤒ import" picks a file for whole-library overwrite (auto-backup before import for rollback, import disabled in unauthorized directories); ② tag click filtering — clicking a card tag filters by that tag (top-bar pill shows the current tag, click ✕ or re-click the same tag to cancel, switching groups auto-clears, stacks with search); ③ group sidebar drag sorting — dragging group bars reorders the groups list (authorized directories write through immediately; unauthorized ones produce a "reorder groups to…" instruction for the AI to save)
+
+**CLI init/update mechanism review & repair**
+
+- Copy excludes impurities: copyDir skips .DS_Store/.git and other metadata files, no longer copied into user directories with skills
+- Upgrade structure sync: new pruneDir — cleans files the official version deleted (and empty directories) before upgrade (historically grow-only stale files no longer linger); user-config.md, .preserve list files, .upstream companions, .bak- backups, node_modules dependencies are all left untouched
+- Three-way [3] differentiation: [3] decide later no longer generates a .upstream companion (truly distinct from [2] keep mine); when the config content matches the official version, old .upstream companions are auto-cleaned
+- deck-stage gains the "config version mechanism (upgrade protection)" section (current required version 2), aligned with the rest of the forge; the whole-repo "four themes" wording unified to five themes (including light IDEA white)
+- prompt-pouch mechanism section gains an explicit "current required version is 4" declaration
+- README upgrade-protection notes synced (three-way [3] semantics + new "structure sync" item)
+
+**Prompt-pouch continued forging: batch-organize two-stage confirmation + full tag interactions + emoji quick panel**
+
+- Batch-organize upgraded to two-stage confirmation: stage one settles entries (default AI smart tagging — each entry auto-fitted with 1-3 semantic tags, user-editable & deletable + interpolation generalization suggestions) → stage two settles groups (grouping rationale + recommended new group names); few entries (≤3) merge both stages
+- Full tag interactions: card tag hover shows "✕" to delete a single tag, tags under 3 hover shows "+" to quickly add (authorized directories write through immediately, unauthorized produce instructions for the AI); closes the loop with the existing click-to-filter and edit-form tag editing
+- Group dialog emoji quick panel: 95 common emoji preset grid under the icon input (9 columns scrollable, click to fill, current selection highlighted), the input keeps manual typing / pasting any character
+- Group dialog enlargement: width 460→640px, emoji panel font 17→28px, larger grid spacing, taller view (96→200px multi-row), more comfortable
+- mono/light body background renaming: body's three-layer composite background (top glow + grid lines + 160° gradient) becomes theme solid colors — mono solid #1e1f22, light solid #ffffff, removing the "gray-top black-bottom" gradient seam, consistent with the IDE editor area (tech/mint keep their ambience backgrounds)
+
+## 0.5.5 (2026-11-11)
+
+**Whole-forge theme reskin: IDEA dark + new IDEA light**
+
+- mono "black" theme upgraded to IDEA dark (JetBrains New UI Dark official palette): editor/body #1e1f22 + panel/dialog #2b2d30 + border #3c3f41 + text #dfe1e5 + IDEA blue #3574f0, fixing the previous old Darcula palette (#2b2b2b family) mismatch with the IDE look
+- New light "white" theme (IntelliJ Light official palette): white editor #ffffff + light-gray panels #f2f2f2 + border #d1d1d1 + IDEA blue #2675bf
+- Coverage: prompt-pouch (4→5 themes), daily/weekly/annual (4→5), magic-deck (16→17), deck-stage (4→5); skin dock / theme arrays / doc lists all synced
+- article-to-html excluded: its A-set four themes are an "accent color" system, not light/dark semantics; D terminal-geek (black) and C minimal-white (white) are already covered by style variants
+
+## 0.5.4 (2026-11-11)
+
+**Prompt-pouch interaction polish (SKILL.md)**
+
+- Intent recognition & confirmation: explicit pouch-entry trigger phrases (put this passage / this conversation / this file into the pouch, etc.); vague intent ("save this") confirms first; ordinary chat never triggers file operations
+- Existing page three-branch: when creating and the directory already has a page → open existing (recommended) / overwrite rebuild (old page backed up .bak, data dir untouched) / cancel
+- Save confirmation: show the content to be written and wait for user confirmation before writing back ("save directly" skips); group smart matching (semantically matches existing groups and explains why)
+- Interpolation generalization suggestions: on add/organize, detect generalizable concrete words, suggest turning them into {variables} (with rewrite examples and reuse effects), only change with user confirmation
+
+## 0.5.3 (2026-11-11)
+
+**Prompt-pouch data directory rename: cache/ → data/**
+
+- DATA_DIR default `cache` → `data` (semantic rename: the directory holds full data, not cache; "cache" semantics reserved for future true process caches); CONFIG_VERSION v3 → v4
+- Page read-side three-tier fallback: `data/prompts.json` → old default `cache/prompts.json` → root-level old flat files; write side always writes `data/`; page copy all synced
+- Upgrade migration: when the AI finds a v3 old-default cache/ dir → back up, rename-migrate to data/ and inform the user (explicitly customized directory names are respected and left alone)
+
+## 0.5.2 (2026-11-11)
+
+**Prompt-pouch mono theme reskin to JetBrains Darcula**
+
+- From "Linear-style pure black" to the Darcula official palette: background `#2b2b2b` / panel `#3c3f41` / card gradient `#313335` / body blue-gray `#a9b7c6` / border `#4e5254` — dark-gray base + blue-gray text + gray-scale panels, consistent with the JetBrains IDE look, easy on the eyes for long sessions
+- Components fully blue-gray adapted: wand/icon filters, tags, stars, popovers, input area, card inner borders and hover borders, skin-dock color dots
+- Theme names synced: "minimal black-white" → "Darcula dark gray-blue" (SKILL.md / user-config.md / usage-guide.md / skin-dock titles)
+
+## 0.5.1 (2026-11-11)
+
+**Self-check loop completed** (hard gates before delivery, all four skills covered)
+
+- magic-deck: SKILL.md gains "2.5 pre-delivery self-check" (Playwright zero errors + flip through every page + first/middle/last three-page capture self-inspection); new resources/content-guide.md content adaptation manual (content temperament → layout / domain → template packs / page pacing / chart selection)
+- Prompt-pouch: SKILL.md gains "2.5 pre-delivery self-check" (json machine validation + zero page errors + card count equals data count)
+- deck-stage: step 5 validation strengthened into the "pre-delivery self-check" hard gate (slide XML count matches pages, no empty pages)
+- template: new-skill template gains a "3.5 pre-delivery self-check" placeholder (pick check methods by skill type)
+
+## 0.5.0 (2026-11-11)
+
+**New**
+
+- **deck-stage joins the forge**: reports / materials → professional .pptx stage decks — three-question interaction (materials → page skeleton table → build method), regular pages natively editable (data cards / timelines / bar charts / pie charts / line charts), cover & closing pages captured losslessly from HTML, speaker notes per page; visuals share the same source as the reports (tech/biz/mono/warm four themes)
+- magic-deck "💼 domain" tab gains 21 template packs (six categories, one-click full deck generation, two-stage confirmation with undo)
+- magic-deck gains resources/usage-guide.md (usage-answer source), hooked at SKILL.md step 4
+
+**Improvements**
+
+- Prompt-pouch time fields precise to the second (cards / detail timeline / AI copy)
+- Prompt-pouch default save structure: data & backups subdirectorized (`cache/prompts.json` + `backup/` rolling backups), `DATA_DIR` / `BACKUP_DIR` configurable, old flat structure still readable
+- Prompt-pouch sidebar partial scrolling (favorites + groups scroll when groups are many; "all" / new group / usage stay fixed) + wider dialog + backup-area buttons no wrap
+- magic-deck template panel dialog widened; "profession" wording unified to "domain" (more general, fits six categories)
+- CLI: init/update run dependency detection for skills with a package.json (prompts npm install when node_modules missing)
+- README rewritten: full command reference (complete flag tables), deck-stage registered, directory layout fully updated, stale copy fixed
+
+**Fixes**
+
+- **npm package content omission**: 0.4.0's `files` list missed prompt-pouch (the package had no pouch), fixed and deck-stage added
+
+## 0.4.0 (2026-11-10)
+
+- magic-deck template runtime switching: toolbar "🎨 templates" panel five layouts click-to-apply (all pages / this page only / checked pages), titles auto-mapped, switching back to classic business restores without losing content
+- Prompt-pouch time fields: createdAt / updatedAt saved and displayed
+- Report skills' outward wording de-git-ified: multi-source data reworded as a paragraph / file descriptions / images / verbal additions, fitting all industries
+- Prompt-pouch default save directory migrated to MyWork/prompt-pouch (html/json/backups collected in one directory)
+
+## 0.3.0 (2026-11-09)
+
+- magic-deck magic slide deck joins the forge (16:9 stage + playback engine + templates & themes + page-select captures + fullscreen presentation)
+- meta-forge meta-smithy joins the forge (the skill that forges skills, four mechanisms self-referential)
+- Three-piece mechanism backfill: CONFIG_VERSION key, reference dual-track, self-check discipline
+- spec-doc2spec / spec-spec2doc fully detached from Speccore, reborn as standalone Pandoc-centric skills (detection & install guidance + AI proofreading loop), config extracted to user-config
+- Three-piece professional reporting conventions (conclusion-first, risk four-ring, value translation) + HTML effect layer upgrade
+
+## 0.2.0 (2026-11-08)
+
+- New annual-report skill (five sections, industry-agnostic skeleton)
+- Upgrade protection: user-config.md config extraction + copyDir preserve list + .preserve list
+- Daily & weekly whole-page content-area captures + meteor progress-bar particle polish
+- spec-doc2spec / spec-spec2doc advanced upgrade with resources volumes
+
+## 0.1.0 (2026-11-06)
+
+- First npm release: `skill-forge-hub` (command name `skill-forge`), zero-dependency Node>=14
+- CLI: ls list / init interactive multi-select install (auto-detects common AI assistant skill directories, supports --target/--skills)
+- Skills included: daily-report, weekly-report, article-to-html, spec-doc2spec, spec-spec2doc
