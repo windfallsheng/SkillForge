@@ -65,11 +65,11 @@
 | weekly-report | 报表汇演 | [weekly-report/](weekly-report/) | 多源数据生成周报（本周结论 + 本周任务进度/下周计划/风险阻塞点 + 本周概览卡）；周结束日可配置（默认周五），支持自然语言周定位（本周/上周/10月第2周/节假日锚定） |
 | monthly-report | 报表汇演 | [monthly-report/](monthly-report/) | 多源数据生成月报（四段式：月度概览/本月关键成果/问题与改进/下月计划），开发类用户可聚合当月 git 提交；12 行业职业词典，支持自定义模板与自然语言月份定位 |
 | quarterly-report | 报表汇演 | [quarterly-report/](quarterly-report/) | 多源数据生成季度总结（四段式：季度概览/季度关键成果/问题与改进/下季度计划）：核心数据卡带环比（较上季度）+ 同比（较去年同期）双基准，概览附 Q1-Q4 季度走势图；成果段按 M1/M2/M3 月时间线；12 行业职业词典，支持自定义模板 |
-| annual-report | 报表汇演 | [annual-report/](annual-report/) | 多源数据生成年度总结（五段式：年度概览/核心成果/经验成长/不足反思/新年规划）：git 全年提交聚合 + 会话口述；12 行业职业词典，支持自定义模板与自然语言年度定位 |
-| team-report-collector | 报表汇演 | [team-report-collector/](team-report-collector/) | 团队成员日报收集台：口述 / 文件批量 / 页面导出三种方式收日报 → reports.json 数据真相源 + 单文件离线收集台 HTML（表单填写 + localStorage 草稿 + 导出导入 JSON + 双主题）+ 按日期分组汇总 md |
+| annual-report | 报表汇演 | [annual-report/](annual-report/) | 多源数据生成年度总结（五段式：年度概览/核心成果/经验成长/不足反思/新年规划），开发类用户可聚合 git 全年提交；12 行业职业词典，支持自定义模板与自然语言年度定位 |
+| team-report-collector | 报表汇演 | [team-report-collector/](team-report-collector/) | 团队成员日报收集台：口述 / 文件批量 / 页面导出三种方式收日报 → reports.json 数据真相源 + 单文件离线收集台 HTML（表单填写 + localStorage 草稿 + 导出导入 JSON + 五主题换肤）+ 按日期分组汇总 md |
 | article-to-html | 文档装裱 | [article-to-html/](article-to-html/) | Word / Markdown / 纯文本 → 精美独立 HTML（思源黑体 + Roboto 商用免费字体，图表 HTML/CSS 重绘），逐章截图（Retina 2x）；现成 HTML 可直接截图或先美化 |
 | twin-docs | 文档装裱 | [twin-docs/](twin-docs/) | 中文文档翻译并同步为英文版（或反向）：术语表一致性对齐、标题层级 / 表格 / 代码块 / 链接逐项对应、双向同步检查出差 |
-| one-pager | 文档装裱 | [one-pager/](one-pager/) | 主题 / 一句话想法 → 一页纸 HTML 海报（大标题渐变字 + 金句 + 要点块，纵向一屏、打印友好）+ 可选 PNG 截图，三主题可切换 |
+| one-pager | 文档装裱 | [one-pager/](one-pager/) | 主题 / 一句话想法 → 一页纸 HTML 海报（大标题渐变字 + 金句 + 要点块，纵向一屏、打印友好）+ 可选 PNG 截图，五主题可切换 |
 | spec-doc2spec | 工程提效 | [spec-doc2spec/](spec-doc2spec/) | Word / Markdown 需求文档转结构化需求切片（薄入口 + resources 分册）；自动检测 Pandoc，未装引导跨系统安装 |
 | spec-spec2doc | 工程提效 | [spec-spec2doc/](spec-spec2doc/) | Markdown 规格导出为 Word / PDF 交付文档；自动检测 Pandoc，未装引导跨系统安装；PDF 双路径（xelatex / Chrome 打印兜底） |
 | release-notes | 工程提效 | [release-notes/](release-notes/) | git 两个版本标签之间提交 → 中英双语发版说明 + CHANGELOG 条目（分类归纳 + 用户视角改写 + 提交统计）+ npm 发布前自检清单 |

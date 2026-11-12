@@ -6,7 +6,7 @@
 
 ## 0. 铁律
 
-- **单文件零依赖**：禁用 CDN/@import/外链 CSS/JS/图片/网络字体，双击离线可打开；字体用系统栈 `ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,'Microsoft YaHei',monospace`
+- **单文件零依赖**：禁用 CDN/@import/外链 CSS/JS/图片/网络字体，双击离线可打开；字体用系统栈 `ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,monospace`
 - **舞台 1280×720（16:9）**，按窗口等比缩放（--sc），窗口任意大小不变形
 - **截图与复制只含主体**：截图克隆当前 slide、复制取 slide innerText，绝不包含工具栏/页码/箭头/提示等操作元素
 - **全屏纯净**：`:root:fullscreen` 下所有操作元素与背景氛围层（.bg-glow/.bg-grid）全部隐藏、页面底色纯黑 `#000`，只留舞台主体（与 PPT 软件放映一致：幻灯按比例充满画面，比例不匹配处补黑边，绝无主题氛围边框/光斑/网格）

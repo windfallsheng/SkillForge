@@ -4,6 +4,15 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
+## 1.1.0 (2026-11-12)
+
+**Harvest season: 8 new skills (13 → 21, seven categories) + built-in usage guide + theme system alignment**
+
+- 8 new skills (seven categories take shape): team-report-collector joins Report showcase (team daily-report collector: three intake paths — verbal / file batch / page export → reports.json as the single source of truth + a single-file offline collection HTML + a date-grouped summary md); twin-docs (Chinese ↔ English twin documents) and one-pager (one-page poster: big gradient title + quote + key-point blocks + optional PNG capture) join Document mounting; release-notes joins Engineering efficiency (commits between two version tags → bilingual release notes + CHANGELOG entry + pre-publish npm self-check list); the new Data preparation category (data-prepper cleaning & structuring + commit-heatmap commit heatmaps); the new Communication & collaboration category (decision-log decision logs, with meeting-minutes and prompt-pouch moved in); skill-doctor joins Skill crafting (skill health check: static checks + three-section report with line-level locations); cli.js CATEGORIES seven-category mapping and both READMEs updated
+- Built-in usage guide: every skill ships skillforge-guide txt+html dual copies in resources/; SKILL.md gains the "how do I use skillforge" overall consultation trigger; guide typical-workflow cards reorganized into scenario bullets (html four cards 20 items + txt sync); root index.html redirects to skillforge-guide.html, making the online guide reachable directly at the GitHub Pages root; both READMEs switch links to absolute addresses + package.json gains the homepage field
+- Theme system alignment: team-report-collector upgrades from two themes to the five-theme system (tech/biz/mono/light/warm 12 core contracts) + tech background layer quartet + container widened to clamp(640px,60%,1200px); one-pager upgrades from three themes to five themes + background layer + key-point three-column grid filling the page width (template upgraded one-pager@2); the skin docks of the collector and the poster are pinned to the bottom-right corner (right/bottom 18px), aligned with the report family
+- Upgrade-command docs completed: 43 documents across README/install/usage-examples/guide gain npm update -g skill-forge-hub (upgrade the CLI itself) alongside skill-forge update (upgrade the skills) — two-tier wording, copy-paste friendly for non-technical users
+- Doc checkup fixes: README.en skill list gains the 8 missing rows; both READMEs align the annual-report wording (multi-source data, developer users can aggregate the year's git commits); stale "two themes" (collector) and "three themes" (poster) wording cleared; output-producing skills now always report output paths in conversation after saving; meta-forge-generated skills embed the SkillForge guide
 ## 1.0.7 (2026-11-12)
 
 **Docs split into pure Chinese & English mirrors + meta-forge lessons fully codified**

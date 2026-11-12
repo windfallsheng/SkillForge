@@ -4,6 +4,15 @@
 
 SkillForge（技能锻造坊）npm 包 `skill-forge-hub`（命令名 `skill-forge`）版本变更记录。
 
+## 1.1.0（2026-11-12）
+
+**技能丰收季 8 连发：13 技能扩至 21 技能七分类 + 内置使用指引 + 主题体系对齐**
+
+- 新增 8 个技能（七分类成型）：报表汇演补 team-report-collector（团队日报收集台：口述 / 文件批量 / 页面导出三路收日报 → reports.json 数据真相源 + 单文件离线收集台 HTML + 按日期分组汇总 md）；文档装裱补 twin-docs（中英孪生文档：术语表对齐、逐项对应、双向同步检查）与 one-pager（一页纸海报：大标题渐变 + 金句 + 要点块 + 可选 PNG 截图）；工程提效补 release-notes（版本标签间提交 → 中英双语发版说明 + CHANGELOG 条目 + npm 发布自检清单）；新设数据整备类（data-prepper 清洗结构化 + commit-heatmap 提交热力图）；新设沟通协作类（decision-log 决策日志，meeting-minutes 与 prompt-pouch 迁入）；技能自造补 skill-doctor（技能体检：静态检查 + 三段式报告行级定位）；cli.js CATEGORIES 七分类映射与 README 双版同步登记
+- 内置使用指引：每个技能 resources/ 内置 skillforge-guide txt+html 双版；SKILL.md 加「skillforge 怎么用」整体咨询触发规则；guide 典型链路卡场景分条（html 四卡 20 条 + txt 同步）；根 index.html 跳转 skillforge-guide.html，GitHub Pages 根地址直达在线引导页；README 双版链接改绝对地址 + package.json 补 homepage 字段
+- 主题体系对齐：team-report-collector 收集台从双主题升级五主题（tech/biz/mono/light/warm 12 核心契约）+ 科技感背景层四件套 + 容器加宽 clamp(640px,60%,1200px)；one-pager 海报从三主题升级五主题 + 背景层 + 要点块三列网格铺满版心（模板升级 one-pager@2）；收集台与海报换肤坞固定右下角（right/bottom 18px）对齐报表体系
+- 升级命令文档补全：README/install/usage-examples/guide 共 43 份文档补充 npm update -g skill-forge-hub（升级 CLI 本体）与 skill-forge update（升级技能）两层口径，非技术用户照抄即可
+- 文档体检修复：README.en 技能清单补齐丰收季 8 行；README 双版年报口径对齐（多源数据，开发类用户可聚合 git 全年提交）；收集台「双主题」、海报「三主题」旧表述清零；产物型技能落盘后强制对话报告产物路径；meta-forge 生成技能内置 SkillForge 指引
 ## 1.0.7（2026-11-12）
 
 **文档中英分离 + meta-forge 坑教训全量入规**
