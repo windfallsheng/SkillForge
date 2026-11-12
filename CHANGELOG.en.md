@@ -4,6 +4,13 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
+## 1.3.1 (2026-11-12)
+
+**Daily/weekly template sample data generalized + CSDN article visual refresh**
+
+- Daily/weekly reference.html template samples fully generalized: all real project/component/product names removed (srf-web-* end names, MyServiceMenu/PaymentZone/ServiceMenuGrid, MoreServicesSection/StudentProfileCard, DISPATCHING state machine, product alias names, error code 43001, wsprobe probe, APK gate, WeChat/Alipay binding, viewer-side, etc.); concrete business-side names and component names replaced with generic wording (multi-side, menu/payment/grid modules, info cards, payment-channel binding, app-package version gate, viewing experience); only industry-generic technical terms (client/server/gateway, API/JWT/SSL) and quantitative data kept; DOM display and TXT copy source updated in lockstep
+- CSDN promo article visual refresh: new title + six skill screenshots + two mermaid structure diagrams
+
 ## 1.3.0 (2026-11-12)
 
 **prompt-pouch native dialogs eliminated: unified in-page confirm dialog in three modes**

@@ -4,6 +4,13 @@
 
 SkillForge（技能锻造坊）npm 包 `skill-forge-hub`（命令名 `skill-forge`）版本变更记录。
 
+## 1.3.1（2026-11-12）
+
+**日报/周报模板示例数据通用化 + CSDN 推广文图文改版**
+
+- 日报/周报 reference.html 模板示例彻底通用化：清除全部真实工程名/组件名/产品专名（srf-web-user/srf-web-wx/srf-web-h5-teacher、MyServiceMenu/PaymentZone/ServiceMenuGrid、MoreServicesSection/StudentProfileCard、DISPATCHING、邻音号、萤火、43001、wsprobe、APK、微信/支付宝、观众端等），业务端名与具体组件名一律换通用表述（多端、菜单/支付/网格等模块、信息卡片、支付渠道绑定、应用安装包版本门禁、观看体验等），仅保留业界通用技术术语（客户端/服务端/网关、API/JWT/SSL 等）与量化数据；DOM 展示区与 TXT 复制源逐处同步；weekly 示例「对外称呼正名」语句顺带修通
+- CSDN 推广文图文并茂改版：换标题 + 六张技能实拍截图 + 两张 mermaid 结构图
+
 ## 1.3.0（2026-11-12）
 
 **prompt-pouch 原生弹框清零：页内统一确认弹框三形态**
