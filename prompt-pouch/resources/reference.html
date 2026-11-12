@@ -61,7 +61,7 @@
 [data-theme="mono"] .bk-item,
 [data-theme="mono"] .detail-content{ background:rgba(223,225,229,.06); }
 [data-theme="mono"] .theme-dock .th-dot[data-theme="mono"]{ border:1.5px solid rgba(94,154,255,.6); }
-[data-theme="mono"] body{ background:var(--bg); } /* 主体纯 #1e1f22：去掉顶部光晕/160° 渐变，消除上灰下黑断层（JetBrains New UI Dark 编辑区同色）；四层氛围独立于 body，mono 下星点换装灰白、条纹灰白不泛蓝 */
+[data-theme="mono"] body::before{ display:none; } /* mono 纯色：关闭顶部光晕/160° 渐变氛围层，消除上灰下黑断层（JetBrains New UI Dark 编辑区同色）；四层氛围独立于 body，mono 下星点换装灰白、条纹灰白不泛蓝 */
 
 /* ═══ light IDEA 白亮：IntelliJ Light 官方色系（白编辑区 + 浅灰面板 #f2f2f2 + IDEA 蓝强调） ═══ */
 [data-theme="light"]{
@@ -92,7 +92,7 @@
 [data-theme="light"] .bk-item,
 [data-theme="light"] .detail-content{ background:#f7f9fb; }
 [data-theme="light"] .theme-dock .th-dot[data-theme="light"]{ border:1.5px solid rgba(38,117,191,.5); }
-[data-theme="light"] body{ background:var(--bg); } /* 主体纯白 #ffffff：去掉顶部光晕/160° 渐变，对齐 IntelliJ Light 编辑区；四层氛围独立于 body */
+[data-theme="light"] body::before{ display:none; } /* light 纯白：关闭顶部光晕/160° 渐变氛围层，对齐 IntelliJ Light 编辑区；四层氛围独立于 body */
 [data-theme="mint"]{ /* 薄荷绿 */
   --bg:#0d1a12; --bg2:#12241a;
   --panel:#182f22; --panel2:#1e3a2a;
@@ -109,14 +109,19 @@
 *{ box-sizing:border-box; margin:0; padding:0; }
 html,body{ height:100%; }
 body{
-  background:
-    radial-gradient(1200px 500px at 70% -10%, var(--gold-dim), transparent 60%),
-    linear-gradient(160deg, var(--bg) 0%, var(--bg2) 100%);
+  background:var(--bg); /* 主体纯色：光晕/160° 渐变移入 fixed 氛围层 body::before——避免背景传播到画布后滚动出现上下颜色断层（html,body 锁 height:100% 时 body 背景只覆盖第一屏，跨浏览器传播行为不一致）；四层氛围与光晕层均 fixed 覆盖视口，滚动恒定 */
   color:var(--text);
   font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,'PingFang SC','Microsoft YaHei',monospace;
   min-height:100%;
 }
 
+/* 顶部光晕 + 160° 渐变 fixed 氛围层（独立于 body，滚动恒定；mono/light 下关闭保持纯色） */
+body::before{
+  content:''; position:fixed; inset:0; z-index:-1; pointer-events:none; /* z-index:-1：画在画布背景之上、正文内容之下（光晕只衬底不压字） */
+  background:
+    radial-gradient(1200px 500px at 70% -10%, var(--gold-dim), transparent 60%),
+    linear-gradient(160deg, var(--bg) 0%, var(--bg2) 100%);
+}
 /* ============ 四层科技氛围（与日报/周报/年报同源，透明度淡半档——工具页不扰读） ============ */
 .grid-pattern{
   position:fixed; inset:0; z-index:0; pointer-events:none;
