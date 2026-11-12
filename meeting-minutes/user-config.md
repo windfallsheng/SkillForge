@@ -10,11 +10,12 @@
 
 ```yaml
 DISK: true                     # 是否落盘写文件；false = 默认只在对话输出，不写文件不开浏览器
-CONFIG_VERSION: 1              # 配置结构版本：skill 升级时若配置结构变化会递增；AI 每次执行前对比 SKILL.md「配置版本机制」节声明的当前版本，不一致时按 SKILL.md 的迁移规则处理（先备份本文件为带时间戳 .bak，再迁移，最后对话告知用户）
+CONFIG_VERSION: 2              # 配置结构版本：skill 升级时若配置结构变化会递增；AI 每次执行前对比 SKILL.md「配置版本机制」节声明的当前版本，不一致时按 SKILL.md 的迁移规则处理（先备份本文件为带时间戳 .bak，再迁移，最后对话告知用户）
 FORMATS: [md, txt, html, content-png] # 落盘哪些格式（数组，可删减/增，如 [md, html] / [md, txt, html]（不截图）；content-png = 内容区截图（五张分节卡片整体，不含头部标题/复制按钮/页脚），删除该项即不截图；不影响对话中的 md 正文输出）
+SERIES_GROUP: auto             # 纪要系列分组：auto = 提取到稳定系列名（如「产品周例会」）时建系列目录 meetings/{系列名}/，未提取到则回退月份平铺 meetings/YYYY-MM/；series = 一律建系列目录（提取不到就用会议主题做目录名）；off = 纯月份平铺（旧行为）。系列名落盘确认时报给用户，可改口（说「这个系列叫 XX」→ 当次改目录名；说「以后这个系列叫 XX」→ 永久记住该系列名）
 DIR: auto                      # 落盘根目录：auto = 按当前系统自动选 DIR_MAC / DIR_WIN（也可直接写死某个绝对路径）
-DIR_MAC: ~/reports                               # macOS 落盘根目录（自动按会议月份建子目录 meetings/2026-11 式样；目录不存在时回退用户主目录下 reports）
-DIR_WIN: %USERPROFILE%\reports                   # Windows 落盘根目录（自动按会议月份建子目录 meetings/2026-11 式样；目录/盘符不存在时回退用户主目录下 reports）
+DIR_MAC: ~/reports                               # macOS 落盘根目录（按 SERIES_GROUP 规则建子目录：auto/series 建 meetings/{系列名}/、off 或未提取到系列名建 meetings/YYYY-MM/；目录不存在时回退用户主目录下 reports）
+DIR_WIN: %USERPROFILE%\reports                   # Windows 落盘根目录（按 SERIES_GROUP 规则建子目录：auto/series 建 meetings/{系列名}/、off 或未提取到系列名建 meetings/YYYY-MM/；目录/盘符不存在时回退用户主目录下 reports）
 OPEN_HTML: true                # 落盘后是否自动用浏览器打开 html（FORMATS 不含 html 时忽略）
 THEME: tech                    # html 页面主题：tech 深蓝科技（默认）/ biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变；生成时写 <html data-theme="THEME值"> 定默认，页面右下角换肤坞五色点随点随换（浏览器本地记忆（键按页内嵌唯一 ID 隔离、多份产物互不串台、改名/移动目录记忆不丢；生成时头部写 `<meta name="minutes-id" content="<UUID>">`，每次新 UUID），?shot 截图模式自动隐藏，打印隐藏）
 TEMPLATE: default              # 纪要模板：default = 内置五段式（会议信息/会议结论/议题讨论/决议与行动项/下次会议）；custom = 使用下方「📝 自定义模板」节；口头临时指定模板仅当次生效

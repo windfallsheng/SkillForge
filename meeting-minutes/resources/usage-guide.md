@@ -41,8 +41,8 @@
 - 词典外会议类型走兜底：按骨架 + 你提供的素材现场生成侧重；说「记住这类会」→ 固化为新词条
 
 ## 控制落盘（临时要求，仅对当次生效）
-- 默认：对话输出 Markdown + md/txt/html 三文件 + 内容区截图 content-png 落盘到 DIR（auto 按系统选：macOS=~/reports、Windows=%USERPROFILE%\reports，模板默认值，路径以 user-config.md 顶部「默认配置」为准）/meetings/YYYY-MM/ + html 自动打开（DIR 目录/盘符不存在时自动改用用户主目录下 reports：macOS=~/reports、Windows=%USERPROFILE%\reports）
-- 说「写到桌面」→ 本次落盘到桌面（macOS=~/Desktop、Windows=%USERPROFILE%\Desktop）；说「存到 ~/report / D:\report」→ 本次用指定目录（均自动按会议月份建子目录）
+- 默认：对话输出 Markdown + md/txt/html 三文件 + 内容区截图 content-png 落盘到 DIR（auto 按系统选：macOS=~/reports、Windows=%USERPROFILE%\reports，模板默认值，路径以 user-config.md 顶部「默认配置」为准）/meetings/{系列名}/（SERIES_GROUP=auto：提取到稳定系列名建系列目录，未提取到回退 meetings/YYYY-MM/ 月份平铺）+ html 自动打开（DIR 目录/盘符不存在时自动改用用户主目录下 reports：macOS=~/reports、Windows=%USERPROFILE%\reports）
+- 说「写到桌面」→ 本次落盘到桌面（macOS=~/Desktop、Windows=%USERPROFILE%\Desktop）；说「存到 ~/report / D:\report」→ 本次用指定目录（仍按 SERIES_GROUP 规则建系列/月份子目录）；说「这个系列叫 XX」→ 当次用新系列名建目录；说「以后这个系列叫 XX」→ 永久记住该系列名；说「把我旧纪要按系列整理」→ 一次性把 meetings/ 下旧纪要按系列名归置到系列目录
 - 说「不落盘/别写文件」→ 本次只在对话输出，不写文件、不开浏览器
 - 说「只要 md」「只出 html」「只要内容区截图」→ 本次只落指定格式文件；说「这次不截图」→ 本次跳过截图（content-png = 五张分节卡片整体一张图，四周约 40px 留白，不含头部标题、复制按钮、页脚）
 - 说「只要截图/重新截个图」（如「给 11-11 会议纪要截个图」）→ 本次不重新生成内容，只对现有 html 执行内容区截图（覆盖 content-png，需 html 已存在，找不到则提示先生成）

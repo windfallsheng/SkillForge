@@ -11,7 +11,7 @@ disable-model-invocation: false
 
 ## 生成流程
 
-0. **读用户配置**（DISK/FORMATS/DIR/OPEN_HTML/TEMPLATE/ROLE/CONFIRM、自定义模板）→ 先 Read 同目录 `user-config.md`
+0. **读用户配置**（DISK/FORMATS/DIR/SERIES_GROUP/OPEN_HTML/TEMPLATE/ROLE/CONFIRM、自定义模板）→ 先 Read 同目录 `user-config.md`
 1. **提取会议要素**（会议主题/日期/类型/地点/主持人/参会人）→ 读 `resources/content-rules.md` 的「会议要素提取」节
 2. **收集会议内容**（会话口述 + 文字/文件/图片/录音材料，合并去重）→ 读 `resources/content-rules.md` 的「素材来源」节
 3. **内容归类与润色**（五段式结构 / 行动项三要素 / 纯文字模式 / 输出格式 / 写作风格）→ 读 `resources/content-rules.md`
@@ -21,7 +21,20 @@ disable-model-invocation: false
 
 ## ⚙️ 配置与自定义模板
 
-**执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（DISK/FORMATS/DIR/OPEN_HTML/TEMPLATE/ROLE/CONFIRM）与自定义模板都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留。
+**执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（DISK/FORMATS/DIR/SERIES_GROUP/OPEN_HTML/TEMPLATE/ROLE/CONFIRM）与自定义模板都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留。
+
+## 配置版本机制（升级保护）
+
+本 skill 当前配置版本为 `2`（对应 user-config.md 中的 `CONFIG_VERSION`）。执行时若发现 user-config.md 的 CONFIG_VERSION 与本节声明不一致：
+
+1. 先将旧 user-config.md 备份为 `user-config.md.bak-<时间戳>`（同目录，绝不删除旧值）
+2. 按本节「配置升级规则」迁移字段：新增字段补默认值、改名字段按映射改写、删除字段的值保留在备份中并在对话提示用户手动确认
+3. 更新 CONFIG_VERSION 为当前版本
+4. 对话中明确告知用户「检测到配置版本从 X 升级到 Y，旧配置已备份至 <路径>」
+
+配置升级规则（v1→v2）：新增 `SERIES_GROUP: auto`（纪要系列分组，见 user-config.md 注释）；其余字段不变。
+
+**无法迁移项处理**：值域失效（旧值不在新值域）/ 语义漂移（同名键含义变化）/ 数据不兼容，停下问、不猜值；旧值永远在 .bak-时间戳备份里，报告必附回滚一句话。
 
 ## 产物升级（回炉）
 
@@ -32,6 +45,7 @@ disable-model-invocation: false
 - 五段式骨架行业无关：会议信息（主题/日期/地点/主持人/参会人）/ 会议结论（一句话 TL;DR + 核心决策 2-5 项）/ 议题讨论（议题名 + 结论 + 讨论要点）/ 决议与行动项（事项 + 负责人 + 截止时间，每项三要素齐全）/ 下次会议（主题/时间，没有则写「待定」）
 - **行动项是汇报链源头**：每条行动项必须带负责人与截止时间；日报/周报/月报/季报生成时可直接引用本纪要的行动项作为任务来源
 - 中文顿号序号（1、2、3）；段内无内容写「暂无」；去口语化，保留事实与数字
+- **系列分组落盘**：SERIES_GROUP=auto 时从会议主题提取稳定系列名（去日期词/序号词，如「11月12日产品周例会」→「产品周例会」），落盘确认时报系列名给用户可改口；提取到 → `meetings/{系列名}/`（系列名目录名清洗：非法字符 / \ : * ? " < > | 替换为 -）；未提取到 → 回退月份平铺 `meetings/YYYY-MM/`。说「把我旧纪要按系列整理」→ 扫 meetings/ 下全部 meeting-minutes-* 文件，从文件名 slug 或 md 头部主题提取系列名建目录归置（md/txt/html/png 全套移动），报告三段式：✅ 已整理清单 / ⚠️ 无法归类留在原地的清单 / 🟡 失败项原因；整理前先列移动计划让用户确认，移动后不删空月份目录（留给用户自行处置）
 - **THEME**：html 页面主题，tech 深蓝科技（默认）/ biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变；生成时写 `<html data-theme="THEME值">` 定默认，页面右下角换肤坞随点随换（localStorage 记忆（键按页内嵌唯一 ID 隔离、多份产物互不串台、改名/移动目录记忆不丢（生成时头部写 `<meta name="minutes-id" content="<UUID>">`，每次新 UUID））、?shot 截图模式与打印隐藏）
 - 会议类型按 `resources/meeting-type-dictionary.md` 词典取要素侧重与行动项模板（未提类型按 ROLE 画像推断，推断不出用通用模板）
 - 完整规则（要素提取 / 素材来源 / 写作风格约束 / 使用提示）见 `resources/content-rules.md`
