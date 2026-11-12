@@ -57,12 +57,19 @@
 - 修改技能任一文件（SKILL.md / user-config.md / resources/*）后，必须 grep 全文核对相关关键词在各文件间一致（章节名/字段名/效果参数改名时新旧词全仓核对，旧词零残留才算完成）
 - 写入 SKILL.md「文档同步自检纪律（维护者必读）」节
 
+### 机制五：.preserve 保护清单（条件植入）
+
+- 技能含「用户可改的官方文件」（半定制资产：设计系统、模板底稿等，SKILL.md 会引导用户直接修改）时，在技能目录放 `.preserve` 清单（每行一个文件名，# 注释）
+- CLI 升级时清单内文件永不覆盖；官方版内容有更新时另存 `.upstream` 对照，供手动合并
+- 纯官方资源（resources/ 下 AI 只读不改的文件）不进清单；user-config.md 由 CLI 内置名单保护，无需声明
+
 ## 四、校验清单（交付前全过）
 
 1. frontmatter：name 与目录名一致且非占位符 skill-name；description 含触发词
 2. resource 引用可达：SKILL.md 每个 `读 resources/xxx.md` 的文件真实存在
 3. 配置抽离完整：SKILL.md 无内嵌配置值；user-config.md 含 CONFIG_VERSION: 1
 4. 四大机制四节齐全：配置节 / 配置版本机制节 / 自检纪律节 / usage-guide 接线
+4b. 用户可改官方文件已声明：含半定制资产（设计系统/模板底稿）时 .preserve 清单存在且列全
 5. 旧词零残留：全文 grep 无占位符、无废弃字段名
 6. 语言一致：正文中文；技术术语保留原文
 

@@ -2,6 +2,15 @@
 
 SkillForge（技能锻造坊）npm 包 `skill-forge-hub`（命令名 `skill-forge`）版本变更记录。
 
+## 1.0.4（2026-11-11）
+
+**图表 echarts 化 + 数据源通用化 + 升级机制强化**
+
+- 图表 echarts 化：周报/年报四类图表（月提交柱图/日提交柱图/环形图/热力图）改 CDN echarts 渲染（jsdelivr 5.5.1）——五主题联动换肤、shot 截图模式停动画、离线自动降级提示（.ech-off 提示文案）；修复 weekly 概览 DOM 闭合层级（ov-bento 九子结构归位）与环中心文字溢出
+- 数据源通用化：三报表新增 DATA_SOURCES 数据源清单（git 仓库聚合 / file 文件目录 / remote 远程源三类型示例，mac/win 双字段），默认模板不再出现真实机器地址（~/reports、%USERPROFILE%\reports 通用路径模板）；CONFIG_VERSION 2→3；deck-stage/prompt-pouch 模板值同步通用化；全仓零真实地址残留
+- 升级机制强化：①新增 .installed-manifest 安装清单——升级时只清理清单内官方已删除的文件与空目录，用户自建文件一律不动（旧版本安装无清单时跳过清理，升级后补写清单）；②article-to-html 植入 .preserve 保护清单（design-system.md 永不覆盖，官方更新另存 .upstream 对照）；③meta-forge 机制五——.preserve 清单条件植入规范 + 校验清单 4b 项
+- 验证：升级机制三场景真机测试 12 项断言全过（旧版无清单升级 / 官方删文件精准清理 / 用户自建与定制文件保护）
+
 ## 1.0.3（2026-11-11）
 
 **窄屏分辨率适配 + 图表默认动画补齐**

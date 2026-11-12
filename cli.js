@@ -44,6 +44,22 @@ const SKIP_DIRS = new Set(["template", "node_modules", ".git", ".github"]);
 // 复制时排除的杂质（macOS 元数据 / 嵌套版本库目录）
 const COPY_EXCLUDE = new Set([".ds_store", ".git"]);
 
+// 安装清单：记录上次安装的官方文件（相对路径）。升级清理只删清单内官方已删除的文件，
+// 用户自建文件与清单外文件一律不动（无清单 = 旧版本安装，跳过清理，升级后补写）
+const MANIFEST_FILE = ".installed-manifest";
+
+function loadManifest(dest) {
+  const set = new Set();
+  const mf = path.join(dest, MANIFEST_FILE);
+  if (fs.existsSync(mf)) {
+    for (const line of fs.readFileSync(mf, "utf8").split(/\r?\n/)) {
+      const t = line.trim();
+      if (t && !t.startsWith("#")) set.add(t.toLowerCase());
+    }
+  }
+  return set;
+}
+
 // ---------- 工具 ----------
 
 function expandHome(p) {
@@ -132,47 +148,53 @@ function stamp() {
   return "" + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + "-" + p(d.getHours()) + p(d.getMinutes()) + p(d.getSeconds());
 }
 
-function copyDir(src, dest, preserve, hits, upstreams, genUpstream) {
+// 复制官方技能文件；files 收集相对路径清单（供 .installed-manifest 安装清单）
+function copyDir(src, dest, preserve, hits, upstreams, genUpstream, rel, files) {
   fs.mkdirSync(dest, { recursive: true });
   for (const entry of fs.readdirSync(src)) {
     if (COPY_EXCLUDE.has(entry.toLowerCase())) continue; // 跳过 .DS_Store 等杂质
     const s = path.join(src, entry);
     const d = path.join(dest, entry);
-    if (fs.statSync(s).isDirectory()) copyDir(s, d, preserve, hits, upstreams, genUpstream);
-    else if (preserve.has(entry.toLowerCase()) && fs.existsSync(d)) {
-      hits.push(d);
-      // 配置演进：官方版与本地版内容不同时，另存 .upstream 对照文件，供用户手动合并新配置点
-      const sData = fs.readFileSync(s, "utf8");
-      const dData = fs.readFileSync(d, "utf8");
-      if (sData !== dData) {
-        if (genUpstream !== false) {
-          fs.writeFileSync(d + ".upstream", sData);
-          upstreams.push(d + ".upstream");
+    const r = rel ? rel + "/" + entry : entry;
+    if (fs.statSync(s).isDirectory()) copyDir(s, d, preserve, hits, upstreams, genUpstream, r, files);
+    else {
+      files.push(r);
+      if (preserve.has(entry.toLowerCase()) && fs.existsSync(d)) {
+        hits.push(d);
+        // 配置演进：官方版与本地版内容不同时，另存 .upstream 对照文件，供用户手动合并新配置点
+        const sData = fs.readFileSync(s, "utf8");
+        const dData = fs.readFileSync(d, "utf8");
+        if (sData !== dData) {
+          if (genUpstream !== false) {
+            fs.writeFileSync(d + ".upstream", sData);
+            upstreams.push(d + ".upstream");
+          }
+        } else {
+          // 内容已一致（用户已手动合并或本就相同），旧对照文件已无意义
+          try { fs.unlinkSync(d + ".upstream"); } catch (e) {}
         }
-      } else {
-        // 内容已一致（用户已手动合并或本就相同），旧对照文件已无意义
-        try { fs.unlinkSync(d + ".upstream"); } catch (e) {}
       }
+      else fs.copyFileSync(s, d);
     }
-    else fs.copyFileSync(s, d);
   }
 }
 
-// 升级前清理：删除目标目录中官方已移除的文件（历史升级只增不删，废弃文件会残留）
-// 保护：preserve 清单文件、.upstream 对照、.bak- 备份、node_modules 依赖、COPY_EXCLUDE 项一律不动
-function pruneDir(src, dest, preserve) {
-  if (!fs.existsSync(dest)) return;
+// 升级前清理：删除官方已移除的文件（仅限安装清单内记录过的官方文件，用户自建文件不受影响）
+// 保护：preserve 清单文件、.upstream 对照、.bak- 备份、node_modules 依赖、安装清单、COPY_EXCLUDE 项一律不动
+function pruneDir(src, dest, preserve, manifest, rel) {
+  if (!fs.existsSync(dest) || manifest.size === 0) return; // 无清单（旧版本安装）跳过清理
   for (const entry of fs.readdirSync(dest)) {
     const lower = entry.toLowerCase();
     if (COPY_EXCLUDE.has(lower)) continue;
-    if (lower === "node_modules" || lower.endsWith(".upstream") || lower.includes(".bak-")) continue;
+    if (lower === "node_modules" || lower === MANIFEST_FILE || lower.endsWith(".upstream") || lower.includes(".bak-")) continue;
     if (preserve.has(lower)) continue; // 用户文件永不删除
     const d = path.join(dest, entry);
     const s = path.join(src, entry);
+    const r = rel ? rel + "/" + entry : entry;
     if (fs.statSync(d).isDirectory()) {
-      pruneDir(s, d, preserve);
+      pruneDir(s, d, preserve, manifest, r);
       if (fs.readdirSync(d).length === 0) fs.rmdirSync(d); // 清空后的目录一并删除
-    } else if (!fs.existsSync(s)) {
+    } else if (!fs.existsSync(s) && manifest.has(r.toLowerCase())) {
       fs.unlinkSync(d);
     }
   }
@@ -332,8 +354,16 @@ async function upgradeSkill(src, dest, argv, existed) {
     try { fs.unlinkSync(localCfg + ".upstream"); } catch (e) {} // 旧对照已无意义，清理
   }
   const preserve = loadPreserveSet(src);
-  if (existed) pruneDir(src, dest, preserve); // 先清理官方已删除的文件，再复制（只增不删 → 结构同步）
-  copyDir(src, dest, preserve, hits, upstreams, mode !== "later"); // [3] 稍后处理不生成对照文件
+  const manifest = loadManifest(dest);
+  if (existed) pruneDir(src, dest, preserve, manifest); // 先清理官方已删除的文件（仅限安装清单内），再复制
+  const officialFiles = [];
+  copyDir(src, dest, preserve, hits, upstreams, mode !== "later", "", officialFiles); // [3] 稍后处理不生成对照文件
+  // 写安装清单：本次复制的官方文件（相对路径），下次升级据此精准清理官方已删文件，用户自建文件不受影响
+  officialFiles.sort((a, b) => a.localeCompare(b));
+  fs.writeFileSync(path.join(dest, MANIFEST_FILE),
+    "# SkillForge 安装清单：本次安装的官方文件（相对路径）\n" +
+    "# 升级清理仅限本清单内官方已删除的文件，用户自建文件不受影响\n" +
+    officialFiles.join("\n") + "\n");
 
   // 依赖提示：技能自带 package.json（如 deck-stage 依赖 PptxGenJS）且目标无 node_modules 时
   // （本地仓库直装会连带复制 node_modules 离线可用；npm 全局装出的包不含 node_modules）
@@ -528,6 +558,8 @@ function printHelp() {
     先备份你的配置为 user-config.md.bak-<时间戳>，再询问三选一——
     [1] 官方覆盖（备份在侧，随时找回）/ [2] 保留我的 + 官方版另存 .upstream 对照（默认）
     [3] 稍后处理（不生成对照文件）；--yes 或非交互时默认 [2]
+  · 升级按 .installed-manifest 安装清单同步官方文件增删：只清理清单内官方已删除的文件，
+    用户自建文件不动；旧版本安装无清单时跳过清理，升级后补写
 
 示例：
   skill-forge ls
