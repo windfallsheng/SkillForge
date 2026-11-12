@@ -1,11 +1,12 @@
 # 生成 HTML（阶段 2）
 
-先 Read `resources/reference.html` 全文，以其为骨架模板逐处替换数据：
+先 Read `resources/reference.html` 全文，以其为骨架模板，**只替换三处**，其余（CSS/JS/结构）一律不许动：
 
-1. **meta**：`sf-template` 版本戳保持当前模板版本；`poster-id` 换成新 UUID（crypto.randomUUID() 标准 v4，落盘前顺扫落盘目录下本技能命名的 html 读 id meta 查重，撞号重掷）
-2. **标题/金句/要点块/页脚注**：替换 `<h1>`、`.quote`、`.points` 内 li、`.footnote` 内容（要点块 3-5 条逐条 li）
-3. **`<title>`** 与海报标题一致
-4. 其余（CSS/JS/结构）一律不许动；样式参数解释与禁止项见 `resources/html-rules.md`
+1. **`<meta name="poster-id">`**：换成新 UUID（crypto.randomUUID() 标准 v4，落盘前顺扫落盘目录下本技能命名的 html 读 id meta 查重，撞号重掷）
+2. **`<title>`**：与海报标题一致
+3. **`<script>` 内 DATA 对象**：只改 `tag`（角标徽章文案，默认 "ONE PAGER"）/ `title`（标题）/ `quote`（金句）/ `points` 数组（要点块 3-5 条逐条 `{ t: "..." }`）/ `footnote`（页脚注，可空字符串）/ `kpi`（dashboard 模板的环形指标值，如 "82%"）六字段，其余 JS 一律不动
+
+样式参数解释与禁止项见 `resources/html-rules.md`。
 
 ## 落盘与截图
 

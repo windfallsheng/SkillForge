@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="tech">
+<html lang="zh-CN" data-theme="tech" data-template="classic">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="sf-template" content="one-pager@2">
+<meta name="sf-template" content="one-pager@3">
 <meta name="poster-id" content="REF-POSTER-0000">
 <title>AI 改变工作 · 一页纸海报</title>
 <style>
-/* ═══ 五主题令牌：与 daily-report 同一套 12 核心契约；html[data-theme] 运行时切换，THEME 生成时定默认 ═══ */
+/* ═══ 五主题令牌：12 核心契约（跨技能同源，html[data-theme] 运行时切换，THEME 生成时定默认） ═══ */
 :root, [data-theme="tech"]{
   --bg:#0a1929; --bg2:#071525; --panel:rgba(11,30,55,.9); --panel-solid:#0b1e37;
   --text:#bae6fd; --muted:#5b7fa5; --accent:#0ea5e9; --accent2:#14b8a6;
@@ -48,9 +48,8 @@
   --tag-bg:rgba(217,119,6,.08);
   --scan:rgba(217,119,6,.16); --scan-dim:rgba(217,119,6,.04);
 }
-/* 浅色主题下星点氛围自然退隐 */
+/* 浅色主题星点退隐；mono 星点灰白化 + 噪点退隐（不泛蓝） */
 [data-theme="biz"] .stars, [data-theme="light"] .stars, [data-theme="warm"] .stars{ opacity:.28; }
-/* mono 黑亮下氛围换装：星点改中性灰白，噪点层同退（不泛蓝） */
 [data-theme="mono"] .stars{ background-image:
   radial-gradient(1px 1px at 12% 18%, rgba(223,225,229,.32), transparent),
   radial-gradient(1px 1px at 28% 64%, rgba(223,225,229,.28), transparent),
@@ -69,48 +68,135 @@ body::before{
   content:''; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.04;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
-.grid-pattern{
-  position:fixed; inset:0; z-index:0; pointer-events:none;
-  background-image:linear-gradient(var(--scan-dim) 1px, transparent 1px),linear-gradient(90deg, var(--scan-dim) 1px, transparent 1px);
-  background-size:60px 60px;
-}
-.stars{
-  position:fixed; inset:0; z-index:0; pointer-events:none;
-  background-image:
-    radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.38), transparent),
-    radial-gradient(1px 1px at 28% 64%, rgba(0,240,255,.48), transparent),
-    radial-gradient(1.5px 1.5px at 41% 32%, rgba(255,255,255,.3), transparent),
-    radial-gradient(1px 1px at 56% 78%, rgba(168,85,247,.4), transparent),
-    radial-gradient(1px 1px at 67% 12%, rgba(0,255,136,.4), transparent),
-    radial-gradient(1.5px 1.5px at 79% 52%, rgba(0,240,255,.45), transparent),
-    radial-gradient(1px 1px at 88% 86%, rgba(255,255,255,.34), transparent),
-    radial-gradient(1px 1px at 93% 24%, rgba(0,240,255,.5), transparent);
-}
-.scanlines{
-  position:fixed; inset:0; z-index:999; pointer-events:none;
-  background:repeating-linear-gradient(0deg, transparent 0 2px, var(--scan-dim) 2px 4px);
-}
-.scanband{
-  position:fixed; left:0; right:0; height:150px; z-index:998; pointer-events:none;
-  background:linear-gradient(180deg, transparent, var(--scan-dim) 50%, transparent);
-  animation:scanMove 11s linear infinite;
-}
+.grid-pattern{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--scan-dim) 1px,transparent 1px),linear-gradient(90deg,var(--scan-dim) 1px,transparent 1px);background-size:60px 60px}
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:
+  radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.38), transparent),
+  radial-gradient(1px 1px at 28% 64%, rgba(0,240,255,.48), transparent),
+  radial-gradient(1.5px 1.5px at 41% 32%, rgba(255,255,255,.3), transparent),
+  radial-gradient(1px 1px at 56% 78%, rgba(168,85,247,.4), transparent),
+  radial-gradient(1px 1px at 67% 12%, rgba(0,255,136,.4), transparent),
+  radial-gradient(1.5px 1.5px at 79% 52%, rgba(0,240,255,.45), transparent),
+  radial-gradient(1px 1px at 88% 86%, rgba(255,255,255,.34), transparent),
+  radial-gradient(1px 1px at 93% 24%, rgba(0,240,255,.5), transparent);}
+.scanlines{position:fixed;inset:0;z-index:999;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 2px,var(--scan-dim) 2px 4px)}
+.scanband{position:fixed;left:0;right:0;height:150px;z-index:998;pointer-events:none;background:linear-gradient(180deg,transparent,var(--scan-dim) 50%,transparent);animation:scanMove 11s linear infinite}
 @keyframes scanMove{ from{top:-22%;} to{top:112%;} }
-.stage{height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6vh 8vw;text-align:center;position:relative;z-index:1}
-.stage-inner{width:min(60%,1200px)}
-.badge{font-size:12px;letter-spacing:3px;color:var(--accent);margin-bottom:22px;animation:riseIn .5s ease backwards;animation-delay:0s}
-h1{font-size:64px;line-height:1.2;font-weight:800;letter-spacing:2px;background:var(--title-grad);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:18px;animation:riseIn .5s ease backwards;animation-delay:.13s;text-shadow:0 0 40px var(--glow)}
-.divider{width:64px;height:2px;background:var(--title-grad);border-radius:2px;margin:0 auto 26px;animation:riseIn .5s ease backwards;animation-delay:.26s}
-.quote{font-size:22px;font-style:italic;color:var(--text);line-height:1.8;margin-bottom:40px;animation:riseIn .5s ease backwards;animation-delay:.39s}
-.quote::before{content:"「";color:var(--accent)}
-.quote::after{content:"」";color:var(--accent)}
-.points{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:44px;text-align:left;animation:riseIn .5s ease backwards;animation-delay:.52s}
-.points li{display:flex;align-items:flex-start;gap:12px;font-size:16px;line-height:1.7;color:var(--text);background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:18px 16px}
-.points li .dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 0 12px var(--glow);flex:none;margin-top:8px}
-footer{font-size:10px;color:var(--muted);letter-spacing:1px;animation:riseIn .5s ease backwards;animation-delay:.65s}
-.footnote{font-size:11px;color:var(--muted);margin-top:8px}
-@keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-.theme-dock{position:fixed;right:14px;bottom:14px;display:flex;gap:8px;background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:7px 10px;z-index:9}
+
+/* ═══ 舞台与八套模板（html[data-template] 决定渲染哪套；模板管布局、主题管配色，40 种组合） ═══ */
+.stage{height:100svh;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;overflow:hidden}
+.serif{font-family:Georgia,'Songti SC','SimSun',serif}
+.mono{font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,monospace}
+
+/* 1. classic 经典舞台：徽章 + 渐变巨字 + 分隔线 + 金句 + 三列要点卡 */
+.tpl-classic{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;width:min(60%,1200px);height:100%;padding:6vh 0}
+.tpl-classic .badge{font-size:12px;letter-spacing:3px;color:var(--accent);margin-bottom:22px}
+.tpl-classic h1{font-size:clamp(40px,5vw,64px);line-height:1.2;font-weight:800;letter-spacing:2px;background:var(--title-grad);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:18px;text-shadow:0 0 40px var(--glow)}
+.tpl-classic .divider{width:64px;height:2px;background:var(--title-grad);border-radius:2px;margin:0 auto 26px}
+.tpl-classic .quote{font-size:22px;font-style:italic;color:var(--text);line-height:1.8;margin-bottom:40px}
+.tpl-classic .quote::before{content:"「";color:var(--accent)}
+.tpl-classic .quote::after{content:"」";color:var(--accent)}
+.tpl-classic ul.points{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:44px;text-align:left;width:100%}
+.tpl-classic ul.points li{display:flex;align-items:flex-start;gap:12px;font-size:16px;line-height:1.7;color:var(--text);background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:18px 16px}
+.tpl-classic .dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 0 12px var(--glow);flex:none;margin-top:8px}
+
+/* 2. minimal 极简留白：瑞士平面，左上小标 + 衬线巨字 + 细线 + 编号竖排要点 */
+.tpl-minimal{display:flex;flex-direction:column;justify-content:center;text-align:left;width:min(74%,1200px);height:100%;padding:6vh 0}
+.tpl-minimal .badge{font-size:11px;letter-spacing:4px;color:var(--muted);margin-bottom:30px;display:flex;align-items:center;gap:14px}
+.tpl-minimal .badge::before{content:'';width:28px;height:1px;background:var(--accent)}
+.tpl-minimal h1{font-family:Georgia,'Songti SC','SimSun',serif;font-weight:700;font-size:clamp(42px,5.4vw,70px);line-height:1.28;color:var(--text);margin-bottom:36px}
+.tpl-minimal .rule{width:100%;height:1px;background:var(--border);margin-bottom:30px}
+.tpl-minimal .quote{font-size:18px;font-style:italic;color:var(--muted);line-height:1.8;margin-bottom:40px}
+.tpl-minimal ol.points{list-style:none;display:flex;flex-direction:column;gap:20px;margin-bottom:50px}
+.tpl-minimal ol.points li{display:flex;align-items:baseline;gap:24px;font-size:17px;line-height:1.6;color:var(--text)}
+.tpl-minimal .num{font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:var(--accent);letter-spacing:1px;flex:none}
+.tpl-minimal .meta{display:flex;justify-content:space-between;align-items:center;font-size:10px;letter-spacing:2px;color:var(--muted)}
+
+/* 3. magazine 杂志社论：刊头通栏线 + 左文右栏 + 首字下沉金句 */
+.tpl-magazine{display:flex;flex-direction:column;justify-content:center;width:min(78%,1200px);height:100%;padding:6vh 0}
+.tpl-magazine .masthead{display:flex;align-items:center;gap:16px;font-size:11px;letter-spacing:3px;color:var(--muted);padding-bottom:14px;border-bottom:2px solid var(--text);margin-bottom:36px}
+.tpl-magazine .masthead::after{content:'';flex:1;height:1px;background:var(--border)}
+.tpl-magazine .cols{display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center}
+.tpl-magazine h1{font-family:Georgia,'Songti SC','SimSun',serif;font-weight:700;font-size:clamp(36px,4.4vw,54px);line-height:1.32;color:var(--text);margin-bottom:24px}
+.tpl-magazine .quote{font-size:17px;line-height:1.95;color:var(--muted);font-style:italic}
+.tpl-magazine .quote::first-letter{font-size:46px;float:left;line-height:.85;margin:4px 10px 0 0;color:var(--accent);font-family:Georgia,serif;font-style:normal;font-weight:700}
+.tpl-magazine ul.points{list-style:none;display:flex;flex-direction:column;gap:20px;border-left:1px solid var(--border);padding-left:26px}
+.tpl-magazine ul.points li{display:flex;gap:14px;font-size:16px;line-height:1.65;color:var(--text)}
+.tpl-magazine .num{font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:var(--accent);padding-top:3px;flex:none}
+.tpl-magazine .footbar{margin-top:40px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:10px;letter-spacing:2px;color:var(--muted)}
+
+/* 4. hero 巨幕：电影海报式巨型关键词 + 底部要点横条 */
+.tpl-hero{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;width:100%;height:100%;padding:6vh 8vw;position:relative}
+.tpl-hero .badge{font-size:12px;letter-spacing:4px;color:var(--accent);margin-bottom:28px}
+.tpl-hero h1{font-size:clamp(56px,10vw,140px);font-weight:900;letter-spacing:6px;line-height:1.06;background:var(--title-grad);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:28px;text-shadow:0 0 60px var(--glow)}
+.tpl-hero .quote{font-size:20px;letter-spacing:2px;color:var(--text);opacity:.92;margin-bottom:8vh}
+.tpl-hero ul.points{list-style:none;display:flex;gap:16px;width:min(84%,1100px)}
+.tpl-hero ul.points li{flex:1;background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:16px 14px;font-size:15px;line-height:1.6;display:flex;flex-direction:column;gap:8px;text-align:left}
+.tpl-hero .num{font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:var(--accent);letter-spacing:1px}
+.tpl-hero footer{position:absolute;bottom:4.5vh;font-size:10px;letter-spacing:2px;color:var(--muted)}
+
+/* 5. timeline 时间叙事：中央竖线 + 节点圆点 + 要点左右交替卡片 */
+.tpl-timeline{display:flex;flex-direction:column;justify-content:center;width:min(76%,1100px);height:100%;padding:6vh 0}
+.tpl-timeline .head{text-align:center;margin-bottom:8vh}
+.tpl-timeline h1{font-size:clamp(34px,4.2vw,50px);font-weight:800;background:var(--title-grad);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px}
+.tpl-timeline .quote{font-size:16px;font-style:italic;color:var(--muted)}
+.tpl-timeline .track{position:relative;width:100%}
+.tpl-timeline .track::before{content:'';position:absolute;left:50%;top:2%;bottom:2%;width:2px;transform:translateX(-50%);background:linear-gradient(180deg,var(--accent),var(--accent2));opacity:.5}
+.tpl-timeline .row{display:grid;grid-template-columns:1fr 44px 1fr;align-items:center;margin-bottom:24px;position:relative}
+.tpl-timeline .mid{display:flex;justify-content:center;grid-column:2;grid-row:1;z-index:1}
+.tpl-timeline .dot{width:14px;height:14px;border-radius:50%;background:var(--bg);border:3px solid var(--accent);box-shadow:0 0 16px var(--glow)}
+.tpl-timeline .card{grid-column:1;grid-row:1;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:14px 20px;font-size:15px;line-height:1.65;text-align:right}
+.tpl-timeline .row:nth-child(odd) .card{grid-column:3;text-align:left}
+.tpl-timeline .card .num{display:block;font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;color:var(--accent);letter-spacing:1px;margin-bottom:4px}
+.tpl-timeline footer{text-align:center;margin-top:5vh;font-size:10px;letter-spacing:2px;color:var(--muted)}
+
+/* 6. grid 卡片栅格：标题区 + 2×2 大圆角卡片（编号描边角标 + 渐变顶条） */
+.tpl-grid{display:flex;flex-direction:column;justify-content:center;width:min(80%,1200px);height:100%;padding:6vh 0}
+.tpl-grid .head{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;margin-bottom:5vh}
+.tpl-grid h1{font-size:clamp(38px,4.6vw,56px);font-weight:800;background:var(--title-grad);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.2}
+.tpl-grid .quote{font-size:15px;font-style:italic;color:var(--muted);text-align:right;max-width:42%;line-height:1.7}
+.tpl-grid .cards{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.tpl-grid .card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:26px 26px 24px;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:12px;min-height:150px}
+.tpl-grid .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));opacity:.85}
+.tpl-grid .card.wide{grid-column:1/-1;min-height:110px}
+.tpl-grid .card .num{font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;font-size:26px;font-weight:700;color:transparent;-webkit-text-stroke:1px var(--accent);line-height:1}
+.tpl-grid .card .t{font-size:16px;line-height:1.65;color:var(--text)}
+.tpl-grid footer{margin-top:4vh;text-align:center;font-size:10px;letter-spacing:2px;color:var(--muted)}
+
+/* 7. dashboard 数据仪表：KPI 环形图 + 要点进度条 + 右栏标题金句 */
+.tpl-dash{display:grid;grid-template-columns:320px 1fr;gap:56px;align-items:center;width:min(82%,1200px);height:100%;padding:6vh 0}
+.tpl-dash .kpi{display:flex;flex-direction:column;align-items:center;gap:30px}
+.tpl-dash .ring{width:190px;height:190px;border-radius:50%;background:conic-gradient(var(--accent) 0 82%,var(--panel-solid) 82% 100%);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 0 44px var(--glow-soft)}
+.tpl-dash .ring::after{content:'';position:absolute;inset:15px;border-radius:50%;background:var(--bg)}
+.tpl-dash .val{position:relative;z-index:1;font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;font-size:44px;font-weight:700;color:var(--text)}
+.tpl-dash .lab{position:absolute;bottom:44px;left:0;right:0;text-align:center;font-size:11px;letter-spacing:2px;color:var(--muted);z-index:1}
+.tpl-dash .bars{display:flex;flex-direction:column;gap:20px;width:100%}
+.tpl-dash .bar .row{display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px;color:var(--text)}
+.tpl-dash .bar .row .pct{font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;color:var(--accent)}
+.tpl-dash .bar .track{height:10px;background:var(--panel-solid);border:1px solid var(--border);border-radius:99px;overflow:hidden}
+.tpl-dash .bar .fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.tpl-dash .side h1{font-size:clamp(34px,4.2vw,50px);font-weight:800;line-height:1.3;margin-bottom:16px;color:var(--text)}
+.tpl-dash .side .quote{font-size:17px;font-style:italic;color:var(--muted);line-height:1.8;margin-bottom:24px}
+.tpl-dash .side .extra{list-style:none;display:flex;flex-direction:column;gap:12px}
+.tpl-dash .side .extra li{display:flex;gap:12px;font-size:15px;color:var(--text);align-items:baseline}
+.tpl-dash .side .extra .num{font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:var(--accent)}
+.tpl-dash .side .foot{margin-top:28px;font-size:10px;letter-spacing:2px;color:var(--muted)}
+
+/* 8. brutalist 新粗野：撞色块 + 4px 粗框 + 8px 硬阴影 + 零圆角 */
+.tpl-brutal{display:flex;flex-direction:column;justify-content:center;gap:28px;width:min(80%,1100px);height:100%;padding:6vh 0}
+.tpl-brutal .badge{align-self:flex-start;font-size:13px;font-weight:700;letter-spacing:2px;color:var(--bg);background:var(--accent);padding:6px 16px;border:4px solid var(--text);box-shadow:6px 6px 0 var(--accent2)}
+.tpl-brutal h1{font-size:clamp(44px,6.4vw,80px);font-weight:900;line-height:1.08;color:var(--bg);background:var(--text);padding:12px 28px;align-self:flex-start;border:4px solid var(--text);box-shadow:10px 10px 0 var(--accent)}
+.tpl-brutal .quote{font-size:18px;font-weight:600;line-height:1.75;border-left:10px solid var(--accent2);padding-left:20px;max-width:88%}
+.tpl-brutal ul.points{list-style:none;display:flex;flex-wrap:wrap;gap:16px}
+.tpl-brutal ul.points li{font-size:15px;font-weight:700;padding:12px 20px;background:var(--panel-solid);border:4px solid var(--text);box-shadow:6px 6px 0 var(--accent2)}
+.tpl-brutal ul.points li .num{margin-right:10px;font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;color:var(--accent)}
+.tpl-brutal footer{font-size:11px;font-weight:700;letter-spacing:2px;border-top:4px solid var(--text);padding-top:14px;display:flex;justify-content:space-between;align-items:center;color:var(--text)}
+
+/* ═══ 切换坞：模板坞（8 标签）在上、主题坞（5 色点）在下，右下角堆叠 ═══ */
+.dock-tpl{position:fixed;right:18px;bottom:64px;display:flex;gap:6px;background:var(--panel-solid);border:1px solid var(--border);border-radius:999px;padding:6px 8px;z-index:1001;box-shadow:0 4px 18px rgba(0,0,0,.3)}
+.dock-theme{position:fixed;right:18px;bottom:18px;display:flex;gap:8px;background:var(--panel-solid);border:1px solid var(--border);border-radius:999px;padding:7px 10px;z-index:1001;box-shadow:0 4px 18px rgba(0,0,0,.3)}
+.tp-btn{font-size:12px;font-family:inherit;color:var(--muted);background:transparent;border:1px solid transparent;border-radius:999px;padding:5px 11px;cursor:pointer;letter-spacing:1px;transition:all .15s ease;white-space:nowrap}
+.tp-btn:hover{color:var(--text);border-color:var(--border)}
+.tp-btn.on{color:var(--accent);background:var(--tag-bg);border-color:var(--accent);font-weight:600}
 .th-dot{width:14px;height:14px;border-radius:50%;cursor:pointer;border:1.5px solid rgba(127,127,127,.35);transition:transform .15s ease}
 .th-dot:hover{transform:scale(1.18)}
 .th-dot.on{border-color:var(--text)}
@@ -119,8 +205,21 @@ footer{font-size:10px;color:var(--muted);letter-spacing:1px;animation:riseIn .5s
 .th-dot[data-t="mono"]{background:#1e1f22}
 .th-dot[data-t="light"]{background:#ffffff}
 .th-dot[data-t="warm"]{background:#d97706}
-@media (max-width:680px){h1{font-size:36px}.quote{font-size:16px}.points li{font-size:14px}.points{grid-template-columns:1fr}}
-html[data-shot] .stage-inner>*{animation:none!important}
+
+/* ═══ 入场动画 + 截图模式 + 响应式 ═══ */
+.anim{animation:riseIn .55s ease both;opacity:0}
+@keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+html[data-shot] .anim{animation:none!important;opacity:1!important;transform:none!important}
+html[data-shot] .dock-tpl,html[data-shot] .dock-theme{display:none!important}
+@media (max-width:680px){
+  .tpl-classic{width:86%}.tpl-classic ul.points{grid-template-columns:1fr}
+  .tpl-magazine .cols{grid-template-columns:1fr;gap:28px}
+  .tpl-dash{grid-template-columns:1fr;gap:36px}
+  .tpl-grid .cards{grid-template-columns:1fr}
+  .tpl-hero ul.points{flex-direction:column;gap:12px}
+  .tp-btn{font-size:11px;padding:4px 8px}
+  .dock-tpl{max-width:calc(100vw - 36px);flex-wrap:wrap;justify-content:flex-end}
+}
 </style>
 </head>
 <body>
@@ -128,22 +227,18 @@ html[data-shot] .stage-inner>*{animation:none!important}
 <div class="stars"></div>
 <div class="scanband"></div>
 <div class="scanlines"></div>
-<div class="stage" id="stage">
-  <div class="stage-inner">
-    <div class="badge">ONE PAGER</div>
-    <h1>AI 改变工作</h1>
-    <div class="divider"></div>
-    <div class="quote">让机器做重复的事，让人做有温度的事</div>
-    <ul class="points">
-      <li><span class="dot"></span>重塑流程，把琐碎交给算法</li>
-      <li><span class="dot"></span>释放创造，把时间还给思考</li>
-      <li><span class="dot"></span>数据驱动，把决策交给证据</li>
-    </ul>
-    <footer>GENERATED BY AI TEAM</footer>
-    <div class="footnote"></div>
-  </div>
+<div class="stage" id="stage"></div>
+<div class="dock-tpl" id="tplDock">
+  <button class="tp-btn on" data-tpl="classic" title="经典舞台">经典</button>
+  <button class="tp-btn" data-tpl="minimal" title="极简留白">极简</button>
+  <button class="tp-btn" data-tpl="magazine" title="杂志社论">杂志</button>
+  <button class="tp-btn" data-tpl="hero" title="巨幕大字">巨幕</button>
+  <button class="tp-btn" data-tpl="timeline" title="时间叙事">时间线</button>
+  <button class="tp-btn" data-tpl="grid" title="卡片栅格">栅格</button>
+  <button class="tp-btn" data-tpl="dashboard" title="数据仪表">数据</button>
+  <button class="tp-btn" data-tpl="brutalist" title="新粗野主义">粗野</button>
 </div>
-<div class="theme-dock" id="dock">
+<div class="dock-theme" id="themeDock">
   <span class="th-dot on" data-t="tech" title="深蓝科技"></span>
   <span class="th-dot" data-t="biz" title="浅色商务"></span>
   <span class="th-dot" data-t="mono" title="IDEA 黑亮"></span>
@@ -152,6 +247,128 @@ html[data-shot] .stage-inner>*{animation:none!important}
 </div>
 <script>
 (function(){
+  /* ═══════════ 数据区（生成海报时只替换此对象 + <title> + poster-id，其余一律不动） ═══════════ */
+  var DATA = {
+    tag: "ONE PAGER",
+    title: "AI 改变工作",
+    quote: "让机器做重复的事，让人做有温度的事",
+    points: [
+      { t: "重塑流程，把琐碎交给算法" },
+      { t: "释放创造，把时间还给思考" },
+      { t: "数据驱动，把决策交给证据" }
+    ],
+    footnote: "",
+    kpi: "82%"
+  };
+  /* ═══════════ 八套布局模板（只描述结构与类名，颜色一律走主题令牌） ═══════════ */
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function N(i){ return String(i+1).padStart(2,'0'); }
+  var F = 'GENERATED BY AI TEAM';
+  var TPL = {
+    classic: function(){
+      var lis = DATA.points.map(function(p){ return '<li class="anim"><span class="dot"></span><span class="t">'+esc(p.t)+'</span></li>'; }).join('');
+      return '<div class="tpl-classic">'
+        + '<div class="badge anim">'+esc(DATA.tag)+'</div>'
+        + '<h1 class="anim">'+esc(DATA.title)+'</h1>'
+        + '<div class="divider anim"></div>'
+        + '<div class="quote anim">'+esc(DATA.quote)+'</div>'
+        + '<ul class="points anim">'+lis+'</ul>'
+        + '<footer class="anim">'+F+'</footer>'
+        + (DATA.footnote ? '<div class="footnote anim" style="font-size:11px;color:var(--muted);margin-top:8px">'+esc(DATA.footnote)+'</div>' : '')
+        + '</div>';
+    },
+    minimal: function(){
+      var lis = DATA.points.map(function(p,i){ return '<li class="anim"><span class="num">'+N(i)+'</span><span class="t">'+esc(p.t)+'</span></li>'; }).join('');
+      return '<div class="tpl-minimal">'
+        + '<div class="badge anim">'+esc(DATA.tag)+'</div>'
+        + '<h1 class="anim">'+esc(DATA.title)+'</h1>'
+        + '<div class="rule anim"></div>'
+        + '<div class="quote anim">'+esc(DATA.quote)+'</div>'
+        + '<ol class="points anim">'+lis+'</ol>'
+        + '<div class="meta anim"><span>'+F+'</span><span>'+esc(DATA.footnote||'')+'</span></div>'
+        + '</div>';
+    },
+    magazine: function(){
+      var lis = DATA.points.map(function(p,i){ return '<li class="anim"><span class="num">'+N(i)+'</span><span class="t">'+esc(p.t)+'</span></li>'; }).join('');
+      return '<div class="tpl-magazine">'
+        + '<div class="masthead anim"><span>'+esc(DATA.tag)+'</span><span>ISSUE 01</span></div>'
+        + '<div class="cols">'
+        +   '<div><h1 class="anim">'+esc(DATA.title)+'</h1><div class="quote anim">'+esc(DATA.quote)+'</div></div>'
+        +   '<ul class="points anim">'+lis+'</ul>'
+        + '</div>'
+        + '<div class="footbar anim"><span>'+F+'</span><span>'+esc(DATA.footnote||'')+'</span></div>'
+        + '</div>';
+    },
+    hero: function(){
+      var lis = DATA.points.map(function(p,i){ return '<li class="anim"><span class="num">'+N(i)+'</span><span class="t">'+esc(p.t)+'</span></li>'; }).join('');
+      return '<div class="tpl-hero">'
+        + '<div class="badge anim">'+esc(DATA.tag)+'</div>'
+        + '<h1 class="anim">'+esc(DATA.title)+'</h1>'
+        + '<div class="quote anim">'+esc(DATA.quote)+'</div>'
+        + '<ul class="points anim">'+lis+'</ul>'
+        + '<footer class="anim">'+F+(DATA.footnote ? ' · '+esc(DATA.footnote) : '')+'</footer>'
+        + '</div>';
+    },
+    timeline: function(){
+      var rows = DATA.points.map(function(p,i){
+        return '<div class="row"><div class="mid"><span class="dot anim"></span></div>'
+          + '<div class="card anim"><span class="num">'+N(i)+'</span><span class="t">'+esc(p.t)+'</span></div></div>';
+      }).join('');
+      return '<div class="tpl-timeline">'
+        + '<div class="head"><h1 class="anim">'+esc(DATA.title)+'</h1><div class="quote anim">'+esc(DATA.quote)+'</div></div>'
+        + '<div class="track">'+rows+'</div>'
+        + '<footer class="anim">'+F+(DATA.footnote ? ' · '+esc(DATA.footnote) : '')+'</footer>'
+        + '</div>';
+    },
+    grid: function(){
+      var cards = DATA.points.map(function(p,i){
+        var w = (DATA.points.length === 5 && i === 4) ? ' wide' : '';
+        return '<div class="card anim'+w+'"><span class="num">'+N(i)+'</span><span class="t">'+esc(p.t)+'</span></div>';
+      }).join('');
+      return '<div class="tpl-grid">'
+        + '<div class="head"><h1 class="anim">'+esc(DATA.title)+'</h1><div class="quote anim">'+esc(DATA.quote)+'</div></div>'
+        + '<div class="cards">'+cards+'</div>'
+        + '<footer class="anim">'+F+(DATA.footnote ? ' · '+esc(DATA.footnote) : '')+'</footer>'
+        + '</div>';
+    },
+    dashboard: function(){
+      var pct = parseInt(String(DATA.kpi||'82%')) || 82;
+      var first = DATA.points.slice(0,3);
+      var rest = DATA.points.slice(3);
+      var widths = [82,66,50];
+      var bars = first.map(function(p,i){
+        return '<div class="bar anim"><div class="row"><span class="t">'+esc(p.t)+'</span><span class="pct">'+widths[i]+'%</span></div>'
+          + '<div class="track"><div class="fill" style="width:'+widths[i]+'%"></div></div></div>';
+      }).join('');
+      var extra = rest.map(function(p,i){
+        return '<li class="anim"><span class="num">'+N(i+3)+'</span><span class="t">'+esc(p.t)+'</span></li>';
+      }).join('');
+      return '<div class="tpl-dash">'
+        + '<div class="kpi">'
+        +   '<div class="ring anim" style="background:conic-gradient(var(--accent) 0 '+pct+'%,var(--panel-solid) '+pct+'% 100%)"><span class="val">'+esc(DATA.kpi||'82%')+'</span><span class="lab">'+esc(DATA.tag)+'</span></div>'
+        +   '<div class="bars">'+bars+'</div>'
+        + '</div>'
+        + '<div class="side">'
+        +   '<h1 class="anim">'+esc(DATA.title)+'</h1>'
+        +   '<div class="quote anim">'+esc(DATA.quote)+'</div>'
+        +   (extra ? '<ul class="extra">'+extra+'</ul>' : '')
+        +   '<div class="foot anim">'+F+(DATA.footnote ? ' · '+esc(DATA.footnote) : '')+'</div>'
+        + '</div>'
+        + '</div>';
+    },
+    brutalist: function(){
+      var lis = DATA.points.map(function(p,i){ return '<li class="anim"><span class="num">'+N(i)+'</span>'+esc(p.t)+'</li>'; }).join('');
+      return '<div class="tpl-brutal">'
+        + '<div class="badge anim">'+esc(DATA.tag)+'</div>'
+        + '<h1 class="anim">'+esc(DATA.title)+'</h1>'
+        + '<div class="quote anim">'+esc(DATA.quote)+'</div>'
+        + '<ul class="points anim">'+lis+'</ul>'
+        + '<footer class="anim"><span>'+F+'</span><span>'+esc(DATA.footnote||'')+'</span></footer>'
+        + '</div>';
+    }
+  };
+
+  /* ═══════════ 页面 ID 自愈（沿用旧版机制） ═══════════ */
   var KEY = 'sf-heal:' + location.pathname;
   var m = document.querySelector('meta[name="poster-id"]');
   var ok = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(m ? m.content : '');
@@ -164,15 +381,16 @@ html[data-shot] .stage-inner>*{animation:none!important}
     m.setAttribute('content', v);
     console.warn('[poster] 非法 id meta 已自愈为 ' + v);
   }
-  /* 主题换肤：五套配色随点随换；记忆上次选择（localStorage，失败静默）；旧版三主题值自动回落 tech */
+
+  /* ═══════════ 主题换肤（五套配色） ═══════════ */
   var THEMES = ['tech','biz','mono','light','warm'];
   var THEME_KEY = 'poster:' + ID + '-theme';
   var savedTheme = null;
   try { savedTheme = localStorage.getItem(THEME_KEY); } catch(e) {}
   if (savedTheme && THEMES.indexOf(savedTheme) !== -1) document.documentElement.setAttribute('data-theme', savedTheme);
-  var cur = document.documentElement.getAttribute('data-theme');
-  if (THEMES.indexOf(cur) === -1) { cur = 'tech'; document.documentElement.setAttribute('data-theme', cur); }
-  document.querySelectorAll('.th-dot').forEach(function(d){ d.classList.toggle('on', d.getAttribute('data-t') === cur); });
+  var curT = document.documentElement.getAttribute('data-theme');
+  if (THEMES.indexOf(curT) === -1) { curT = 'tech'; document.documentElement.setAttribute('data-theme', curT); }
+  document.querySelectorAll('.th-dot').forEach(function(d){ d.classList.toggle('on', d.getAttribute('data-t') === curT); });
   document.querySelectorAll('.th-dot').forEach(function(d){
     d.addEventListener('click', function(){
       var t = d.getAttribute('data-t');
@@ -181,27 +399,49 @@ html[data-shot] .stage-inner>*{animation:none!important}
       document.querySelectorAll('.th-dot').forEach(function(x){ x.classList.toggle('on', x === d); });
     });
   });
+
+  /* ═══════════ 模板切换（八套布局随点随换，记忆上次选择） ═══════════ */
+  var TPLS = ['classic','minimal','magazine','hero','timeline','grid','dashboard','brutalist'];
+  var TPL_KEY = 'poster:' + ID + '-tpl';
+  var savedTpl = null;
+  try { savedTpl = localStorage.getItem(TPL_KEY); } catch(e) {}
+  if (savedTpl && TPLS.indexOf(savedTpl) !== -1) document.documentElement.setAttribute('data-template', savedTpl);
+  var curP = document.documentElement.getAttribute('data-template');
+  if (TPLS.indexOf(curP) === -1) { curP = 'classic'; document.documentElement.setAttribute('data-template', curP); }
+
+  function render(){
+    var stage = document.getElementById('stage');
+    stage.innerHTML = TPL[curP] ? TPL[curP]() : TPL.classic();
+    var els = stage.querySelectorAll('.anim');
+    els.forEach(function(e,i){ e.style.animationDelay = (i * 0.12) + 's'; });
+    setTimeout(function(){ els.forEach(function(e){ e.style.opacity = '1'; e.style.transform = 'none'; }); }, 2000);
+    fit();
+  }
+  document.querySelectorAll('.tp-btn').forEach(function(b){
+    b.classList.toggle('on', b.getAttribute('data-tpl') === curP);
+    b.addEventListener('click', function(){
+      curP = b.getAttribute('data-tpl');
+      document.documentElement.setAttribute('data-template', curP);
+      try { localStorage.setItem(TPL_KEY, curP); } catch(e) {}
+      document.querySelectorAll('.tp-btn').forEach(function(x){ x.classList.toggle('on', x === b); });
+      render();
+    });
+  });
+
+  /* ═══════════ 一屏自适应缩放 + ?shot 截图模式 ═══════════ */
   function fit(){
     var stage = document.getElementById('stage');
+    stage.style.transform = 'none';
     var scale = Math.min(1, window.innerHeight / (stage.scrollHeight + 1));
-    if (scale < 1) {
-      stage.style.transform = 'scale(' + scale + ')';
-      stage.style.transformOrigin = 'center center';
-    }
+    if (scale < 1) { stage.style.transform = 'scale(' + scale + ')'; stage.style.transformOrigin = 'center center'; }
   }
-  fit();
+  render();
   window.addEventListener('resize', fit);
   if (location.search.indexOf('shot') !== -1) {
     document.documentElement.setAttribute('data-shot', '1');
-    document.querySelectorAll('.stage-inner > *').forEach(function(c){ c.style.opacity = '1'; c.style.transform = 'none'; });
-    document.getElementById('dock').style.display = 'none';
-  }
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function(es){
-      es.forEach(function(e){ if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'none'; io.unobserve(e.target); } });
-    }, {threshold:.1});
-    document.querySelectorAll('.stage-inner > *').forEach(function(c){ io.observe(c); });
-    setTimeout(function(){ document.querySelectorAll('.stage-inner > *').forEach(function(c){ c.style.opacity = '1'; c.style.transform = 'none'; }); }, 2000);
+    var els = document.querySelectorAll('.anim');
+    els.forEach(function(e){ e.style.opacity = '1'; e.style.transform = 'none'; e.style.animationDelay = '0s'; });
+    fit();
   }
 })();
 </script>
