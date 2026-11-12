@@ -2,6 +2,16 @@
 
 SkillForge（技能锻造坊）npm 包 `skill-forge-hub`（命令名 `skill-forge`）版本变更记录。
 
+## 1.0.5（2026-11-12）
+
+**月报技能上线：monthly-report + 报表家族四选一分流 + 登台月报映射**
+
+- 新增 monthly-report 技能：四段式月报（月度概览/本月关键成果/问题与改进/下月计划），差异化资产——数据卡环比小字（较上月 ±x%，绿涨红跌）、W1-W4 周时间线、月度日历热力图（echarts calendar heatmap，CSS 变量驱动五主题换肤）；数据收集支持 git 月度聚合 + 环比上月同口径 + 日历热力图逐日统计；自然语言月份定位（这个月/上个月/近一个月/2026-10）；与三报表同构：12 行业词典、自定义模板、五主题深蓝面板、content-png 截图
+- 分流升级：日报/周报/年报 SKILL.md 周期歧义分流 三选一 → 四选一（日报/周报/月报/年报）
+- 登台联动：deck-stage 报告四件套（补月报段映射：概览→overview、成果→timeline W1-W4、问题/计划→bullets、日历热力图→chart-heatmap）；usage-guide 示例补月报
+- CLI 与文档：cli.js CATEGORIES 报表汇演收编 monthly-report；README 分类行/技能表/安装命令同步
+- 实测：月度 reference.html headless 渲染四段卡片 + 日历热力图 + 换肤坞全通过；content 截图高度公式实测校准（760 宽基准 ~2020px + 条目增减线性外推），修正旧公式低估截断问题
+
 ## 1.0.4（2026-11-11）
 
 **图表 echarts 化 + 数据源通用化 + 升级机制强化**

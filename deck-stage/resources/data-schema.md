@@ -75,6 +75,16 @@
 | 多期趋势对比（提交/工时双线等） | `chart-line`（series=多系列） | blue |
 | — | `closing-image`（谢谢观看 + 署名） | — |
 
+### 月报（四段式）
+
+| 报告段落 | 页类型 | color |
+|:---|:---|:---|
+| 月度概览（TL;DR + 数据卡） | `overview`（TL;DR + stats=数据卡，环比小字并入卡片描述） | blue |
+| 本月关键成果（W1-W4 周时间线） | `timeline`（q=W1..W4，desc=成果描述，metric=量化小字） | green |
+| 问题与改进 | `bullets`（t=问题，d=影响+改进） | rose |
+| 下月计划 | `bullets`（t=目标，d=量化指标与周级行动节点） | orange |
+| 本月提交日历热力图 | `chart-heatmap`（calendar 热力图：dates=当日提交数，labels=YYYY-MM） | orange |
+
 ### 周报
 
 | 报告段落 | 页类型 | color |

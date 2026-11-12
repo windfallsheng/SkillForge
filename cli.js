@@ -20,7 +20,7 @@ const VERSION = require(path.join(PKG_DIR, "package.json")).version;
 
 // 分类映射与 README「技能分类」表一致；新增技能时请同步
 const CATEGORIES = [
-  { name: "报表汇演", en: "Reports", skills: ["daily-report", "weekly-report", "annual-report"] },
+  { name: "报表汇演", en: "Reports", skills: ["daily-report", "weekly-report", "monthly-report", "annual-report"] },
   { name: "文档装裱", en: "Documents", skills: ["article-to-html"] },
   { name: "工程提效", en: "Engineering", skills: ["spec-doc2spec", "spec-spec2doc"] },
   { name: "演示汇演", en: "Slides", skills: ["magic-deck", "deck-stage"] },

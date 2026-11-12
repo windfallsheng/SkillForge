@@ -12,7 +12,7 @@
 
 | 分类 | Category | 说明 | 收录技能 |
 |:---|:---|:---|:---|
-| 报表汇演 | Reports | 多源数据整理（一段文字 / 文件里的描述 / 图片与素材 / 口头补充，什么材料都能成稿），按周期产出报告（日报 / 周报 / 年报） | daily-report、weekly-report、annual-report |
+| 报表汇演 | Reports | 多源数据整理（一段文字 / 文件里的描述 / 图片与素材 / 口头补充，什么材料都能成稿），按周期产出报告（日报 / 周报 / 月报 / 年报） | daily-report、weekly-report、monthly-report、annual-report |
 | 文档装裱 | Documents | 文档转换与美化：Word / Markdown / 纯文本 → 精美 HTML + 逐章截图 | article-to-html |
 | 工程提效 | Engineering | 基于 Pandoc 的文档 ↔ 规格互转（需求文档切片 / 规格导出 Word·PDF），Pandoc 机械转换 + AI 校对防错 | spec-doc2spec、spec-spec2doc |
 | 演示汇演 | Slides | 从内容到演示：HTML 形态的魔法幻灯（放映 + 模板 + 主题）与 .pptx 登台文稿（原生可编辑页 + 封面截图） | magic-deck、deck-stage |
@@ -26,6 +26,7 @@
 |:---|:---|:---|:---|
 | daily-report | 报表汇演 | [daily-report/](daily-report/) | 多源数据生成日报（今日任务进度/明日计划/风险阻塞点）：一段文字、文件里的描述、图片或口头补充皆可成稿；支持自然语言日期（今天/昨天/上周三/10月20号）、连续多日批量、自定义模板、12 行业词条 |
 | weekly-report | 报表汇演 | [weekly-report/](weekly-report/) | 多源数据生成周报（本周结论 + 本周任务进度/下周计划/风险阻塞点 + 本周概览卡），数据来源同日报；周结束日可配置（默认周五，可改周日等），支持自然语言周定位（本周/上周/10月第2周/节假日锚定） |
+| monthly-report | 报表汇演 | [monthly-report/](monthly-report/) | 多源数据生成月报（四段式：月度概览/本月关键成果/问题与改进/下月计划）：一段文字、文件里的描述、图片或口头补充皆可成稿，开发类用户可聚合当月 git 提交；12 行业职业词典，支持自定义模板与自然语言月份定位（这个月/上个月/近一个月） |
 | annual-report | 报表汇演 | [annual-report/](annual-report/) | 多源数据生成年度总结（五段式：年度概览/核心成果/经验成长/不足反思/新年规划）：一段文字、文件里的描述、图片或口头补充皆可成稿；12 行业职业词典，支持自定义模板与自然语言年度定位 |
 | article-to-html | 文档装裱 | [article-to-html/](article-to-html/) | Word / Markdown / 纯文本 → 精美独立 HTML（思源黑体 + Roboto 商用免费字体，图表 HTML/CSS 重绘），逐章截图（Retina 2x）；现成 HTML 可直接截图或先美化 |
 | spec-doc2spec | 工程提效 | [spec-doc2spec/](spec-doc2spec/) | Word / Markdown 需求文档转结构化需求切片（薄入口 + resources 分册）；自动检测 Pandoc，未装引导跨系统安装 |
@@ -59,12 +60,12 @@ skill-forge init --target ~/.claude/skills --skills daily-report,weekly-report
 将技能目录复制到你所用的 AI 助手的技能目录（支持 SKILL.md 格式、本地加载技能的助手均可）：
 
 ```bash
-cp -R daily-report weekly-report annual-report <你的 AI 助手技能目录>/
+cp -R daily-report weekly-report monthly-report annual-report <你的 AI 助手技能目录>/
 cp -R magic-deck prompt-pouch <你的 AI 助手技能目录>/
 cp -R spec-doc2spec spec-spec2doc <你的 AI 助手技能目录>/
 ```
 
-复制后直接说「写日报」「写周报」或丢给它一个文档即可触发；问「日报怎么用 / 周报怎么用 / 登台怎么用」输出使用说明。
+复制后直接说「写日报」「写周报」「写月报」或丢给它一个文档即可触发；问「日报怎么用 / 周报怎么用 / 登台怎么用」输出使用说明。
 
 ## 命令参考
 
@@ -116,7 +117,7 @@ cp -R spec-doc2spec spec-spec2doc <你的 AI 助手技能目录>/
 │   ├── design-system.md         # 设计系统（字体 / 配色 / 排版 / 图表重绘）
 │   ├── user-config.md           # ⚙️ 用户配置（THEME 等，升级不覆盖）
 │   └── scripts/                 # 字体安装 / docx 抽取 / 字体内联脚本
-├── daily-report/（weekly-report / annual-report 同构）
+├── daily-report/（weekly-report / monthly-report / annual-report 同构）
 │   ├── SKILL.md                 # 薄入口：frontmatter + 生成流程 + 规则速览
 │   ├── user-config.md           # ⚙️ 用户配置（CONFIG_VERSION + 默认配置 + 自定义模板）
 │   └── resources/               # 重内容按生成阶段拆分，AI 按需读取

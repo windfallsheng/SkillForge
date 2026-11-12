@@ -1,6 +1,6 @@
 ---
 name: daily-report
-description: 生成工作日报（默认任务进度/明日计划/风险阻塞点三段结构，中文顿号序号），适配各行业（内置 12 行业职业词典，可指定角色身份）。数据来源灵活：直接口述、给一段文字、发文件（Word/PDF/Excel/PPT 等）或图片，都能整理成日报。支持自定义模板（可永久或临时指定）。支持自然语言指定日期（今天/昨天/上周三/10月20号等）。当用户请求写日报、今日日报、昨天的日报、生成日报、/daily-report，或询问日报用法（日报怎么用/日报使用说明/日报有哪些使用方式）时使用。用户说「写总结/工作总结/写个汇报」等未言明周期的词时，先 AskUserQuestion 分流（日报/周报/年报）再执行，不擅自默认。
+description: 生成工作日报（默认任务进度/明日计划/风险阻塞点三段结构，中文顿号序号），适配各行业（内置 12 行业职业词典，可指定角色身份）。数据来源灵活：直接口述、给一段文字、发文件（Word/PDF/Excel/PPT 等）或图片，都能整理成日报。支持自定义模板（可永久或临时指定）。支持自然语言指定日期（今天/昨天/上周三/10月20号等）。当用户请求写日报、今日日报、昨天的日报、生成日报、/daily-report，或询问日报用法（日报怎么用/日报使用说明/日报有哪些使用方式）时使用。用户说「写总结/工作总结/写个汇报」等未言明周期的词时，先 AskUserQuestion 分流（日报/周报/月报/年报）再执行，不擅自默认。
 allowed-tools: Bash, Read, Write
 disable-model-invocation: false
 ---
@@ -11,7 +11,7 @@ disable-model-invocation: false
 
 ## 生成流程
 
-0.5 **周期歧义分流**：用户说「写总结/工作总结/写个汇报/做一份总结」等未言明周期的词 → AskUserQuestion 三选一（日报/周报/年报）确认周期再继续，不擅自默认
+0.5 **周期歧义分流**：用户说「写总结/工作总结/写个汇报/做一份总结」等未言明周期的词 → AskUserQuestion 四选一（日报/周报/月报/年报）确认周期再继续，不擅自默认
 0. **读用户配置**（DISK/FORMATS/DIR/OPEN_HTML/THEME/TEMPLATE/ROLE/CONFIRM/CONFIG_VERSION/DATA_SOURCES、自定义模板）→ 先 Read 同目录 `user-config.md`
 1. **解析日期**（自然语言 → 目标日期 YYYY-MM-DD）→ 读 `resources/date-parsing.md`
 2. **收集数据**（多源：会话口述 / 文字 / 文件 / 图片 / 代码提交记录，合并去重）→ 读 `resources/data-collection.md`

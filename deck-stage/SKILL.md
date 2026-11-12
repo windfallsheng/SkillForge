@@ -1,20 +1,20 @@
 ---
 name: deck-stage
 description: >
-  登台 deck-stage：把日报/周报/年报（md/HTML/口述大纲）或散装素材（目录/文件/随手文字）转成专业 .pptx 演示文稿。
+  登台 deck-stage：把日报/周报/月报/年报（md/HTML/口述大纲）或散装素材（目录/文件/随手文字）转成专业 .pptx 演示文稿。
   三问交互——先问素材（指定目录/指定文件/贴文字/口述主题）、再报页结构大纲表确认、后选成片方式（一键成片/逐页确认）。
   混合模式——常规页原生生成（文本/数据卡/时间线/柱图/饼图/折线，全部可编辑），封面与结尾页用 HTML 截图贴图（视觉保真）。
   视觉与报告深蓝面板体系同源：tech 深蓝科技（默认）/biz 浅色商务/mono IDEA 黑亮/light IDEA 白亮/warm 温暖渐变五主题，
   五段节色（蓝/绿/紫/玫红/橙）。每页可带演讲备注（notes），bullets 页可配图。
   数据经结构化 data.json 交给 resources/pptx-builder.js（PptxGenJS，本目录 node_modules 离线可用）产出 16:9 pptx。
-  当用户请求把报告/日报/周报/年报转成 PPT、做成 PPT、导出 pptx、生成演示文稿、登台，或询问本 skill 用法时使用。用户要 HTML 网页幻灯（网页放映/分享）时不用本 skill（交给 magic-deck）；「做 PPT/演示文稿」未言明产出形态时先 AskUserQuestion 二选一（.pptx 可编辑文件 → 本 skill；HTML 网页幻灯 → magic-deck），不擅自默认。
+  当用户请求把报告/日报/周报/月报/年报转成 PPT、做成 PPT、导出 pptx、生成演示文稿、登台，或询问本 skill 用法时使用。用户要 HTML 网页幻灯（网页放映/分享）时不用本 skill（交给 magic-deck）；「做 PPT/演示文稿」未言明产出形态时先 AskUserQuestion 二选一（.pptx 可编辑文件 → 本 skill；HTML 网页幻灯 → magic-deck），不擅自默认。
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 disable-model-invocation: false
 ---
 
 # 登台 deck-stage
 
-把报告三件套（日报/周报/年报）的产出——或任何散装素材——转成专业 .pptx 演示文稿。常规页原生可编辑（文本/数据卡/时间线/柱图/饼图/折线），封面/结尾页 HTML 截图保真，每页可带演讲备注，视觉与报告同源。写报告 → 放映（magic-deck）→ 登台（本 skill），最后一公里闭环。
+把报告四件套（日报/周报/月报/年报）的产出——或任何散装素材——转成专业 .pptx 演示文稿。常规页原生可编辑（文本/数据卡/时间线/柱图/饼图/折线），封面/结尾页 HTML 截图保真，每页可带演讲备注，视觉与报告同源。写报告 → 放映（magic-deck）→ 登台（本 skill），最后一公里闭环。
 
 ## 意图边界（与 magic-deck 分流）
 
@@ -50,7 +50,7 @@ disable-model-invocation: false
 
 0. **读用户配置**（DIR/DIR_WIN/THEME/OPEN_PPTX/CONFIRM/MODE/AUDIENCE/NOTES/CONFIG_VERSION）→ 先 Read 同目录 `user-config.md`
 1. **三问交互**（见上节）：素材 → 骨架大纲表确认 → 成片方式（MODE 未配置时默认 B 逐页确认）
-2. **结构化提炼** → 读 `resources/data-schema.md`（schema + 段落映射：年报五段/周报四段/日报四段 → 页类型与节色）
+2. **结构化提炼** → 读 `resources/data-schema.md`（schema + 段落映射：年报五段/月报四段/周报四段/日报四段 → 页类型与节色）
 3. **封面/结尾截图**（无现成素材时）→ 读 `resources/cover-template.html` 说明：复制模板到临时目录 → 替换 `COVER` 对象（title/subtitle/info/stats 或 mode:closing）→ Chrome headless 截图 1280x720（macOS：`/Applications/Google Chrome.app/Contents/MacOS/Google Chrome --headless --disable-gpu --no-sandbox --hide-scrollbars --screenshot=cover.png --window-size=1280,720 --virtual-time-budget=3000 "file:///<临时html>"`；Windows 按序探测 chrome.exe/msedge.exe，URL 用 node url.pathToFileURL）
 4. **生成 pptx**：写 data.json → `cd <skill目录> && node resources/pptx-builder.js --data <data.json绝对路径> --out <DIR>/<文件名>.pptx` → 输出 `PPTX_OK <路径>`
 5. **交付前自检**（硬门禁，不可跳过）：文件存在、大小 > 20KB；`unzip -l <pptx>` 校验——`ppt/slides/slideN.xml` 数量与 data.json pages 数一致、每页 slide XML 均存在且非空；builder 已报 `PPTX_OK` 才算通过。未通过 → 修 data.json 后重跑 builder，禁止跳过直接交付
