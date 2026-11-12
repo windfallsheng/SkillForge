@@ -21,17 +21,17 @@ TEMPLATE: default              # 报告模板：default = 内置四段式（本�
 ROLE: 全栈开发工程师（企业内技术开发）  # 用户默认职业角色与主要工作内容（两者并存：职业名 + 括号内工作内容，生成内容/术语/量化指标/热力图/柱图/风险话术全部按此画像走）；用户随口描述职业时（如「我搞装修的，天天跑工地」）→ AI 提炼为规范表述（装修项目经理（负责工地现场管理、施工进度与质量巡检））更新此处；说「以 XX 的身份写」→ 当次临时换角色不改配置；说「以后默认用 XX 角色 / 我的职业是 XX / 我的主要工作是 XX」→ 永久更新此处
 WEEK_END: friday               # 周结束日（当周最后一天）：friday = 每周五（默认）；可改 sunday = 每周日、saturday 等；周范围、落盘子目录名均按该天日期
 CONFIRM: never                 # 落盘前确认：never = 直接生成落盘不确认（默认）；text = 纯文字整理模式先出效果确认后再落盘；always = 任何方式生成都先确认；临时说「先看看效果」当次先确认、说「不用确认」当次跳过
-DATA_SOURCES: []               # 数据源清单（升级不覆盖；AI 每次生成前 Read 本文件按此清单收集；空清单 = 只按会话/文字内容生成）。每项：name 唯一名称 + type 类型 + 路径。三种类型示例（把下方 # 注释示例改成你的真实数据源后填入上方数组）：
+DATA_SOURCES: []               # 数据源清单（升级不覆盖；AI 每次生成前 Read 本文件按此清单收集；空清单 = 只按会话/文字内容生成）。每项：name 唯一名称 + type 类型 + 路径。三种类型示例（把下方 # 注释示例改成你的真实数据源后填入上方数组；未知 type（拼写错误）忽略该项并在生成时一句话提示，不中断）：
   # - name: 主项目仓库          # 名称：唯一 key（重名视为同一数据源；口述「只聚合 xxx」按 name 匹配）
-  #   type: git                # git = 代码仓库（git log 聚合提交）
+  #   type: git                # git = 代码仓库（git log 聚合提交；路径不存在/非代码仓库时静默跳过）
   #   mac: ~/Projects/main-app  # macOS 路径（绝对路径或 ~ 开头）
   #   win: D:\Projects\main-app # Windows 路径；「-」= 该系统不存在，自动跳过
   # - name: 周例会纪要
-  #   type: file               # file = 普通文件/目录（直接 Read 内容聚合，适合文档/纪要/日志素材）
+  #   type: file               # file = 普通文件/目录（文件 Read 全文、目录逐个 Read 文本文件，二进制跳过；路径无效静默跳过）
   #   mac: ~/Documents/meeting-notes.md
   #   win: -
   # - name: 数据接口
-  #   type: remote             # remote = 远程网络源（AI 联网拉取 url 内容；仅生成时联网，HTML 产物仍零外链）
+  #   type: remote             # remote = 远程网络源（只需 url 字段忽略 mac/win；AI 联网拉取内容提取要点；失败静默跳过不阻塞；仅收集时联网，HTML 产物仍零外链）
   #   url: https://example.com/data.json
 ```
 
