@@ -23,6 +23,10 @@ disable-model-invocation: false
 
 **执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（DISK/FORMATS/DIR/OPEN_HTML/TEMPLATE/ROLE/CONFIRM）与自定义模板都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留。
 
+## 产物升级（回炉）
+
+生成 HTML 时头部写版本戳 `<meta name="sf-template" content="meeting-minutes@1">`（模板升级时递增 @N 并同步 reference.html 与本文档）。用户说「升级旧产物/回炉旧页面/旧纪要换新样式」时：扫落盘目录下本技能命名的 html，读版本戳筛出旧版 → 列清单（文件/旧版本/手改状态——旧 html 正文与同目录 md 正文对比，不一致视为可能手改过）→ AskUserQuestion 选全部或部分 → 逐份升级：浅升级（仅 CSS/JS 变化）对旧页替换 `<style>` 块与交互脚本、正文内容原样保留；深升级（DOM 结构变化）从同目录 md 底稿按当前 reference.html 重建，先备份旧版 `.bak-时间戳` → 报告三段式：✅ 已升级清单 / ⚠️ 手改保留说明 / 🟡 失败项原因。
+
 ## 规则速览
 
 - 五段式骨架行业无关：会议信息（主题/日期/地点/主持人/参会人）/ 会议结论（一句话 TL;DR + 核心决策 2-5 项）/ 议题讨论（议题名 + 结论 + 讨论要点）/ 决议与行动项（事项 + 负责人 + 截止时间，每项三要素齐全）/ 下次会议（主题/时间，没有则写「待定」）

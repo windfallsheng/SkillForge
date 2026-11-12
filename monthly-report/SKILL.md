@@ -40,6 +40,10 @@ disable-model-invocation: false
 
 当前版本变更记录：v1→v2 新增 THEME 字段（默认 tech）。v2→v3 新增 DATA_SOURCES 数据源清单段（默认空清单 + git/file/remote 三类型示例注释）。
 
+## 产物升级（回炉）
+
+生成 HTML 时头部写版本戳 `<meta name="sf-template" content="monthly-report@1">`（模板升级时递增 @N 并同步 reference.html 与本文档）。用户说「升级旧产物/回炉旧页面/旧月报换新样式」时：扫落盘目录下本技能命名的 html，读版本戳筛出旧版 → 列清单（文件/旧版本/手改状态——旧 html 正文与同目录 md 正文对比，不一致视为可能手改过）→ AskUserQuestion 选全部或部分 → 逐份升级：浅升级（仅 CSS/JS 变化）对旧页替换 `<style>` 块与交互脚本、正文内容原样保留；深升级（DOM 结构变化）从同目录 md 底稿按当前 reference.html 重建，先备份旧版 `.bak-时间戳` → 报告三段式：✅ 已升级清单 / ⚠️ 手改保留说明 / 🟡 失败项原因。
+
 ## 🔧 报修处理流程（用户报页面问题时）
 
 用户说「这个页面效果不对 / 布局乱了 / 有 UI 问题 / 样式错了 / 交互坏了」（常附截图或指出具体现象）→ 按以下流程处理，不以「重新生成一份」敷衍：
