@@ -5,7 +5,8 @@
  *
  *   skill-forge ls       列出全部技能（分类 + 名称 + 说明）
  *   skill-forge init     交互式挑选技能，装进 AI 助手的技能目录
- *   skill-forge update   升级已安装技能（配置版本感知：官方配置结构变化时
+ *   skill-forge update   升级已安装技能（无参数时列出已装清单：a=全部 / 编号
+ *                        挑部分升级；配置版本感知：官方配置结构变化时
  *                        先备份你的配置，再询问覆盖/保留/稍后处理）
  *
  * 零依赖，Node >= 14。
@@ -297,6 +298,32 @@ async function selectSkillsInteractive(skills, target) {
   return chosen;
 }
 
+// 交互挑选已安装技能：a=全部升级 / 编号挑选（逗号分隔，如 1,3）/ q=退出
+async function selectInstalledInteractive(installed) {
+  let text = "\n已安装技能（a=全部升级；编号挑选，逗号分隔，如 1,3；q=退出）：\n\n";
+  installed.forEach((s, i) => {
+    text += `  [${i + 1}] ${s.name.padEnd(16)}${shortDesc(s.description)}\n`;
+  });
+  text += `\n共 ${installed.length} 件已安装技能\n`;
+  console.log(text);
+  const ans = await ask("你的选择：");
+  if (/^q$/i.test(ans)) return [];
+  if (/^a$/i.test(ans)) return installed; // 全部升级
+  const chosen = [];
+  for (const part of ans.split(/[,，\s]+/)) {
+    if (!part) continue;
+    const i = parseInt(part, 10);
+    if (!isNaN(i) && i >= 1 && i <= installed.length && !chosen.includes(installed[i - 1])) {
+      chosen.push(installed[i - 1]);
+    }
+  }
+  if (chosen.length === 0) {
+    console.log("未识别任何编号，已取消。");
+    return [];
+  }
+  return chosen;
+}
+
 // 解析目标技能目录（--target 优先，否则自动探测；失败返回 null）
 async function resolveTarget(argv, cmd) {
   if (argv.target) return expandHome(argv.target);
@@ -516,8 +543,19 @@ async function cmdUpdate(argv) {
     return;
   }
 
+  // 2.5 无 --skills 且交互环境：列出已装清单，a=全部 / 编号挑部分升级
+  let picked = false;
+  if (!argv.skills && !argv.yes && process.stdin.isTTY) {
+    installed = await selectInstalledInteractive(installed);
+    if (installed.length === 0) {
+      console.log("已取消。");
+      return;
+    }
+    picked = true; // 清单选定即确认，不再重复询问
+  }
+
   // 3. 确认
-  if (!argv.yes) {
+  if (!argv.yes && !picked) {
     console.log(`\n将升级 ${installed.length} 件技能：`);
     installed.forEach((s) => console.log(`  - ${s.name}`));
     if (process.stdin.isTTY) {
@@ -547,8 +585,9 @@ function printHelp() {
 用法：
   skill-forge ls                      列出全部技能（分类 + 名称 + 说明）
   skill-forge init                    列清单交互挑选：a=全部安装 / 编号挑选（已装标 ★，确认时可跳过已装）
-  skill-forge update                  升级已安装技能（配置版本感知，默认全部已装技能）
+  skill-forge update                  升级已安装技能（无参数时列出已装清单：a=全部 / 编号挑部分升级）
   skill-forge update --skills a,b     只升级指定技能（未安装的提示跳过）
+  skill-forge update --yes            跳过清单与确认，直接升级全部已装技能（脚本友好）
   skill-forge init --target <目录>    指定技能目录（默认自动探测常见助手目录）
   skill-forge init --skills a,b       跳过选择，直接安装/升级指定技能（适合脚本与单件补装）
   skill-forge init --yes              跳过确认，直接安装
