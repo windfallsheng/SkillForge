@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="sf-template" content="prompt-pouch@9">
+<meta name="sf-template" content="prompt-pouch@10">
 <meta name="pouch-id" content="REF-POUCH-0000">
 <title>锦囊 Prompt Pouch — 提示词管理台</title>
 <style>
@@ -475,6 +475,38 @@ mark.hl{ background:var(--gold-dim); color:var(--gold); border-radius:3px; paddi
   color:var(--muted); font-family:inherit; font-size:12px; line-height:1.7;
 }
 .fp-ops{ display:flex; justify-content:flex-end; gap:10px; }
+/* ============ 统一确认弹框（替代浏览器原生弹框） ============ */
+.cf-panel{
+  width:460px; max-width:92vw; max-height:82vh; display:flex; flex-direction:column;
+  background:linear-gradient(180deg, var(--panel) 0%, var(--panel2) 100%);
+  border:1px solid var(--border); border-radius:16px; padding:20px 22px;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+  animation:cfPop .18s ease;
+}
+@keyframes cfPop{ from{ transform:translateY(10px) scale(.97); opacity:0; } to{ transform:none; opacity:1; } }
+.cf-title{
+  font-size:15px; font-weight:900; letter-spacing:1px; margin-bottom:10px;
+  background:linear-gradient(90deg,var(--star),var(--gold));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.cf-body{
+  font-size:13px; line-height:1.9; color:var(--text); white-space:pre-wrap; word-break:break-word;
+  max-height:46vh; overflow-y:auto; padding-right:4px;
+}
+.cf-field{ display:flex; flex-direction:column; gap:4px; margin-top:12px; }
+.cf-field label{ font-size:12px; font-weight:700; color:var(--gold); letter-spacing:.5px; }
+.cf-field input{
+  width:100%; padding:9px 12px; border-radius:9px;
+  background:rgba(0,0,0,.25); border:1px solid var(--border); outline:none;
+  color:var(--text); font-family:inherit; font-size:13px; transition:border-color .18s ease, box-shadow .18s ease;
+}
+.cf-field input:focus{ border-color:var(--gold); box-shadow:0 0 0 3px var(--gold-dim); }
+.cf-ops{ display:flex; justify-content:flex-end; gap:10px; margin-top:16px; }
+.btn.danger{
+  background:linear-gradient(135deg, #a63d34, #e06c5b); color:#fff;
+  font-weight:900; border:none;
+}
+.btn.danger:hover{ box-shadow:0 0 16px rgba(224,108,91,.45); }
 /* 备份与数据安全 */
 .bk-wrap{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
 .bk-status{ font-size:12px; color:var(--muted); letter-spacing:1px; }
@@ -783,6 +815,22 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
       <button class="btn" id="detailClose">关闭</button>
       <button class="btn" id="detailEdit">✎ 修改</button>
       <button class="btn primary" id="detailCopy">⧉ 复制</button>
+    </div>
+  </div>
+</div>
+
+<!-- 统一确认弹框（确认 / 提示 / 输入，替代浏览器原生弹框） -->
+<div class="modal-mask" id="cfMask">
+  <div class="cf-panel">
+    <div class="cf-title" id="cfTitle">确认</div>
+    <div class="cf-body" id="cfBody"></div>
+    <div class="cf-field" id="cfFieldWrap" style="display:none">
+      <label id="cfLabel"></label>
+      <input id="cfInput" />
+    </div>
+    <div class="cf-ops">
+      <button class="btn" id="cfCancel">取消</button>
+      <button class="btn primary" id="cfOk">确定</button>
     </div>
   </div>
 </div>
@@ -1474,6 +1522,71 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     if (toastTimer) clearTimeout(toastTimer);
     toastTimer = setTimeout(function(){ el.className = 'toast'; }, 2800);
   }
+  /* ---------- 统一确认弹框（替代原生 confirm/alert/prompt） ---------- */
+  var cfMask = document.getElementById('cfMask');
+  var cfTitle = document.getElementById('cfTitle');
+  var cfBody = document.getElementById('cfBody');
+  var cfFieldWrap = document.getElementById('cfFieldWrap');
+  var cfLabel = document.getElementById('cfLabel');
+  var cfInput = document.getElementById('cfInput');
+  var cfOk = document.getElementById('cfOk');
+  var cfCancel = document.getElementById('cfCancel');
+  var cfPending = null; var cfMode = 'confirm';
+  function cfClose(res){
+    cfMask.classList.remove('open');
+    if (cfPending){ cfPending(res); cfPending = null; }
+  }
+  function cfOpen(opts){
+    cfMode = opts.mode || 'confirm';
+    cfTitle.textContent = opts.title || '确认';
+    cfBody.textContent = opts.body || '';
+    if (cfMode === 'prompt'){
+      cfFieldWrap.style.display = '';
+      cfLabel.textContent = opts.label || '';
+      cfInput.value = opts.def || '';
+      cfInput.placeholder = opts.placeholder || '';
+    } else {
+      cfFieldWrap.style.display = 'none';
+    }
+    cfOk.textContent = opts.okText || (cfMode === 'alert' ? '知道了' : '确定');
+    cfOk.classList.toggle('danger', !!opts.danger);
+    cfCancel.textContent = opts.cancelText || '取消';
+    cfCancel.style.display = (cfMode === 'alert') ? 'none' : '';
+    cfMask.classList.add('open');
+    setTimeout(function(){
+      if (cfMode === 'prompt'){ cfInput.focus(); cfInput.select(); }
+      else cfOk.focus();
+    }, 60);
+    return new Promise(function(res){ cfPending = res; });
+  }
+  cfOk.addEventListener('click', function(){
+    cfClose({ ok: true, value: (cfMode === 'prompt') ? cfInput.value : null });
+  });
+  cfCancel.addEventListener('click', function(){ cfClose({ ok: false, canceled: true, value: null }); });
+  cfMask.addEventListener('click', function(e){
+    if (e.target === this) cfClose({ ok: false, canceled: true, value: null });
+  });
+  cfInput.addEventListener('keydown', function(e){
+    if (e.key === 'Enter'){ e.preventDefault(); cfOk.click(); }
+  });
+  document.addEventListener('keydown', function(e){
+    if (!cfMask.classList.contains('open')) return;
+    if (e.key === 'Escape') cfClose({ ok: false, canceled: true, value: null });
+  });
+  function uiConfirm(title, body, opts){
+    opts = opts || {};
+    return cfOpen({
+      mode: 'confirm', title: title, body: body,
+      okText: opts.okText, cancelText: opts.cancelText, danger: opts.danger
+    }).then(function(r){ return !!r.ok; });
+  }
+  function uiAlert(title, body){
+    return cfOpen({ mode: 'alert', title: title, body: body });
+  }
+  function uiPrompt(title, label, def, placeholder){
+    return cfOpen({ mode: 'prompt', title: title, label: label, def: def, placeholder: placeholder })
+      .then(function(r){ return r.canceled ? null : r.value; });
+  }
   function ensureWriteDir(){
     if (bkDirHandle) return Promise.resolve(true);
     return maybeAutoAuth().then(function(){ return !!bkDirHandle; });
@@ -1672,14 +1785,16 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     }).then(function(ok){ if (ok) toast(editId ? '提示词已更新' : '提示词已入囊'); });
   }
   function delItem(p){
-    if (!window.confirm('确定删除「' + p.title + '」？删除前会自动备份，可从 ↩ 恢复。')) return;
-    writePromptsJson({
-      apply: function(data){
-        data.prompts = data.prompts.filter(function(x){ return x.id !== p.id; });
-        return data;
-      },
-      cmd: '请删除锦囊里「' + p.title + '」这条'
-    }).then(function(ok){ if (ok) toast('已删除「' + p.title + '」'); });
+    uiConfirm('删除提示词', '确定删除「' + p.title + '」？删除前会自动备份，可从 ↩ 恢复。', { danger: true, okText: '删除' }).then(function(ok){
+      if (!ok) return;
+      writePromptsJson({
+        apply: function(data){
+          data.prompts = data.prompts.filter(function(x){ return x.id !== p.id; });
+          return data;
+        },
+        cmd: '请删除锦囊里「' + p.title + '」这条'
+      }).then(function(ok2){ if (ok2) toast('已删除「' + p.title + '」'); });
+    });
   }
   /* 标签快捷操作：卡片标签悬停 ✕ 删 / ＋ 加（授权目录即写即存，未授权生成指令） */
   function removeTag(p, t){
@@ -1701,21 +1816,22 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
   }
   function quickAddTag(p){
     var cur = (p.tags || []).slice(0, 3);
-    var input = window.prompt('为「' + p.title + '」添加标签（多个用逗号分隔，最多 3 个）：', cur.join(', '));
-    if (input === null) return;
-    var adds = input.split(/[,，]/).map(function(s){ return s.trim(); }).filter(Boolean);
-    if (!adds.length) return;
-    var merged = cur.concat(adds).slice(0, 3);
-    writePromptsJson({
-      apply: function(data){
-        var item = data.prompts.find(function(x){ return x.id === p.id; });
-        if (!item){ toast('该提示词已不存在，请刷新后重试', true); return null; }
-        item.tags = merged;
-        item.updatedAt = nowStamp();
-        return data;
-      },
-      cmd: '请把锦囊里「' + p.title + '」的标签更新为：' + merged.join(', ') + '（同时把 updatedAt 更新为当前时间 YYYY-MM-DD HH:mm:ss）'
-    }).then(function(ok){ if (ok) toast('标签已更新'); });
+    uiPrompt('添加标签', '为「' + p.title + '」添加标签（多个用逗号分隔，最多 3 个）：', cur.join(', '), '如：日报,工作').then(function(input){
+      if (input === null) return;
+      var adds = input.split(/[,，]/).map(function(s){ return s.trim(); }).filter(Boolean);
+      if (!adds.length) return;
+      var merged = cur.concat(adds).slice(0, 3);
+      writePromptsJson({
+        apply: function(data){
+          var item = data.prompts.find(function(x){ return x.id === p.id; });
+          if (!item){ toast('该提示词已不存在，请刷新后重试', true); return null; }
+          item.tags = merged;
+          item.updatedAt = nowStamp();
+          return data;
+        },
+        cmd: '请把锦囊里「' + p.title + '」的标签更新为：' + merged.join(', ') + '（同时把 updatedAt 更新为当前时间 YYYY-MM-DD HH:mm:ss）'
+      }).then(function(ok){ if (ok) toast('标签已更新'); });
+    });
   }
   document.getElementById('itemCancel').addEventListener('click', closeItemForm);
   document.getElementById('itemSave').addEventListener('click', saveItem);
@@ -1785,15 +1901,17 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
   function delGroup(g){
     var n = state.data.prompts.filter(function(p){ return p.group === g.id; }).length;
     if (n > 0){ toast('「' + g.name + '」内还有 ' + n + ' 条提示词，请先移出或删除', true); return; }
-    if (!window.confirm('确定删除分组「' + g.name + '」？')) return;
-    if (state.curGroup === g.id) state.curGroup = 'all';
-    writePromptsJson({
-      apply: function(data){
-        data.groups = data.groups.filter(function(x){ return x.id !== g.id; });
-        return data;
-      },
-      cmd: '请删除锦囊分组「' + g.name + '」'
-    }).then(function(ok){ if (ok) toast('分组「' + g.name + '」已删除'); });
+    uiConfirm('删除分组', '确定删除分组「' + g.name + '」？', { danger: true, okText: '删除' }).then(function(ok){
+      if (!ok) return;
+      if (state.curGroup === g.id) state.curGroup = 'all';
+      writePromptsJson({
+        apply: function(data){
+          data.groups = data.groups.filter(function(x){ return x.id !== g.id; });
+          return data;
+        },
+        cmd: '请删除锦囊分组「' + g.name + '」'
+      }).then(function(ok2){ if (ok2) toast('分组「' + g.name + '」已删除'); });
+    });
   }
   function reorderGroups(moveId, beforeId){
     var ids = state.data.groups.map(function(g){ return g.id; });
@@ -1856,9 +1974,11 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
         }
       } catch(err){ toast('JSON 解析失败，请确认文件内容', true); return; }
       var cur = (state.data && state.data.prompts) ? state.data.prompts.length : 0;
-      if (!window.confirm('导入将覆盖现有 ' + cur + ' 条数据为 ' + d.prompts.length + ' 条（导入前自动备份，可从 ↩ 恢复）。确定继续？')) return;
-      writePromptsJson({ apply: function(){ return d; }, cmd: '' }).then(function(ok){
-        if (ok) toast('已导入 ' + d.prompts.length + ' 条提示词');
+      uiConfirm('覆盖导入', '导入将覆盖现有 ' + cur + ' 条数据为 ' + d.prompts.length + ' 条（导入前自动备份，可从 ↩ 恢复）。确定继续？', { danger: true, okText: '覆盖导入' }).then(function(ok){
+        if (!ok) return;
+        writePromptsJson({ apply: function(){ return d; }, cmd: '' }).then(function(ok2){
+          if (ok2) toast('已导入 ' + d.prompts.length + ' 条提示词');
+        });
       });
     };
     reader.readAsText(f, 'utf-8');
@@ -2182,23 +2302,24 @@ if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(POUC
     if (bkDirHandle) return Promise.resolve(true);
     if (!bkSupported() || bkDeclined || pendingAuth) return Promise.resolve(false);
     if (!state.data) return Promise.resolve(false);
-    var ok = window.confirm('锦囊自动备份\n\n数据一有变更就会自动备份，建议授权写入 prompt-pouch.html 所在目录（首次弹窗选一次，浏览器会记住）。\n\n点「确定」打开目录选择 → 选 prompt-pouch.html 所在文件夹即可；\n点「取消」则改用浏览器本地快照（保留最近 5 份，清浏览器数据会丢）。');
-    if (!ok){
-      bkDeclined = true;
-      try{ localStorage.setItem(SF_NS + '-bk-declined', '1'); }catch(e){}
-      return Promise.resolve(false);
-    }
-    pendingAuth = true; updateBkUI();
-    return window.showDirectoryPicker({ id: 'pouch-backup', mode: 'readwrite' })
-      .then(function(h){
-        bkDirHandle = h; pendingAuth = false; bkDeclined = false; subDirCache = {};
-        try{ localStorage.removeItem(SF_NS + '-bk-declined'); }catch(e){}
-        idbSet('bkHandle', bkDirHandle);
-        updateBkUI();
-        reloadFromDirIfNeeded();
-        return true;
-      })
-      .catch(function(){ pendingAuth = false; updateBkUI(); return false; });
+    return uiConfirm('锦囊自动备份', '数据一有变更就会自动备份，建议授权写入 prompt-pouch.html 所在目录（首次选一次，浏览器会记住）。\n\n点「授权目录」打开目录选择 → 选 prompt-pouch.html 所在文件夹即可；\n点「暂不」则改用浏览器本地快照（保留最近 5 份，清浏览器数据会丢）。', { okText: '授权目录', cancelText: '暂不' }).then(function(ok){
+      if (!ok){
+        bkDeclined = true;
+        try{ localStorage.setItem(SF_NS + '-bk-declined', '1'); }catch(e){}
+        return false;
+      }
+      pendingAuth = true; updateBkUI();
+      return window.showDirectoryPicker({ id: 'pouch-backup', mode: 'readwrite' })
+        .then(function(h){
+          bkDirHandle = h; pendingAuth = false; bkDeclined = false; subDirCache = {};
+          try{ localStorage.removeItem(SF_NS + '-bk-declined'); }catch(e){}
+          idbSet('bkHandle', bkDirHandle);
+          updateBkUI();
+          reloadFromDirIfNeeded();
+          return true;
+        })
+        .catch(function(){ pendingAuth = false; updateBkUI(); return false; });
+    });
   }
   function updateBkUI(){
     if (!bkSupported()){
@@ -2285,7 +2406,7 @@ if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(POUC
       return;
     }
     if (!bkSupported()){
-      alert('当前浏览器不支持「选择目录」授权（Chrome / Edge 可用）。\n本页已自动使用本地快照备份（保留最近 5 份，随浏览器数据走）；\n也可随时对 AI 说「导出锦囊数据」生成备份文件备用。');
+      uiAlert('目录授权不可用', '当前浏览器不支持「选择目录」授权（Chrome / Edge 可用）。\n本页已自动使用本地快照备份（保留最近 5 份，随浏览器数据走）；\n也可随时对 AI 说「导出锦囊数据」生成备份文件备用。');
       return;
     }
     if (bkDirHandle && pendingAuth){
@@ -2308,17 +2429,19 @@ if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(POUC
   });
   btnBkChange.addEventListener('click', function(){
     if (!bkSupported()){ updateBkUI(); return; }
-    if (!window.confirm('更换备份目录\n\n建议仍选 prompt-pouch.html 所在目录：页面新增/编辑的分组与提示词、自动备份都写在这个目录，选别处会造成页面与数据文件不一致。\n\n确定继续选择目录？')) return;
-    window.showDirectoryPicker({ id: 'pouch-backup', mode: 'readwrite' })
-      .then(function(h){
-        bkDirHandle = h; pendingAuth = false; bkDeclined = false; subDirCache = {};
-        try{ localStorage.removeItem(SF_NS + '-bk-declined'); }catch(e){}
-        idbSet('bkHandle', bkDirHandle);
-        updateBkUI();
-        writeBackupNow();
-        reloadFromDirIfNeeded();
-      })
-      .catch(function(){});
+    uiConfirm('更换备份目录', '建议仍选 prompt-pouch.html 所在目录：页面新增/编辑的分组与提示词、自动备份都写在这个目录，选别处会造成页面与数据文件不一致。\n\n确定继续选择目录？', { okText: '选择目录' }).then(function(ok){
+      if (!ok) return;
+      window.showDirectoryPicker({ id: 'pouch-backup', mode: 'readwrite' })
+        .then(function(h){
+          bkDirHandle = h; pendingAuth = false; bkDeclined = false; subDirCache = {};
+          try{ localStorage.removeItem(SF_NS + '-bk-declined'); }catch(e){}
+          idbSet('bkHandle', bkDirHandle);
+          updateBkUI();
+          writeBackupNow();
+          reloadFromDirIfNeeded();
+        })
+        .catch(function(){});
+    });
   });
   btnBkRestore.addEventListener('click', function(){
     document.getElementById('bkList').innerHTML = '<div class="bk-empty">读取备份清单…</div>';
@@ -2369,32 +2492,33 @@ if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(POUC
   }
   function doRestore(content){
     var snap;
-    try{ snap = JSON.parse(content); }catch(e){ alert('备份文件损坏，无法恢复。'); return; }
+    try{ snap = JSON.parse(content); }catch(e){ uiAlert('恢复失败', '备份文件损坏，无法恢复。'); return; }
     if (!snap || !snap.data || !Array.isArray(snap.data.groups) || !Array.isArray(snap.data.prompts)){
-      alert('备份结构不完整，无法恢复。'); return;
+      uiAlert('恢复失败', '备份结构不完整，无法恢复。'); return;
     }
-    var ok = window.confirm('将用这份备份覆盖当前数据：\n\n· 备份时间：' + fmtTime(snap.time)
+    uiConfirm('恢复备份', '将用这份备份覆盖当前数据：\n\n· 备份时间：' + fmtTime(snap.time)
       + '\n· 内容：' + snap.counts.groups + ' 分组 / ' + snap.counts.prompts + ' 条提示词\n\n'
-      + '恢复前会先把当前数据自动另存一份新备份，可随时再恢复回来。\n\n确定恢复？');
-    if (!ok) return;
-    // 先把当前状态固化进备份（目录备份滚入 .prev.json / 快照环记一份），再应用所选备份
-    (bkDirHandle ? writeBackupNow() : writeSnapNow()).then(function(){
-      state.data = snap.data;
-      syncMirror(snap.data);
-      applyUserStateFrom(snap.userState || {});
-      state.dirty = false; state.moves = [];
-      persistUserState();
-      renderNav(); render();
-      document.getElementById('bkMask').classList.remove('open');
-      if (bkDirHandle){
-        return bkWrite('prompts.json', JSON.stringify(snap.data, null, 2)).then(function(){
-          toast('✓ 已恢复并写入 prompts.json，刷新即见');
-        }).catch(function(){
-          toast('已恢复；写入 prompts.json 失败，请重新授权目录', true);
-        });
-      }
-      markDirty();
-      toast('✓ 已恢复；未授权目录——点「📋 复制变更指令」交给 AI 落盘，或先「💾 授权目录备份」');
+      + '恢复前会先把当前数据自动另存一份新备份，可随时再恢复回来。\n\n确定恢复？', { danger: true, okText: '恢复' }).then(function(ok){
+      if (!ok) return;
+      // 先把当前状态固化进备份（目录备份滚入 .prev.json / 快照环记一份），再应用所选备份
+      (bkDirHandle ? writeBackupNow() : writeSnapNow()).then(function(){
+        state.data = snap.data;
+        syncMirror(snap.data);
+        applyUserStateFrom(snap.userState || {});
+        state.dirty = false; state.moves = [];
+        persistUserState();
+        renderNav(); render();
+        document.getElementById('bkMask').classList.remove('open');
+        if (bkDirHandle){
+          return bkWrite('prompts.json', JSON.stringify(snap.data, null, 2)).then(function(){
+            toast('✓ 已恢复并写入 prompts.json，刷新即见');
+          }).catch(function(){
+            toast('已恢复；写入 prompts.json 失败，请重新授权目录', true);
+          });
+        }
+        markDirty();
+        toast('✓ 已恢复；未授权目录——点「📋 复制变更指令」交给 AI 落盘，或先「💾 授权目录备份」');
+      });
     });
   }
   document.getElementById('bkCancelBtn').addEventListener('click', function(){
