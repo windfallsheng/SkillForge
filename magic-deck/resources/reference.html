@@ -1349,9 +1349,17 @@ themeGrid.addEventListener('click', function(e){
   var sc = themeMask.querySelector('input[name="thScope"]:checked');
   if (sc && sc.value === 'current') setSlideTheme(it.getAttribute('data-theme'));
   else setGlobalTheme(it.getAttribute('data-theme'));
+  saveThemeState();
   renderThemeDots();
   buildThumbs();
 });
+
+/* 主题记忆：全局主题 + 本页主题（按页码索引）序列化到 localStorage，刷新恢复；失败静默 */
+function saveThemeState(){
+  var per = {};
+  slides.forEach(function(s, k){ var t = s.getAttribute('data-theme'); if (t) per[k] = t; });
+  try{ localStorage.setItem('md-deck-theme', JSON.stringify({ global: document.documentElement.getAttribute('data-theme') || 'tech', slides: per })); }catch(e){}
+}
 
 
 /* ── 模板应用（全部/本页/选页；标题自动映射到模板固定位置，内容不丢） ── */
@@ -2528,7 +2536,23 @@ slides.forEach(function(s){
   if (tp && tp !== 'classic') applyTpl(s, tp);
 });
 var themeParam = new URLSearchParams(location.search).get('theme');
-if (['tech','biz','mono','light','warm'].indexOf(themeParam) > -1) setGlobalTheme(themeParam);
+var themeIds = THEMES.map(function(t){ return t[0]; });
+if (themeIds.indexOf(themeParam) > -1) setGlobalTheme(themeParam);
+else { /* 无显式 URL 参数时恢复主题记忆（md-deck-theme JSON：global + slides 页码索引；删页/排序后本页主题可能错位，重新点选即可） */
+  var savedTheme = null; try{ savedTheme = localStorage.getItem('md-deck-theme'); }catch(e){}
+  if (savedTheme){
+    var st = null; try{ st = JSON.parse(savedTheme); }catch(e){}
+    if (st && typeof st === 'object'){
+      if (st.global && themeIds.indexOf(st.global) > -1) setGlobalTheme(st.global);
+      if (st.slides && typeof st.slides === 'object'){
+        Object.keys(st.slides).forEach(function(k){
+          var i = parseInt(k, 10);
+          if (isFinite(i) && slides[i] && themeIds.indexOf(st.slides[k]) > -1) slides[i].setAttribute('data-theme', st.slides[k]);
+        });
+      }
+    }
+  }
+}
 var tplParam = new URLSearchParams(location.search).get('tpl');
 if (tplParam && TPLS.some(function(t){ return t.id === tplParam; })) applyScope(tplParam, 'all', []);
 var sm = location.hash.match(/^#\/(\d+)$/);
