@@ -4,6 +4,13 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
+## 1.0.7 (2026-11-12)
+
+**Docs split into pure Chinese & English mirrors + meta-forge lessons fully codified**
+
+- Docs Chinese/English split: README/docs/CHANGELOG switched from mixed bilingual to pure Chinese + pure English one-to-one mirrors (README.en.md, docs/install.en.md, docs/architecture.en.md, CHANGELOG.en.md — full translation 0.1.0→1.0.6), cross-linked at the top of every document; architecture mechanism table four → eight (CONFIG_VERSION key / user-config extraction / reference dual-track / doc-sync self-check discipline / preserve list / multi-file isolation / infringement-free, desensitized & offline / output reforge upgrades, aligned with the forge-rules numbering); both READMEs drop the outdated "config stays in SKILL.md" wording — config moves out to user-config.md; package.json files gains README.en.md and CHANGELOG.en.md
+- meta-forge lessons fully codified: ① repo registration checklist gains package.json files — the 1.0.5 exam③ lesson (monthly-report/meeting-minutes/quarterly-report missing from the npm package) is now a rule, verified with `npm pack --dry-run` after registration; ② validation ring gains the self-heal double check — static gate A-14 (embedded JS validates the id meta, heals via the path key and writes back, console.warn alert) + runtime test B-5 (break the id meta → reopen heals to a valid v4 + memories recovered via the path key), so mechanism 6's page-level self-healing is now backed by validation; SKILL.md description / flow steps 4-5 / usage-guide / README both languages synced
+
 ## 1.0.6 (2026-11-12)
 
 **meta-forge spec & template alignment: three real-world lessons codified + template modernization**

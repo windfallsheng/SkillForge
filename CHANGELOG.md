@@ -4,6 +4,13 @@
 
 SkillForge（技能锻造坊）npm 包 `skill-forge-hub`（命令名 `skill-forge`）版本变更记录。
 
+## 1.0.7（2026-11-12）
+
+**文档中英分离 + meta-forge 坑教训全量入规**
+
+- 文档中英分离：README/docs/CHANGELOG 由中英混排改为纯中文 + 纯英文一一对应（README.en.md、docs/install.en.md、docs/architecture.en.md、CHANGELOG.en.md，全量英译 0.1.0→1.0.6），每份文档顶部互相链接切换；architecture 机制表四大 → 八大（CONFIG_VERSION 钥匙 / user-config 抽离 / reference 双轨 / 自检纪律 / preserve 保护清单 / 多文件隔离 / 零侵权脱敏离线 / 产物升级回炉，与 forge-rules 编号对齐）；README 两版「配置留在 SKILL.md」旧表述改为配置出站 user-config.md；package.json files 补 README.en.md 与 CHANGELOG.en.md
+- meta-forge 坑教训入规补全：①仓库登记清单补 package.json files——1.0.5 体检③教训（漏 monthly-report/meeting-minutes/quarterly-report 三技能，装包却无技能）正式入规，登记后跑 `npm pack --dry-run` 验证；②验证环补自愈块双检查——静态门禁 A-14（HTML 内嵌 JS 含 id meta 校验 + 路径键自愈回写 + console.warn 报警）+ 运行时实测 B-5（改坏 id meta → 重开自愈为合法 v4 + 记忆经路径键恢复），机制六执行层自愈从此有验证兜底；SKILL.md description/流程第 4-5 步/usage-guide/README 中英文同步
+
 ## 1.0.6（2026-11-12）
 
 **meta-forge 规范与模板对齐：三大实战教训入规 + template 模板现代化**
