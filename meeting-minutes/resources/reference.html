@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="sf-template" content="meeting-minutes@2">
+<meta name="sf-template" content="meeting-minutes@3">
 <meta name="minutes-id" content="REF-MINUTES-0000">
 <title>示例项目 周例会纪要</title>
 <style>
@@ -419,6 +419,9 @@ var SF_NS = 'minutes:' + SF_ID;
   }, { threshold: 0.12 });
   rvs.forEach(function(el){ io2.observe(el); });
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){ rvs.forEach(function(el){ el.classList.add('in'); }); }
+  setTimeout(function(){
+    document.querySelectorAll('.rv:not(.in)').forEach(function(el){ el.classList.add('in'); });
+  }, 2000);
   var secs = document.querySelectorAll('.section');
   secs.forEach(function(s){
     s.addEventListener('mousemove', function(e){

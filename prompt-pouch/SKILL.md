@@ -76,6 +76,10 @@ disable-model-invocation: false
 4. **自证**：Playwright headless（channel="chrome"）→ 起本地服务 → 挂 pageerror 零容忍 → 断言卡片数等于 prompts.json 条数 → 截图 Read 自查
 5. **汇报**：一句话说清问题根因 + 修复了什么 + 附截图；若根因在 reference.html 自身，顺修 reference.html 并在汇报中说明「参考模板已同步修正」
 
+## 产物升级（回炉）
+
+生成/初始化页面时头部写版本戳 `<meta name="sf-template" content="prompt-pouch@2">`（模板升级时递增 @N 并同步 reference.html 与本文档）。用户说「升级旧锦囊/回炉旧页面/旧锦囊换新样式」时：扫 `<DIR>` 下 `prompt-pouch.html` 读版本戳筛出旧版（无版本戳或缺少 `<meta name="pouch-id">` 稳定 ID 的产物视为 v0 最旧版，一并进清单）→ 列清单（文件/旧版本/有无用户数据）→ AskUserQuestion 选全部或部分 → 逐份升级：浅升级（仅 CSS/JS 变化）对旧页替换 `<style>` 块与交互脚本；深升级（DOM 结构变化）从 reference.html 重建，**必须沿用原页 pouch-id meta 值**（IndexedDB 用户数据按 pouch-id 命名空间存取，换 ID = 数据失联，重建后原收藏/分组照旧读回），`<DIR>/<DATA_DIR>/prompts.json` 数据文件一概不动，先备份旧页 `.bak-时间戳` → 报告三段式：✅ 已升级清单 / ⚠️ 手改保留说明 / 🟡 失败项原因。模板改动分级：业务改动（板块/段落/标题体系）、数据格式改动（字段/存储结构）、页面改动（样式/布局/交互）任一发生即模板升级，版本戳 +1 并同步 reference.html 与本文档；纯措辞润色不 bump。每次生成/初始化新锦囊时顺扫 `<DIR>` 读版本戳：发现旧版产物主动告知「技能模板已升级至 vN，检测到 X 份旧版锦囊，说『把我旧锦囊都升级成新样式』即可一键升级」，不让用户背触发语。
+
 ## ⚙️ 配置与自定义主题
 
 **执行本 skill 前必须先 Read 同目录 `user-config.md`**：目录（DIR/DIR_WIN）、端口（PORT）、初始化数据（INIT_DATA）、确认开关（CONFIRM）、主题（THEME）等默认配置都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留。

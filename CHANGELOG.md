@@ -12,6 +12,14 @@ SkillForge（技能锻造坊）npm 包 `skill-forge-hub`（命令名 `skill-forg
 - CLI 与文档：cli.js CATEGORIES 报表汇演收编 monthly-report；README 分类行/技能表/安装命令同步
 - 实测：月度 reference.html headless 渲染四段卡片 + 日历热力图 + 换肤坞全通过；content 截图高度公式实测校准（760 宽基准 ~2020px + 条目增减线性外推），修正旧公式低估截断问题
 
+**纪要系列分组 + article 落盘治理 + ID 唯一性加固 + 体检四修 + 文档双语化**
+
+- 纪要系列分组：meeting-minutes 新增 SERIES_GROUP 三态（auto 自动提取系列名建 meetings/{系列名}/、series 一律系列目录、off 纯月份平铺）；系列名提取规则 + 目录名非法字符清洗 + 改口机制（「这个系列叫 XX」当次改 /「以后这个系列叫 XX」永久记）+ 一次性整理指令（扫全部旧纪要 → 移动计划确认 → 三段式报告，不删空月份目录）；CONFIG_VERSION 1→2
+- article-to-html 落盘治理：截图按篇隔离 文章截图/<标题slug>/C00-封面.png（消掉「章节截图」冗余层，多篇同名不再互相覆盖）；DIR 配置化（DIR: auto + DIR_MAC 默认 ~/articles + DIR_WIN，目录不存在回退用户主目录）；同名不同篇 slug 追加 -2/-3 序号；CONFIG_VERSION 1→2
+- ID 唯一性两条加固：①格式定死——crypto.randomUUID() 标准 UUID v4（8-4-4-4-12 十六进制小写），禁止手写变体/沿用占位与旧值；②落盘前查重——写文件前顺扫落盘目录本技能命名 html 读各 id meta，撞号重掷。三层防线：8 技能 SKILL.md 生成规则 + 9 技能 reference.html「格式自愈块」（meta 非法/缺失时按路径键自愈为合法 v4，同路径跨打开稳定复用，console.warn 显性报警）+ meta-forge forge-rules 机制句与验证环；Playwright 9/9 实测通过
+- 全仓体检四修：①quarterly-report user-config CONFIG_VERSION 1→3（内容已是 v3 形态，版本号漏 bump）；②prompt-pouch 补 sf-template@2 版本戳 + SKILL.md「产物升级（回炉）」节（深升级重建必须沿用原页 pouch-id——IndexedDB 用户数据按 pouch-id 命名空间，换 ID 即数据失联，prompts.json 数据文件一概不动）；③package.json files 补 monthly-report/meeting-minutes/quarterly-report（npm 包此前缺失这三个技能）；④meeting-minutes 补 2s 入场动画兜底 setTimeout（IntersectionObserver 不触发的环境——headless 截图/打印预览——卡片永久隐藏缺陷，与其余报表族对齐）+ 版本戳 @2→@3
+- 文档双语化改造：README 重构为中英双语全量对应 + 新增「产物画廊」（6 张技能成品真实截图，图文并茂）；拆分 docs/install.md（两种安装方式/命令参考/升级与配置保护机制详解）+ docs/architecture.md（目录结构/技能形态/四大机制/拆分规范），全部中英对照
+
 ## 1.0.4（2026-11-11）
 
 **图表 echarts 化 + 数据源通用化 + 升级机制强化**

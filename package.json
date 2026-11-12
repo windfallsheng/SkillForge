@@ -1,7 +1,7 @@
 {
   "name": "skill-forge-hub",
-  "version": "1.0.4",
-  "description": "SkillForge (技能锻造坊) — a curated collection of AI craft skills. Install once, then pick skills interactively: daily/weekly/annual reports, article-to-HTML, magic-deck slides, deck-stage PPTX, prompt-pouch manager, Pandoc doc converters, meta-forge.",
+  "version": "1.0.5",
+  "description": "SkillForge (技能锻造坊) — a curated collection of AI craft skills. Install once, then pick skills interactively: daily/weekly/monthly/quarterly/annual reports, meeting minutes, article-to-HTML, magic-deck slides, deck-stage PPTX, prompt-pouch manager, Pandoc doc converters, meta-forge.",
   "bin": {
     "skill-forge": "cli.js"
   },
@@ -9,8 +9,11 @@
     "cli.js",
     "daily-report",
     "weekly-report",
+    "monthly-report",
+    "quarterly-report",
     "annual-report",
     "article-to-html",
+    "meeting-minutes",
     "magic-deck",
     "deck-stage",
     "spec-doc2spec",
@@ -18,6 +21,7 @@
     "meta-forge",
     "prompt-pouch",
     "template",
+    "docs",
     "README.md",
     "CHANGELOG.md",
     "LICENSE"
@@ -31,6 +35,9 @@
     "daily-report",
     "weekly-report",
     "annual-report",
+    "meeting-minutes",
+    "quarterly-report",
+    "monthly-report",
     "article-to-html",
     "magic-deck",
     "deck-stage",
