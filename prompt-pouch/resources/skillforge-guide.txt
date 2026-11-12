@@ -1,15 +1,15 @@
 # SkillForge 使用指引（技能锻造坊）
 
-SkillForge 是一套个人技能仓库 + 命令行分发器（npm 包 skill-forge-hub，命令 skill-forge）：把 13 个技能打包分发，一条命令装进你的 AI 助手技能目录；升级时配置版本感知，你的本地个性化配置永不丢失。
+SkillForge 是一套个人技能仓库 + 命令行分发器（npm 包 skill-forge-hub，命令 skill-forge）：把 21 个技能打包分发，一条命令装进你的 AI 助手技能目录；升级时配置版本感知，你的本地个性化配置永不丢失。
 
 ## 一、SkillForge 是什么
 
 三个关键词：
-1、技能仓库：13 个技能按「最终产出什么」分六类（报表汇演 / 文档装裱 / 工程提效 / 演示汇演 / 沟通协作 / 技能自造），每个技能都是 SKILL.md 薄入口 + resources/ 分册 + user-config.md 用户配置的规范结构
+1、技能仓库：21 个技能按「最终产出什么」分七类（报表汇演 / 文档装裱 / 工程提效 / 演示汇演 / 数据整备 / 沟通协作 / 技能自造），每个技能都是 SKILL.md 薄入口 + resources/ 分册 + user-config.md 用户配置的规范结构
 2、命令行分发器：npm 包 skill-forge-hub，命令 skill-forge（ls / init / update），自动探测 AI 助手技能目录，交互或非交互安装
 3、配置保护：每个技能的用户配置出站在 user-config.md，升级永不覆盖；配置结构变化时备份 + 三选一，官方新配置另存对照文件供手动合并
 
-技能全景（13 个）：
+技能全景（21 个）：
 
 | 分类 | 技能 | 一句话触发语 |
 |:---|:---|:---|
@@ -18,14 +18,22 @@ SkillForge 是一套个人技能仓库 + 命令行分发器（npm 包 skill-forg
 | 报表汇演 | monthly-report | 「写月报」 |
 | 报表汇演 | quarterly-report | 「写季报」 |
 | 报表汇演 | annual-report | 「写年报」 |
+| 报表汇演 | team-report-collector | 「收日报」 |
 | 文档装裱 | article-to-html | 丢给它一个文档 |
+| 文档装裱 | twin-docs | 「翻译成英文文档」 |
+| 文档装裱 | one-pager | 「做张海报」 |
 | 工程提效 | spec-doc2spec | 「把这个文档转成需求规格」 |
 | 工程提效 | spec-spec2doc | 「把这个规格导出 Word/PDF」 |
+| 工程提效 | release-notes | 「写发版说明」 |
 | 演示汇演 | magic-deck | 「做个 PPT」（HTML 幻灯形态） |
 | 演示汇演 | deck-stage | 「做个 PPT」（.pptx 可编辑形态） |
+| 数据整备 | data-prepper | 「整理这份数据」 |
+| 数据整备 | commit-heatmap | 「生成提交热力图」 |
 | 沟通协作 | meeting-minutes | 「记会议」 |
 | 沟通协作 | prompt-pouch | 「做一个锦囊管理页面」 |
+| 沟通协作 | decision-log | 「记决策」 |
 | 技能自造 | meta-forge | 「帮我创建一个新技能」 |
+| 技能自造 | skill-doctor | 「给技能体检」 |
 
 ## 二、命令速查
 

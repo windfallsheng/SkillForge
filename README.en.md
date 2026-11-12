@@ -49,13 +49,13 @@ Skills are grouped by "what they ultimately produce" — one skill belongs to ex
 
 | Category | Description | Skills |
 |:---|:---|:---|
-| Report showcase | Multi-source data assembly (a paragraph, descriptions in files, images & materials, verbal additions — anything becomes copy) into periodic reports (daily / weekly / monthly / quarterly / annual) | daily-report, weekly-report, monthly-report, quarterly-report, annual-report |
-| Document mounting | Document conversion & beautification: Word / Markdown / plain text → polished HTML + per-chapter screenshots | article-to-html |
-| Engineering efficiency | Pandoc-based document ↔ spec conversion (requirement slicing / spec export to Word·PDF): mechanical Pandoc conversion + AI proofreading against errors | spec-doc2spec, spec-spec2doc |
+| Report showcase | Multi-source data assembly (a paragraph, descriptions in files, images & materials, verbal additions — anything becomes copy) into periodic reports (daily / weekly / monthly / quarterly / annual) and a team daily-report collector | daily-report, weekly-report, monthly-report, quarterly-report, annual-report, team-report-collector |
+| Document mounting | Document conversion & beautification: Word / Markdown / plain text → polished HTML + per-chapter screenshots; Chinese ↔ English twin documents; one-page posters | article-to-html, twin-docs, one-pager |
+| Engineering efficiency | Pandoc-based document ↔ spec conversion (requirement slicing / spec export to Word·PDF): mechanical Pandoc conversion + AI proofreading against errors; release notes & CHANGELOG generation | spec-doc2spec, spec-spec2doc, release-notes |
 | Presentation showcase | From content to presentation: HTML-form magic slides (playback + templates + themes) and .pptx stage decks (natively editable pages + cover captures) | magic-deck, deck-stage |
-| Data preparation | Excel / CSV / charts, data cleaning & template organizing (planned) | (planned) |
-| Communication & collaboration | Meeting minutes (action items with owners and deadlines, the source of the reporting chain) and prompt management (prompt-pouch local console) | meeting-minutes, prompt-pouch |
-| Skill crafting | The meta skill that forges skills themselves (create skills / plugins) | meta-forge |
+| Data preparation | Excel / CSV / JSON cleaning into structured data (transparent cleaning steps, full audit trail, overview report) and git commit heatmaps | data-prepper, commit-heatmap |
+| Communication & collaboration | Meeting minutes (action items with owners and deadlines, the source of the reporting chain), prompt management (prompt-pouch local console) and decision logs | meeting-minutes, prompt-pouch, decision-log |
+| Skill crafting | The meta skill that forges skills themselves (create skills / plugins) and skill health checks | meta-forge, skill-doctor |
 
 ## Skill List
 

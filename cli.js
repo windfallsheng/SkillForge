@@ -20,12 +20,13 @@ const VERSION = require(path.join(PKG_DIR, "package.json")).version;
 
 // 分类映射与 README「技能分类」表一致；新增技能时请同步
 const CATEGORIES = [
-  { name: "报表汇演", en: "Reports", skills: ["daily-report", "weekly-report", "monthly-report", "quarterly-report", "annual-report"] },
-  { name: "文档装裱", en: "Documents", skills: ["article-to-html"] },
-  { name: "工程提效", en: "Engineering", skills: ["spec-doc2spec", "spec-spec2doc"] },
+  { name: "报表汇演", en: "Reports", skills: ["daily-report", "weekly-report", "monthly-report", "quarterly-report", "annual-report", "team-report-collector"] },
+  { name: "文档装裱", en: "Documents", skills: ["article-to-html", "twin-docs", "one-pager"] },
+  { name: "工程提效", en: "Engineering", skills: ["spec-doc2spec", "spec-spec2doc", "release-notes"] },
   { name: "演示汇演", en: "Slides", skills: ["magic-deck", "deck-stage"] },
-  { name: "沟通协作", en: "Communication", skills: ["meeting-minutes", "prompt-pouch"] },
-  { name: "技能自造", en: "Meta", skills: ["meta-forge"] },
+  { name: "数据整备", en: "Data", skills: ["data-prepper", "commit-heatmap"] },
+  { name: "沟通协作", en: "Communication", skills: ["meeting-minutes", "prompt-pouch", "decision-log"] },
+  { name: "技能自造", en: "Meta", skills: ["meta-forge", "skill-doctor"] },
 ];
 
 // 常见 AI 助手的用户级技能目录（宿主中立，init 时自动探测）

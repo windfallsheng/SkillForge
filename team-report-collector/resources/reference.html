@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="sf-template" content="team-report-collector@1">
+<meta name="trc-id" content="REF-TRC-0000">
+<title>示例团队日报收集台</title>
+<style>
+:root, [data-theme="dark"]{
+  --bg:#0a1612; --bg2:#0f1f19;
+  --panel:#123026; --panel2:#173a2f;
+  --text:#e8f6f0; --muted:#8fb3a5;
+  --accent:#34d399; --accent2:#10b981;
+  --border:rgba(52,211,153,.22);
+  --tag-bg:rgba(52,211,153,.1);
+  --risk:#fda4af;
+  --glow:rgba(52,211,153,.28);
+  --input-bg:rgba(15,31,25,.9);
+}
+[data-theme="light"]{
+  --bg:#f6f8f7; --bg2:#eef2f0;
+  --panel:#ffffff; --panel2:#f4f7f6;
+  --text:#1e2a26; --muted:#6b7f78;
+  --accent:#059669; --accent2:#10b981;
+  --border:rgba(5,150,105,.25);
+  --tag-bg:rgba(5,150,105,.08);
+  --risk:#e11d48;
+  --glow:rgba(5,150,105,.15);
+  --input-bg:#fbfdfc;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,system-ui,sans-serif;min-height:100vh;padding:40px 20px;position:relative}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% -10%,var(--glow),transparent 55%)}
+.wrap{width:clamp(320px,90%,760px);margin:0 auto;position:relative;z-index:1}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:24px;margin-bottom:20px;box-shadow:0 6px 24px rgba(0,0,0,.18);transition:transform .2s ease,box-shadow .2s ease;animation:riseIn .5s ease backwards}
+.card:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,0,0,.26)}
+@keyframes riseIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.header-card{animation-delay:0s}
+.form-card{animation-delay:.13s}
+.list-card{animation-delay:.26s}
+.header-card{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px}
+.header-card h1{font-size:22px;letter-spacing:.5px;color:var(--accent);text-shadow:0 0 16px var(--glow)}
+.badges{display:flex;gap:8px;flex-wrap:wrap}
+.badge{font-size:11.5px;color:var(--muted);background:var(--tag-bg);border:1px solid var(--border);border-radius:20px;padding:4px 12px}
+.stats{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px;width:100%}
+.stat{font-size:12px;color:var(--muted)}
+.stat b{color:var(--accent);font-size:18px;margin-right:4px}
+.theme-btn{position:fixed;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--panel2);color:var(--accent);font-size:15px;cursor:pointer;z-index:9;transition:transform .2s ease}
+.theme-btn:hover{transform:rotate(20deg) scale(1.1)}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font-size:12px;color:var(--muted)}
+.field input,.field textarea{background:var(--input-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:9px 12px;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s ease}
+.field input:focus,.field textarea:focus{border-color:var(--accent)}
+.field textarea{min-height:56px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#04241a;border:none;border-radius:6px;padding:10px 22px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:transform .15s ease,box-shadow .2s ease;box-shadow:0 0 18px var(--glow)}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--border);box-shadow:none}
+.toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.day-group{margin-bottom:18px}
+.day-title{font-size:13px;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.day-title::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.item{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:10px;transition:background .2s ease}
+.item:hover{background:var(--tag-bg)}
+.item .who{font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px}
+.item .line{font-size:13px;line-height:1.7;color:var(--text);margin-bottom:3px}
+.item .line span{color:var(--muted);font-size:12px;margin-right:6px}
+.item .line.risk{color:var(--risk)}
+.empty{color:var(--muted);font-size:13px;text-align:center;padding:28px 0}
+footer{text-align:center;color:var(--muted);font-size:10px;margin-top:26px}
+@media (max-width:680px){body{padding:24px 12px}.row2{grid-template-columns:1fr}.header-card h1{font-size:18px}}
+html[data-shot] .card{animation:none!important}
+@media print{.theme-btn,.btn{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card header-card">
+    <h1>示例团队日报收集台</h1>
+    <div class="badges">
+      <span class="badge">📅 <span id="d-badge">2026-11-12</span></span>
+      <span class="badge" id="t-badge">dark</span>
+    </div>
+    <div class="stats">
+      <span class="stat"><b id="s-members">2</b>成员</span>
+      <span class="stat"><b id="s-reports">2</b>日报</span>
+      <span class="stat"><b id="s-risks">1</b>风险</span>
+    </div>
+  </div>
+  <div class="card form-card">
+    <div class="row2">
+      <div class="field"><label>成员姓名</label><input id="f-name" placeholder="张工"></div>
+      <div class="field"><label>日期</label><input id="f-date" type="date"></div>
+    </div>
+    <div class="field"><label>今日进展</label><textarea id="f-progress" placeholder="完成了什么"></textarea></div>
+    <div class="field"><label>明日计划</label><textarea id="f-plan" placeholder="准备做什么"></textarea></div>
+    <div class="field"><label>风险阻塞</label><textarea id="f-risk" placeholder="无则留空"></textarea></div>
+    <div style="display:flex;gap:10px">
+      <button class="btn" id="save-btn">保存日报</button>
+      <button class="btn ghost" id="clear-btn">清空表单</button>
+    </div>
+  </div>
+  <div class="card list-card">
+    <div class="toolbar">
+      <button class="btn ghost" id="export-btn">导出 JSON</button>
+      <button class="btn ghost" id="import-btn">导入 JSON</button>
+      <input type="file" id="import-file" accept=".json" style="display:none">
+    </div>
+    <div id="list"></div>
+  </div>
+  <footer>GENERATED BY AI TEAM · 2026-11</footer>
+</div>
+<button class="theme-btn" id="theme-btn" title="切换主题">◐</button>
+<script>
+window.TRC_DATA = [
+  {"name":"张工","date":"2026-11-12","progress":"完成登录模块接口联调","plan":"补单元测试并提测","risk":"测试环境不稳定"},
+  {"name":"李工","date":"2026-11-12","progress":"日报模块前端页面初稿","plan":"接入接口与交互细节","risk":""}
+];
+(function(){
+  var KEY = 'sf-heal:' + location.pathname;
+  var m = document.querySelector('meta[name="trc-id"]');
+  var ok = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(m ? m.content : '');
+  var ID;
+  if (ok) { ID = m.content; }
+  else {
+    var v = localStorage.getItem(KEY);
+    if (!v) { v = crypto.randomUUID(); localStorage.setItem(KEY, v); }
+    ID = v;
+    m.setAttribute('content', v);
+    console.warn('[trc] 非法 id meta 已自愈为 ' + v);
+  }
+  var REPORTS_KEY = 'trc:' + ID + '-reports';
+  var THEME_KEY = 'trc:' + ID + '-theme';
+  var seed = window.TRC_DATA || [];
+  var saved = localStorage.getItem(REPORTS_KEY);
+  var reports = saved ? JSON.parse(saved) : seed;
+
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function today(){ var d = new Date(); var p = function(n){ return n < 10 ? '0' + n : n; }; return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate()); }
+  function persist(){ localStorage.setItem(REPORTS_KEY, JSON.stringify(reports)); }
+  function render(){
+    var groups = {};
+    reports.forEach(function(r){
+      (groups[r.date] = groups[r.date] || []).push(r);
+    });
+    var dates = Object.keys(groups).sort().reverse();
+    var html = '';
+    if (!dates.length) { html = '<div class="empty">暂无日报，填写左侧表单开始收集</div>'; }
+    dates.forEach(function(d){
+      html += '<div class="day-group"><div class="day-title">' + esc(d) + ' · ' + groups[d].length + ' 人已报</div>';
+      groups[d].forEach(function(r){
+        html += '<div class="item"><div class="who">' + esc(r.name) + '</div>';
+        if (r.progress) html += '<div class="line"><span>进展</span>' + esc(r.progress) + '</div>';
+        if (r.plan) html += '<div class="line"><span>计划</span>' + esc(r.plan) + '</div>';
+        if (r.risk) html += '<div class="line risk"><span>风险</span>' + esc(r.risk) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+    });
+    document.getElementById('list').innerHTML = html;
+    var names = {}; var risks = 0;
+    reports.forEach(function(r){ names[r.name] = 1; if (r.risk) risks++; });
+    document.getElementById('s-members').textContent = Object.keys(names).length;
+    document.getElementById('s-reports').textContent = reports.length;
+    document.getElementById('s-risks').textContent = risks;
+  }
+  document.getElementById('save-btn').addEventListener('click', function(){
+    var name = document.getElementById('f-name').value.trim();
+    var date = document.getElementById('f-date').value || today();
+    var progress = document.getElementById('f-progress').value.trim();
+    var plan = document.getElementById('f-plan').value.trim();
+    var risk = document.getElementById('f-risk').value.trim();
+    if (!name) { alert('请填写成员姓名'); return; }
+    if (!progress && !plan && !risk) { alert('进展/计划/风险至少填一项'); return; }
+    var ex = reports.filter(function(r){ return r.name === name && r.date === date; })[0];
+    if (ex) {
+      if (progress) ex.progress = ex.progress ? ex.progress + '；' + progress : progress;
+      if (plan) ex.plan = ex.plan ? ex.plan + '；' + plan : plan;
+      if (risk) ex.risk = ex.risk ? ex.risk + '；' + risk : risk;
+    } else {
+      reports.push({name:name, date:date, progress:progress, plan:plan, risk:risk});
+    }
+    persist(); render();
+    ['f-name','f-progress','f-plan','f-risk'].forEach(function(id){ document.getElementById(id).value = ''; });
+    document.getElementById('f-date').value = today();
+  });
+  document.getElementById('clear-btn').addEventListener('click', function(){
+    ['f-name','f-progress','f-plan','f-risk'].forEach(function(id){ document.getElementById(id).value = ''; });
+  });
+  document.getElementById('export-btn').addEventListener('click', function(){
+    var blob = new Blob([JSON.stringify(reports, null, 2)], {type:'application/json'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'reports.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+  document.getElementById('import-btn').addEventListener('click', function(){
+    document.getElementById('import-file').click();
+  });
+  document.getElementById('import-file').addEventListener('change', function(ev){
+    var f = ev.target.files[0];
+    if (!f) return;
+    var rd = new FileReader();
+    rd.onload = function(){
+      try {
+        var arr = JSON.parse(rd.result);
+        if (!Array.isArray(arr)) throw new Error('not array');
+        arr.forEach(function(r){ reports.push(r); });
+        persist(); render();
+      } catch(e) { alert('导入失败：不是合法的 reports.json 数组'); }
+    };
+    rd.readAsText(f);
+  });
+  var THEME_KEY_VAL = localStorage.getItem(THEME_KEY);
+  if (THEME_KEY_VAL) document.documentElement.setAttribute('data-theme', THEME_KEY_VAL);
+  document.getElementById('t-badge').textContent = document.documentElement.getAttribute('data-theme');
+  document.getElementById('theme-btn').addEventListener('click', function(){
+    var cur = document.documentElement.getAttribute('data-theme');
+    var next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem(THEME_KEY, next);
+    document.getElementById('t-badge').textContent = next;
+  });
+  document.getElementById('d-badge').textContent = '2026-11-12';
+  if (location.search.indexOf('shot') !== -1) {
+    document.documentElement.setAttribute('data-shot', '1');
+    document.querySelectorAll('.card').forEach(function(c){ c.style.opacity = '1'; c.style.transform = 'none'; });
+    document.querySelector('.header-card').style.display = 'none';
+    document.querySelector('.toolbar').style.display = 'none';
+    document.getElementById('theme-btn').style.display = 'none';
+    document.body.style.padding = '40px';
+  }
+  render();
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'none'; io.unobserve(e.target); } });
+    }, {threshold:.1});
+    document.querySelectorAll('.card').forEach(function(c){ io.observe(c); });
+    setTimeout(function(){ document.querySelectorAll('.card').forEach(function(c){ c.style.opacity = '1'; c.style.transform = 'none'; }); }, 2000);
+  }
+})();
+</script>
+</body>
+</html>

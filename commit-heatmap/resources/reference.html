@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="github">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="sf-template" content="commit-heatmap@1">
+<meta name="heat-id" content="REF-HEAT-0000">
+<title>提交热力图 · 示例项目</title>
+<style>
+:root, [data-theme="github"]{
+  --bg:#f6f8fa; --panel:#ffffff;
+  --text:#1f2328; --muted:#656d76;
+  --border:#d0d7de;
+  --cell-0:#ebedf0; --cell-1:#9be9a8; --cell-2:#40c463; --cell-3:#30a14e; --cell-4:#216e39;
+  --accent:#1f883d;
+  --today-ring:#0969da;
+}
+[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22;
+  --text:#e6edf3; --muted:#8b949e;
+  --border:#30363d;
+  --cell-0:#161b22; --cell-1:#0e4429; --cell-2:#006d32; --cell-3:#26a641; --cell-4:#39d353;
+  --accent:#3fb950;
+  --today-ring:#58a6ff;
+}
+[data-theme="amber"]{
+  --bg:#1c1208; --panel:#281a0c;
+  --text:#f5e9d6; --muted:#b39b7c;
+  --border:#4a3620;
+  --cell-0:#241708; --cell-1:#6b3d14; --cell-2:#9c5a1a; --cell-3:#d08028; --cell-4:#f0a648;
+  --accent:#f0a648;
+  --today-ring:#ffd28a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:system-ui,'Segoe UI',Roboto,sans-serif;min-height:100vh;padding:40px 20px}
+.mono{font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,monospace}
+.wrap{width:clamp(320px,92%,1100px);margin:0 auto}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:24px;margin-bottom:20px;box-shadow:0 4px 16px rgba(0,0,0,.08);animation:riseIn .5s ease backwards}
+@keyframes riseIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.header-card{animation-delay:0s}
+.stats-card{animation-delay:.13s}
+.heat-card{animation-delay:.26s}
+.header-card{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:10px}
+.header-card h1{font-size:22px;color:var(--text)}
+.range{font-size:12px;color:var(--muted)}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;padding:0}
+.stat{text-align:left}
+.stat .num{font-size:26px;font-weight:700;color:var(--accent)}
+.stat .lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.heat-card{overflow:hidden}
+.legend{display:flex;align-items:center;gap:6px;justify-content:flex-end;margin-bottom:12px;font-size:11px;color:var(--muted)}
+.legend .sw{width:11px;height:11px;border-radius:2px;display:inline-block}
+.grid-scroll{overflow-x:auto;padding-bottom:8px}
+.grid-wrap{display:inline-block;position:relative}
+.months{display:flex;gap:3px;margin-left:28px;margin-bottom:4px;font-size:10px;color:var(--muted)}
+.months span{width:48px;flex:none}
+.rows{display:flex;gap:3px}
+.weekdays{display:flex;flex-direction:column;gap:3px;margin-right:5px}
+.weekdays span{width:18px;height:11px;font-size:9px;color:var(--muted);line-height:11px;text-align:right}
+.grid{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,11px);gap:3px}
+.cell{width:11px;height:11px;border-radius:2px;background:var(--cell-0);transition:transform .12s ease}
+.cell:hover{transform:scale(1.35);outline:1px solid var(--border)}
+.cell.l1{background:var(--cell-1)}
+.cell.l2{background:var(--cell-2)}
+.cell.l3{background:var(--cell-3)}
+.cell.l4{background:var(--cell-4)}
+.cell.today{outline:1.5px solid var(--today-ring);outline-offset:0}
+.theme-dock{position:fixed;right:14px;bottom:14px;display:flex;gap:8px;background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:7px 10px;z-index:9}
+.th-dot{width:16px;height:16px;border-radius:50%;cursor:pointer;border:1.5px solid transparent;transition:transform .15s ease}
+.th-dot:hover{transform:scale(1.2)}
+.th-dot[data-t="github"]{background:#40c463}
+.th-dot[data-t="dark"]{background:#39d353}
+.th-dot[data-t="amber"]{background:#f0a648}
+.th-dot.on{border-color:var(--today-ring)}
+footer{text-align:center;color:var(--muted);font-size:10px;margin-top:26px}
+html[data-shot] .card{animation:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card header-card">
+    <h1>提交热力图 · 示例项目</h1>
+    <span class="range mono">2025-11-13 至 2026-11-12</span>
+  </div>
+  <div class="card stats-card" style="padding:0;border:none;background:transparent;box-shadow:none">
+    <div class="stats-row">
+      <div class="card stat"><div class="num mono" id="st-total">486</div><div class="lbl">总提交数</div></div>
+      <div class="card stat"><div class="num mono" id="st-streak">12 天</div><div class="lbl">最长连续提交</div></div>
+      <div class="card stat"><div class="num mono" id="st-active">62%</div><div class="lbl">活跃日占比</div></div>
+      <div class="card stat"><div class="num mono" id="st-top">-</div><div class="lbl">最活跃日</div></div>
+    </div>
+  </div>
+  <div class="card heat-card">
+    <div class="legend">
+      <span>少</span>
+      <span class="sw" style="background:var(--cell-0)"></span>
+      <span class="sw" style="background:var(--cell-1)"></span>
+      <span class="sw" style="background:var(--cell-2)"></span>
+      <span class="sw" style="background:var(--cell-3)"></span>
+      <span class="sw" style="background:var(--cell-4)"></span>
+      <span>多</span>
+    </div>
+    <div class="grid-scroll">
+      <div class="grid-wrap">
+        <div class="months" id="months"></div>
+        <div class="rows">
+          <div class="weekdays"><span></span><span>一</span><span></span><span>三</span><span></span><span>五</span><span></span></div>
+          <div class="grid" id="grid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>GENERATED BY AI TEAM · 2026-11</footer>
+</div>
+<div class="theme-dock" id="dock">
+  <span class="th-dot on" data-t="github" title="经典绿"></span>
+  <span class="th-dot" data-t="dark" title="深夜绿"></span>
+  <span class="th-dot" data-t="amber" title="琥珀金"></span>
+</div>
+<script>
+window.HEAT_DATA = {"2026-11-05":9,"2026-11-06":4,"2026-11-07":2,"2026-11-08":7,"2026-11-09":1,"2026-11-10":5,"2026-11-11":3,"2026-11-12":2};
+window.HEAT_STATS = {total:486, streak:12, active:"62%", topDay:"2026-11-05", topCount:9};
+(function(){
+  var KEY = 'sf-heal:' + location.pathname;
+  var m = document.querySelector('meta[name="heat-id"]');
+  var ok = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(m ? m.content : '');
+  var ID;
+  if (ok) { ID = m.content; }
+  else {
+    var v = localStorage.getItem(KEY);
+    if (!v) { v = crypto.randomUUID(); localStorage.setItem(KEY, v); }
+    ID = v;
+    m.setAttribute('content', v);
+    console.warn('[heat] 非法 id meta 已自愈为 ' + v);
+  }
+  var THEME_KEY = 'heat:' + ID + '-theme';
+  var savedTheme = localStorage.getItem(THEME_KEY);
+  if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+  var cur = document.documentElement.getAttribute('data-theme');
+  document.querySelectorAll('.th-dot').forEach(function(d){ d.classList.toggle('on', d.getAttribute('data-t') === cur); });
+  document.querySelectorAll('.th-dot').forEach(function(d){
+    d.addEventListener('click', function(){
+      var t = d.getAttribute('data-t');
+      document.documentElement.setAttribute('data-theme', t);
+      localStorage.setItem(THEME_KEY, t);
+      document.querySelectorAll('.th-dot').forEach(function(x){ x.classList.toggle('on', x === d); });
+    });
+  });
+
+  var DATA = window.HEAT_DATA || {};
+  var STATS = window.HEAT_STATS || {total:0,streak:0,active:'0%',topDay:'-',topCount:0};
+  var rangeEl = document.querySelector('.range');
+  var start = null, end = null;
+  Object.keys(DATA).forEach(function(d){
+    if (!start || d < start) start = d;
+    if (!end || d > end) end = d;
+  });
+  var todayStr = (function(){
+    var d = new Date(); var p = function(n){ return n < 10 ? '0' + n : n; };
+    return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate());
+  })();
+  if (!end) end = todayStr;
+  function addDays(s, n){
+    var d = new Date(s + 'T00:00:00'); d.setDate(d.getDate() + n);
+    var p = function(x){ return x < 10 ? '0' + x : x; };
+    return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate());
+  }
+  function dayOfWeek(s){ return new Date(s + 'T00:00:00').getDay(); }
+  var first = start || addDays(todayStr, -364);
+  var dow = dayOfWeek(first);
+  var gridStart = addDays(first, -dow);
+  var cells = [];
+  var d = gridStart, months = {};
+  var idx = 0;
+  while (d <= todayStr) {
+    cells.push(d);
+    var mon = d.slice(0, 7);
+    if (!(mon in months)) months[mon] = idx;
+    d = addDays(d, 1); idx++;
+  }
+  var cols = Math.ceil(cells.length / 7);
+  var gridEl = document.getElementById('grid');
+  gridEl.style.gridTemplateColumns = 'repeat(' + cols + ',11px)';
+  var cellMap = {};
+  cells.forEach(function(c){
+    var n = DATA[c] || 0;
+    var cls = 'cell';
+    if (n > 0) cls += n >= 4 ? ' l4' : n === 3 ? ' l3' : n === 2 ? ' l2' : ' l1';
+    if (c === todayStr) cls += ' today';
+    var el = document.createElement('div');
+    el.className = cls;
+    el.title = c + ' · ' + n + ' 次提交';
+    gridEl.appendChild(el);
+  });
+  var mEl = document.getElementById('months');
+  Object.keys(months).sort().forEach(function(mon, i, arr){
+    var startIdx = months[mon];
+    var endIdx = (i + 1 < arr.length) ? months[arr[i+1]] : cells.length;
+    var span = endIdx - startIdx;
+    var el = document.createElement('span');
+    el.style.width = (span * 14 - 3) + 'px';
+    el.textContent = Number(mon.slice(5)) + '月';
+    mEl.appendChild(el);
+  });
+  if (rangeEl) rangeEl.textContent = first + ' 至 ' + todayStr;
+  if (STATS.total !== undefined) document.getElementById('st-total').textContent = STATS.total;
+  if (STATS.streak !== undefined) document.getElementById('st-streak').textContent = STATS.streak + ' 天';
+  if (STATS.active !== undefined) document.getElementById('st-active').textContent = STATS.active;
+  if (STATS.topDay) document.getElementById('st-top').textContent = STATS.topDay + ' · ' + STATS.topCount + ' 次';
+
+  if (location.search.indexOf('shot') !== -1) {
+    document.documentElement.setAttribute('data-shot', '1');
+    document.querySelectorAll('.card').forEach(function(c){ c.style.opacity = '1'; c.style.transform = 'none'; });
+    document.querySelector('.header-card').style.display = 'none';
+    document.getElementById('dock').style.display = 'none';
+    document.body.style.padding = '40px';
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'none'; io.unobserve(e.target); } });
+    }, {threshold:.1});
+    document.querySelectorAll('.card').forEach(function(c){ io.observe(c); });
+    setTimeout(function(){ document.querySelectorAll('.card').forEach(function(c){ c.style.opacity = '1'; c.style.transform = 'none'; }); }, 2000);
+  }
+})();
+</script>
+</body>
+</html>

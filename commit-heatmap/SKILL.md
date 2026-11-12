@@ -1,0 +1,70 @@
+---
+name: commit-heatmap
+description: 把 git 仓库近一年提交聚合为 GitHub 风格提交热力图 HTML 页面（53 周×7 天格子、颜色深浅按提交数分档、悬停显示日期与次数、总提交数/最长连续提交天数统计），离线零依赖、主题可切换。当用户请求提交热力图、commit heatmap、代码活跃度、提交日历、年度代码贡献图时使用。
+allowed-tools: Bash, Read, Write
+disable-model-invocation: false
+---
+
+# 提交热力图（commit-heatmap）
+
+把冷冰冰的 git log 变成一张可视的代码活跃度图：聚合近一年提交 → 按日计数 → 热力图 HTML（GitHub 风格格子 + 统计卡）落盘。
+
+## 生成流程
+
+0. **读用户配置**（REPO/DAYS/DIR/OPEN_HTML/THEME/EXCLUDE）→ 先 Read 同目录 `user-config.md`
+1. **收集数据**（git log 聚合按日计数）→ 读 `resources/collect.md`
+2. **生成 HTML**（先 Read reference.html 骨架替换数据）→ 读 `resources/generate.md` 与 `resources/html-rules.md` 两份
+2.5 **交付前自检**（硬门禁不可跳过）：HTML 文件写好后——
+   - 挂 pageerror 监听用 Chrome headless 访问页面（零容忍报错）→ 截全页 PNG Read 自查：标题卡、统计卡、热力图格子全渲染、无溢出、无豆腐块缺字
+   - 任何报错或视觉问题：修 HTML → 重检；全绿才进第 3 步
+3. **使用咨询**（用户只问「热力图怎么用」等用法、未要求生成）→ 读 `resources/usage-guide.md`，将其内容原样输出（首行标题改为「提交热力图使用指南」），不收集提交、不落盘、不开浏览器
+
+## ⚙️ 配置与自定义
+
+**执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（REPO/DAYS/DIR/OPEN_HTML/THEME/EXCLUDE）都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留；官方更新配置时另存 `user-config.md.upstream` 对照文件，可按需手动合并新配置点。
+
+- **THEME**：页面主题，github 经典绿（默认）/ dark 深夜绿 / amber 琥珀金；生成时写 `<html data-theme="THEME值">` 定默认，页面右下角换肤坞随点随换（localStorage 记忆，键按页内嵌唯一 ID 隔离、多份产物互不串台、改名/移动目录记忆不丢；生成时头部写 `<meta name="heat-id" content="<UUID>">`，每次 crypto.randomUUID() 生成标准 UUID v4（8-4-4-4-12 十六进制，禁止手写变体、禁止沿用占位与旧值）；落盘写文件前顺扫落盘目录下本技能命名的 html，读各文件 id meta 查重，撞号重掷至不重复）
+
+## 配置版本机制（升级保护）
+
+本 skill 当前配置版本为 `1`（对应 user-config.md 中的 `CONFIG_VERSION`）。执行时若发现 user-config.md 的 CONFIG_VERSION 与本节声明不一致：
+
+1. 先将旧 user-config.md 备份为 `user-config.md.bak-<时间戳>`（同目录，绝不删除旧值）
+2. 按本节「配置升级规则」迁移字段：新增字段补默认值、改名字段按映射改写、删除字段的值保留在备份中并在对话提示用户手动确认
+3. 更新 CONFIG_VERSION 为当前版本
+4. 对话中明确告知用户「检测到配置版本从 X 升级到 Y，旧配置已备份至 <路径>」
+
+升级本 skill 时，配置结构如有变化必须同步更新本节的当前版本号与迁移说明；禁止在未声明版本变更的情况下静默修改配置语义。
+## 文档同步自检纪律（维护者必读）
+
+修改本 skill 任一文件（SKILL.md / user-config.md / resources/*）后，必须 grep 全文核对相关关键词在各文件间一致（字段名 / 流程节点 / 模板名改名时新旧词全仓核对，旧词零残留才算完成）。
+## 🔧 报修处理流程（用户报页面问题时）
+
+用户说「这个页面效果不对 / 布局乱了 / 有 UI 问题 / 样式错了 / 交互坏了」（常附截图或指出具体现象）→ 按以下流程处理，不以「重新生成一份」敷衍：
+
+1. **立标准**：先 Read 本 skill 目录 `resources/reference.html`——它就是设计标准答案（布局/配色/交互全在代码里）
+2. **找问题**：Read 用户那份问题 html 文件，与 reference 逐处比对（结构顺序 / CSS 变量 / 关键类名 / 交互 JS），定位跑偏处；用户给了截图则按截图现象反查
+3. **修复**：以 reference 为准修复那份 html（只修跑偏处，不动正确内容；reference 与 html 不一致时以 reference 为准）
+4. **自证**：Chrome headless 访问修复后页面截全页 PNG，Read 自查修复点恢复标准效果
+5. **汇报**：一句话说清问题根因 + 修复了什么 + 附截图；若根因在 reference.html 自身，顺修 reference.html 对应处并在汇报中说明「参考模板已同步修正」
+
+
+## 产物升级（回炉）
+
+生成 HTML 时头部写版本戳 `<meta name="sf-template" content="commit-heatmap@1">`（模板升级时递增 @N 并同步 reference.html 与本文档）。用户说「升级旧热力图/回炉」时：扫落盘目录读版本戳筛旧版（无版本戳或缺少 `<meta name="heat-id">` 稳定 ID 的产物视为 v0 最旧版，一并进清单）→ 列清单（文件/旧版本）→ AskUserQuestion 选全部或部分 → 逐份升级：浅升级（仅 CSS/JS 变化）对旧页替换 `<style>` 块与交互脚本、正文原样保留；深升级（DOM 结构变化）重新跑 git 收集按当前 reference.html 重建，先备份旧版 `.bak-时间戳`，重建必须沿用原页 heat-id meta 值（换 ID = 主题记忆失联）→ 报告三段式：✅ 已升级清单 / ⚠️ 手改保留说明 / 🟡 失败项原因。模板改动分级：业务改动、数据格式改动、页面改动任一发生即模板升级，版本戳 +1 并同步 reference.html 与本文档；纯措辞润色不 bump。每次生成 HTML 时顺扫落盘目录读版本戳：发现旧版产物主动告知用户「说『把我旧热力图都升级成新样式』即可一键升级」。
+
+## 规则速览
+
+- 计数口径：单仓库按提交者邮箱（默认）或姓名聚合；合并提交按 --no-merges 排除（需含时用户说明）；时区按仓库本地 git 配置
+- 数据零编造：热力图格子只画 git 统计出的真实数字；EXCLUDE 名单（邮箱/路径）过滤的提交如实排除并备注
+- 离线零依赖：页面禁止 CDN/@import/外链资源，纯 HTML/CSS/JS 渲染格子，双击可开
+- 落盘完成后对话必须报告落盘位置：完整路径，并注明 html 是否已在浏览器打开
+
+---
+
+## 🔍 SkillForge 使用指引（整体咨询时触发）
+
+当用户询问 **SkillForge 本身**（不是单个技能用法）——「skillforge 怎么用 / 使用说明 / 使用指引 / 是什么」「技能怎么安装 / 怎么升级 / 装了哪些技能 / 技能清单」「skill-forge ls / init / update 等命令怎么用」「技能安装器 / 技能锻造坊」等（中英文、近似说法均可，关键词可自由扩展）：
+1. Read 同目录 `resources/skillforge-guide.txt` 全文，按其内容整理回答（命令与参数以 txt 为准，勿自行编造）
+2. 用系统命令打开同目录 `resources/skillforge-guide.html`（macOS `open`，Windows `start`），让用户在浏览器看排版版
+3. 用户只问单个技能怎么用时（如「日报怎么用」）不触发本指引，走本技能的使用说明
