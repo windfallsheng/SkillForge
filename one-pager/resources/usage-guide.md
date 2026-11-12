@@ -12,7 +12,7 @@
 
 ## 可改配置（user-config.md）
 
-- `THEME`：deepblue 深蓝 / gold 暖金 / mint 薄荷
+- `THEME`：tech 深蓝科技 / biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变
 - `ASPECT`：截图纵横比（3:4 竖版 / 1:1 方版 / 16:9 横版）
 - `SHOT`：是否顺带截 PNG
 - `DIR`：落盘目录（默认 posters/）

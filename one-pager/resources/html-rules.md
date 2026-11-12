@@ -1,14 +1,15 @@
 > ⛔ **Reference 铁律（最高优先）**：本目录 `reference.html` 是定稿样式源码。生成 HTML 时必须先 Read `resources/reference.html` 与本文件两份，以 reference.html 为骨架模板逐处替换数据（标题/金句/要点 li/页脚注/poster-id UUID），本文件的描述是参数解释、变体规则与禁止项；两者冲突时**以 reference.html 为准**。修改本 skill 的 HTML 效果时，必须同步更新 `resources/reference.html` 与本文档的对应描述，禁止只改一处。
 
-# 海报 HTML 版式（一屏三主题）
+# 海报 HTML 版式（一屏五主题 + 科技感背景层）
 
 ## 版式总览
 
 - 一屏海报：`.stage` 纵向 flex 满视口（100svh）内排布标题区/金句区/要点区/页脚，内容多时自动缩放字号（JS 按内容高度收缩，禁止滚动出第二屏）；页面 body 不产生滚动条（overflow hidden）
-- 三主题：deepblue 深蓝（默认，深蓝底 + 青蓝渐变标题）/ gold 暖金（暖黑底 + 金渐变标题）/ mint 薄荷（深绿底 + 薄荷渐变标题）；`html[data-theme]` 运行时切换；右下角换肤坞三点随点随换、localStorage 记忆（键 `poster:<ID>-theme`，ID = 页内嵌 poster-id meta，多份产物互不串台、改名/移动目录记忆不丢）
+- 五主题：tech 深蓝科技（默认）/ biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变，色值与 daily-report 同一套 12 核心契约；`html[data-theme]` 运行时切换；右下角换肤坞五色点随点随换、localStorage 记忆（键 `poster:<ID>-theme`，ID = 页内嵌 poster-id meta，多份产物互不串台、改名/移动目录记忆不丢）；旧版三主题值不在五主题列表，启动时自动回落 tech
+- 科技感背景层四件套（与日报/周报同款）：SVG 微噪点（opacity .04，mono 退隐）+ 60px 网格底纹 + 星点（biz/light/warm 退隐 .28、mono 灰白化）+ 全屏扫描线与循环光带；内容版心 .stage-inner max-width 60%（与其它页面版心同宽）
 - 字体全用系统本地字体栈（system-ui + ui-monospace/'SF Mono'/Menlo/Consolas，品牌字体 PingFang/YaHei/apple-system 零出现），禁止 CDN、@import、外链 CSS/JS/图片/网络字体——页面离线双击可开
 - 多文件隔离（必植）：头部写 `<meta name="poster-id" content="<UUID>">`（crypto.randomUUID() 标准 UUID v4）；localStorage 键一律 `poster:<ID>-xxx`，禁止裸通用键名；页面 JS 启动时校验 id meta——非法或缺失（占位残留/手写变体/误沿用旧值）时按路径键（`'sf-heal:' + location.pathname`）自愈为 crypto.randomUUID() 标准 v4 并回写 meta，console.warn 显性报警；路径键持久化保证同文件跨打开稳定复用；合法 UUID 原样放行
-- 版本戳：`<meta name="sf-template" content="one-pager@1">`（模板升级递增 @N）
+- 版本戳：`<meta name="sf-template" content="one-pager@2">`（模板升级递增 @N）
 - 视觉层次：大标题 40-56px 渐变字（linear-gradient 背景裁切文字）+ 装饰分隔线（渐变短横线）；金句区斜体 18-22px + 左右引号装饰；要点块 3-5 条各带序号圆点（渐变球）+ 每条一行短句；页脚 10px muted
 - 入场动画：标题/金句/要点错峰上浮淡入；fill-mode 必须用 backwards 严禁 both；IntersectionObserver + 2s 兜底 setTimeout 强制全显（headless 截图 / 打印预览环境内容不得永久隐藏）
 - ?shot 截图模式：页面 JS 检测 location.search 含 shot 时给 html 挂 data-shot 属性（CSS 关闭入场动画直接终态，headless 虚拟时间下动画帧不推进会停在初始帧导致截图空白）、强制全部内容 opacity 1、隐藏换肤坞，body padding 归零，输出纯海报画面

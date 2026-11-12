@@ -24,7 +24,7 @@ disable-model-invocation: false
 
 **执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（THEME/DIR/OPEN_HTML/SHOT/ASPECT）都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留；官方更新配置时另存 `user-config.md.upstream` 对照文件，可按需手动合并新配置点。
 
-- **THEME**：海报主题，deepblue 深蓝（默认）/ gold 暖金 / mint 薄荷；生成时写 `<html data-theme="THEME值">` 定默认，页面右下角换肤坞随点随换（localStorage 记忆，键按页内嵌唯一 ID 隔离、多份产物互不串台、改名/移动目录记忆不丢；生成时头部写 `<meta name="poster-id" content="<UUID>">`，每次 crypto.randomUUID() 生成标准 UUID v4（8-4-4-4-12 十六进制，禁止手写变体、禁止沿用占位与旧值）；落盘写文件前顺扫落盘目录下本技能命名的 html，读各文件 id meta 查重，撞号重掷至不重复）
+- **THEME**：海报主题，tech 深蓝科技（默认）/ biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变；生成时写 `<html data-theme="THEME值">` 定默认，页面右下角换肤坞随点随换（localStorage 记忆，键按页内嵌唯一 ID 隔离、多份产物互不串台、改名/移动目录记忆不丢；生成时头部写 `<meta name="poster-id" content="<UUID>">`，每次 crypto.randomUUID() 生成标准 UUID v4（8-4-4-4-12 十六进制，禁止手写变体、禁止沿用占位与旧值）；落盘写文件前顺扫落盘目录下本技能命名的 html，读各文件 id meta 查重，撞号重掷至不重复）
 
 ## 配置版本机制（升级保护）
 
@@ -52,7 +52,7 @@ disable-model-invocation: false
 
 ## 产物升级（回炉）
 
-生成 HTML 时头部写版本戳 `<meta name="sf-template" content="one-pager@1">`（模板升级时递增 @N 并同步 reference.html 与本文档）。用户说「升级旧海报/回炉」时：扫落盘目录读版本戳筛旧版（无版本戳或缺少 `<meta name="poster-id">` 稳定 ID 的产物视为 v0 最旧版，一并进清单）→ 列清单（文件/旧版本）→ AskUserQuestion 选全部或部分 → 逐份升级：浅升级（仅 CSS/JS 变化）对旧页替换 `<style>` 块与交互脚本、正文原样保留；深升级（DOM 结构变化）从同目录 md 底稿按当前 reference.html 重建，先备份旧版 `.bak-时间戳`，重建必须沿用原页 poster-id meta 值（换 ID = 主题记忆失联）→ 报告三段式：✅ 已升级清单 / ⚠️ 手改保留说明 / 🟡 失败项原因。模板改动分级：业务改动、数据格式改动、页面改动任一发生即模板升级，版本戳 +1 并同步 reference.html 与本文档；纯措辞润色不 bump。每次生成 HTML 时顺扫落盘目录读版本戳：发现旧版产物主动告知用户「说『把我旧海报都升级成新样式』即可一键升级」。
+生成 HTML 时头部写版本戳 `<meta name="sf-template" content="one-pager@2">`（模板升级时递增 @N 并同步 reference.html 与本文档）。用户说「升级旧海报/回炉」时：扫落盘目录读版本戳筛旧版（无版本戳或缺少 `<meta name="poster-id">` 稳定 ID 的产物视为 v0 最旧版，一并进清单）→ 列清单（文件/旧版本）→ AskUserQuestion 选全部或部分 → 逐份升级：浅升级（仅 CSS/JS 变化）对旧页替换 `<style>` 块与交互脚本、正文原样保留；深升级（DOM 结构变化）从同目录 md 底稿按当前 reference.html 重建，先备份旧版 `.bak-时间戳`，重建必须沿用原页 poster-id meta 值（换 ID = 主题记忆失联）→ 报告三段式：✅ 已升级清单 / ⚠️ 手改保留说明 / 🟡 失败项原因。模板改动分级：业务改动、数据格式改动、页面改动任一发生即模板升级，版本戳 +1 并同步 reference.html 与本文档；纯措辞润色不 bump。每次生成 HTML 时顺扫落盘目录读版本戳：发现旧版产物主动告知用户「说『把我旧海报都升级成新样式』即可一键升级」。
 
 ## 规则速览
 
