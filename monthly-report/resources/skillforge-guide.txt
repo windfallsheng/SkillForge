@@ -41,6 +41,7 @@ SkillForge 是一套个人技能仓库 + 命令行分发器（npm 包 skill-forg
 |:---|:---|
 | skill-forge ls | 列出全部技能（分类 + 名称 + 说明），只读不写文件 |
 | skill-forge init | 交互挑选安装：a 全装 / 编号挑选（已装标 ★）/ 确认时 s 跳过已装 |
+| npm update -g skill-forge-hub | 官方发新版后升级 CLI 本体（只升级本包） |
 | skill-forge update | 升级全部已安装技能（配置版本感知） |
 | skill-forge update --skills a,b | 只升级指定技能（未安装的提示跳过） |
 | skill-forge --version | 显示版本号 |
@@ -66,7 +67,7 @@ skill-forge init --skills prompt-pouch --target ~/.qoder-cn/skills
 跳过挑选环节，只装指定技能到指定目录。
 
 场景三 官方发新版后升级：
-skill-forge update（全部）/ skill-forge update --skills daily-report（单个）
+先 npm update -g skill-forge-hub（升级 CLI 本体），再 skill-forge update（全部）/ skill-forge update --skills daily-report（单个）
 · 配置结构没变：无感升级，user-config.md 原样保留
 · 配置结构变了（CONFIG_VERSION 升了）：先备份 user-config.md.bak-<时间戳>，再三选一——[1] 官方覆盖 / [2] 保留我的（默认，最稳，官方版另存 .upstream 对照文件手动合并）/ [3] 稍后处理
 · 官方删了文件：按 .installed-manifest 安装清单精准清理，你自建的文件一律不动

@@ -10,6 +10,7 @@
 npm i -g skill-forge-hub
 skill-forge ls        # list all skills & descriptions (read-only)
 skill-forge init      # interactive skill picker, auto-detects & installs to the AI assistant's skill directory
+npm update -g skill-forge-hub    # upgrade the CLI itself after a release (this package only)
 skill-forge update    # upgrade installed skills (config-version aware, see below)
 ```
 
@@ -79,7 +80,8 @@ Skips the picker and installs exactly the named skill to the named directory —
 ### Scenario 3: upgrading after an official release
 
 ```bash
-skill-forge update                              # upgrade all installed skills
+npm update -g skill-forge-hub                    # first upgrade the CLI itself (this package only)
+skill-forge update                              # then upgrade all installed skills
 skill-forge update --skills daily-report        # upgrade just one
 ```
 

@@ -11,7 +11,7 @@
 1. **安装**：`skill-forge init --skills daily-report`
 2. **首次生成**：直接说「写日报」，口述今天干了什么（或丢一段文字 / 一个文件 / 一张图）→ 生成 `daily-report-YYYYMMDD.md` + `.txt` + `.html`（自动打开），附整页截图 content-png
 3. **修改配置**：让 AI 打开技能目录的 `user-config.md`，改 `DIR`（落盘目录）、`THEME`（tech/biz/mono/light/warm 五主题）、`TEMPLATE: custom` 换自定义模板；临时口头要求（如「今天只写 3 条」）当次生效、不写配置
-4. **官方升级后**：`skill-forge update` → 若官方配置结构变了，先自动备份再交互三选一，选 `[2] 保留我的`，然后对照 `user-config.md.upstream` 手动合并新配置点（如新增的 DATA_SOURCES 数据源清单）
+4. **官方升级后**：`npm update -g skill-forge-hub`（升级 CLI 本体）→ `skill-forge update`（升级技能）→ 若官方配置结构变了，先自动备份再交互三选一，选 `[2] 保留我的`，然后对照 `user-config.md.upstream` 手动合并新配置点（如新增的 DATA_SOURCES 数据源清单）
 5. **旧产物回炉**：官方模板版本戳升了（`sf-template@N`）→ 下次生成时提示「检测到 X 份旧版日报」→ 说「把我旧日报都升级成新样式」→ 选全部或部分 → 浅升级（样式变化）替换样式块、深升级（结构变化）从同目录 md 底稿重建，旧版先备份
 
 ## 示例二：prompt-pouch 锦囊（本地管理台 + 用户数据）
@@ -44,7 +44,7 @@
 | 需求 | 做法 |
 |:---|:---|
 | 换落盘目录 / 主题 / 模板 | 改 `user-config.md`（升级永不覆盖） |
-| 官方发新版 | `skill-forge update`，配置冲突选 `[2] 保留我的` |
+| 官方发新版 | 先 `npm update -g skill-forge-hub`（CLI 本体）再 `skill-forge update`，配置冲突选 `[2] 保留我的` |
 | 旧产物换新样式 | 说「把我旧 XX 都升级成新样式」 |
 | 装漏技能 | `skill-forge init --skills 技能名` |
 | 看全部命令 | `skill-forge --help` |

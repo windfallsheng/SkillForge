@@ -260,6 +260,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);letter-spacing:1px;pa
       <tr><th>命令</th><th>说明</th></tr>
       <tr><td><span class="cmd-in">skill-forge ls</span></td><td>列出全部技能（分类 + 名称 + 说明），只读不写文件</td></tr>
       <tr><td><span class="cmd-in">skill-forge init</span></td><td>交互挑选安装：a 全装 / 编号挑选（已装标 ★）/ 确认时 s 跳过已装</td></tr>
+      <tr><td><span class="cmd-in">npm update -g skill-forge-hub</span></td><td>官方发新版后升级 CLI 本体（只升级本包）</td></tr>
       <tr><td><span class="cmd-in">skill-forge update</span></td><td>升级全部已安装技能（配置版本感知）</td></tr>
       <tr><td><span class="cmd-in">skill-forge update --skills a,b</span></td><td>只升级指定技能（未安装的提示跳过）</td></tr>
       <tr><td><span class="cmd-in">skill-forge --version</span> / <span class="cmd-in">--help</span></td><td>显示版本号 / 完整帮助</td></tr>
@@ -282,8 +283,8 @@ footer{text-align:center;font-size:10px;color:var(--muted);letter-spacing:1px;pa
     <div class="scn"><div class="scn-title">场景二 · 单件补装（脚本 / 只想要某一个）</div>
       <p><span class="cmd">skill-forge init --skills prompt-pouch --target ~/.qoder-cn/skills</span>跳过挑选环节，只装指定技能到指定目录。</p></div>
     <div class="scn"><div class="scn-title">场景三 · 官方发新版后升级</div>
-      <p><span class="cmd">skill-forge update</span><span class="cmd">skill-forge update --skills daily-report</span>
-      配置结构没变：无感升级，user-config.md 原样保留；<br>
+      <p><span class="cmd">npm update -g skill-forge-hub</span><span class="cmd">skill-forge update</span><span class="cmd">skill-forge update --skills daily-report</span>
+      先升级 CLI 本体，再升级技能；配置结构没变：无感升级，user-config.md 原样保留；<br>
       配置结构变了（CONFIG_VERSION 升了）：先备份 <span class="cmd-in">user-config.md.bak-&lt;时间戳&gt;</span>，再三选一——<span class="dot">[1]</span> 官方覆盖 / <span class="dot">[2]</span> 保留我的（默认，最稳，官方版另存 .upstream 对照文件手动合并）/ <span class="dot">[3]</span> 稍后处理；<br>
       官方删了文件：按 .installed-manifest 安装清单精准清理，你自建的文件一律不动。</p></div>
     <div class="scn"><div class="scn-title">场景四 · 非交互 / 自动化</div>

@@ -89,6 +89,7 @@
 npm i -g skill-forge-hub        # 全局安装
 skill-forge ls                  # 列出全部技能（只读）
 skill-forge init                # 交互式挑选技能，自动探测并安装到 AI 助手技能目录
+npm update -g skill-forge-hub   # 官方发新版后升级 CLI 本体（只升级本包）
 skill-forge update              # 升级已安装技能（配置版本感知，本地配置受保护）
 ```
 

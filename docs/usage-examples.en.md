@@ -11,7 +11,7 @@ Every example follows the same rhythm: **install → first generation → config
 1. **Install**: `skill-forge init --skills daily-report`
 2. **First generation**: just say "write a daily report", describe what you did today (or hand it a paragraph / a file / an image) → produces `daily-report-YYYYMMDD.md` + `.txt` + `.html` (auto-opened), plus a full-page content-png capture
 3. **Config tweaks**: ask the AI to open the skill's `user-config.md` and change `DIR` (save directory), `THEME` (tech/biz/mono/light/warm five themes), `TEMPLATE: custom` for a custom template; ad-hoc verbal requests ("only 3 items today") apply once and never touch config
-4. **After an official upgrade**: `skill-forge update` → if the official config structure changed, it backs up first then offers a three-way choice; pick `[2] keep mine`, then compare `user-config.md.upstream` and merge new config points manually (e.g. a new DATA_SOURCES list)
+4. **After an official upgrade**: `npm update -g skill-forge-hub` (upgrade the CLI itself) → `skill-forge update` (upgrade the skills) → if the official config structure changed, it backs up first then offers a three-way choice; pick `[2] keep mine`, then compare `user-config.md.upstream` and merge new config points manually (e.g. a new DATA_SOURCES list)
 5. **Output reforge**: when the official template stamp bumped (`sf-template@N`) → the next generation says "found X old daily reports" → say "upgrade all my old daily reports to the new style" → pick all or some → shallow upgrade (style changes) swaps style blocks, deep upgrade (structure changes) rebuilds from the sibling md draft, old version backed up first
 
 ## Example 2: prompt-pouch (local console + user data)
@@ -44,7 +44,7 @@ Every example follows the same rhythm: **install → first generation → config
 | Need | Do |
 |:---|:---|
 | Change save dir / theme / template | Edit `user-config.md` (never overwritten on upgrade) |
-| Official release is out | `skill-forge update`; on config conflict pick `[2] keep mine` |
+| Official release is out | first `npm update -g skill-forge-hub` (the CLI itself), then `skill-forge update`; on config conflict pick `[2] keep mine` |
 | Restyle old outputs | Say "upgrade all my old XX to the new style" |
 | A skill is missing | `skill-forge init --skills <skill-name>` |
 | See all commands | `skill-forge --help` |

@@ -81,6 +81,7 @@ Skills are grouped by "what they ultimately produce" — one skill belongs to ex
 npm i -g skill-forge-hub        # global install
 skill-forge ls                  # list all skills (read-only)
 skill-forge init                # interactive skill picker, auto-detects & installs to your AI assistant's skill directory
+npm update -g skill-forge-hub   # upgrade the CLI itself after a release (this package only)
 skill-forge update              # upgrade installed skills (config-version aware, local config protected)
 ```
 

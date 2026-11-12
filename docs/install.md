@@ -10,6 +10,7 @@
 npm i -g skill-forge-hub
 skill-forge ls        # 列出全部技能与说明（只读）
 skill-forge init      # 交互式挑选技能，自动探测并安装到 AI 助手技能目录
+npm update -g skill-forge-hub    # 官方发新版后升级 CLI 本体（只升级本包）
 skill-forge update    # 升级已安装技能（配置版本感知，见下）
 ```
 
@@ -79,7 +80,8 @@ skill-forge init --skills prompt-pouch --target ~/.qoder-cn/skills
 ### 场景三：官方发新版后升级
 
 ```bash
-skill-forge update                              # 升级全部已装技能
+npm update -g skill-forge-hub                    # 先升级 CLI 本体（只升级本包）
+skill-forge update                              # 再升级全部已装技能
 skill-forge update --skills daily-report        # 只升级某一个
 ```
 
