@@ -104,6 +104,7 @@ After installation, just say "write a daily report", "write a weekly report", "w
 | [docs/usage-examples.en.md](docs/usage-examples.en.md) | Skill usage scenario examples: daily-report / prompt-pouch / both PPT forms / meeting-minutes, full chain from install to reforge. Chinese version [docs/usage-examples.md](docs/usage-examples.md) |
 | [skillforge-guide](https://windfallsheng.github.io/SkillForge/) | Built-in usage guide (txt + html in every skill's resources/): ask the AI 'how to use skillforge' and it reads the guide and opens the styled page; live hosted guide at the GitHub Pages public URL (permanent) |
 | [SKILLS_CATALOG.md](SKILLS_CATALOG.md) | Per-skill bilingual catalog: a standalone citable profile for each of the 21 skills, ready to excerpt for skills.sh / awesome-claude-skills directory submissions and article citations |
+| [docs/articles/](docs/articles/) | Hands-on articles: prompt management with AI skill packs, the right way to write daily reports with AI; [docs/directory-submission.md](docs/directory-submission.md) directory submission kit (awesome-claude-skills PR material & steps / skills.sh publishing guide / gh login guide) |
 | [CHANGELOG.en.md](CHANGELOG.en.md) | Version changelog. Chinese version [CHANGELOG.md](CHANGELOG.md) |
 
 ## License

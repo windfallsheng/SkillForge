@@ -104,6 +104,7 @@ skill-forge update              # 升级已安装技能（配置版本感知，�
 | [docs/usage-examples.md](docs/usage-examples.md) | 技能使用场景示例：日报 / 锦囊 / PPT 两形态 / 会议纪要的安装到回炉全链路。英文版 [docs/usage-examples.en.md](docs/usage-examples.en.md) |
 | [skillforge-guide](https://windfallsheng.github.io/SkillForge/) | 内置使用指引（每个技能 resources/ 均含 txt + html 双版）：对 AI 说「skillforge 怎么用」即朗读指引并打开排版页；在线引导页见 GitHub Pages 公网地址（长期有效） |
 | [SKILLS_CATALOG.md](SKILLS_CATALOG.md) | 技能目录简介册：21 技能逐条中英双语独立简介（每技能一段可直接摘录），供 skills.sh / awesome-claude-skills 等目录收录与文章引用时锚点链接 |
+| [docs/articles/](docs/articles/) | 实操文章：《用 AI 技能包管提示词》《AI 写日报的正确姿势》；[docs/directory-submission.md](docs/directory-submission.md) 目录收录素材包（awesome-claude-skills PR 素材与步骤 / skills.sh 发布指引 / gh 登录指引） |
 | [CHANGELOG.md](CHANGELOG.md) | 版本变更记录。英文版 [CHANGELOG.en.md](CHANGELOG.en.md) |
 
 ## 许可证
