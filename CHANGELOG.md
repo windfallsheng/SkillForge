@@ -2,6 +2,17 @@
 
 SkillForge（技能锻造坊）npm 包 `skill-forge-hub`（命令名 `skill-forge`）版本变更记录。
 
+## 1.0.6（2026-11-12）
+
+**meta-forge 规范与模板对齐：三大实战教训入规 + template 模板现代化**
+
+- template/ 模板对齐 forge-rules 新规范：SKILL.md 重写（第 0 步读 user-config、配置版本机制节、产物升级回炉节（条件）、文档同步自检纪律节、交付自检硬门禁）；新增 template/user-config.md（CONFIG_VERSION: 1 + 保护声明）与 template/resources/usage-guide.md（咨询应答模板）；README 拆掉「配置必须留在 SKILL.md」旧句改为配置出站
+- forge-rules 机制三补入场动画兜底：reference.html 含滚动入场动画（IntersectionObserver + JS 门控）必须带 2s 兜底 setTimeout 强制全显——IO 不触发的环境（headless 截图/打印预览/PDF 导出/嵌入式 webview）卡片不得永久隐藏（meeting-minutes 1.0.5 空白截图教训入规）
+- forge-rules 机制六补页面执行层自愈：id meta 非法/缺失时按路径键（sf-heal: + pathname）自愈为标准 UUID v4 并回写 meta、console.warn 报警——执行层第三防线入规
+- forge-rules 机制八补用户数据类细则：深升级重建必须沿用原页稳定 ID meta 值（换 ID = 数据失联），数据文件一概不动
+- 验证环扩充：静态门禁加第 13 项（入场动画兜底检查）；运行时实测加第 4 项（headless 截图验证内容完整，截图空白即失败）
+- meta-forge 自身对齐：SKILL.md description/流程第 3 步/规则速览补 preserve 保护清单与机制条件（含 HTML 加机制三七八、localStorage 记忆加六、半定制资产加五）；usage-guide 机制清单对齐 forge-rules 八项编号；user-config.md 修复 CONFIG_VERSION 行尾注释吞掉 DIR 行的换行 bug
+
 ## 1.0.5（2026-11-12）
 
 **月报技能上线：monthly-report + 报表家族四选一分流 + 登台月报映射**
