@@ -69,7 +69,7 @@
 | team-report-collector | 报表汇演 | [team-report-collector/](team-report-collector/) | 团队成员日报收集台：口述 / 文件批量 / 页面导出三种方式收日报 → reports.json 数据真相源 + 单文件离线收集台 HTML（表单填写 + localStorage 草稿 + 导出导入 JSON + 五主题换肤）+ 按日期分组汇总 md |
 | article-to-html | 文档装裱 | [article-to-html/](article-to-html/) | Word / Markdown / 纯文本 → 精美独立 HTML（思源黑体 + Roboto 商用免费字体，图表 HTML/CSS 重绘），逐章截图（Retina 2x）；现成 HTML 可直接截图或先美化 |
 | twin-docs | 文档装裱 | [twin-docs/](twin-docs/) | 中文文档翻译并同步为英文版（或反向）：术语表一致性对齐、标题层级 / 表格 / 代码块 / 链接逐项对应、双向同步检查出差 |
-| one-pager | 文档装裱 | [one-pager/](one-pager/) | 主题 / 一句话想法 → 一页纸 HTML 海报（大标题 + 金句 + 要点块，纵向一屏、打印友好）+ 可选 PNG 截图；8 套布局模板 × 10 套配色主题随点随切（80 种版式） |
+| one-pager | 文档装裱 | [one-pager/](one-pager/) | 主题 / 一句话想法 → 一页纸 HTML 海报（大标题 + 金句 + 要点块，纵向一屏、打印友好）+ 可选 PNG 截图；32 套布局模板（现代主义/编辑出版/数据商务/艺术流派/国风雅韵/先锋实验/场景专用七组流派）× 25 套配色主题随点随切（800 种版式） |
 | spec-doc2spec | 工程提效 | [spec-doc2spec/](spec-doc2spec/) | Word / Markdown 需求文档转结构化需求切片（薄入口 + resources 分册）；自动检测 Pandoc，未装引导跨系统安装 |
 | spec-spec2doc | 工程提效 | [spec-spec2doc/](spec-spec2doc/) | Markdown 规格导出为 Word / PDF 交付文档；自动检测 Pandoc，未装引导跨系统安装；PDF 双路径（xelatex / Chrome 打印兜底） |
 | release-notes | 工程提效 | [release-notes/](release-notes/) | git 两个版本标签之间提交 → 中英双语发版说明 + CHANGELOG 条目（分类归纳 + 用户视角改写 + 提交统计）+ npm 发布前自检清单 |
@@ -103,6 +103,7 @@ skill-forge update              # 升级已安装技能（配置版本感知，�
 | [docs/architecture.md](docs/architecture.md) | 架构与规范：目录结构、技能形态（薄入口 + resources）、八大机制、拆分规范、通用原则。英文版 [docs/architecture.en.md](docs/architecture.en.md) |
 | [docs/usage-examples.md](docs/usage-examples.md) | 技能使用场景示例：日报 / 锦囊 / PPT 两形态 / 会议纪要的安装到回炉全链路。英文版 [docs/usage-examples.en.md](docs/usage-examples.en.md) |
 | [skillforge-guide](https://windfallsheng.github.io/SkillForge/) | 内置使用指引（每个技能 resources/ 均含 txt + html 双版）：对 AI 说「skillforge 怎么用」即朗读指引并打开排版页；在线引导页见 GitHub Pages 公网地址（长期有效） |
+| [SKILLS_CATALOG.md](SKILLS_CATALOG.md) | 技能目录简介册：21 技能逐条中英双语独立简介（每技能一段可直接摘录），供 skills.sh / awesome-claude-skills 等目录收录与文章引用时锚点链接 |
 | [CHANGELOG.md](CHANGELOG.md) | 版本变更记录。英文版 [CHANGELOG.en.md](CHANGELOG.en.md) |
 
 ## 许可证
