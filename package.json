@@ -56,6 +56,7 @@
     "meta-forge"
   ],
   "license": "MIT",
+  "homepage": "https://windfallsheng.github.io/SkillForge/",
   "engines": {
     "node": ">=14.0.0"
   },
