@@ -33,7 +33,7 @@ disable-model-invocation: false
    - **目录确认**：用户未提目录 → 用配置 `DIR`；`CONFIRM: true` 时先 AskUserQuestion 确认（选项：用默认目录 / 换目录）；用户已说「放到 XX 目录」→ 直接用该目录（本次会话有效，不改配置文件）
    - 复制 `resources/reference.html` → `<DIR>/prompt-pouch.html`（原样复制，不修改任何样式与脚本；仅两处例外：①html 根标签 `data-theme` 属性值设为配置 `THEME`——reference 默认 "gold"，仅当配置非 gold 时替换该属性值；②head 中 `<meta name="pouch-id" content="...">` 的 content 替换为本次用 crypto.randomUUID() 新生成的全局唯一 ID——标准 UUID v4（十六进制 8-4-4-4-12 节，禁止手写变体、禁止沿用 reference 的占位 ID REF-POUCH-0000、禁止两份锦囊共用同一 ID；复制文件副本=同一身份共享数据）；落盘写文件前顺扫 <DIR> 下已有 html 的 pouch-id meta 查重，撞号重掷至不重复）
    - 创建 `<DIR>/<DATA_DIR>/` 与 `<DIR>/<BACKUP_DIR>/` 子目录（配置为空串则跳过、平铺根目录）；生成 `<DIR>/<DATA_DIR>/prompts.json`：`INIT_DATA: example` 时写入「各职业通用」示例五组（写作输出/沟通协作/规划执行/复盘成长/提问艺术，每组 3 条，标题与正文按下方「## 默认示例数据」清单写，**每条必带 createdAt 当前时间（YYYY-MM-DD HH:mm:ss，写到时分秒）**）；`empty` 时写空结构（version + 空 groups/prompts）
-   - 收尾提示启动方式：`cd <DIR> && python3 -m http.server <PORT>`（Windows 无 python3 时 `py -m http.server`），浏览器访问 `http://localhost:<PORT>/prompt-pouch.html`（HTTP 才能读 prompts.json；file:// 直开回退缓存快照）
+   - 收尾提示启动方式：`cd <DIR> && python3 -m http.server <PORT>`（Windows 无 python3 时 `py -m http.server`），浏览器访问 `http://localhost:<PORT>/prompt-pouch.html`（HTTP 自动读 prompts.json；file:// 直开浏览器会拦截文件读取——已授权目录则直读 data/prompts.json，未授权回退缓存快照，推荐 HTTP 打开）
 2. **维护**（页面已存在时）：读 `<DIR>/<DATA_DIR>/prompts.json` → 按用户意图修改 → 写回（UTF-8、2 空格缩进、保留 version 字段）→ 提醒用户刷新页面
    - **落盘确认**：写回前展示将要落盘的内容（新增/修改的标题、分组、正文摘要，一句话说清改了什么），等用户确认后落盘；用户明确说「直接存/不用确认」则跳过（本次会话有效）；写回前重读最新文件合并；落盘完成后对话报告产物位置：页面文件 `<DIR>/prompt-pouch.html`、数据文件 `<DIR>/<DATA_DIR>/prompts.json`、滚动备份目录 `<DIR>/<BACKUP_DIR>/`
    - **分类交互**：用户说「添加 XX」但未说分组 → 先按现有分组语义智能匹配（如内容讲周报 → 建议「写作输出 ✍️」并说明理由），匹配到则默认归入、用户可改口换组；匹配不到 → AskUserQuestion 列出全部现有分组（加「新建分组」选项）让用户选；用户指定的分组不存在 → 明确告知该分组不存在，并问是否新建（新建则补 groups 条目：id 16 位数字主键（雪花规则见 data-format.md）、name 中文、icon 一个 emoji）
@@ -68,7 +68,7 @@ disable-model-invocation: false
 
 ## 产物升级（回炉）
 
-生成/初始化页面时头部写版本戳 `<meta name="sf-template" content="prompt-pouch@5">`（模板升级时递增 @N 并同步 reference.html 与本文档）。用户说「升级旧锦囊/回炉旧页面/旧锦囊换新样式」时：扫 `<DIR>` 下 `prompt-pouch.html` 读版本戳筛出旧版（无版本戳或缺少 `<meta name="pouch-id">` 稳定 ID 的产物视为 v0 最旧版，一并进清单）→ 列清单（文件/旧版本/有无用户数据）→ AskUserQuestion 选全部或部分 → 逐份升级：浅升级（仅 CSS/JS 变化）对旧页替换 `<style>` 块与交互脚本；深升级（DOM 结构变化）从 reference.html 重建，**必须沿用原页 pouch-id meta 值**（IndexedDB 用户数据按 pouch-id 命名空间存取，换 ID = 数据失联，重建后原收藏/分组照旧读回），`<DIR>/<DATA_DIR>/prompts.json` 数据文件一概不动，先备份旧页 `.bak-时间戳` → 报告三段式：✅ 已升级清单 / ⚠️ 手改保留说明 / 🟡 失败项原因。模板改动分级：业务改动（板块/段落/标题体系）、数据格式改动（字段/存储结构）、页面改动（样式/布局/交互）任一发生即模板升级，版本戳 +1 并同步 reference.html 与本文档；纯措辞润色不 bump。每次生成/初始化新锦囊时顺扫 `<DIR>` 读版本戳：发现旧版产物主动告知「技能模板已升级至 vN，检测到 X 份旧版锦囊，说『把我旧锦囊都升级成新样式』即可一键升级」，不让用户背触发语。
+生成/初始化页面时头部写版本戳 `<meta name="sf-template" content="prompt-pouch@6">`（模板升级时递增 @N 并同步 reference.html 与本文档）。用户说「升级旧锦囊/回炉旧页面/旧锦囊换新样式」时：扫 `<DIR>` 下 `prompt-pouch.html` 读版本戳筛出旧版（无版本戳或缺少 `<meta name="pouch-id">` 稳定 ID 的产物视为 v0 最旧版，一并进清单）→ 列清单（文件/旧版本/有无用户数据）→ AskUserQuestion 选全部或部分 → 逐份升级：浅升级（仅 CSS/JS 变化）对旧页替换 `<style>` 块与交互脚本；深升级（DOM 结构变化）从 reference.html 重建，**必须沿用原页 pouch-id meta 值**（IndexedDB 用户数据按 pouch-id 命名空间存取，换 ID = 数据失联，重建后原收藏/分组照旧读回），`<DIR>/<DATA_DIR>/prompts.json` 数据文件一概不动，先备份旧页 `.bak-时间戳` → 报告三段式：✅ 已升级清单 / ⚠️ 手改保留说明 / 🟡 失败项原因。模板改动分级：业务改动（板块/段落/标题体系）、数据格式改动（字段/存储结构）、页面改动（样式/布局/交互）任一发生即模板升级，版本戳 +1 并同步 reference.html 与本文档；纯措辞润色不 bump。每次生成/初始化新锦囊时顺扫 `<DIR>` 读版本戳：发现旧版产物主动告知「技能模板已升级至 vN，检测到 X 份旧版锦囊，说『把我旧锦囊都升级成新样式』即可一键升级」，不让用户背触发语。
 
 ## ⚙️ 配置与自定义主题
 

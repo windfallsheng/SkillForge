@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="sf-template" content="prompt-pouch@5">
+<meta name="sf-template" content="prompt-pouch@6">
 <meta name="pouch-id" content="REF-POUCH-0000">
 <title>锦囊 Prompt Pouch — 提示词管理台</title>
 <style>
@@ -2127,6 +2127,7 @@ if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(POUC
         try{ localStorage.removeItem(SF_NS + '-bk-declined'); }catch(e){}
         idbSet('bkHandle', bkDirHandle);
         updateBkUI();
+        reloadFromDirIfNeeded();
         return true;
       })
       .catch(function(){ pendingAuth = false; updateBkUI(); return false; });
@@ -2173,6 +2174,21 @@ if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(POUC
       pendingAuth = false;
     }).catch(function(){});
   }
+  /* file:// 直开补洞：fetch 被浏览器拦截读不到数据文件时，授权目录后直读 data/prompts.json 替换示例/快照 */
+  function reloadFromDirIfNeeded(){
+    if (!bkDirHandle || bootMode === 'live') return;
+    readPouch().then(function(text){
+      if (text === null) return;
+      var data = JSON.parse(text);
+      state.data = data;
+      idbSet('lastData', data);
+      bootMode = 'live';
+      cacheBadge.style.display = 'none';
+      applyUserState();
+      renderNav(); render();
+      toast('✓ 已直读 data/prompts.json，你的分组与提示词已载入');
+    }).catch(function(){});
+  }
   btnBkEnable.addEventListener('click', function(){
     if (bkDirHandle && !pendingAuth){
       writeBackupNow().then(function(ok){ toast(ok ? '✓ 备份完成 · backup/pouch-backup.json' : '备份失败，请重新授权目录', !ok); });
@@ -2184,7 +2200,7 @@ if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(POUC
     }
     if (bkDirHandle && pendingAuth){
       bkDirHandle.requestPermission({ mode: 'readwrite' }).then(function(st){
-        if (st === 'granted'){ pendingAuth = false; updateBkUI(); writeBackupNow(); }
+        if (st === 'granted'){ pendingAuth = false; updateBkUI(); writeBackupNow(); reloadFromDirIfNeeded(); }
         else bkStatus.textContent = '未获授权，备份暂停';
       }).catch(function(){});
       return;
@@ -2196,6 +2212,7 @@ if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(POUC
         idbSet('bkHandle', bkDirHandle);
         updateBkUI();
         writeBackupNow();
+        reloadFromDirIfNeeded();
       })
       .catch(function(){});
   });
@@ -2209,6 +2226,7 @@ if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(POUC
         idbSet('bkHandle', bkDirHandle);
         updateBkUI();
         writeBackupNow();
+        reloadFromDirIfNeeded();
       })
       .catch(function(){});
   });
@@ -2308,7 +2326,7 @@ if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(POUC
     render();
     if (bootMode === 'cache') cacheBadge.style.display = '';
     if (bootMode === 'demo'){
-      cacheBadge.textContent = '📌 示例模式：未读到 data/prompts.json，当前展示系统自带示例提示词（file:// 直开或数据文件尚未生成）。经 HTTP 打开页面并生成数据文件后即为你的提示词，示例可随时删除。';
+      cacheBadge.textContent = '📌 示例模式：未读到 data/prompts.json，当前展示系统自带示例。若你有自己的数据文件：点顶部「💾 授权目录」选 prompt-pouch.html 所在文件夹即可直读载入；或经 HTTP 打开页面（file:// 直开会被浏览器拦截文件读取）。';
       cacheBadge.style.display = '';
     }
   }
@@ -2328,22 +2346,36 @@ if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(POUC
       firstRender();
     })
     .catch(function(){
-      idbGet('lastData').then(function(cached){
-        if (cached){
-          state.data = cached;
-          bootMode = 'cache';
-          firstRender();
-        } else {
-          state.data = DEFAULT_POUCH;
-          bootMode = 'demo';
-          firstRender();
-        }
+      // file:// 场景：fetch 被浏览器拦截 → 已授权目录则直读 data/prompts.json（File System Access API）
+      return dirHandleReady.then(function(){
+        return readPouch().then(function(text){
+          if (text !== null) return JSON.parse(text);
+          throw new Error('no-fs');
+        });
+      }).then(function(data){
+        state.data = data;
+        idbSet('lastData', data);
+        bootMode = 'live';
+        firstRender();
+      }).catch(function(){
+        idbGet('lastData').then(function(cached){
+          if (cached){
+            state.data = cached;
+            bootMode = 'cache';
+            firstRender();
+          } else {
+            state.data = DEFAULT_POUCH;
+            bootMode = 'demo';
+            firstRender();
+          }
+        });
       });
     });
   // 本地态并行：可用则应用收藏与排序并刷新备份区（不阻塞数据展示）
+  var dirHandleReady = idbOpen().then(function(){ return loadDirHandle(); }).catch(function(){});
   idbOpen()
     .then(loadLocalState)
-    .then(loadDirHandle)
+    .then(function(){ return dirHandleReady; })
     .catch(function(){})
     .then(function(){
       applyUserState();
