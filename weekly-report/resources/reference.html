@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="sf-template" content="weekly-report@1">
+<meta name="weekly-id" content="REF-WEEKLY-0000">
+<meta name="weekly-id" content="REF-WEEKLY-0000">
+<meta name="weekly-id" content="REF-WEEKLY-0000">
 <title>本周周报 - 20261102 ~ 20261106</title>
 <style>
 /* ═══ 五主题令牌：12 核心契约（与 magic-deck 一致）+ 报告扩展（发光/氛围/热力/语义色）；html[data-theme] 运行时切换，THEME 生成时定默认 ═══ */
@@ -1005,8 +1008,9 @@ function sheen(track, src){
 })();
 // 主题换肤：五套配色随点随换；记忆上次选择（localStorage，失败静默）；?shot 截图模式隐藏坞
 
-/* 多文件隔离：localStorage 键按页面路径命名空间——Chrome/Safari 下 file:// 与 localhost 共享同源存储，固定键名会导致多份产物互相串台；文件改名或移动则记忆重置 */
-var SF_NS = 'sf:' + location.pathname;
+/* 稳定身份命名空间：localStorage 键按页内嵌唯一 ID（meta weekly-id）命名——Chrome/Safari 下 file:// 与 localhost 共享同源存储，固定键名会导致多份产物互相串台；ID 与文件路径解耦，改名/移动目录记忆不丢 */
+var SF_ID = ((document.querySelector('meta[name="weekly-id"]') || {}).content || 'REF-WEEKLY-0000').trim();
+var SF_NS = 'weekly:' + SF_ID;
 (function(){
   var THEMES = ['tech','biz','mono','light','warm'];
   var dock = document.getElementById('themeDock');
@@ -1017,7 +1021,7 @@ var SF_NS = 'sf:' + location.pathname;
     try{ localStorage.setItem(SF_NS + '-theme', t); }catch(e){}
     if (window.__sfEchartsTheme) window.__sfEchartsTheme(); }
   var cur = document.documentElement.getAttribute('data-theme');
-  var saved = null; try{ saved = localStorage.getItem(SF_NS + '-theme'); }catch(e){}
+  var saved = null; try{ saved = localStorage.getItem(SF_NS + '-theme') || localStorage.getItem('sf:' + location.pathname + '-theme'); }catch(e){}
   if (saved && THEMES.indexOf(saved) !== -1 && saved !== cur){ apply(saved); }
   else{ dock.querySelectorAll('.th-dot').forEach(function(d){ d.classList.toggle('on', d.getAttribute('data-theme') === (cur || 'tech')); }); }
   dock.querySelectorAll('.th-dot').forEach(function(d){ d.addEventListener('click', function(){ apply(d.getAttribute('data-theme')); }); });
