@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="sf-template" content="one-pager@4">
+<meta name="sf-template" content="one-pager@5">
 <meta name="poster-id" content="REF-POSTER-0000">
 <title>AI 改变工作 · 一页纸海报</title>
 <style>
@@ -128,8 +128,6 @@ body::before{
   radial-gradient(1px 1px at 88% 86%, rgba(255,255,255,.34), transparent),
   radial-gradient(1px 1px at 93% 24%, rgba(0,240,255,.5), transparent);}
 .scanlines{position:fixed;inset:0;z-index:999;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 2px,var(--scan-dim) 2px 4px)}
-.scanband{position:fixed;left:0;right:0;height:150px;z-index:998;pointer-events:none;background:linear-gradient(180deg,transparent,var(--scan-dim) 50%,transparent);animation:scanMove 11s linear infinite}
-@keyframes scanMove{ from{top:-22%;} to{top:112%;} }
 
 /* ═══ 舞台与八套模板（html[data-template] 决定渲染哪套；模板管布局、主题管配色，80 种组合） ═══ */
 .stage{height:100svh;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;overflow:hidden}
@@ -279,7 +277,6 @@ html[data-shot] .dock-tpl,html[data-shot] .dock-theme{display:none!important}
 <body>
 <div class="grid-pattern"></div>
 <div class="stars"></div>
-<div class="scanband"></div>
 <div class="scanlines"></div>
 <div class="stage" id="stage"></div>
 <div class="dock-tpl" id="tplDock">
