@@ -241,3 +241,13 @@ grep -nE "PingFang|YaHei|apple-system|sans-serif|serif|monospace|SF Mono|Menlo|M
 6. **字体栈严禁兜底**：--sans/--mono 只许 Roboto + 思源黑体（含 Noto/思源黑体别名），加苹方/雅黑兜底会导致字体缺失时静默回退、截图抽检无法发现
 7. **章节截图顺序**：`C00-封面` → `C00-引言` → `C01…C13`，按序拼接即整篇长图
 8. **主题色禁止硬编码**：A 款配色一律走 --accent 家族令牌（--accent/--hero-base/--title-grad 等），写死色值会导致换肤坞失灵、四主题渲染错乱
+
+
+---
+
+## 🔍 SkillForge 使用指引（整体咨询时触发）
+
+当用户询问 **SkillForge 本身**（不是单个技能用法）——「skillforge 怎么用 / 使用说明 / 使用指引 / 是什么」「技能怎么安装 / 怎么升级 / 装了哪些技能 / 技能清单」「skill-forge ls / init / update 等命令怎么用」「技能安装器 / 技能锻造坊」等（中英文、近似说法均可，关键词可自由扩展）：
+1. Read 同目录 `resources/skillforge-guide.txt` 全文，按其内容整理回答（命令与参数以 txt 为准，勿自行编造）
+2. 用系统命令打开同目录 `resources/skillforge-guide.html`（macOS `open`，Windows `start`），让用户在浏览器看排版版
+3. 用户只问单个技能怎么用时（如「日报怎么用」）不触发本指引，走本技能的使用说明

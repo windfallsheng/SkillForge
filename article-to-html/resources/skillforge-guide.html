@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="tech">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SkillForge 使用指引</title>
+<style>
+
+/* ═══ 五主题令牌：与报表/幻灯同源（12 核心契约 + 报告扩展）；html[data-theme] 运行时切换 ═══ */
+:root, [data-theme="tech"]{
+  --bg:#0a1929; --bg2:#071525; --panel:rgba(11,30,55,.9); --panel-solid:#0b1e37;
+  --text:#bae6fd; --muted:#5b7fa5; --accent:#0ea5e9; --accent2:#14b8a6;
+  --border:rgba(14,165,233,.18); --glow:rgba(14,165,233,.35); --glow-soft:rgba(14,165,233,.15);
+  --title-grad:linear-gradient(90deg,#7dd3fc,#0ea5e9 45%,#818cf8);
+  --tag-bg:rgba(14,165,233,.12);
+  --card-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 12px 32px rgba(1,6,16,.5),0 0 24px rgba(14,165,233,.15);
+  --scan:rgba(0,240,255,.2); --scan-dim:rgba(0,240,255,.05);
+  --green:#14b8a6; --orange:#f97316; --rose:#f43f5e;
+}
+[data-theme="biz"]{
+  --bg:#e8ecf5; --bg2:#dde3ef; --panel:rgba(255,255,255,.97); --panel-solid:#ffffff;
+  --text:#1e293b; --muted:#64748b; --accent:#2563eb; --accent2:#0891b2;
+  --border:rgba(37,99,235,.14); --glow:rgba(37,99,235,.18); --glow-soft:rgba(37,99,235,.12);
+  --title-grad:linear-gradient(90deg,#1e40af,#2563eb 55%,#0891b2);
+  --tag-bg:rgba(37,99,235,.08);
+  --card-shadow:0 1px 2px rgba(15,23,42,.05),0 10px 28px rgba(15,23,42,.12);
+  --scan:rgba(37,99,235,.14); --scan-dim:rgba(37,99,235,.04);
+  --green:#0d9488; --orange:#ea580c; --rose:#e11d48;
+}
+[data-theme="mono"]{
+  --bg:#1e1f22; --bg2:#2b2d30; --panel:rgba(43,45,48,.95); --panel-solid:#2b2d30;
+  --card-shadow:0 1px 0 rgba(255,255,255,.06) inset, 0 12px 32px rgba(0,0,0,.5), 0 0 24px rgba(53,116,240,.16);
+  --text:#dfe1e5; --muted:#9aa0a6; --accent:#3574f0; --accent2:#5e9aff;
+  --border:rgba(53,116,240,.26); --glow:rgba(53,116,240,.3); --glow-soft:rgba(53,116,240,.13);
+  --title-grad:linear-gradient(90deg,#dfe1e5,#5e9aff 50%,#3574f0);
+  --tag-bg:rgba(53,116,240,.13);
+  --scan:rgba(223,225,229,.18); --scan-dim:rgba(223,225,229,.07);
+  --green:#4da36b; --orange:#d09645; --rose:#d85f73;
+}
+[data-theme="light"]{
+  --bg:#ffffff; --bg2:#f2f2f2; --panel:rgba(255,255,255,.98); --panel-solid:#ffffff;
+  --card-shadow:0 1px 2px rgba(30,31,34,.06), 0 10px 28px rgba(30,31,34,.12);
+  --text:#1e1f22; --muted:#6e7781; --accent:#2675bf; --accent2:#4a9be0;
+  --border:rgba(38,117,191,.18); --glow:rgba(38,117,191,.2); --glow-soft:rgba(38,117,191,.1);
+  --title-grad:linear-gradient(90deg,#1e5f9f,#2675bf 55%,#4a9be0);
+  --tag-bg:rgba(38,117,191,.08);
+  --scan:rgba(38,117,191,.12); --scan-dim:rgba(38,117,191,.04);
+  --green:#2f8a5b; --orange:#d97706; --rose:#d6336c;
+}
+[data-theme="warm"]{
+  --bg:#f7ebd9; --bg2:#efe0c8; --panel:rgba(255,250,243,.97); --panel-solid:#fffaf3;
+  --text:#43301f; --muted:#8a7565; --accent:#d97706; --accent2:#ea580c;
+  --border:rgba(217,119,6,.18); --glow:rgba(217,119,6,.22); --glow-soft:rgba(217,119,6,.14);
+  --title-grad:linear-gradient(90deg,#b45309,#d97706 50%,#ea580c);
+  --tag-bg:rgba(217,119,6,.1);
+  --card-shadow:0 1px 2px rgba(120,72,24,.07),0 10px 28px rgba(120,72,24,.13);
+  --scan:rgba(217,119,6,.16); --scan-dim:rgba(217,119,6,.04);
+  --green:#0d9488; --orange:#c2410c; --rose:#be123c;
+}
+[data-theme="biz"] .stars, [data-theme="light"] .stars, [data-theme="warm"] .stars{ opacity:.28; }
+[data-theme="mono"] .stars{ background:radial-gradient(1px 1px at 12% 22%,rgba(223,225,229,.32),transparent),radial-gradient(1px 1px at 28% 68%,rgba(223,225,229,.28),transparent),radial-gradient(1.5px 1.5px at 45% 15%,rgba(223,225,229,.24),transparent),radial-gradient(1px 1px at 62% 78%,rgba(223,225,229,.26),transparent),radial-gradient(1px 1px at 78% 32%,rgba(223,225,229,.3),transparent),radial-gradient(1.5px 1.5px at 88% 58%,rgba(223,225,229,.28),transparent),radial-gradient(1px 1px at 8% 85%,rgba(223,225,229,.26),transparent),radial-gradient(1px 1px at 55% 45%,rgba(223,225,229,.24),transparent)}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--bg)}
+body{
+  font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,'PingFang SC','Microsoft YaHei',monospace;
+  color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+.grid-pattern{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(var(--scan-dim) 1px,transparent 1px),linear-gradient(90deg,var(--scan-dim) 1px,transparent 1px);
+  background-size:60px 60px}
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(1px 1px at 12% 22%,rgba(255,255,255,.4),transparent),radial-gradient(1px 1px at 28% 68%,rgba(0,240,255,.5),transparent),radial-gradient(1.5px 1.5px at 45% 15%,rgba(168,85,247,.4),transparent),radial-gradient(1px 1px at 62% 78%,rgba(0,255,136,.4),transparent),radial-gradient(1px 1px at 78% 32%,rgba(255,255,255,.35),transparent),radial-gradient(1.5px 1.5px at 88% 58%,rgba(0,240,255,.45),transparent),radial-gradient(1px 1px at 8% 85%,rgba(255,255,255,.3),transparent),radial-gradient(1px 1px at 55% 45%,rgba(0,240,255,.35),transparent)}
+.scanlines{position:fixed;inset:0;z-index:999;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,var(--scan-dim) 2px,var(--scan-dim) 4px)}
+.scanband{position:fixed;left:0;right:0;height:150px;z-index:998;pointer-events:none;
+  background:linear-gradient(180deg,transparent,var(--scan-dim) 50%,transparent);
+  animation:scanMove 11s linear infinite}
+@keyframes scanMove{from{top:-22%}to{top:112%}}
+.wrap{width:clamp(640px, 60%, 1200px); margin:0 auto; position:relative; z-index:1; padding:40px 0}
+.header-card{position:relative;overflow:hidden;background:var(--panel-solid);border:1px solid var(--border);border-radius:6px;
+  padding:34px 28px 26px;text-align:center;margin-bottom:18px;
+  box-shadow:var(--card-shadow);
+  background-image:repeating-linear-gradient(180deg, rgba(255,255,255,.012) 0 1px, transparent 1px 8px)}
+.header-card h1{font-size:26px;letter-spacing:2px;margin-bottom:8px;
+  background:var(--title-grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:titleGlow 3s ease-in-out infinite}
+@keyframes titleGlow{0%,100%{text-shadow:0 0 8px var(--glow),0 0 22px var(--glow-soft)}50%{text-shadow:0 0 14px var(--glow),0 0 34px var(--glow-soft)}}
+.header-sub{font-size:12px;color:var(--muted);letter-spacing:1px;margin-bottom:12px}
+.header-badge{display:inline-block;font-size:11px;color:var(--accent);border:1px solid var(--glow);border-radius:999px;padding:4px 14px}
+.card-glow{position:absolute;inset:-40% -20% auto;height:70%;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 10%,var(--glow),transparent 70%);
+  animation:cardGlow 3s ease-in-out infinite;transform-origin:top center;opacity:.5}
+@keyframes cardGlow{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.6)}}
+.scanline-el{position:absolute;pointer-events:none}
+.scan-x{top:0;left:0;height:1px;width:100%;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:scanX 3s linear infinite}
+.scan-y{top:0;right:0;width:1px;height:100%;background:linear-gradient(180deg,transparent,var(--accent),transparent);animation:scanY 3s linear infinite}
+.scan-x-rev{bottom:0;left:0;height:1px;width:100%;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:scanXRev 3s linear infinite}
+.scan-y-rev{top:0;left:0;width:1px;height:100%;background:linear-gradient(180deg,transparent,var(--accent),transparent);animation:scanYRev 3s linear infinite}
+@keyframes scanX{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+@keyframes scanY{from{transform:translateY(-100%)}to{transform:translateY(100%)}}
+@keyframes scanXRev{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+@keyframes scanYRev{from{transform:translateY(100%)}to{transform:translateY(-100%)}}
+.section{position:relative;overflow:hidden;background:var(--panel-solid);border:1px solid var(--border);border-radius:6px;
+  padding:22px 24px 22px 32px;margin-bottom:18px;
+  box-shadow:var(--card-shadow);
+  background-image:repeating-linear-gradient(180deg, rgba(255,255,255,.012) 0 1px, transparent 1px 8px);
+  transition:transform .18s ease,box-shadow .18s ease}
+.section:hover{transform:translateY(-2px);box-shadow:var(--card-shadow),inset 0 0 22px var(--glow-soft)}
+.sec-bar{position:absolute;left:0;top:0;bottom:0;width:8px}
+.sec-ov .sec-bar{background:linear-gradient(180deg,var(--accent2),var(--accent));box-shadow:0 0 12px var(--glow)}
+.sec-ms .sec-bar{background:linear-gradient(180deg,#5eead4,#14b8a6);box-shadow:0 0 12px rgba(20,184,166,.3)}
+.sec-gw .sec-bar{background:linear-gradient(180deg,#a5b4fc,#6366f1);box-shadow:0 0 12px rgba(99,102,241,.3)}
+.sec-rf .sec-bar{background:linear-gradient(180deg,#fda4af,#e11d48);box-shadow:0 0 12px rgba(244,63,94,.3)}
+.sec-pl .sec-bar{background:linear-gradient(180deg,#fdba74,#f97316);box-shadow:0 0 12px rgba(249,115,22,.3)}
+.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.sec-head svg{flex:0 0 auto}
+.sec-head h2{font-size:18px;letter-spacing:1px;animation:secGlow 3s ease-in-out infinite}
+.sec-ov .sec-head h2{color:var(--accent)}.sec-ms .sec-head h2{color:#5eead4}.sec-gw .sec-head h2{color:#c7d2fe}
+.sec-rf .sec-head h2{color:#fda4af}.sec-pl .sec-head h2{color:#fdba74}
+@keyframes secGlow{0%,100%{text-shadow:0 0 6px var(--glow)}50%{text-shadow:0 0 14px var(--glow)}}
+/* 引言与条目 */
+.lead{font-size:15px;line-height:1.75;margin-bottom:14px}
+.lead b{color:var(--accent);font-weight:700}
+.kw{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.kw-item{flex:1 1 200px;background:var(--tag-bg);border:1px solid var(--border);border-radius:6px;padding:12px 14px;
+  transition:transform .18s ease,box-shadow .18s ease}
+.kw-item:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.3)}
+.kw-num{font-size:20px;font-weight:900;background:var(--title-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.kw-label{font-size:12px;color:var(--muted);margin-top:4px}
+/* 表格 */
+.tbl{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:14px}
+.tbl th{text-align:left;font-size:12px;color:var(--muted);letter-spacing:1px;padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap}
+.tbl td{padding:8px 10px;border-bottom:1px dashed var(--border);line-height:1.6;vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--tag-bg)}
+.tbl td:first-child{color:var(--accent);font-weight:700;white-space:nowrap}
+.cat-tag{display:inline-block;font-size:11px;color:var(--muted);border:1px solid var(--border);border-radius:999px;padding:1px 8px;margin-right:6px}
+/* 命令代码块 */
+.cmd{display:block;font-family:inherit;font-size:13px;color:var(--accent2);background:var(--tag-bg);
+  border:1px solid var(--border);border-radius:4px;padding:3px 8px;margin:2px 0;white-space:nowrap;overflow-x:auto}
+.cmd-in{display:inline-block;font-family:inherit;font-size:13px;color:var(--accent2);background:var(--tag-bg);
+  border:1px solid var(--border);border-radius:4px;padding:1px 6px;white-space:nowrap}
+/* 场景条目 */
+.scn{margin-bottom:12px;padding-left:14px;border-left:2px solid var(--border)}
+.scn-title{font-size:14px;font-weight:700;color:var(--accent);letter-spacing:1px;margin-bottom:6px}
+.scn p{font-size:13.5px;line-height:1.7}
+.scn p .dot{color:var(--muted)}
+/* 链路条目 */
+ol.chain{list-style:none}
+ol.chain>li{display:flex;gap:12px;padding:10px;border-radius:4px;transition:background .18s;margin-bottom:4px}
+ol.chain>li:hover{background:var(--tag-bg)}
+.idx{flex:0 0 auto;width:26px;height:26px;border-radius:50%;position:relative;
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  font-size:12px;font-weight:900;margin-top:2px;transition:transform .2s ease}
+.idx.rf{background:radial-gradient(circle at 30% 28%,#fdaab4,#f43f5e 55%,#be123c);
+  box-shadow:0 2px 4px rgba(0,0,0,.25),0 0 8px rgba(244,63,94,.4),inset -3px -4px 6px rgba(0,0,0,.3),inset 1px 2px 3px rgba(255,255,255,.25)}
+.idx::before{content:'';position:absolute;top:4px;left:6px;width:7px;height:5px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.7),rgba(255,255,255,0));transform:rotate(-28deg);pointer-events:none}
+ol.chain>li:hover .idx{transform:scale(1.15) rotate(-4deg)}
+.entry{flex:1;min-width:0}
+.entry-title{font-size:14px;font-weight:700;color:#fda4af;margin-bottom:4px}
+.entry p{font-size:13.5px;line-height:1.7}
+/* 小抄与 FAQ */
+.faq{margin-top:14px;padding-top:12px;border-top:1px dashed var(--border)}
+.faq-title{font-size:12px;color:var(--muted);letter-spacing:1px;margin-bottom:10px}
+.faq-item{font-size:13.5px;line-height:1.7;margin-bottom:8px;padding-left:14px;border-left:2px solid var(--border)}
+.faq-item b{color:var(--accent);font-weight:700}
+footer{text-align:center;font-size:10px;color:var(--muted);letter-spacing:1px;padding:8px 0 4px}
+.header-card{animation:fadeDown .6s ease-out backwards}
+.sec-ov{animation:riseIn .5s ease-out .13s backwards}
+.sec-ms{animation:riseIn .5s ease-out .26s backwards}
+.sec-gw{animation:riseIn .5s ease-out .4s backwards}
+.sec-rf{animation:riseIn .5s ease-out .54s backwards}
+.sec-pl{animation:riseIn .5s ease-out .68s backwards}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+@keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.theme-dock{
+  position:fixed; right:18px; bottom:18px; z-index:1001;
+  display:flex; gap:8px; padding:8px 10px; border-radius:999px;
+  background:var(--panel-solid); border:1px solid var(--border);
+  box-shadow:0 4px 18px rgba(0,0,0,.3);
+}
+.theme-dock .th-dot{
+  width:22px; height:22px; border-radius:50%; cursor:pointer;
+  border:2px solid transparent; padding:0;
+  transition:transform .15s ease, border-color .15s ease;
+}
+.theme-dock .th-dot:hover{ transform:scale(1.18); }
+.theme-dock .th-dot.on{ border-color:var(--text); }
+.theme-dock .th-dot[data-theme="tech"]{ background:#0ea5e9; }
+.theme-dock .th-dot[data-theme="biz"]{ background:#2563eb; }
+.theme-dock .th-dot[data-theme="mono"]{ background:#1e1f22; }
+.theme-dock .th-dot[data-theme="light"]{ background:#ffffff; }
+.theme-dock .th-dot[data-theme="warm"]{ background:#d97706; }
+@media print{ .theme-dock{ display:none; } }
+@media (max-width:680px){
+  body{ padding:24px 12px 32px; }
+  .wrap{ width:100%; max-width:none; }
+  .header-card{ padding:26px 18px 20px; }
+  .header-card h1{ font-size:26px; }
+}
+</style>
+</head>
+<body>
+<div class="grid-pattern"></div>
+<div class="stars"></div>
+<div class="scanband"></div>
+<div class="scanlines"></div>
+<div class="wrap">
+  <header class="header-card" id="headerCard">
+    <span class="scanline-el scan-x"></span>
+    <span class="scanline-el scan-y"></span>
+    <span class="scanline-el scan-x-rev"></span>
+    <span class="scanline-el scan-y-rev"></span>
+    <div class="card-glow"></div>
+    <h1>SkillForge 使用指引</h1>
+    <div class="header-sub">技能锻造坊 · 个人技能仓库与命令行分发器</div>
+    <span class="header-badge">npm 包 skill-forge-hub · 命令 skill-forge · 13 技能</span>
+  </header>
+
+  <section class="section sec-ov">
+    <div class="sec-bar"></div>
+    <div class="card-glow"></div>
+    <div class="sec-head">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15l4-5M8 15l4-5"/><circle cx="12" cy="14" r="8"/><path d="M12 14l4-5"/></svg>
+      <h2>一、SkillForge 是什么</h2>
+    </div>
+    <div class="lead"><b>SkillForge</b> 是一套个人技能仓库 + 命令行分发器：把 13 个技能打包分发，一条命令装进你的 AI 助手技能目录；升级时配置版本感知，你的本地个性化配置永不丢失。</div>
+    <div class="kw">
+      <div class="kw-item"><div class="kw-num">13</div><div class="kw-label">技能 · 六类：报表汇演 / 文档装裱 / 工程提效 / 演示汇演 / 沟通协作 / 技能自造</div></div>
+      <div class="kw-item"><div class="kw-num">ls · init · update</div><div class="kw-label">命令 skill-forge：只读浏览 / 交互安装 / 配置版本感知升级</div></div>
+      <div class="kw-item"><div class="kw-num">永不覆盖</div><div class="kw-label">用户配置出站 user-config.md，升级不丢个性化；结构变化先备份再三选一</div></div>
+    </div>
+    <table class="tbl">
+      <tr><th>分类</th><th>技能</th><th>一句话触发语</th></tr>
+      <tr><td>报表汇演</td><td>daily-report · weekly-report · monthly-report · quarterly-report · annual-report</td><td>「写日报 / 周报 / 月报 / 季报 / 年报」</td></tr>
+      <tr><td>文档装裱</td><td>article-to-html</td><td>丢给它一个文档</td></tr>
+      <tr><td>工程提效</td><td>spec-doc2spec · spec-spec2doc</td><td>「把这个文档转成需求规格 / 导出 Word·PDF」</td></tr>
+      <tr><td>演示汇演</td><td>magic-deck · deck-stage</td><td>「做个 PPT」（HTML 幻灯 / .pptx 可编辑）</td></tr>
+      <tr><td>沟通协作</td><td>meeting-minutes · prompt-pouch</td><td>「记会议」/「做一个锦囊管理页面」</td></tr>
+      <tr><td>技能自造</td><td>meta-forge</td><td>「帮我创建一个新技能」</td></tr>
+    </table>
+  </section>
+
+  <section class="section sec-ms">
+    <div class="sec-bar"></div>
+    <div class="card-glow"></div>
+    <div class="sec-head">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#5eead4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/></svg>
+      <h2>二、命令速查</h2>
+    </div>
+    <table class="tbl">
+      <tr><th>命令</th><th>说明</th></tr>
+      <tr><td><span class="cmd-in">skill-forge ls</span></td><td>列出全部技能（分类 + 名称 + 说明），只读不写文件</td></tr>
+      <tr><td><span class="cmd-in">skill-forge init</span></td><td>交互挑选安装：a 全装 / 编号挑选（已装标 ★）/ 确认时 s 跳过已装</td></tr>
+      <tr><td><span class="cmd-in">skill-forge update</span></td><td>升级全部已安装技能（配置版本感知）</td></tr>
+      <tr><td><span class="cmd-in">skill-forge update --skills a,b</span></td><td>只升级指定技能（未安装的提示跳过）</td></tr>
+      <tr><td><span class="cmd-in">skill-forge --version</span> / <span class="cmd-in">--help</span></td><td>显示版本号 / 完整帮助</td></tr>
+    </table>
+    <div class="lead">命令别名：<b>list = ls、install = init、upgrade = update</b>。通用参数（init / update 通用）：</div>
+    <div class="scn"><div class="scn-title">--target &lt;目录&gt;（-t）</div><p>指定技能目录；缺省自动探测常见助手目录（~/.qoder-cn、~/.claude、~/.cursor 等），探测到多个时交互选择</p></div>
+    <div class="scn"><div class="scn-title">--skills a,b（-s）</div><p>init 时跳过选择直接装指定技能（脚本与单件补装友好）；update 时只升级指定技能</p></div>
+    <div class="scn"><div class="scn-title">--yes（-y）</div><p>跳过确认直接执行；配置版本变化时默认「保留我的 + 官方版另存 .upstream 对照」</p></div>
+  </section>
+
+  <section class="section sec-gw">
+    <div class="sec-bar"></div>
+    <div class="card-glow"></div>
+    <div class="sec-head">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#a5b4fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 6h4M17 14h4M3 6h4M3 14h4"/><path d="M12 22a10 10 0 0 0 0-20"/></svg>
+      <h2>三、场景化使用流程</h2>
+    </div>
+    <div class="scn"><div class="scn-title">场景一 · 首次接入（从零到可用）</div>
+      <p><span class="cmd">npm i -g skill-forge-hub</span><span class="cmd">skill-forge ls</span><span class="cmd">skill-forge init</span>先浏览清单（只读）→ 交互挑选（a 全装 / 编号挑选 → 确认时 s 跳过已装）→ 自动探测技能目录 → 完成。装完直接对话触发：「写日报」「写周报」「写月报」「写季报」「写年报」「记会议」，或直接丢给它一个文档。</p></div>
+    <div class="scn"><div class="scn-title">场景二 · 单件补装（脚本 / 只想要某一个）</div>
+      <p><span class="cmd">skill-forge init --skills prompt-pouch --target ~/.qoder-cn/skills</span>跳过挑选环节，只装指定技能到指定目录。</p></div>
+    <div class="scn"><div class="scn-title">场景三 · 官方发新版后升级</div>
+      <p><span class="cmd">skill-forge update</span><span class="cmd">skill-forge update --skills daily-report</span>
+      配置结构没变：无感升级，user-config.md 原样保留；<br>
+      配置结构变了（CONFIG_VERSION 升了）：先备份 <span class="cmd-in">user-config.md.bak-&lt;时间戳&gt;</span>，再三选一——<span class="dot">[1]</span> 官方覆盖 / <span class="dot">[2]</span> 保留我的（默认，最稳，官方版另存 .upstream 对照文件手动合并）/ <span class="dot">[3]</span> 稍后处理；<br>
+      官方删了文件：按 .installed-manifest 安装清单精准清理，你自建的文件一律不动。</p></div>
+    <div class="scn"><div class="scn-title">场景四 · 非交互 / 自动化</div>
+      <p><span class="cmd">skill-forge init --skills daily-report,weekly-report --yes</span>--yes 跳过一切确认，配置冲突默认走 [2] 保留我的。</p></div>
+    <div class="scn"><div class="scn-title">场景五 · 换机器 / 换 AI 助手</div>
+      <p>新环境重新 <span class="cmd-in">npm i -g skill-forge-hub &amp;&amp; skill-forge init</span>；保留个人配置就把旧机器技能目录里的 user-config.md 一并拷过去（升级永不覆盖，覆盖安装时也保留）。</p></div>
+  </section>
+
+  <section class="section sec-rf">
+    <div class="sec-bar"></div>
+    <div class="card-glow"></div>
+    <div class="sec-head">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fda4af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+      <h2>四、典型技能使用链路</h2>
+    </div>
+    <div class="lead">统一节奏：<b>安装 → 首次生成 → 修改配置 → 官方升级后 → 旧产物回炉</b>。四个代表，其余同构。</div>
+    <ol class="chain">
+      <li><span class="idx rf"><b>1</b></span><div class="entry">
+        <div class="entry-title">日报 daily-report（报表族代表）</div>
+        <p><span class="cmd-in">skill-forge init --skills daily-report</span> → 说「写日报」口述内容即生成 md/txt/html（自动打开）+ 截图 → 改 user-config.md 的 DIR（落盘目录）/ THEME（五主题）/ TEMPLATE（自定义模板），临时口头要求当次生效不写配置 → 官方升级后选 [2] 保留我的，对照 .upstream 合并新配置点 → 模板版本戳升了说「把我旧日报都升级成新样式」：浅升级换样式块、深升级从同目录 md 底稿重建，旧版先备份。</p>
+      </div></li>
+      <li><span class="idx rf"><b>2</b></span><div class="entry">
+        <div class="entry-title">锦囊 prompt-pouch（本地管理台 + 用户数据）</div>
+        <p>装 → 「做一个锦囊管理页面」生成管理台 html + data/prompts.json → 日常：分组侧栏 / 搜索 / 收藏 / 标签过滤 / {变量} 插值一键复制 / 导入导出 JSON 备份；页面与数据分离，删页面不丢数据 → 改 user-config.md 的 DIR / DATA_DIR / BACKUP_DIR → 官方升级后数据目录与数据文件一概不动，深升级沿用原页 pouch-id，收藏分组照旧读回 → 多文件隔离：两份锦囊各自独立；复制文件副本 = 同一身份共享同一份数据（要独立身份请重新生成）。</p>
+      </div></li>
+      <li><span class="idx rf"><b>3</b></span><div class="entry">
+        <div class="entry-title">PPT 两形态 magic-deck / deck-stage</div>
+        <p>说「做个 PPT」AI 先问形态——HTML 幻灯（magic-deck）还是 .pptx 可编辑文稿（deck-stage）→ magic-deck 生成单文件 HTML 幻灯，浏览器全屏放映（自动播放 / 循环 / 热键翻页），需要图片时逐页 PNG 截图 → deck-stage 三问交互（素材 → 页骨架表 → 成片方式）生成 .pptx：常规页原生可编辑（数据卡 / 时间线 / 图表），封面与结尾页 HTML 截图保真 → deck-stage 依赖 PptxGenJS，npm 包不含 node_modules，装完按提示 <span class="cmd-in">cd &lt;技能目录&gt;/deck-stage &amp;&amp; npm install</span> 补装一次 → 配置（五主题 / 页面尺寸 / 演讲备注）在 user-config.md。</p>
+      </div></li>
+      <li><span class="idx rf"><b>4</b></span><div class="entry">
+        <div class="entry-title">会议纪要 meeting-minutes（汇报链源头）</div>
+        <p>装 → 「记会议」口述材料生成五段式纪要（会议信息 / 会议结论 / 议题讨论 / 决议与行动项 / 下次会议），行动项带负责人与截止时间——这就是日报 / 周报 / 月报 / 季报的汇报链源头 → SERIES_GROUP 三态：auto 自动提取系列名归入 meetings/{系列名}/、series 一律按系列建目录、off 纯月份平铺；改口机制「以后这个系列叫 XX」永久生效 → 官方升级后同报表族：配置三选一保护 + 说「把旧纪要升级成新样式」回炉。</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="section sec-pl">
+    <div class="sec-bar"></div>
+    <div class="card-glow"></div>
+    <div class="sec-head">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fdba74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>
+      <h2>五、通用小抄</h2>
+    </div>
+    <table class="tbl">
+      <tr><th>需求</th><th>做法</th></tr>
+      <tr><td>换落盘目录 / 主题 / 模板</td><td>改 user-config.md（升级永不覆盖）</td></tr>
+      <tr><td>官方发新版</td><td><span class="cmd-in">skill-forge update</span>，配置冲突选 [2] 保留我的</td></tr>
+      <tr><td>旧产物换新样式</td><td>说「把我旧 XX 都升级成新样式」</td></tr>
+      <tr><td>装漏技能</td><td><span class="cmd-in">skill-forge init --skills 技能名</span></td></tr>
+      <tr><td>查全部命令</td><td><span class="cmd-in">skill-forge --help</span></td></tr>
+      <tr><td>问单个技能用法</td><td>直接问「XX 技能怎么用」，AI 会读该技能的使用说明输出</td></tr>
+      <tr><td>问 SkillForge 本身</td><td>问「skillforge 怎么用」，AI 朗读本指引并打开排版页</td></tr>
+    </table>
+    <div class="faq">
+      <div class="faq-title">常见问题</div>
+      <div class="faq-item"><b>装完对话没触发技能？</b>确认装进了当前 AI 助手实际读取的技能目录（init 完成时输出的路径）。</div>
+      <div class="faq-item"><b>deck-stage 报缺依赖？</b><span class="cmd-in">cd &lt;技能目录&gt;/deck-stage &amp;&amp; npm install</span> 补装 PptxGenJS 一次即可。</div>
+      <div class="faq-item"><b>升级后配置会丢吗？</b>不会。user-config.md（与 .preserve 清单内文件）升级永不覆盖，本地修改永久保留。</div>
+      <div class="faq-item"><b>这份指引在哪？</b>每个技能的 resources/ 目录里都有（skillforge-guide.txt 文字版 + skillforge-guide.html 排版版），官方升级时随技能资源一起更新。</div>
+    </div>
+  </section>
+
+  <footer>GENERATED BY SKILLFORGE TEAM</footer>
+</div>
+
+<div class="theme-dock" id="themeDock">
+  <button class="th-dot" type="button" data-theme="tech" title="深蓝科技"></button>
+  <button class="th-dot" type="button" data-theme="biz" title="浅色商务"></button>
+  <button class="th-dot" type="button" data-theme="mono" title="IDEA 黑亮"></button>
+  <button class="th-dot" type="button" data-theme="light" title="IDEA 白亮"></button>
+  <button class="th-dot" type="button" data-theme="warm" title="温暖渐变"></button>
+</div>
+
+<script>
+// ?shot：截图/打印模式——停入场动画直接渲染终态（headless 虚拟时间下动画帧不推进会停在 0 相位）
+if (location.search.indexOf('shot=') !== -1) {
+  document.querySelectorAll('.header-card,.section').forEach(function(el){
+    el.style.animation = 'none'; el.style.opacity = '1';
+  });
+}
+// 主题换肤：五套配色随点随换；记忆上次选择（localStorage，失败静默）
+(function(){
+  var THEMES = ['tech','biz','mono','light','warm'];
+  var dock = document.getElementById('themeDock');
+  if (!dock) return;
+  function apply(t){ document.documentElement.setAttribute('data-theme', t);
+    dock.querySelectorAll('.th-dot').forEach(function(d){ d.classList.toggle('on', d.getAttribute('data-theme') === t); });
+    try{ localStorage.setItem('sf-guide-theme', t); }catch(e){} }
+  var cur = document.documentElement.getAttribute('data-theme');
+  var saved = null; try{ saved = localStorage.getItem('sf-guide-theme'); }catch(e){}
+  if (saved && THEMES.indexOf(saved) !== -1 && saved !== cur){ apply(saved); }
+  else{ dock.querySelectorAll('.th-dot').forEach(function(d){ d.classList.toggle('on', d.getAttribute('data-theme') === (cur || 'tech')); }); }
+  dock.querySelectorAll('.th-dot').forEach(function(d){ d.addEventListener('click', function(){ apply(d.getAttribute('data-theme')); }); });
+})();
+</script>
+</body>
+</html>

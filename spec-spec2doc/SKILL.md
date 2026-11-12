@@ -70,3 +70,13 @@ PDF 的 LaTeX 引擎（仅当要求 LaTeX 出 PDF 时）：macOS `brew install -
 - Word 是主路径（Pandoc 原生）；PDF 双路径 xelatex / Chrome 打印，引擎缺失先出 Word 并提示 Word 另存 PDF
 - 图片相对路径以工作目录为基准：转换前 cd 到源 md 目录或 --resource-path 声明；EMF 源图先转 PNG
 - 模板探测链 template.docx → reference.docx → Pandoc 默认样式；目录生成 TOC 默认开启
+
+
+---
+
+## 🔍 SkillForge 使用指引（整体咨询时触发）
+
+当用户询问 **SkillForge 本身**（不是单个技能用法）——「skillforge 怎么用 / 使用说明 / 使用指引 / 是什么」「技能怎么安装 / 怎么升级 / 装了哪些技能 / 技能清单」「skill-forge ls / init / update 等命令怎么用」「技能安装器 / 技能锻造坊」等（中英文、近似说法均可，关键词可自由扩展）：
+1. Read 同目录 `resources/skillforge-guide.txt` 全文，按其内容整理回答（命令与参数以 txt 为准，勿自行编造）
+2. 用系统命令打开同目录 `resources/skillforge-guide.html`（macOS `open`，Windows `start`），让用户在浏览器看排版版
+3. 用户只问单个技能怎么用时（如「日报怎么用」）不触发本指引，走本技能的使用说明

@@ -109,3 +109,13 @@ DIR（落盘根目录，DIR_MAC/DIR_WIN 双键）、THEME（tech/biz/mono/light/
 - **落盘防覆盖**：同名 pptx 已存在时加日期后缀（如 `-1106`），不覆盖旧文件
 - **零外部网络**：生成全程离线（截图用本地 Chrome/Edge headless，依赖本地 node_modules），pptx 双击即开
 - **未授权目录不写**：DIR 不存在或不可写时停下问用户，不猜路径
+
+
+---
+
+## 🔍 SkillForge 使用指引（整体咨询时触发）
+
+当用户询问 **SkillForge 本身**（不是单个技能用法）——「skillforge 怎么用 / 使用说明 / 使用指引 / 是什么」「技能怎么安装 / 怎么升级 / 装了哪些技能 / 技能清单」「skill-forge ls / init / update 等命令怎么用」「技能安装器 / 技能锻造坊」等（中英文、近似说法均可，关键词可自由扩展）：
+1. Read 同目录 `resources/skillforge-guide.txt` 全文，按其内容整理回答（命令与参数以 txt 为准，勿自行编造）
+2. 用系统命令打开同目录 `resources/skillforge-guide.html`（macOS `open`，Windows `start`），让用户在浏览器看排版版
+3. 用户只问单个技能怎么用时（如「日报怎么用」）不触发本指引，走本技能的使用说明

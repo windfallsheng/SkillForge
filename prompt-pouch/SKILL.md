@@ -102,3 +102,13 @@ disable-model-invocation: false
 - **插值语法**：内容里的 `{变量名}`（如「{功能名}」）会被页面自动识别为填充面板变量，写内容时按需保留花括号占位
 - **插值泛化纪律**：新增/整理提示词时主动识别可泛化的具体词（人名/日期/数字/对象名），向用户建议改为 {变量}（附改写示例与复用效果），用户确认后才改；不擅自泛化，用户拒绝则原样保留
 - **主题令牌纪律**：reference.html 组件样式一律引用 CSS 变量（--gold/--gold2/--gold-dim/--border/--tag-bg/--star/--glow/--scan/--scan-dim/--bar-hi/--bar-lo 等），禁止在组件侧硬编码暖棕金色值（#e8b04b、rgba(232,176,75,…)、rgba(23,17,12,…)）；新增样式需复用现有令牌或先在五主题块中各补一致定义；改主题只改对应 [data-theme] 块，不动组件
+
+
+---
+
+## 🔍 SkillForge 使用指引（整体咨询时触发）
+
+当用户询问 **SkillForge 本身**（不是单个技能用法）——「skillforge 怎么用 / 使用说明 / 使用指引 / 是什么」「技能怎么安装 / 怎么升级 / 装了哪些技能 / 技能清单」「skill-forge ls / init / update 等命令怎么用」「技能安装器 / 技能锻造坊」等（中英文、近似说法均可，关键词可自由扩展）：
+1. Read 同目录 `resources/skillforge-guide.txt` 全文，按其内容整理回答（命令与参数以 txt 为准，勿自行编造）
+2. 用系统命令打开同目录 `resources/skillforge-guide.html`（macOS `open`，Windows `start`），让用户在浏览器看排版版
+3. 用户只问单个技能怎么用时（如「日报怎么用」）不触发本指引，走本技能的使用说明

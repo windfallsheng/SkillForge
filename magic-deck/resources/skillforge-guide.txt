@@ -1,0 +1,106 @@
+# SkillForge 使用指引（技能锻造坊）
+
+SkillForge 是一套个人技能仓库 + 命令行分发器（npm 包 skill-forge-hub，命令 skill-forge）：把 13 个技能打包分发，一条命令装进你的 AI 助手技能目录；升级时配置版本感知，你的本地个性化配置永不丢失。
+
+## 一、SkillForge 是什么
+
+三个关键词：
+1、技能仓库：13 个技能按「最终产出什么」分六类（报表汇演 / 文档装裱 / 工程提效 / 演示汇演 / 沟通协作 / 技能自造），每个技能都是 SKILL.md 薄入口 + resources/ 分册 + user-config.md 用户配置的规范结构
+2、命令行分发器：npm 包 skill-forge-hub，命令 skill-forge（ls / init / update），自动探测 AI 助手技能目录，交互或非交互安装
+3、配置保护：每个技能的用户配置出站在 user-config.md，升级永不覆盖；配置结构变化时备份 + 三选一，官方新配置另存对照文件供手动合并
+
+技能全景（13 个）：
+
+| 分类 | 技能 | 一句话触发语 |
+|:---|:---|:---|
+| 报表汇演 | daily-report | 「写日报」 |
+| 报表汇演 | weekly-report | 「写周报」 |
+| 报表汇演 | monthly-report | 「写月报」 |
+| 报表汇演 | quarterly-report | 「写季报」 |
+| 报表汇演 | annual-report | 「写年报」 |
+| 文档装裱 | article-to-html | 丢给它一个文档 |
+| 工程提效 | spec-doc2spec | 「把这个文档转成需求规格」 |
+| 工程提效 | spec-spec2doc | 「把这个规格导出 Word/PDF」 |
+| 演示汇演 | magic-deck | 「做个 PPT」（HTML 幻灯形态） |
+| 演示汇演 | deck-stage | 「做个 PPT」（.pptx 可编辑形态） |
+| 沟通协作 | meeting-minutes | 「记会议」 |
+| 沟通协作 | prompt-pouch | 「做一个锦囊管理页面」 |
+| 技能自造 | meta-forge | 「帮我创建一个新技能」 |
+
+## 二、命令速查
+
+| 命令 | 说明 |
+|:---|:---|
+| skill-forge ls | 列出全部技能（分类 + 名称 + 说明），只读不写文件 |
+| skill-forge init | 交互挑选安装：a 全装 / 编号挑选（已装标 ★）/ 确认时 s 跳过已装 |
+| skill-forge update | 升级全部已安装技能（配置版本感知） |
+| skill-forge update --skills a,b | 只升级指定技能（未安装的提示跳过） |
+| skill-forge --version | 显示版本号 |
+| skill-forge --help | 显示完整帮助 |
+
+命令别名：list = ls、install = init、upgrade = update。
+
+通用参数（init / update 通用）：
+--target <目录>（-t）：指定技能目录；缺省自动探测常见助手目录（~/.qoder-cn、~/.claude、~/.cursor 等），探测到多个时交互选择
+--skills a,b（-s）：init 时跳过选择直接装指定技能（脚本与单件补装友好）；update 时只升级指定技能
+--yes（-y）：跳过确认直接执行；配置版本变化时默认「保留我的 + 官方版另存 .upstream 对照」
+
+## 三、场景化使用流程
+
+场景一 首次接入（从零到可用）：
+1、npm i -g skill-forge-hub
+2、skill-forge ls（先浏览清单，只读）
+3、skill-forge init（交互挑选）→ 输入 a 全装或编号挑选 → 确认时 s 跳过已装 → 自动探测技能目录 → 完成
+装完直接对话触发：「写日报」「写周报」「写月报」「写季报」「写年报」「记会议」，或直接丢给它一个文档。
+
+场景二 单件补装（脚本 / 只想要某一个）：
+skill-forge init --skills prompt-pouch --target ~/.qoder-cn/skills
+跳过挑选环节，只装指定技能到指定目录。
+
+场景三 官方发新版后升级：
+skill-forge update（全部）/ skill-forge update --skills daily-report（单个）
+· 配置结构没变：无感升级，user-config.md 原样保留
+· 配置结构变了（CONFIG_VERSION 升了）：先备份 user-config.md.bak-<时间戳>，再三选一——[1] 官方覆盖 / [2] 保留我的（默认，最稳，官方版另存 .upstream 对照文件手动合并）/ [3] 稍后处理
+· 官方删了文件：按 .installed-manifest 安装清单精准清理，你自建的文件一律不动
+
+场景四 非交互 / 自动化：
+skill-forge init --skills daily-report,weekly-report --yes
+--yes 跳过一切确认，配置冲突默认走 [2] 保留我的。
+
+场景五 换机器 / 换 AI 助手：
+新环境重新 npm i -g skill-forge-hub && skill-forge init；保留个人配置就把旧机器技能目录里的 user-config.md 一并拷过去（升级永不覆盖，覆盖安装时也保留）。
+
+## 四、典型技能使用链路
+
+统一节奏：安装 → 首次生成 → 修改配置 → 官方升级后 → 旧产物回炉。
+
+1、日报（报表族代表）：
+装 skill-forge init --skills daily-report → 说「写日报」口述内容即生成 md/txt/html（自动打开）+ 截图 → 改 user-config.md 的 DIR（落盘目录）/ THEME（五主题）/ TEMPLATE（自定义模板），临时口头要求当次生效不写配置 → 官方升级后选 [2] 保留我的，对照 .upstream 合并新配置点 → 模板版本戳升了说「把我旧日报都升级成新样式」：浅升级换样式块、深升级从同目录 md 底稿重建，旧版先备份。
+
+2、锦囊 prompt-pouch：
+装 → 「做一个锦囊管理页面」生成管理台 html + data/prompts.json → 日常：分组侧栏 / 搜索 / 收藏 / 标签过滤 / {变量} 插值一键复制 / 导入导出 JSON 备份；页面与数据分离，删页面不丢数据 → 改 user-config.md 的 DIR / DATA_DIR / BACKUP_DIR → 官方升级后数据目录与数据文件一概不动，深升级沿用原页 pouch-id，收藏分组照旧读回 → 多文件隔离：两份锦囊各自独立；复制文件副本 = 同一身份共享同一份数据（要独立身份请重新生成）。
+
+3、PPT 两形态 magic-deck / deck-stage：
+说「做个 PPT」AI 先问形态——HTML 幻灯（magic-deck）还是 .pptx 可编辑文稿（deck-stage）→ magic-deck 生成单文件 HTML 幻灯，浏览器全屏放映（自动播放 / 循环 / 热键翻页），需要图片时逐页 PNG 截图 → deck-stage 三问交互（素材 → 页骨架表 → 成片方式）生成 .pptx：常规页原生可编辑（数据卡 / 时间线 / 图表），封面与结尾页 HTML 截图保真 → deck-stage 依赖 PptxGenJS，npm 包不含 node_modules，装完按提示 cd <技能目录>/deck-stage && npm install 补装一次 → 配置（五主题 / 页面尺寸 / 演讲备注）在 user-config.md。
+
+4、会议纪要 meeting-minutes：
+装 → 「记会议」口述材料生成五段式纪要（会议信息 / 会议结论 / 议题讨论 / 决议与行动项 / 下次会议），行动项带负责人与截止时间——这就是日报 / 周报 / 月报 / 季报的汇报链源头 → SERIES_GROUP 三态：auto 自动提取系列名归入 meetings/{系列名}/、series 一律按系列建目录、off 纯月份平铺；改口机制「以后这个系列叫 XX」永久生效 → 官方升级后同报表族：配置三选一保护 + 说「把旧纪要升级成新样式」回炉。
+
+## 五、通用小抄
+
+| 需求 | 做法 |
+|:---|:---|
+| 换落盘目录 / 主题 / 模板 | 改 user-config.md（升级永不覆盖） |
+| 官方发新版 | skill-forge update，配置冲突选 [2] 保留我的 |
+| 旧产物换新样式 | 说「把我旧 XX 都升级成新样式」 |
+| 装漏技能 | skill-forge init --skills 技能名 |
+| 查全部命令 | skill-forge --help |
+| 问单个技能用法 | 直接问「XX 技能怎么用」，AI 会读该技能的使用说明输出 |
+| 问 SkillForge 本身 | 问「skillforge 怎么用」，AI 朗读本指引并打开排版页 |
+
+## 六、常见问题
+
+1、装完对话没触发技能：确认装进了当前 AI 助手实际读取的技能目录（init 完成时输出的路径）
+2、deck-stage 报缺依赖：cd <技能目录>/deck-stage && npm install 补装 PptxGenJS 一次即可
+3、升级后配置会丢吗：不会。user-config.md（与 .preserve 清单内文件）升级永不覆盖，本地修改永久保留
+4、这份指引在哪：每个技能的 resources/ 目录里都有（skillforge-guide.txt 文字版 + skillforge-guide.html 排版版），官方升级时随技能资源一起更新

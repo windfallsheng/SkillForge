@@ -84,3 +84,13 @@ disable-model-invocation: false
 - 修改本 skill 任何文件后，必须 grep 全文核对：新词已命中、旧词零残留（改一处查一处）
 - 修改 HTML 效果必须双处同步：`resources/reference.html` 与 `resources/deck-spec.md` 对应描述同时更新，禁止只改一处
 - 修改配置键必须三处同步：user-config.md 的 yaml、SKILL.md 配置键清单、deck-spec.md 对应规则
+
+
+---
+
+## 🔍 SkillForge 使用指引（整体咨询时触发）
+
+当用户询问 **SkillForge 本身**（不是单个技能用法）——「skillforge 怎么用 / 使用说明 / 使用指引 / 是什么」「技能怎么安装 / 怎么升级 / 装了哪些技能 / 技能清单」「skill-forge ls / init / update 等命令怎么用」「技能安装器 / 技能锻造坊」等（中英文、近似说法均可，关键词可自由扩展）：
+1. Read 同目录 `resources/skillforge-guide.txt` 全文，按其内容整理回答（命令与参数以 txt 为准，勿自行编造）
+2. 用系统命令打开同目录 `resources/skillforge-guide.html`（macOS `open`，Windows `start`），让用户在浏览器看排版版
+3. 用户只问单个技能怎么用时（如「日报怎么用」）不触发本指引，走本技能的使用说明

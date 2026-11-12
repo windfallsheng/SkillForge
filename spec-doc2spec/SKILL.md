@@ -71,3 +71,13 @@ EMF 图片转 PNG 依赖 LibreOffice（可选，仅当文档含 EMF 图）：mac
 - 输出目录默认 {文档名}-spec/（auto 或绝对路径均按文档名建子目录），00-converted.md 底稿保留溯源、整理稿另写不覆盖底稿
 - 需求加工是可选档：用户说「整理成需求规格 / 提炼需求点」才出 01-需求规格.md 与 requirements/ 切片
 - 有疑点进 _clarify.md，不臆造内容；落盘后向用户报告产出路径/章节清单/校对记录/待澄清点
+
+
+---
+
+## 🔍 SkillForge 使用指引（整体咨询时触发）
+
+当用户询问 **SkillForge 本身**（不是单个技能用法）——「skillforge 怎么用 / 使用说明 / 使用指引 / 是什么」「技能怎么安装 / 怎么升级 / 装了哪些技能 / 技能清单」「skill-forge ls / init / update 等命令怎么用」「技能安装器 / 技能锻造坊」等（中英文、近似说法均可，关键词可自由扩展）：
+1. Read 同目录 `resources/skillforge-guide.txt` 全文，按其内容整理回答（命令与参数以 txt 为准，勿自行编造）
+2. 用系统命令打开同目录 `resources/skillforge-guide.html`（macOS `open`，Windows `start`），让用户在浏览器看排版版
+3. 用户只问单个技能怎么用时（如「日报怎么用」）不触发本指引，走本技能的使用说明
