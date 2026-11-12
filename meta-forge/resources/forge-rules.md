@@ -110,6 +110,7 @@
 11. 产物版本戳（含 HTML 的技能）：reference.html 头部含 `<meta name="sf-template" content="<技能名>@N">`（N≥1）；SKILL.md 含「产物升级（回炉）」节且判定含无版本戳/无稳定 ID meta 视为 v0 最旧版
 12. 版本递增与主动提示（含 HTML 的技能）：SKILL.md 回炉节含版本递增判定（业务/数据格式/页面改动均 bump）与主动提示语（顺扫旧产物 + 告知触发语）
 13. 入场动画兜底（含 HTML 且含滚动入场动画的技能）：reference.html 含 2s 兜底强制全显代码（`.rv:not(.in)` 模式或等价），确保 headless 截图 / 打印预览内容全显
+14. 执行层自愈块（含 HTML 且页面有 localStorage 记忆的技能）：HTML 内嵌 JS 含 id meta 校验——非法或缺失（占位残留 / 手写变体 / 误沿用旧值）时按路径键（`sf-heal:` + location.pathname）自愈为 crypto.randomUUID() 标准 v4 并回写 meta，console.warn 显性报警
 
 ### B. 运行时实测（含 HTML 的技能必做，Playwright headless channel="chrome"）
 
@@ -117,6 +118,7 @@
 2. 关键交互实测：主题/状态切换 → localStorage 键带路径 → 刷新恢复
 3. 多文件隔离实测：复制 HTML 到第二路径（用户数据类改成换 ID）→ 两份各自读写键互不干扰；用户数据类加测：同 ID 文件移动到新目录 → 数据保留
 4. 截图验证：headless 全页截图内容完整（标题 / 关键卡片 / 区块可见），入场动画兜底后内容全显；截图空白即失败（真实教训：入场动画无兜底 → headless 截图空白）
+5. 自愈实测（页面有 localStorage 记忆的技能）：把 id meta 改坏（占位值或删除）→ 重新打开页面 → meta 自愈为合法 v4 + console.warn 报警 + localStorage 记忆经路径键恢复（不丢）
 
 ### C. 验证证据（交付报告必附）
 
@@ -130,3 +132,4 @@
 3. cli.js 的 CATEGORIES 数组：同步登记（name/en/skills），与 README 分类表一致
 4. README「目录结构」图：按需补新技能目录
 5. 登记后跑 `skill-forge ls` 验证技能出现在正确分类下
+6. package.json 的 files 数组：补技能目录名——npm 包内容遗漏教训（1.0.5 曾漏 monthly-report/meeting-minutes/quarterly-report 三技能，装包却无技能）；登记后跑 `npm pack --dry-run` 验证新技能目录出现在包内容清单中

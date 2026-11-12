@@ -15,8 +15,8 @@ meta-forge 是「造 skill 的 skill」：把一段重复劳作，按 SkillForge
   6. 多文件隔离——页面有 localStorage 记忆时，键按页内嵌唯一 ID（标准 UUID v4）命名空间，多份产物互不串台、改名/移动目录记忆不丢
   7. 零侵权脱敏离线——品牌字体零出现、禁 CDN 页面离线可开、示例数据零真实身份（通用占位）
   8. 产物升级回炉——HTML 带模板版本戳（业务/数据格式/页面改动均 bump），升级后可扫旧产物交互式回炉（浅升级区块替换/深升级 md 重建），生成时顺扫旧版主动提示触发语
-- 交付前跑验证环（偏差必被发现）：静态门禁逐项 grep + 含 HTML 时 Playwright 实测（零 JS 错误 / 键带路径 / 刷新恢复 / 多文件隔离），验证证据随交付报告附上
-- 技能入 SkillForge 仓库时，自动登记 README 技能分类表/技能清单/目录结构与 cli.js CATEGORIES
+- 交付前跑验证环（偏差必被发现）：静态门禁逐项 grep + 含 HTML 时 Playwright 实测（零 JS 错误 / 键带路径 / 刷新恢复 / 多文件隔离 / 自愈实测），验证证据随交付报告附上
+- 技能入 SkillForge 仓库时，自动登记 README 技能分类表/技能清单/目录结构、cli.js CATEGORIES 与 package.json files（npm 包不遗漏技能）
 
 ## 怎么用
 
