@@ -13,11 +13,11 @@ Turn any Word/Markdown/plain-text article into a standalone styled HTML page and
 
 ## ⚙️ 配置与自定义主题
 
-**执行本 skill 前必须先 Read 同目录 `user-config.md`**：`THEME` 配置决定 A 款页面的默认主题色（tech 科技蓝 / gold 暖棕金 / forest 墨绿 / plum 梅紫）。升级技能时 user-config.md 不会被覆盖，你的修改永久保留。
+**执行本 skill 前必须先 Read 同目录 `user-config.md`**：`THEME` 配置决定 A 款页面的默认主题色（tech 科技蓝 / gold 暖棕金 / forest 墨绿 / plum 梅紫）；`DIR` 配置决定产物落盘根目录（auto 按系统选 DIR_MAC/DIR_WIN，目录不存在时回退用户主目录，用户口头指定目录永远优先）。升级技能时 user-config.md 不会被覆盖，你的修改永久保留。
 
 ## 配置版本机制（升级保护）
 
-本 skill 当前配置版本为 `1`（对应 user-config.md 中的 `CONFIG_VERSION`）。执行时若发现 user-config.md 的 CONFIG_VERSION 与本节声明不一致：
+本 skill 当前配置版本为 `2`（对应 user-config.md 中的 `CONFIG_VERSION`）。执行时若发现 user-config.md 的 CONFIG_VERSION 与本节声明不一致：
 1. 将旧 user-config.md 备份为 `user-config.md.bak-<时间戳>`
 2. 保留用户全部自定义字段，按本节「当前版本变更记录」逐项改写旧字段
 3. 更新 CONFIG_VERSION 为当前版本
@@ -27,7 +27,8 @@ Turn any Word/Markdown/plain-text article into a standalone styled HTML page and
 
 **无法迁移项处理**（值域失效 / 语义漂移 / 数据不兼容）：三情形——①旧值不在新值域（如旧模板/主题名已移除）②同名键含义变化（单位/枚举变更）③数据文件 schema 不兼容。三绝不：绝不静默（无法迁移项停下问，不猜值）、绝不丢失（旧值永远在 .bak-时间戳）、一次说清（升级报告三段式：⚠️ 版本与备份路径 → ✅ 已自动迁移清单 → 🟡 无法迁移项逐条附原因+影响+建议替代）；随后 AskUserQuestion 三选项（A 用建议值 / B 用户给新值 / C 保持旧配置——不更新 CONFIG_VERSION，每次执行再提醒）；报告必附回滚一句话；数据文件迁移前先复制 .bak-时间戳，能映射则映射、不能则写兼容层或留备份提示手动整理
 
-当前版本变更记录：暂无（初始版本 1，含 THEME 字段）。
+当前版本变更记录：
+- v1→v2：新增 `DIR: auto` + `DIR_MAC: ~/articles` + `DIR_WIN: %USERPROFILE%\articles`（产物落盘根目录，auto 按系统选、目录不存在回退用户主目录、口头指定优先）；其余字段不变。
 
 ## 产物升级（回炉）
 
@@ -163,7 +164,7 @@ grep -nE "PingFang|YaHei|apple-system|sans-serif|serif|monospace|SF Mono|Menlo|M
   - 截图对象：封面 `.hero` + `.wrap` 内每个 `section`（引言 + 各章 + 写在最后 + 作者），一章节一张
   - **统一宽度**：JS 注入 `.hero` → `width:730px;margin:0 auto;padding:112px 16px 104px;box-sizing:border-box`；每个 section → `padding:72px 16px 24px`；DPR=2 时所有图宽度一致（1460px）
   - 元素级截图，截前先 `scrollIntoView`；四周 16px 内边距保证 box-shadow 阴影完整显示
-  - 命名与顺序：`C00-封面.png`、`C00-引言.png`、`C01-<章节短名>.png` … `C13-作者介绍.png`，保存到 `<目标目录>/文章截图/章节截图/`
+  - 命名与顺序：`C00-封面.png`、`C00-引言.png`、`C01-<章节短名>.png` … `C13-作者介绍.png`，保存到 `<目标目录>/文章截图/<标题slug>/`（slug 用简洁英文或拼音；每篇文章一个目录，多篇文章截图互不覆盖；同一目标目录下已有同 slug 目录时对话确认归属，同名不同篇则 slug 追加 -2/-3 序号）
   - 若子代理报浏览器窗口不可见（`NATIVE_BROWSER_VIEWPORT_UNAVAILABLE`），请用户把浏览器窗口置前，然后重新派发子代理；不要无限重试
 
 - **窗口不可见时的 headless 兜底**（三轮置前失败后直接走此路，无需可见窗口）：
@@ -208,12 +209,14 @@ grep -nE "PingFang|YaHei|apple-system|sans-serif|serif|monospace|SF Mono|Menlo|M
 
 ## Output conventions
 
+<目标目录> = 用户口头指定的目录；未指定时取 user-config.md 的 DIR（auto 按系统选 DIR_MAC/DIR_WIN，目录不存在时回退用户主目录）。
+
 ```
 <目标目录>/
 ├── <标题>.html                        # 标准版（依赖 assets/fonts）
 ├── <标题>-单文件版.html                # 字体全内嵌，双击即开
 ├── assets/fonts/roboto-latin-{400,500,700,900}-normal.woff2
-└── 文章截图/章节截图/
+└── 文章截图/<标题slug>/            # 每篇文章一个目录，互不覆盖
     ├── C00-封面.png  C00-引言.png  C01-*.png … C13-作者介绍.png
 ```
 
