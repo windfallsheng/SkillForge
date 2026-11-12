@@ -7,9 +7,9 @@
 1. **TPL_CSS 块**（原样）：插到 CSS 内嵌点注释（`/* ▼ 用户模板 CSS 内嵌点`）**之前**
 2. **TPL_FN 块**（原样）：插到 FN 内嵌点注释（`/* ▼ 用户模板渲染函数内嵌点`）**之后**
 3. **模板坞**：在按钮内嵌点注释（`<!-- ▼ 用户模板按钮内嵌点`）**之后**插分组标 `<span class="tp-sep">我的模板</span>`（多份模板只插一次）+ 每份一个 `<button class="tp-btn" data-tpl="{name}" title="{label}">{label}</button>`
-4. **TPLS 数组**：`'window'` 之后追加 `,'{name}'`
+4. **TPLS 数组**：数组末尾（`'notice'` 之后）追加 `,'{name}'`
 
-约束：name 必须唯一且不与官方 16 个（classic/minimal/magazine/hero/timeline/grid/dashboard/brutalist/swiss/bauhaus/mondrian/editorial/typo/memphis/exhibit/window）重名；缺区块/重名的文件跳过并在对话中提醒用户。TPL_DIR 不存在或无 html 文件则跳过本步。
+约束：name 必须唯一且不与官方 28 个（classic/minimal/swiss/window/magazine/editorial/typo/newspaper/dashboard/grid/timeline/hero/bauhaus/mondrian/memphis/exhibit/popart/opart/artnouveau/brutalist/acid/glitch/vaporwave/cyber/academic/recruit/invitation/notice）重名；缺区块/重名的文件跳过并在对话中提醒用户。TPL_DIR 不存在或无 html 文件则跳过本步。
 
 先 Read `resources/reference.html` 全文，以其为骨架模板，**只替换三处**，其余（CSS/JS/结构）一律不许动：
 
