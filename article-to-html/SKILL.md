@@ -91,7 +91,7 @@ Turn any Word/Markdown/plain-text article into a standalone styled HTML page and
 - 通读解析出的内容，判断文章气质（科技 / 文艺 / 教程 / 科普 / 报道 / 商业等），从 [design-system.md](design-system.md)「0. 风格菜单」的六款版式中选一款
 - 默认款（暗色封面长文风）适用于大多数科技 / 产品文；文艺散文选文艺排版风；教程干货选极简白；硬核技术选终端极客风；科普清单选卡片流；深度报道选报纸分栏
 - 拿不准或用户有明确偏好时，用 AskUserQuestion 让用户在 2-4 款候选里挑（每款附一句话气质描述），不替用户做有风格争议的决定
-- A 款页面主题色默认取 user-config.md 的 `THEME` 值写入 `<html data-theme>`，页面右下角换肤坞四色点随点随换（浏览器本地记忆，键按页内嵌唯一 ID 隔离、多份产物互不串台、改名/移动目录记忆不丢（生成时头部写 `<meta name="article-id" content="<UUID>">`，每次新 UUID））
+- A 款页面主题色默认取 user-config.md 的 `THEME` 值写入 `<html data-theme>`，页面右下角换肤坞四色点随点随换（浏览器本地记忆，键按页内嵌唯一 ID 隔离、多份产物互不串台、改名/移动目录记忆不丢（生成时头部写 `<meta name="article-id" content="<UUID>">`，每次 crypto.randomUUID() 生成标准 UUID v4（8-4-4-4-12 十六进制，禁止手写变体、禁止沿用占位与旧值）；落盘写文件前顺扫落盘目录下本技能命名的 html，读各文件 id meta 查重，撞号重掷至不重复））
 - 任何风格都不许引入第三个字体：文艺排版风同样只用思源黑体，文艺感靠排版营造（大行距、留白、首字下沉、细分割线），不得改用宋体
 - 无论哪款风格：字体白名单锁死（Roboto + 思源黑体）、零兜底、第 3.5 步核查照跑
 

@@ -46,6 +46,6 @@ disable-model-invocation: false
 - **行动项是汇报链源头**：每条行动项必须带负责人与截止时间；日报/周报/月报/季报生成时可直接引用本纪要的行动项作为任务来源
 - 中文顿号序号（1、2、3）；段内无内容写「暂无」；去口语化，保留事实与数字
 - **系列分组落盘**：SERIES_GROUP=auto 时从会议主题提取稳定系列名（去日期词/序号词，如「11月12日产品周例会」→「产品周例会」），落盘确认时报系列名给用户可改口；提取到 → `meetings/{系列名}/`（系列名目录名清洗：非法字符 / \ : * ? " < > | 替换为 -）；未提取到 → 回退月份平铺 `meetings/YYYY-MM/`。说「把我旧纪要按系列整理」→ 扫 meetings/ 下全部 meeting-minutes-* 文件，从文件名 slug 或 md 头部主题提取系列名建目录归置（md/txt/html/png 全套移动），报告三段式：✅ 已整理清单 / ⚠️ 无法归类留在原地的清单 / 🟡 失败项原因；整理前先列移动计划让用户确认，移动后不删空月份目录（留给用户自行处置）
-- **THEME**：html 页面主题，tech 深蓝科技（默认）/ biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变；生成时写 `<html data-theme="THEME值">` 定默认，页面右下角换肤坞随点随换（localStorage 记忆（键按页内嵌唯一 ID 隔离、多份产物互不串台、改名/移动目录记忆不丢（生成时头部写 `<meta name="minutes-id" content="<UUID>">`，每次新 UUID））、?shot 截图模式与打印隐藏）
+- **THEME**：html 页面主题，tech 深蓝科技（默认）/ biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变；生成时写 `<html data-theme="THEME值">` 定默认，页面右下角换肤坞随点随换（localStorage 记忆（键按页内嵌唯一 ID 隔离、多份产物互不串台、改名/移动目录记忆不丢（生成时头部写 `<meta name="minutes-id" content="<UUID>">`，每次 crypto.randomUUID() 生成标准 UUID v4（8-4-4-4-12 十六进制，禁止手写变体、禁止沿用占位与旧值）；落盘写文件前顺扫落盘目录下本技能命名的 html，读各文件 id meta 查重，撞号重掷至不重复））、?shot 截图模式与打印隐藏）
 - 会议类型按 `resources/meeting-type-dictionary.md` 词典取要素侧重与行动项模板（未提类型按 ROLE 画像推断，推断不出用通用模板）
 - 完整规则（要素提取 / 素材来源 / 写作风格约束 / 使用提示）见 `resources/content-rules.md`

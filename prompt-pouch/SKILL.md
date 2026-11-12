@@ -42,7 +42,7 @@ disable-model-invocation: false
 1. **初始化**（目标目录无 `prompt-pouch.html` 时）：
    - **已有页面分支**：用户说「创建/生成」但目标目录已有 prompt-pouch.html → AskUserQuestion 三选项：A 打开现有页面（推荐，数据无损）；B 覆盖重建——旧页面先复制 .bak-时间戳，仅重置页面为新版 reference.html（DATA_DIR/BACKUP_DIR 数据目录一概不动，用户数据绝不丢）；C 取消不创建。默认推荐 A
    - **目录确认**：用户未提目录 → 用配置 `DIR`；`CONFIRM: true` 时先 AskUserQuestion 确认（选项：用默认目录 / 换目录）；用户已说「放到 XX 目录」→ 直接用该目录（本次会话有效，不改配置文件）
-   - 复制 `resources/reference.html` → `<DIR>/prompt-pouch.html`（原样复制，不修改任何样式与脚本；仅两处例外：①html 根标签 `data-theme` 属性值设为配置 `THEME`——reference 默认 "gold"，仅当配置非 gold 时替换该属性值；②head 中 `<meta name="pouch-id" content="...">` 的 content 替换为本次新生成的全局唯一 ID——UUID 格式随机串（十六进制 8-4-4-4-12 节，禁止沿用 reference 的占位 ID REF-POUCH-0000、禁止两份锦囊共用同一 ID；复制文件副本=同一身份共享数据））
+   - 复制 `resources/reference.html` → `<DIR>/prompt-pouch.html`（原样复制，不修改任何样式与脚本；仅两处例外：①html 根标签 `data-theme` 属性值设为配置 `THEME`——reference 默认 "gold"，仅当配置非 gold 时替换该属性值；②head 中 `<meta name="pouch-id" content="...">` 的 content 替换为本次用 crypto.randomUUID() 新生成的全局唯一 ID——标准 UUID v4（十六进制 8-4-4-4-12 节，禁止手写变体、禁止沿用 reference 的占位 ID REF-POUCH-0000、禁止两份锦囊共用同一 ID；复制文件副本=同一身份共享数据）；落盘写文件前顺扫 <DIR> 下已有 html 的 pouch-id meta 查重，撞号重掷至不重复）
    - 创建 `<DIR>/<DATA_DIR>/` 与 `<DIR>/<BACKUP_DIR>/` 子目录（配置为空串则跳过、平铺根目录）；生成 `<DIR>/<DATA_DIR>/prompts.json`：`INIT_DATA: example` 时写入「各职业通用」示例五组（写作输出/沟通协作/规划执行/复盘成长/提问艺术，每组 3 条，标题与正文按下方「## 默认示例数据」清单写，**每条必带 createdAt 当前时间（YYYY-MM-DD HH:mm:ss，写到时分秒）**）；`empty` 时写空结构（version + 空 groups/prompts）
    - 收尾提示启动方式：`cd <DIR> && python3 -m http.server <PORT>`（Windows 无 python3 时 `py -m http.server`），浏览器访问 `http://localhost:<PORT>/prompt-pouch.html`（HTTP 才能读 prompts.json；file:// 直开回退缓存快照）
 2. **维护**（页面已存在时）：读 `<DIR>/<DATA_DIR>/prompts.json` → 按用户意图修改 → 写回（UTF-8、2 空格缩进、保留 version 字段）→ 提醒用户刷新页面

@@ -1358,6 +1358,21 @@ themeGrid.addEventListener('click', function(e){
 
 /* 稳定身份命名空间：localStorage 键按页内嵌唯一 ID（meta deck-id）命名——Chrome/Safari 下 file:// 与 localhost 共享同源存储，固定键名会导致多份演示稿主题/动画互相串台；ID 与文件路径解耦，改名/移动目录记忆不丢 */
 var DECK_ID = ((document.querySelector('meta[name="deck-id"]') || {}).content || 'ref-deck').trim();
+/* ID 格式自愈（格式定死执行层）：meta 非法或缺失（占位残留/手写变体/误沿用旧值）时按路径键自愈为 crypto.randomUUID() 标准 v4，同路径跨打开稳定；合法 UUID 原样使用（复制文件副本=同一身份共享数据，是特性） */
+if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(DECK_ID)) {
+  var __sfHealKey = 'sf-heal:' + location.pathname;
+  try { DECK_ID = localStorage.getItem(__sfHealKey) || DECK_ID; } catch (e) {}
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(DECK_ID)) {
+    try { DECK_ID = crypto.randomUUID(); } catch (e) {
+      DECK_ID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c){ var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8); return v.toString(16); });
+    }
+    try { localStorage.setItem(__sfHealKey, DECK_ID); } catch (e) {}
+  }
+  var __sfMeta = document.querySelector('meta[name="deck-id"]');
+  if (__sfMeta) __sfMeta.setAttribute('content', DECK_ID);
+  console.warn('[magic-deck] meta deck-id 非法或缺失，已自愈为标准 v4 ID（' + DECK_ID + '），建议重新生成页面固化');
+}
+
 var MD_NS = 'md-deck:' + DECK_ID;
 
 /* 主题记忆：全局主题 + 本页主题（按页码索引）序列化到 localStorage，刷新恢复；失败静默 */
