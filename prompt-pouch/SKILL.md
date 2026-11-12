@@ -65,6 +65,17 @@ disable-model-invocation: false
    - 条目少（≤3 条）时两段可合并一次确认：报完整方案表（条目 + 标签 + 分组 + 插值建议），一次确认
 6. **使用咨询**（用户只问「锦囊怎么用」等用法、未要求生成或修改）→ 读 `resources/usage-guide.md`，将其内容原样输出（首行标题改为「锦囊使用指南」），不读写任何文件
 
+
+## 🔧 报修处理流程（用户报页面问题时）
+
+用户说「锦囊页面效果不对 / 布局乱了 / 卡片显示异常 / 交互坏了」（常附截图或指出具体现象）→ 按以下流程处理：
+
+1. **立标准**：先 Read 本 skill 目录 `resources/reference.html`——它就是设计标准答案；再 Read `<DIR>/<DATA_DIR>/prompts.json` 确认数据本身合法（schema / group 引用 / order 连续）
+2. **分诊**：数据问题（读不到 / 卡数不对 / 分组错乱）→ 修 prompts.json；页面问题（样式 / 布局 / 交互）→ 对照 reference.html 比对那份 `<DIR>/prompt-pouch.html` 的跑偏处
+3. **修复**：页面跑偏 → 以 reference.html 为准重新复制覆盖 `<DIR>/prompt-pouch.html`（用户数据 prompts.json 一概不动，绝不丢）；数据问题 → 重读最新文件后按 data-format.md 修正写回
+4. **自证**：Playwright headless（channel="chrome"）→ 起本地服务 → 挂 pageerror 零容忍 → 断言卡片数等于 prompts.json 条数 → 截图 Read 自查
+5. **汇报**：一句话说清问题根因 + 修复了什么 + 附截图；若根因在 reference.html 自身，顺修 reference.html 并在汇报中说明「参考模板已同步修正」
+
 ## ⚙️ 配置与自定义主题
 
 **执行本 skill 前必须先 Read 同目录 `user-config.md`**：目录（DIR/DIR_WIN）、端口（PORT）、初始化数据（INIT_DATA）、确认开关（CONFIRM）、主题（THEME）等默认配置都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留。

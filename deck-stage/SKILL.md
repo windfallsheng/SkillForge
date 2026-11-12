@@ -57,6 +57,17 @@ disable-model-invocation: false
 6. **落盘与打开**：按配置 DIR 落盘；`OPEN_PPTX: true` 时打开（macOS：`open <pptx>`；Windows：`start <pptx>`）
 7. **使用咨询**（用户只问「登台怎么用」「报告转 PPT 怎么用」等用法、未要求生成）→ 读 `resources/usage-guide.md`，将其内容原样输出（首行标题改为「登台 deck-stage 使用指南」），不执行任何生成动作
 
+
+## 🔧 报修处理流程（用户报成品问题时）
+
+用户说「封面/结尾页效果不对」「第 N 页版式不对」「ppt 打开有问题」（常附截图或指出具体现象）→ 按以下流程处理，不以「重新生成一份」敷衍：
+
+1. **立标准**：封面/结尾页的标准答案在 `resources/cover-template.html`；常规页版式标准在 `resources/pptx-builder.js`（真相源）+ `resources/data-schema.md`（schema 描述）
+2. **分诊**：封面/结尾页问题 → 重新生成截图（按第 3 步流程替换 COVER 对象重截）；常规页版式问题 → Read data.json 与 data-schema.md 比对定位（字段缺/映射错/主题错）
+3. **修复**：以 builder 与 data-schema 为准修 data.json 后重跑 builder；封面问题修 cover-template.html 或 COVER 数据后重截
+4. **自证**：`unzip -l <pptx>` 校验 slide 数与非空 + 输出 `PPTX_OK`；封面重截后 Read 截图自查
+5. **汇报**：一句话说清问题根因 + 修复了什么 + 附截图；若根因在 cover-template.html / pptx-builder.js 自身，顺修仓库模板并在汇报中说明「参考模板已同步修正」
+
 ## ⚙️ 默认配置（在 user-config.md，执行前必须先 Read）
 
 DIR（落盘根目录，DIR_MAC/DIR_WIN 双键）、THEME（tech/biz/mono/light/warm）、OPEN_PPTX（生成后是否打开）、CONFIRM（落盘前确认）、MODE（成片方式 page-by-page/once）、AUDIENCE（受众画像，备注话术参考）、NOTES（是否生成演讲备注）——均以 `user-config.md` 为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留。

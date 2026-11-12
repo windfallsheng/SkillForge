@@ -18,6 +18,11 @@ disable-model-invocation: false
 3. **内容归类与润色**（聚合来源 / 补充任务 / 纯文字模式 / 输出格式 / 写作风格）→ 读 `resources/content-rules.md`
 4. **行业词条**（话术含职业词时按词典取词）→ 读 `resources/industry-dictionary.md`
 5. **落盘与截图**（md/txt/html/content-png + 自动打开 html）→ 读 `resources/disk-and-html.md`
+5.5 **交付前自检**（落盘与截图前必做，硬门禁不可跳过）：weekly-report-YYYYMMDD.html 文件写好后——
+   - Bash 起 `python3 -m http.server 8945`（后台，端口占用换 8946/8947…）
+   - Playwright headless 自检（缺则 `pip3 install --user playwright`；用系统 Chrome，channel="chrome" 无需下载浏览器）：goto 页面 → 挂 pageerror 监听（零容忍）→ 滚动到底部 → 断言头部标题卡与本周任务进度/下周计划/风险阻塞点三张分节卡存在（证明主体结构完整未被破坏）
+   - 截全页 PNG Read 自查：头部标题卡与本周任务进度/下周计划/风险阻塞点三张分节卡齐全、文字无溢出截断、无豆腐块缺字
+   - 任何报错或视觉问题：修 HTML → 重检；全绿才进第 6 步
 6. **使用咨询**（用户只问「周报怎么用」等用法、未要求生成）→ 读 `resources/usage-guide.md`，将其内容原样输出（首行标题改为「周报生成器使用指南」），不收集数据、不生成报告、不落盘、不开浏览器
 
 ## ⚙️ 配置与自定义模板
@@ -25,6 +30,7 @@ disable-model-invocation: false
 **执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（DISK/FORMATS/DIR/OPEN_HTML/THEME/TEMPLATE/ROLE/CONFIRM/CONFIG_VERSION/DATA_SOURCES）与自定义模板都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留；官方更新配置时另存 `user-config.md.upstream` 对照文件，可按需手动合并新配置点。
 
 - **THEME**：html 页面主题，tech 深蓝科技（默认）/ biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变；生成时写 `<html data-theme="THEME值">` 定默认，页面右下角换肤坞随点随换（localStorage 记忆、?shot 截图模式与打印隐藏）
+- **DATA_SOURCES 意图路由**：用户说「把这些 git 地址 / 目录配置到这个 skill」「数据源加一下」「以后数据从 XX 仓库取」→ 默认指配置到 `user-config.md` 的 `DATA_SOURCES` 数据源清单（不是 SKILL.md、不是 disk-and-html.md）；「git 地址」给的是 URL 或本地仓库路径、目录给的是本地路径都写进 DATA_SOURCES。用户话术只指向某个特定数据源（如「只算这个仓库」）→ 当次生效，不写配置。意图仍有歧义（如分不清「数据收集配置」与「落盘目录配置」）→ 一句话与用户确认后写入，不猜
 
 ## 配置版本机制（升级保护）
 
@@ -44,6 +50,16 @@ disable-model-invocation: false
 ## 文档同步自检纪律（维护者必读）
 
 修改本 skill 任一文件（SKILL.md / user-config.md / resources/*）后，必须 grep 全文核对相关关键词在各文件间一致（如章节名/字段名/效果参数改名时新旧词全仓核对，旧词零残留才算完成）。修改 HTML 效果必须同步更新 `resources/reference.html` 与 `disk-and-html.md` 对应描述，三者以 reference.html 为真相源；改完后互相 grep 关键参数确认对齐。
+
+## 🔧 报修处理流程（用户报页面问题时）
+
+用户说「这个页面效果不对 / 布局乱了 / 有 UI 问题 / 样式错了 / 交互坏了」（常附截图或指出具体现象）→ 按以下流程处理，不以「重新生成一份」敷衍：
+
+1. **立标准**：先 Read 本 skill 目录 `resources/reference.html`——它就是设计标准答案（布局/配色/交互全在代码里）
+2. **找问题**：Read 用户那份问题 html 文件，与 reference 逐处比对（结构顺序 / CSS 变量 / 关键类名 / 交互 JS），定位跑偏处；用户给了截图则按截图现象反查
+3. **修复**：以 reference 为准修复那份 html（只修跑偏处，不动正确内容；reference 与 html 不一致时以 reference 为准）
+4. **自证**：Chrome headless 访问修复后页面截全页 PNG，Read 自查修复点恢复标准效果；用户给了问题截图时尽量复现同视角截图做前后对比
+5. **汇报**：一句话说清问题根因 + 修复了什么 + 附截图；若根因在 reference.html 自身（生成结果与 reference 一模一样但仍有问题），顺修 reference.html 对应处并在汇报中说明「参考模板已同步修正」，避免下一份重蹈覆辙
 
 ## 规则速览
 

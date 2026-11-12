@@ -212,6 +212,17 @@ grep -nE "PingFang|YaHei|apple-system|sans-serif|serif|monospace|SF Mono|Menlo|M
     ├── C00-封面.png  C00-引言.png  C01-*.png … C13-作者介绍.png
 ```
 
+
+## 🔧 报修处理流程（用户报页面问题时）
+
+用户说「页面 / 截图效果不对 / 第 X 章有 XX 问题 / 布局乱了」（常附截图或指出具体现象）→ 按以下流程处理：
+
+1. **立标准**：先 Read `resources/design-system.md`——六款版式 + CSS 变量 + 组件模式就是本 skill 的设计标准（无唯一 reference.html，以设计系统为准）
+2. **找问题**：Read 那份问题 html，对照 design-system.md 逐处比对（版式结构 / --accent 令牌 / 字体白名单 / 图表组件），定位跑偏处；用户给了截图则按截图现象反查
+3. **修复**：以 design-system.md 为准修复（只修跑偏处）；改完重跑「3.5 交付前零侵权核查」grep 扫描——任何字体污染命中必须清零
+4. **自证**：按第 5 步规格重截问题章节（1460px 统一宽度），Read 自查恢复标准效果；用户给了问题截图时尽量复现同视角截图做前后对比
+5. **汇报**：一句话说清问题根因 + 修复了什么 + 附截图；若根因在 design-system.md 自身（版式规范本身有缺陷），顺修 design-system.md 并在汇报中说明「设计标准已同步修正」
+
 ## Pitfalls
 
 1. **Write 沙盒限制**：工作区外无法直接 Write → 写工作区 `outputs/` 再 `cp` 到目标目录

@@ -28,6 +28,17 @@ disable-model-invocation: false
 3. **落盘与命名**：自检通过后在 DIR 下新建 `{文件名}/` 子目录（`mkdir -p`，总目录统一管理、各次产出自包含互不干扰），`cp` 到该子目录，自动打开浏览器供用户放映。命名三级优先：①用户口头指定文件名 → 用指定名；②未指定且 FILENAME=auto → 按本次内容主题+用途总结中文名（如「智能探针系统-产品介绍」，让用户日后能按名找回继续改）；③FILENAME 写死固定名 → 用固定名。重名一律自动加日期后缀，绝不覆盖；落盘目录复用不清空、不改动目录内既有文件
 4. **使用咨询**（用户只问「怎么用 / 使用说明 / 能干什么」等用法、未要求生成）→ 读 `resources/usage-guide.md`，将其内容原样输出（首行标题改为「魔法幻灯生成器使用指南」），不生成 HTML
 
+
+## 🔧 报修处理流程（用户报页面问题时）
+
+用户说「这个页面效果不对 / 布局乱了 / 有 UI 问题 / 某交互坏了」（常附截图或指出具体现象）→ 按以下流程处理，不以「重新生成一份」敷衍：
+
+1. **立标准**：先 Read 本 skill 目录 `resources/reference.html` + `resources/deck-spec.md`——reference.html 就是设计标准答案（布局/主题/动画/播放引擎全在代码里），deck-spec.md 是它的规格说明
+2. **找问题**：Read 用户那份问题 html 文件，与 reference 逐处比对（结构顺序 / 主题变量 / 模板面板 / 播放引擎 / 热键 / 截图复制），定位跑偏处；用户给了截图则按截图现象反查
+3. **修复**：以 reference 为准修复那份 html（只修跑偏处，不动正确内容；reference 与 html 不一致时以 reference 为准）
+4. **自证**：Playwright headless（channel="chrome"）→ 挂 pageerror 零容忍 → 按页数循环 `go(i)` 翻完每页 → 截问题页 PNG Read 自查恢复标准效果；用户给了问题截图时尽量复现同视角截图做前后对比
+5. **汇报**：一句话说清问题根因 + 修复了什么 + 附截图；若根因在 reference.html 自身（生成结果与 reference 一模一样但仍有问题），顺修 reference.html 与 deck-spec.md 对应处并在汇报中说明「参考模板已同步修正」，避免下一份重蹈覆辙
+
 ## ⚙️ 配置与自定义
 
 **执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（TEMPLATE/THEME/TRANSITION/ANIM/WIDTH/HEIGHT/SEC/FILENAME/DIR 等）与用户模板都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留；官方更新配置时另存 `user-config.md.upstream` 对照文件，可按需手动合并新配置点。
