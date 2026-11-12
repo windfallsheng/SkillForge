@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="sf-template" content="one-pager@9">
+<meta name="sf-template" content="one-pager@10">
 <meta name="poster-id" content="REF-POSTER-0000">
 <title>AI 改变工作 · 一页纸海报</title>
 <style>
@@ -571,8 +571,69 @@ body{background:linear-gradient(180deg,var(--bg) 12%,var(--bg2) 135%);color:var(
 .tpl-notice ul.points .num{color:var(--accent);font-weight:800}
 .tpl-notice footer{display:flex;flex-direction:column;align-items:flex-end;font-size:12px;color:var(--muted);gap:6px;margin-top:auto}
 
+/* 29. inkwash 水墨：宣纸底 + 墨色远山 + 朱印落款（风格本体色特许：宣纸米/墨黑/朱砂红） */
+.tpl-inkwash{display:flex;align-items:center;justify-content:center;width:100%;height:100%;position:relative;overflow:hidden;background:#f5f0e3}
+.tpl-inkwash .mt{position:absolute;border-radius:50%;pointer-events:none;background:#26221e}
+.tpl-inkwash .m1{width:76%;height:26%;left:-6%;bottom:-7%;opacity:.07}
+.tpl-inkwash .m2{width:92%;height:30%;left:14%;bottom:-13%;opacity:.13}
+.tpl-inkwash .m3{width:104%;height:34%;left:24%;bottom:-17%;opacity:.2}
+.tpl-inkwash .sun{position:absolute;right:15%;top:11%;width:min(15vw,110px);height:min(15vw,110px);border-radius:50%;background:#b03a2e;opacity:.92;pointer-events:none}
+.tpl-inkwash .content{position:relative;display:flex;flex-direction:column;justify-content:center;width:min(82%,1060px);height:100%;padding:7vh 0}
+.tpl-inkwash .seal{align-self:flex-start;font-family:Georgia,'Songti SC','SimSun',serif;font-size:13px;font-weight:700;letter-spacing:2px;color:#f5f0e3;background:#b03a2e;padding:8px 12px;border-radius:4px;margin-bottom:3vh}
+.tpl-inkwash h1{font-family:Georgia,'Songti SC','SimSun',serif;font-size:clamp(38px,5.2vw,66px);font-weight:700;color:#26221e;line-height:1.4;margin-bottom:2.5vh}
+.tpl-inkwash .quote{font-size:16px;font-style:italic;color:#6b645a;margin-bottom:4vh;max-width:72%;border-left:3px solid #b03a2e;padding-left:18px;line-height:1.9}
+.tpl-inkwash ul.points{list-style:none;display:flex;flex-direction:column;gap:14px;margin-bottom:4vh}
+.tpl-inkwash ul.points li{font-size:15px;color:#26221e;display:flex;gap:12px;align-items:baseline;line-height:1.8}
+.tpl-inkwash ul.points .num{font-family:Georgia,'Songti SC','SimSun',serif;color:#b03a2e;font-weight:700;flex:none}
+.tpl-inkwash footer{display:flex;justify-content:space-between;font-size:10px;letter-spacing:3px;color:#6b645a;border-top:1px solid rgba(38,34,30,.18);padding-top:14px}
+
+/* 30. palace 红金宫廷：朱红底 + 回纹金边双线框 + 衬线金字（风格本体色特许：朱红/鎏金/米白） */
+.tpl-palace{display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:linear-gradient(160deg,#7a1f1f,#5e1717);padding:6vh 0}
+.tpl-palace .frame{position:relative;width:min(80%,1060px);height:100%;display:flex;flex-direction:column;justify-content:center;border:2px solid #d4af37;outline:1px solid #d4af37;outline-offset:5px;padding:7vh 5vw;text-align:center;background:repeating-linear-gradient(90deg,rgba(212,175,55,.08) 0 2px,transparent 2px 34px)}
+.tpl-palace .frame::after{content:'';position:absolute;inset:9px;border:1px solid rgba(212,175,55,.5);pointer-events:none}
+.tpl-palace .badge{font-size:12px;letter-spacing:8px;color:#d4af37;margin-bottom:2.5vh}
+.tpl-palace h1{font-family:Georgia,'Songti SC','SimSun',serif;font-size:clamp(36px,4.8vw,62px);font-weight:700;color:#f5ead1;margin-bottom:2vh;line-height:1.4}
+.tpl-palace .divider{display:flex;align-items:center;gap:14px;justify-content:center;color:#d4af37;font-size:13px;margin-bottom:2.5vh}
+.tpl-palace .divider::before,.tpl-palace .divider::after{content:'';height:1px;width:110px;background:linear-gradient(90deg,transparent,#d4af37)}
+.tpl-palace .divider::after{background:linear-gradient(90deg,#d4af37,transparent)}
+.tpl-palace .quote{font-size:15px;font-style:italic;color:#e8cba0;margin-bottom:3.5vh;max-width:70%;margin-left:auto;margin-right:auto}
+.tpl-palace ul.points{list-style:none;display:flex;justify-content:center;gap:3.5vw;flex-wrap:wrap;margin-bottom:3.5vh}
+.tpl-palace ul.points li{font-size:14px;color:#f5ead1;display:flex;gap:8px;align-items:center;line-height:1.8}
+.tpl-palace ul.points .num{width:22px;height:22px;border:1px solid #d4af37;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:#d4af37;flex:none}
+.tpl-palace footer{display:flex;justify-content:center;gap:26px;font-size:10px;letter-spacing:3px;color:#d8b878}
+
+/* 31. landscape 青绿山水：clip-path 层叠山峦 + 留白天际 + 题跋落款（风格本体色特许：青绿/赭石/留白） */
+.tpl-landscape{display:flex;align-items:center;justify-content:center;width:100%;height:100%;position:relative;overflow:hidden;background:#f4f1e8}
+.tpl-landscape .peak{position:absolute;left:-6%;right:-6%;pointer-events:none}
+.tpl-landscape .p1{bottom:36%;height:32%;background:#a8c6b4;clip-path:polygon(0 100%,8% 42%,18% 66%,30% 30%,44% 58%,56% 38%,68% 62%,80% 34%,100% 70%,100% 100%)}
+.tpl-landscape .p2{bottom:23%;height:32%;background:#6ea08d;clip-path:polygon(0 100%,12% 48%,26% 72%,40% 40%,58% 68%,72% 44%,86% 70%,100% 50%,100% 100%)}
+.tpl-landscape .p3{bottom:9%;height:30%;background:#4a8a76;clip-path:polygon(0 100%,10% 58%,30% 78%,50% 52%,70% 80%,88% 60%,100% 84%,100% 100%)}
+.tpl-landscape .p4{bottom:-5%;height:24%;background:#356b5a;clip-path:polygon(0 100%,18% 62%,42% 86%,64% 66%,84% 90%,100% 74%,100% 100%)}
+.tpl-landscape .content{position:relative;display:flex;flex-direction:column;justify-content:center;width:min(82%,1060px);height:100%;padding:7vh 0}
+.tpl-landscape .badge{align-self:flex-start;font-family:Georgia,'Songti SC','SimSun',serif;font-size:12px;letter-spacing:6px;color:#356b5a;border:1px solid #356b5a;padding:6px 14px;margin-bottom:3vh}
+.tpl-landscape h1{font-family:Georgia,'Songti SC','SimSun',serif;font-size:clamp(36px,4.8vw,62px);font-weight:700;color:#26352e;line-height:1.45;margin-bottom:2vh;max-width:82%}
+.tpl-landscape .quote{font-size:15px;color:#5c6b62;margin-bottom:4vh;max-width:64%;line-height:1.9}
+.tpl-landscape ul.points{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:3.5vh}
+.tpl-landscape ul.points li{font-size:14px;color:#26352e;display:flex;gap:10px;align-items:baseline}
+.tpl-landscape ul.points .num{font-family:Georgia,'Songti SC','SimSun',serif;color:#b06a3b;font-weight:700;flex:none}
+.tpl-landscape footer{display:flex;justify-content:space-between;font-size:10px;letter-spacing:3px;color:#5c6b62}
+
+/* 32. watermark 水印公文：斜置大字背景水印 + 居中公文正文（颜色跟随主题令牌） */
+.tpl-watermark{display:flex;align-items:center;justify-content:center;width:100%;height:100%;position:relative;overflow:hidden}
+.tpl-watermark .wm{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-24deg);font-size:min(28vw,340px);font-weight:900;letter-spacing:12px;color:var(--accent);opacity:.07;white-space:nowrap;pointer-events:none}
+.tpl-watermark .doc{position:relative;width:min(78%,1020px);height:100%;display:flex;flex-direction:column;justify-content:center;padding:6vh 0}
+.tpl-watermark .head{text-align:center;border-bottom:2px solid var(--accent);padding-bottom:2.5vh;margin-bottom:3.5vh}
+.tpl-watermark .head .badge{font-size:clamp(26px,3.4vw,42px);font-weight:900;letter-spacing:10px;color:var(--accent);line-height:1.3}
+.tpl-watermark .head .meta{font-size:11px;letter-spacing:2px;color:var(--muted);margin-top:10px}
+.tpl-watermark h1{font-size:clamp(24px,2.8vw,36px);font-weight:800;text-align:center;color:var(--text);margin-bottom:3vh;line-height:1.5}
+.tpl-watermark .quote{font-size:15px;line-height:2;color:var(--text);text-indent:2em;margin-bottom:3vh}
+.tpl-watermark ul.points{list-style:none;margin-bottom:3vh}
+.tpl-watermark ul.points li{font-size:15px;line-height:2;color:var(--text);padding:8px 0;border-bottom:1px dashed var(--border);display:flex;gap:12px;align-items:baseline}
+.tpl-watermark ul.points .num{flex:none;align-self:center;width:24px;height:24px;border:1.5px solid var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--accent);font-weight:800}
+.tpl-watermark footer{display:flex;flex-direction:column;align-items:flex-end;font-size:12px;color:var(--muted);gap:6px;margin-top:auto}
+
 /* ▼ 用户模板 CSS 内嵌点（TPL_DIR 模板的 TPL_CSS 块插到本行之前，无用户模板则保持原样） */
-/* ═══ 切换坞（可折叠）：模板坞（28 标签六组流派 + 用户模板）在顶部、主题坞（25 色点 5×5）在右下角；默认折叠成胶囊把手，点开选完自动收起 ═══ */
+/* ═══ 切换坞（可折叠）：模板坞（32 标签七组流派 + 用户模板）在顶部、主题坞（25 色点 5×5）在右下角；默认折叠成胶囊把手，点开选完自动收起 ═══ */
 .dock-tpl{position:fixed;right:18px;top:18px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;z-index:1001}
 .dock-theme{position:fixed;right:18px;bottom:18px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;z-index:1001}
 .dock-bar{display:flex;align-items:center;gap:8px;background:var(--panel-solid);border:1px solid var(--border);border-radius:999px;padding:7px 13px;color:var(--text);cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.3);transition:border-color .15s ease;font-family:inherit}
@@ -583,14 +644,17 @@ body{background:linear-gradient(180deg,var(--bg) 12%,var(--bg2) 135%);color:var(
 .dock-theme.fold .bar-arrow{transform:rotate(-90deg)}
 .dock-theme .bar-arrow{transform:rotate(180deg)}
 .dock-body{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px;background:var(--panel-solid);border:1px solid var(--border);border-radius:14px;padding:8px 10px;max-width:min(720px,calc(100vw - 36px));box-shadow:0 4px 18px rgba(0,0,0,.3)}
-.dock-theme .dock-body{display:grid;grid-template-columns:repeat(5,14px);gap:9px 8px;border-radius:12px;padding:9px 10px;max-width:none}
+.dock-theme .dock-body{display:grid;grid-template-columns:repeat(5,18px);gap:11px 10px;border-radius:14px;padding:12px 13px;max-width:none}
 .tp-sep{flex-basis:100%;font-size:10px;letter-spacing:2px;color:var(--muted);margin:5px 4px 1px;text-align:right}
 .tp-sep::before{content:'— ';color:var(--accent)}
-.bar-cur{width:13px;height:13px;pointer-events:none}
+.bar-cur{width:17px;height:17px;pointer-events:none}
+.th-tip{position:fixed;pointer-events:none;background:var(--panel-solid);border:1px solid var(--border);color:var(--text);font-size:11px;letter-spacing:1px;padding:4px 11px;border-radius:999px;box-shadow:0 4px 18px rgba(0,0,0,.3);z-index:1002;opacity:0;transform:translateY(4px);transition:opacity .15s ease,transform .15s ease;white-space:nowrap}
+.th-tip.show{opacity:1;transform:none}
+[data-theme="light"] .th-tip{box-shadow:0 10px 28px rgba(30,31,34,.16)}
 .tp-btn{font-size:12px;font-family:inherit;color:var(--muted);background:transparent;border:1px solid transparent;border-radius:999px;padding:5px 11px;cursor:pointer;letter-spacing:1px;transition:all .15s ease;white-space:nowrap}
 .tp-btn:hover{color:var(--text);border-color:var(--border)}
 .tp-btn.on{color:var(--accent);background:var(--tag-bg);border-color:var(--accent);font-weight:600}
-.th-dot{width:14px;height:14px;border-radius:50%;cursor:pointer;border:1.5px solid rgba(127,127,127,.35);transition:transform .15s ease}
+.th-dot{width:18px;height:18px;border-radius:50%;cursor:pointer;border:1.5px solid rgba(127,127,127,.35);transition:transform .15s ease}
 .th-dot:hover{transform:scale(1.18)}
 .th-dot.on{border-color:var(--text)}
 .th-dot[data-t="tech"]{background:#0ea5e9}
@@ -663,6 +727,10 @@ html[data-shot] .dock-tpl,html[data-shot] .dock-theme{display:none!important}
   <button class="tp-btn" data-tpl="popart" title="波普艺术">波普</button>
   <button class="tp-btn" data-tpl="opart" title="欧普视错觉">欧普</button>
   <button class="tp-btn" data-tpl="artnouveau" title="新艺术装饰">新艺术</button>
+  <span class="tp-sep">国风雅韵</span>
+  <button class="tp-btn" data-tpl="inkwash" title="水墨留白">水墨</button>
+  <button class="tp-btn" data-tpl="palace" title="红金宫廷">宫廷</button>
+  <button class="tp-btn" data-tpl="landscape" title="青绿山水">青绿</button>
   <span class="tp-sep">先锋实验</span>
   <button class="tp-btn" data-tpl="brutalist" title="新粗野主义">粗野</button>
   <button class="tp-btn" data-tpl="acid" title="酸性设计">酸性</button>
@@ -674,6 +742,7 @@ html[data-shot] .dock-tpl,html[data-shot] .dock-theme{display:none!important}
   <button class="tp-btn" data-tpl="recruit" title="招聘海报">招聘</button>
   <button class="tp-btn" data-tpl="invitation" title="邀请函">邀请函</button>
   <button class="tp-btn" data-tpl="notice" title="公告通知">公告</button>
+  <button class="tp-btn" data-tpl="watermark" title="水印公文">水印</button>
   <!-- ▼ 用户模板按钮内嵌点（「我的模板」分组标 + 用户按钮插到本行之后，无用户模板则保持原样） -->
   </div>
 </div>
@@ -705,7 +774,7 @@ html[data-shot] .dock-tpl,html[data-shot] .dock-theme{display:none!important}
   <span class="th-dot" data-t="cream" title="奶油纸"></span>
   <span class="th-dot" data-t="academic" title="学术蓝"></span>
   </div>
-  <button class="dock-bar" id="thBar" type="button" title="主题切换（点击展开/收起）"><span class="th-dot bar-cur" data-t="tech"></span><span>主题</span><span class="bar-arrow">▾</span></button>
+  <button class="dock-bar" id="thBar" type="button" title="主题切换（点击展开/收起）"><span class="th-dot bar-cur" data-t="tech"></span><span class="bar-tpl-name" id="thName">主题</span><span class="bar-arrow">▾</span></button>
 </div>
 <script>
 (function(){
@@ -722,7 +791,7 @@ html[data-shot] .dock-tpl,html[data-shot] .dock-theme{display:none!important}
     footnote: "",
     kpi: "82%"
   };
-  /* ═══════════ 二十八套布局模板（只描述结构与类名，颜色一律走主题令牌；TPL_DIR 用户模板生成时并入 TPLS） ═══════════ */
+  /* ═══════════ 三十二套布局模板（只描述结构与类名，颜色一律走主题令牌；TPL_DIR 用户模板生成时并入 TPLS） ═══════════ */
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function N(i){ return String(i+1).padStart(2,'0'); }
   var F = 'GENERATED BY AI TEAM';
@@ -1049,6 +1118,58 @@ html[data-shot] .dock-tpl,html[data-shot] .dock-theme{display:none!important}
       + '<footer class="anim"><span>'+esc(DATA.footnote||'')+'</span><span>'+F+'</span></footer>'
       + '</div>';
   };
+  TPL['inkwash'] = function(){
+    var lis = DATA.points.map(function(p,i){ return '<li class="anim"><span class="num">'+N(i)+'</span><span class="t">'+esc(p.t)+'</span></li>'; }).join('');
+    return '<div class="tpl-inkwash">'
+      + '<div class="mt m1"></div><div class="mt m2"></div><div class="mt m3"></div><div class="sun"></div>'
+      + '<div class="content">'
+      +   '<div class="seal anim">'+esc(DATA.tag)+'</div>'
+      +   '<h1 class="anim">'+esc(DATA.title)+'</h1>'
+      +   '<div class="quote anim">'+esc(DATA.quote)+'</div>'
+      +   '<ul class="points anim">'+lis+'</ul>'
+      +   '<footer class="anim"><span>'+F+'</span><span>'+esc(DATA.footnote||'')+'</span></footer>'
+      + '</div>'
+      + '</div>';
+  };
+  TPL['palace'] = function(){
+    var lis = DATA.points.map(function(p,i){ return '<li class="anim"><span class="num">'+N(i)+'</span><span class="t">'+esc(p.t)+'</span></li>'; }).join('');
+    return '<div class="tpl-palace">'
+      + '<div class="frame">'
+      +   '<div class="badge anim">'+esc(DATA.tag)+'</div>'
+      +   '<h1 class="anim">'+esc(DATA.title)+'</h1>'
+      +   '<div class="divider anim">&#10044;</div>'
+      +   '<div class="quote anim">'+esc(DATA.quote)+'</div>'
+      +   '<ul class="points anim">'+lis+'</ul>'
+      +   '<footer class="anim"><span>'+F+'</span><span>'+esc(DATA.footnote||'')+'</span></footer>'
+      + '</div>'
+      + '</div>';
+  };
+  TPL['landscape'] = function(){
+    var lis = DATA.points.map(function(p,i){ return '<li class="anim"><span class="num">'+N(i)+'</span><span class="t">'+esc(p.t)+'</span></li>'; }).join('');
+    return '<div class="tpl-landscape">'
+      + '<div class="peak p1"></div><div class="peak p2"></div><div class="peak p3"></div><div class="peak p4"></div>'
+      + '<div class="content">'
+      +   '<div class="badge anim">'+esc(DATA.tag)+'</div>'
+      +   '<h1 class="anim">'+esc(DATA.title)+'</h1>'
+      +   '<div class="quote anim">'+esc(DATA.quote)+'</div>'
+      +   '<ul class="points anim">'+lis+'</ul>'
+      +   '<footer class="anim"><span>'+F+'</span><span>'+esc(DATA.footnote||'')+'</span></footer>'
+      + '</div>'
+      + '</div>';
+  };
+  TPL['watermark'] = function(){
+    var lis = DATA.points.map(function(p,i){ return '<li class="anim"><span class="num">'+N(i)+'</span><span class="t">'+esc(p.t)+'</span></li>'; }).join('');
+    return '<div class="tpl-watermark">'
+      + '<div class="wm">'+esc(DATA.title)+'</div>'
+      + '<div class="doc">'
+      +   '<div class="head anim"><div class="badge">'+esc(DATA.tag)+'</div><div class="meta">'+F+'</div></div>'
+      +   '<h1 class="anim">'+esc(DATA.title)+'</h1>'
+      +   '<div class="quote anim">'+esc(DATA.quote)+'</div>'
+      +   '<ul class="points anim">'+lis+'</ul>'
+      +   '<footer class="anim"><span>'+esc(DATA.footnote||'')+'</span><span>'+F+'</span></footer>'
+      + '</div>'
+      + '</div>';
+  };
 
   /* ═══════════ 页面 ID 自愈（沿用旧版机制） ═══════════ */
   var KEY = 'sf-heal:' + location.pathname;
@@ -1072,20 +1193,42 @@ html[data-shot] .dock-tpl,html[data-shot] .dock-theme{display:none!important}
   if (savedTheme && THEMES.indexOf(savedTheme) !== -1) document.documentElement.setAttribute('data-theme', savedTheme);
   var curT = document.documentElement.getAttribute('data-theme');
   if (THEMES.indexOf(curT) === -1) { curT = 'tech'; document.documentElement.setAttribute('data-theme', curT); }
-  document.querySelectorAll('#themeDock .dock-body .th-dot').forEach(function(d){ d.classList.toggle('on', d.getAttribute('data-t') === curT); });
-  document.querySelectorAll('#themeDock .dock-body .th-dot').forEach(function(d){
+  var TH_DOTS = document.querySelectorAll('#themeDock .dock-body .th-dot');
+  var TH_LABELS = {};
+  TH_DOTS.forEach(function(d){ TH_LABELS[d.getAttribute('data-t')] = d.getAttribute('title') || ''; });
+  var thTip = document.createElement('div');
+  thTip.className = 'th-tip';
+  document.body.appendChild(thTip);
+  function updateThBar(){
+    var bc = document.querySelector('#thBar .bar-cur'); if (bc) bc.setAttribute('data-t', curT);
+    var tn = document.getElementById('thName'); if (tn) tn.textContent = '主题 · ' + (TH_LABELS[curT] || '自定义');
+  }
+  TH_DOTS.forEach(function(d){ d.classList.toggle('on', d.getAttribute('data-t') === curT); });
+  TH_DOTS.forEach(function(d){
     d.addEventListener('click', function(){
       var t = d.getAttribute('data-t');
+      curT = t;
       document.documentElement.setAttribute('data-theme', t);
       try { localStorage.setItem(THEME_KEY, t); } catch(e) {}
-      document.querySelectorAll('#themeDock .dock-body .th-dot').forEach(function(x){ x.classList.toggle('on', x === d); });
-      var bc = document.querySelector('#thBar .bar-cur'); if (bc) bc.setAttribute('data-t', t);
+      TH_DOTS.forEach(function(x){ x.classList.toggle('on', x === d); });
+      updateThBar();
       document.getElementById('themeDock').classList.add('fold');
     });
+    d.addEventListener('mouseenter', function(){
+      var name = TH_LABELS[d.getAttribute('data-t')];
+      if (!name) return;
+      thTip.textContent = name;
+      thTip.classList.add('show');
+      var r = d.getBoundingClientRect();
+      var tw = thTip.offsetWidth;
+      thTip.style.left = Math.min(Math.max(r.left + r.width / 2 - tw / 2, 8), window.innerWidth - tw - 8) + 'px';
+      thTip.style.top = Math.max(r.top - 34, 8) + 'px';
+    });
+    d.addEventListener('mouseleave', function(){ thTip.classList.remove('show'); });
   });
 
-  /* ═══════════ 模板切换（二十八套布局六组流派随点随换，记忆上次选择） ═══════════ */
-  var TPLS = ['classic','minimal','magazine','hero','timeline','grid','dashboard','brutalist','swiss','bauhaus','mondrian','editorial','typo','memphis','exhibit','window','newspaper','popart','opart','artnouveau','acid','glitch','vaporwave','cyber','academic','recruit','invitation','notice']; /* ▼ 用户模板 name 内嵌点：数组末尾（'notice' 之后）追加 ,'{name}'，无用户模板则保持原样 */
+  /* ═══════════ 模板切换（三十二套布局七组流派随点随换，记忆上次选择） ═══════════ */
+  var TPLS = ['classic','minimal','magazine','hero','timeline','grid','dashboard','brutalist','swiss','bauhaus','mondrian','editorial','typo','memphis','exhibit','window','newspaper','popart','opart','artnouveau','acid','glitch','vaporwave','cyber','academic','recruit','invitation','notice','inkwash','palace','landscape','watermark']; /* ▼ 用户模板 name 内嵌点：数组末尾（'watermark' 之后）追加 ,'{name}'，无用户模板则保持原样 */
   var TPL_KEY = 'poster:' + ID + '-tpl';
   var savedTpl = null;
   try { savedTpl = localStorage.getItem(TPL_KEY); } catch(e) {}
@@ -1133,8 +1276,7 @@ html[data-shot] .dock-tpl,html[data-shot] .dock-theme{display:none!important}
   var initTplBtn = document.querySelector('#tplDock .tp-btn[data-tpl="' + curP + '"]');
   var btEl = document.querySelector('#tplBar .bar-tpl-name');
   if (btEl) btEl.textContent = '模板 · ' + (initTplBtn ? initTplBtn.textContent : '自定义');
-  var bcEl = document.querySelector('#thBar .bar-cur');
-  if (bcEl) bcEl.setAttribute('data-t', curT);
+  updateThBar();
   window.addEventListener('resize', fit);
   if (location.search.indexOf('shot') !== -1) {
     document.documentElement.setAttribute('data-shot', '1');
