@@ -178,7 +178,7 @@
 ```
 主题切换（全局）：`document.documentElement.setAttribute('data-theme', name)`，面板色点同步 .on 点亮。
 
-主题面板（「🎨 主题」打开 `#themeMask`）：`.theme-panel` 460px 宽，头部标题 + 范围 radio 胶囊（全部页面/仅本页，切换时 label.sel 高亮 + 重渲染点亮）+ `.theme-grid` 4 列 `.th-item`（`.th-dot` 色点内联 style 取 THEMES 色值 + 主题名，当前主题 .on 高亮）+ 底部「✕ 关闭」；**即点即换**——点 `.th-item` pushUndo → 按范围 setGlobalTheme/setSlideTheme → saveThemeState 写 localStorage（`md-deck-theme` JSON：global 全局主题 + slides 本页主题按页码索引）→ renderThemeDots 重渲染点亮 → buildThumbs，面板保持打开可连点对比；Esc/点遮罩/✕ 关闭；与模板/选页复制/选页截图/新页面板互斥打开。范围=仅本页时点亮按 `slides[cur]` 的 data-theme，否则按根 data-theme。
+主题面板（「🎨 主题」打开 `#themeMask`）：`.theme-panel` 460px 宽，头部标题 + 范围 radio 胶囊（全部页面/仅本页，切换时 label.sel 高亮 + 重渲染点亮）+ `.theme-grid` 4 列 `.th-item`（`.th-dot` 色点内联 style 取 THEMES 色值 + 主题名，当前主题 .on 高亮）+ 底部「✕ 关闭」；**即点即换**——点 `.th-item` pushUndo → 按范围 setGlobalTheme/setSlideTheme → saveThemeState 写 localStorage（键 `md-deck:<页面路径>-theme`，JSON：global 全局主题 + slides 本页主题按页码索引；键名带页面路径命名空间，多份演示稿互不串台）→ renderThemeDots 重渲染点亮 → buildThumbs，面板保持打开可连点对比；Esc/点遮罩/✕ 关闭；与模板/选页复制/选页截图/新页面板互斥打开。范围=仅本页时点亮按 `slides[cur]` 的 data-theme，否则按根 data-theme。
 
 ### 2.1 单页主题（整份或单页自由换肤）
 
@@ -487,7 +487,7 @@
 - 应用范围：`animSlides()` = scope 为 all 时全部 slides、current 时仅 slides[cur]；入场/离场/强调/标题文字设置均作用于范围页；互斥规则：挂强调时移除该元素 `data-anim`（强调优先）；applyEnter none = 移除 `data-anim` 与 `data-anim-delay`；applyLeave none = 移除 `data-anim-leave`；applyEmph none = 移除 `data-anim-emphasis`
 - 标题文字拆分：splitText 按 `<br>` 分行后逐字（char）/逐词（word，按空白分）/逐行（line）包 `<span class="tchar|tword|tline" data-anim="fade-up" style="animation-delay:min(序号×60,600)ms">`，原文存 `data-md-orig`；restoreText 按原文还原；none 时还原为纯文本（默认无动画）
 - 渐变字特例：`.s-title`（background-clip:text 渐变字）不拆分——span 行内块不参与父级文字剪裁，拆分后文字全透明只剩辉光（视觉成「蒙层」），改为整体 `data-anim="fade-up"`（自加属性标 `data-md-whole`，切回 none 时移除）；CSS 兜底 `.s-title .tchar/.tword/.tline` 补 `background:inherit` + `background-clip:text` 修复历史拆分 DOM；deck `data-anim="off"`（入场开关关）时刷新不回填 localStorage 的文字动画
-- deck 根标签：`data-transition="slide-lr" data-anim="on"`；JS 初始化时读 localStorage（`md-deck-transition` / `md-deck-anim` / `md-deck-anim-scope` / `md-deck-text-anim` / `md-deck-side-tab`），命中则回填控件并设置 deck 属性，无记忆则回退 DOM 属性；事件写 deck 属性 + 写 localStorage（try-catch 静默）
+- deck 根标签：`data-transition="slide-lr" data-anim="on"`；JS 初始化时读 localStorage（键名均带 `md-deck:<页面路径>` 前缀命名空间：transition / anim / anim-scope / text-anim / side-tab，多份演示稿互不干扰），命中则回填控件并设置 deck 属性，无记忆则回退 DOM 属性；事件写 deck 属性 + 写 localStorage（try-catch 静默）
 - 离场引擎：`leaveThenGo(i)` = leaving 防抖；当前页无 `[data-anim-leave]:not(none)` 或 deck `data-anim="off"` 时直切 `go(i)`；否则 slide 加 `.leaving` 类触发 CSS 离场（0.45s），并重置节点 animation 重播，480ms 后移除类再 `go(i)`；next/prev/自动播放/键盘/缩略图/数字键/Home/End/data-goto/hashchange 全走 leaveThenGo
 - 生成侧规则：生成时按 user-config `TRANSITION` 写 deck 的 `data-transition` 初始值（用户口头点名风格当次优先）；`ANIM: false` 时 deck 挂 `data-anim="off"` 且 chkAnim 不勾选
 - `data-anim` 十二式选用建议：页标题/封面大字配 `fade-up`，整页要点配 `fade-in`，数据卡/图片配 `zoom-in`，左右分栏内容各配 `slide-left`/`slide-right`，强调结论配 `pop`，轻快元素配 `bounce-in`，翻牌感配 `flip-in`，整卡浮现配 `blur`；同页多元素按视觉次序挂 `data-anim-delay`（60/120/180/240/300/400/500/600 八档）错落入场
@@ -559,7 +559,7 @@ function prev(){ if (cur > 0) leaveThenGo(cur - 1); else if (chkLoop.checked) le
   - P：播放/暂停；S：截图本页；C：复制本页；F：全屏；G：右侧边栏（▤ 页面管理：新页/复页/排序/删页/跳转 + ⚙ 动画与工具）；?：说明弹层；Esc：关弹层 + 退全屏
   - Ctrl+Z：撤销；Ctrl+Shift+Z / Ctrl+Y：重做（弹层面板打开时忽略）
 - **全屏**：`toggleFull()` = fullscreenElement 存在则 exitFullscreen，否则 document.documentElement.requestFullscreen
-- **主题作用域**：主题面板范围 radio 选「全部页面」时点色点 → `documentElement.setAttribute('data-theme', name)` + 遍历 slides 移除所有 slide 级 data-theme；选「仅本页」时 → `slides[cur].setAttribute('data-theme', name)`（仅当前页变色）；`?theme=biz` 参数走全局（任意 THEMES id 均可，如 ?theme=ocean；无参数时回退 localStorage `md-deck-theme` 记忆）；面板色点 .on 态按 activeThemeName()（当前范围下的生效主题）显示
+- **主题作用域**：主题面板范围 radio 选「全部页面」时点色点 → `documentElement.setAttribute('data-theme', name)` + 遍历 slides 移除所有 slide 级 data-theme；选「仅本页」时 → `slides[cur].setAttribute('data-theme', name)`（仅当前页变色）；`?theme=biz` 参数走全局（任意 THEMES id 均可，如 ?theme=ocean；无参数时回退 localStorage `md-deck:<页面路径>-theme` 记忆）；面板色点 .on 态按 activeThemeName()（当前范围下的生效主题）显示
 - **模板应用**：TPLS 十七套元信息（id/name/ic/ds/mini 结构示意图）；applyTpl(slide, tpl) = ensureOrigin 存档首次 innerHTML → 恢复语义态 → 挂 data-template（classic 则移除属性）→ 按需 wrapTimeline/wrapKeynote/wrapMagazine/wrapSteps/wrapPoster/wrapVintage/wrapFinance（封面/结束页/目录页 isSpecialPage 保护不包装；blueprint/education/executive/metro/bento/dark/nature/stats 纯 CSS 无包装器）；applyScope(tpl, scope, selected) 按范围应用返回页数；初始化时每页 data-template 声明自动跑 applyTpl 生效；`?tpl=xxx` 参数全局应用（只认 TPLS 内 id）
 - **标题自动映射**：包装器从语义节点取内容重建模板结构——timeline 节点标题=卡片标题、keynote 大观点=页标题、magazine 分栏标题=页标题；内容一条不丢
 - **页内连接**：deck 上事件委托，`closest('[data-goto]')` 跳页；目录条目/任意元素都可用

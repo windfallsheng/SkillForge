@@ -1354,11 +1354,14 @@ themeGrid.addEventListener('click', function(e){
   buildThumbs();
 });
 
+/* 多文件隔离：localStorage 键按页面路径命名空间——Chrome/Safari 下 file:// 与 localhost 共享同源存储，固定键名会导致多份演示稿主题/动画互相串台；文件改名或移动则记忆重置 */
+var MD_NS = 'md-deck:' + location.pathname;
+
 /* 主题记忆：全局主题 + 本页主题（按页码索引）序列化到 localStorage，刷新恢复；失败静默 */
 function saveThemeState(){
   var per = {};
   slides.forEach(function(s, k){ var t = s.getAttribute('data-theme'); if (t) per[k] = t; });
-  try{ localStorage.setItem('md-deck-theme', JSON.stringify({ global: document.documentElement.getAttribute('data-theme') || 'tech', slides: per })); }catch(e){}
+  try{ localStorage.setItem(MD_NS + '-theme', JSON.stringify({ global: document.documentElement.getAttribute('data-theme') || 'tech', slides: per })); }catch(e){}
 }
 
 
@@ -2539,7 +2542,7 @@ var themeParam = new URLSearchParams(location.search).get('theme');
 var themeIds = THEMES.map(function(t){ return t[0]; });
 if (themeIds.indexOf(themeParam) > -1) setGlobalTheme(themeParam);
 else { /* 无显式 URL 参数时恢复主题记忆（md-deck-theme JSON：global + slides 页码索引；删页/排序后本页主题可能错位，重新点选即可） */
-  var savedTheme = null; try{ savedTheme = localStorage.getItem('md-deck-theme'); }catch(e){}
+  var savedTheme = null; try{ savedTheme = localStorage.getItem(MD_NS + '-theme'); }catch(e){}
   if (savedTheme){
     var st = null; try{ st = JSON.parse(savedTheme); }catch(e){}
     if (st && typeof st === 'object'){
@@ -2567,10 +2570,10 @@ fit();
 buildThumbs();
 if (!jumped) go(0);
 
-/* ═══ 动画控制：翻页八套 + 入场/离场/强调 + 标题文字动画 + 应用范围（localStorage 记忆，失败静默）═══ */
+/* ═══ 动画控制：翻页八套 + 入场/离场/强调 + 标题文字动画 + 应用范围（localStorage 记忆，键按页面路径隔离多文件，失败静默）═══ */
 var deckEl = document.getElementById('deck');
 var TRANS_LIST = ['slide-lr','fade','slide-ud','zoom','flip','cube','wipe','dissolve'];
-var sideTabSaved = null; try{ sideTabSaved = localStorage.getItem('md-deck-side-tab'); }catch(e){}
+var sideTabSaved = null; try{ sideTabSaved = localStorage.getItem(MD_NS + '-side-tab'); }catch(e){}
 var leaving = false;
 
 function openSideTab(name){
@@ -2616,7 +2619,7 @@ function leaveThenGo(i){
 (function(){
   /* 应用范围：全部页面 / 仅本页 */
   var scope = 'all';
-  var savedScope = null; try{ savedScope = localStorage.getItem('md-deck-anim-scope'); }catch(e){}
+  var savedScope = null; try{ savedScope = localStorage.getItem(MD_NS + '-anim-scope'); }catch(e){}
   if (savedScope === 'current' || savedScope === 'all') scope = savedScope;
   var scopeRadios = Array.prototype.slice.call(document.querySelectorAll('input[name="animScope"]'));
   function syncScope(){
@@ -2628,7 +2631,7 @@ function leaveThenGo(i){
   }
   syncScope();
   scopeRadios.forEach(function(r){ r.addEventListener('change', function(){
-    if (r.checked){ scope = r.value; try{ localStorage.setItem('md-deck-anim-scope', scope); }catch(e){} syncScope(); }
+    if (r.checked){ scope = r.value; try{ localStorage.setItem(MD_NS + '-anim-scope', scope); }catch(e){} syncScope(); }
   }); });
   function animSlides(){ return scope === 'all' ? slides : [slides[cur]]; }
   function animEls(s){
@@ -2640,9 +2643,9 @@ function leaveThenGo(i){
   function setTransition(v){
     deckEl.setAttribute('data-transition', v);
     tgBtns.forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-tg') === v); });
-    try{ localStorage.setItem('md-deck-transition', v); }catch(e){}
+    try{ localStorage.setItem(MD_NS + '-transition', v); }catch(e){}
   }
-  var savedT = null; try{ savedT = localStorage.getItem('md-deck-transition'); }catch(e){}
+  var savedT = null; try{ savedT = localStorage.getItem(MD_NS + '-transition'); }catch(e){}
   if (savedT && TRANS_LIST.indexOf(savedT) !== -1){ setTransition(savedT); }
   else { setTransition(deckEl.getAttribute('data-transition') || 'slide-lr'); }
   tgBtns.forEach(function(b){ b.addEventListener('click', function(){ setTransition(b.getAttribute('data-tg')); }); });
@@ -2651,9 +2654,9 @@ function leaveThenGo(i){
   var chkA = document.getElementById('chkAnim');
   function setAnim(v){
     deckEl.setAttribute('data-anim', v ? 'on' : 'off');
-    try{ localStorage.setItem('md-deck-anim', v ? 'on' : 'off'); }catch(e){}
+    try{ localStorage.setItem(MD_NS + '-anim', v ? 'on' : 'off'); }catch(e){}
   }
-  var savedA = null; try{ savedA = localStorage.getItem('md-deck-anim'); }catch(e){}
+  var savedA = null; try{ savedA = localStorage.getItem(MD_NS + '-anim'); }catch(e){}
   if (savedA === 'off' || savedA === 'on'){ setAnim(savedA === 'on'); chkA.checked = savedA === 'on'; }
   else { chkA.checked = deckEl.getAttribute('data-anim') !== 'off'; }
   chkA.addEventListener('change', function(){ setAnim(chkA.checked); });
@@ -2735,21 +2738,21 @@ function leaveThenGo(i){
     });
     mark(textBtns, mode, 'data-ta');
   }
-  var savedTA = null; try{ savedTA = localStorage.getItem('md-deck-text-anim'); }catch(e){}
+  var savedTA = null; try{ savedTA = localStorage.getItem(MD_NS + '-text-anim'); }catch(e){}
   /* 入场动画总开关关闭时不回填文字动画（与开关语义一致，避免「关不掉」） */
   if ((savedTA === 'char' || savedTA === 'word' || savedTA === 'line') && deckEl.getAttribute('data-anim') !== 'off'){ applyText(savedTA); }
   else { mark(textBtns, 'none', 'data-ta'); }
   textBtns.forEach(function(b){ b.addEventListener('click', function(){
     var m = b.getAttribute('data-ta');
     applyText(m);
-    try{ localStorage.setItem('md-deck-text-anim', m); }catch(e){}
+    try{ localStorage.setItem(MD_NS + '-text-anim', m); }catch(e){}
   }); });
 
   /* 双 Tab 切换 */
   Array.prototype.forEach.call(document.querySelectorAll('.sp-tab'), function(b){
     b.addEventListener('click', function(){
       openSideTab(b.getAttribute('data-tab'));
-      try{ localStorage.setItem('md-deck-side-tab', b.getAttribute('data-tab')); }catch(e){}
+      try{ localStorage.setItem(MD_NS + '-side-tab', b.getAttribute('data-tab')); }catch(e){}
     });
   });
   openSideTab(sideTabSaved === 'tools' ? 'tools' : 'pages');
