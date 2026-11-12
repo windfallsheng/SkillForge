@@ -10,8 +10,8 @@
 
 ## 落盘与截图
 
-- 文件名 `poster-<主题slug>.html`（英文 slug 化标题，如 poster-ai-work.html；DIR: auto 时落当前工作目录 posters/ 子目录，不存在则创建）
-- 同目录同时落 `poster-<主题slug>.md` 内容底稿（标题/金句/要点/页脚四要素纯文本，html 永远可从它重建——数据真相源）
+- 落盘组织一海报一目录：`<DIR>/<主题slug>/` 内三件套成组——`poster.html`（海报）+ `poster.md`（内容底稿：标题/金句/要点/页脚四要素纯文本，html 永远可从它重建——数据真相源）+ `poster.png`（SHOT 截图，与 html 同名）；DIR: auto = 当前工作目录 posters/（不存在则创建）
+- 旧版平铺产物（posters/poster-<slug>.html 等）保持原位不迁移；回炉升级扫描时两种形态（子目录 poster.html + 平铺 poster-*.html）都扫
 - OPEN_HTML: true 且落盘了 html 时自动打开浏览器（macOS：open <html文件>；Windows PowerShell：Start-Process <html文件>）
 - SHOT: true 时用 Chrome headless 截 PNG：`--headless --disable-gpu --no-sandbox --hide-scrollbars --user-data-dir=<临时目录> --screenshot=<png路径> --window-size=<宽>,<高> --virtual-time-budget=4000 "file:///<html路径>?shot"`（Windows 用 node url.pathToFileURL 生成 URL）；按 ASPECT 定窗口（3:4 → 900,1200；1:1 → 1000,1000；16:9 → 1600,900）；禁止用 `--headless=new`；Chrome 不存在换 Edge，都无则跳过并对话注明
 - **落盘完成后对话报告落盘位置**：完整路径清单（html + md + 可选 png），并注明 html 是否已在浏览器打开、截图是否跳过
