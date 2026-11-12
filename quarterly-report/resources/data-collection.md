@@ -23,7 +23,7 @@ DATA_SOURCES:
 - 遍历 user-config.md 的 DATA_SOURCES 清单（type: git 项；个人数据源必须写在 user-config.md，本文件随升级覆盖），对每仓执行当季统计：
   - 总提交数：`git log --since={季首} --until={季末 23:59} --oneline | wc -l`
   - 增删行数：`git log --since=... --until=... --numstat --pretty=tformat: | awk` 汇总 add/del
-  - **先剔除生成物路径**（.speccore/code-graph/、node_modules、dist、*.lock 等，用 grep -vE 按制表符+路径过滤），否则 graph.json 之类单文件可贡献数十万行噪音
+  - **先剔除生成物路径**（.build/code-graph/、node_modules、dist、*.lock 等，用 grep -vE 按制表符+路径过滤），否则 graph.json 之类单文件可贡献数十万行噪音
   - Q1-Q4 走势数据：对当年各季度分别统计总提交数（`git log --since={各季首} --until={各季末} --oneline | wc -l`），喂给 HTML 概览区的 Q1-Q4 季度走势图（当年未到的季度不统计，图形只画已有季度）
   - 里程碑：`git tag` / `git log --merges --oneline` 提取版本发布与重要合并，读 tag 信息取版本号与日期，筛选落在目标季度内的
   - **双基准统计**（概览卡「较上季度/较去年同期」两行小字的数据来源）：

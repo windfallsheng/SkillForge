@@ -23,7 +23,7 @@ DATA_SOURCES:
 - 遍历 user-config.md 的 DATA_SOURCES 清单（type: git 项；个人数据源必须写在 user-config.md，本文件随升级覆盖），对每仓执行当月统计：
   - 总提交数：`git log --since={月首} --until={月末 23:59} --oneline | wc -l`
   - 增删行数：`git log --since=... --until=... --numstat --pretty=tformat: | awk` 汇总 add/del
-  - **先剔除生成物路径**（.speccore/code-graph/、node_modules、dist、*.lock 等，用 grep -vE 按制表符+路径过滤），否则 graph.json 之类单文件可贡献数十万行噪音
+  - **先剔除生成物路径**（.build/code-graph/、node_modules、dist、*.lock 等，用 grep -vE 按制表符+路径过滤），否则 graph.json 之类单文件可贡献数十万行噪音
   - 日历热力图数据：`git log --since=... --until=... --format='%ad' --date=format:'%Y-%m-%d' | sort | uniq -c`（逐日提交数，喂给 HTML 的月度日历热力图）
   - 里程碑：`git tag` / `git log --merges --oneline` 提取版本发布与重要合并，读 tag 信息取版本号与日期，筛选落在目标月内的
   - 环比上月：同样口径统计上月总提交数/完成任务数，供概览卡「较上月」环比行使用

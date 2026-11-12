@@ -11,7 +11,7 @@ meta-forge 是「造 skill 的 skill」：把一段重复劳作，按 SkillForge
   2. user-config 抽离——用户可改配置全部出站到 user-config.md，升级永不覆盖
   3. reference 双轨——技能含 HTML 输出时，reference.html 是定稿样式真相源，改样式三处同步
   4. 多文件隔离——页面有 localStorage 记忆时，键按页面路径命名空间，多份产物互不串台
-  5. 零侵权离线——品牌字体零出现、禁 CDN，页面离线双击可开
+  5. 零侵权脱敏离线——品牌字体零出现、禁 CDN 页面离线可开、示例数据零真实身份（通用占位）
   6. 自检纪律——改任一文件 grep 全仓核对关键词，旧词零残留
 - 交付前跑验证环（偏差必被发现）：静态门禁逐项 grep + 含 HTML 时 Playwright 实测（零 JS 错误 / 键带路径 / 刷新恢复 / 多文件隔离），验证证据随交付报告附上
 - 技能入 SkillForge 仓库时，自动登记 README 技能分类表/技能清单/目录结构与 cli.js CATEGORIES
