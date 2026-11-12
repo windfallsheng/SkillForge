@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="sf-template" content="prompt-pouch@2">
+<meta name="sf-template" content="prompt-pouch@4">
 <meta name="pouch-id" content="REF-POUCH-0000">
 <title>锦囊 Prompt Pouch — 提示词管理台</title>
 <style>
@@ -201,9 +201,9 @@ header{
 aside{ width:200px; flex:0 0 auto;
   display:flex; flex-direction:column;
   position:sticky; top:80px; align-self:flex-start;
-  height:calc(100vh - 100px);
+  height:calc(100vh - 128px); /* 占满侧栏在视口中的剩余高度并稍留底余量：初始流位置在 sticky 顶栏与版心 padding 之下（约 104px），多留 28px 保证「＋ 新建分组」完整在屏 */
 }
-/* 侧栏分组滚动区：收藏 + 分组局部滚动，分组下方紧跟「＋ 新建分组」，滚动流末尾附「锦囊用法」说明——滚动区占满「全部」与侧栏底缘之间的剩余屏幕高度（最大占满屏幕），说明被顶出首屏（滚到底可见）；窄滚动条 */
+/* 侧栏分组滚动区：收藏 + 分组局部滚动——滚动区占满「全部」与「＋ 新建分组」（钉在侧栏底部）之间的剩余屏幕高度，分组再多按钮也不出屏；滚动流末尾附「锦囊用法」说明（分组多时滚到底可见）；窄滚动条 */
 .nav-scroll{
   flex:1 1 auto; min-height:0; overflow-y:auto;
   margin:0 -4px 0 0; padding-right:4px;
@@ -521,6 +521,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
 }
 /* 页面直写：侧栏分组管理 / 提示词表单 / toast */
 .nav-add{
+  flex:0 0 auto; /* 钉在侧栏底部：分组列表在「全部」与本按钮之间滚动，分组再多也不出屏 */
   display:flex; align-items:center; justify-content:center; gap:6px;
   margin-top:10px; padding:10px 14px; border-radius:10px; cursor:pointer;
   font-size:13px; letter-spacing:1px; color:var(--gold);
@@ -951,9 +952,9 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
       var n = state.data.prompts.filter(function(p){ return p.group === g.id; }).length;
       html += '<div class="nav-item' + (state.curGroup===g.id?' on':'') + '" data-g="' + g.id + '" draggable="true" title="拖拽调整分组顺序"><span class="icon">' + g.icon + '</span><span class="g-name">' + escapeHtml(g.name) + '</span><span class="cnt">' + n + '</span><span class="g-ops"><button class="g-edit" title="编辑分组">✎</button><button class="g-del" title="删除分组">🗑</button></span></div>';
     });
-    html += '<div class="nav-add" id="navAdd">＋ 新建分组</div>';
     html += '<div class="side-tip"><b>锦囊用法</b><br>· 页面直接增删改：＋ 新建分组 / ＋ 新增提示词 / ✎ 编辑 / 🗑 删除（授权目录即写即存）<br>· 也可对 AI 说「把 XX 加到写作输出分组」<br>· 顶栏切换排序；⇄ 移组、拖卡片排序自动保存；拖分组条调整分组顺序<br>· 点卡片标签按标签筛选（再点取消）；标签悬停 ✕ 删 / ＋ 加；⤓ 导出 / ⤒ 导入 JSON 备份<br>· ⭐ 收藏常用 · 复制次数在卡片右上角</div>';
     html += '</div>';
+    html += '<div class="nav-add" id="navAdd">＋ 新建分组</div>';
     sideNav.innerHTML = html;
     sideNav.querySelectorAll('.nav-item').forEach(function(el){
       el.addEventListener('click', function(){
