@@ -220,6 +220,8 @@ grep -nE "PingFang|YaHei|apple-system|sans-serif|serif|monospace|SF Mono|Menlo|M
     ├── C00-封面.png  C00-引言.png  C01-*.png … C13-作者介绍.png
 ```
 
+- 落盘完成后，对话回复必须向用户报告落盘位置：列出实际写入的目录完整路径与文件清单（如「已落盘到 ~/articles/<标题>/：<标题>.html、<标题>-单文件版.html、assets/fonts/、文章截图/<标题slug>/ 的 C00-C13 共 N 张」），并注明 html 是否已在浏览器打开、章节截图是否跳过（Chrome/Edge 都不存在时）
+
 
 ## 🔧 报修处理流程（用户报页面问题时）
 

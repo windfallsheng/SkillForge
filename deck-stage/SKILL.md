@@ -54,7 +54,7 @@ disable-model-invocation: false
 3. **封面/结尾截图**（无现成素材时）→ 读 `resources/cover-template.html` 说明：复制模板到临时目录 → 替换 `COVER` 对象（title/subtitle/info/stats 或 mode:closing）→ Chrome headless 截图 1280x720（macOS：`/Applications/Google Chrome.app/Contents/MacOS/Google Chrome --headless --disable-gpu --no-sandbox --hide-scrollbars --screenshot=cover.png --window-size=1280,720 --virtual-time-budget=3000 "file:///<临时html>"`；Windows 按序探测 chrome.exe/msedge.exe，URL 用 node url.pathToFileURL）
 4. **生成 pptx**：写 data.json → `cd <skill目录> && node resources/pptx-builder.js --data <data.json绝对路径> --out <DIR>/<文件名>.pptx` → 输出 `PPTX_OK <路径>`
 5. **交付前自检**（硬门禁，不可跳过）：文件存在、大小 > 20KB；`unzip -l <pptx>` 校验——`ppt/slides/slideN.xml` 数量与 data.json pages 数一致、每页 slide XML 均存在且非空；builder 已报 `PPTX_OK` 才算通过。未通过 → 修 data.json 后重跑 builder，禁止跳过直接交付
-6. **落盘与打开**：按配置 DIR 落盘；`OPEN_PPTX: true` 时打开（macOS：`open <pptx>`；Windows：`start <pptx>`）
+6. **落盘与打开**：按配置 DIR 落盘；`OPEN_PPTX: true` 时打开（macOS：`open <pptx>`；Windows：`start <pptx>`）；落盘完成后对话回复必须向用户报告落盘位置：pptx 文件完整路径（如「已落盘到 ~/reports/月度汇报-202611.pptx」），并注明是否已自动打开（OPEN_PPTX=false 时注明未打开）
 7. **使用咨询**（用户只问「登台怎么用」「报告转 PPT 怎么用」等用法、未要求生成）→ 读 `resources/usage-guide.md`，将其内容原样输出（首行标题改为「登台 deck-stage 使用指南」），不执行任何生成动作
 
 

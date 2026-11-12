@@ -44,7 +44,7 @@ disable-model-invocation: false
 
 - 机制体系缺一不可：CONFIG_VERSION 钥匙（配置版本机制节 + user-config 配置块首行 CONFIG_VERSION: 1）、user-config 抽离（用户可改配置全部出站，SKILL.md 只引用不内嵌）、reference 双轨（含 HTML 输出的技能以 reference.html 为样式真相源）、多文件隔离（页面有 localStorage 记忆时键带路径命名空间）、零侵权脱敏离线（品牌字体零出现、禁 CDN 离线可开、示例数据零真实身份）、产物升级回炉（HTML 带模板版本戳、业务/数据格式/页面改动均 bump、旧产物可交互回炉、生成时顺扫旧版主动提示）、preserve 保护清单（半定制资产 .preserve 声明、CLI 升级永不覆盖、官方更新另存 .upstream 对照）、自检纪律（改一处 grep 全仓）
 - 薄入口：SKILL.md 只留 frontmatter / 生成流程 / 配置节 / 机制节 / 规则速览；重内容按阶段拆 resources/，一文件一职责
-- 新技能必须带 user-config.md（含 CONFIG_VERSION: 1）与 resources/usage-guide.md（咨询应答原样输出源）
+- 新技能必须带 user-config.md（含 CONFIG_VERSION: 1）、resources/usage-guide.md（咨询应答原样输出源）与 resources/skillforge-guide.txt + skillforge-guide.html（SkillForge 使用指引双版，SKILL.md 末尾带整体咨询触发节）
 - 完整规则（澄清清单 / 结构规范 / 机制体系 / 验证环 / 仓库登记）见 `resources/forge-rules.md`
 
 

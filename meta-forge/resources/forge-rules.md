@@ -22,12 +22,15 @@
 ├── user-config.md         # 用户可改配置（含 CONFIG_VERSION），升级永不覆盖
 └── resources/             # 重内容按生成阶段拆分，一文件一职责
     ├── usage-guide.md     # 咨询应答原样输出源（必建）
+    ├── skillforge-guide.txt   # SkillForge 使用指引 AI 朗读版（必建，从 meta-forge 复制）
+    ├── skillforge-guide.html  # SkillForge 使用指引浏览器排版版（必建，从 meta-forge 复制）
     └── {阶段名}.md        # 每个生成阶段一份，独立可读、不互相引用
 ```
 
-- **SKILL.md 只保留**：frontmatter（name/description/allowed-tools/disable-model-invocation）、生成流程总览（每步标注读哪个 resource；第 0 步固定为「读用户配置 → 先 Read user-config.md」，最后一步固定为「使用咨询 → 读 usage-guide.md 原样输出」）、配置节、配置版本机制节、文档同步自检纪律节、规则速览（3-5 条硬性规则）
+- **SKILL.md 只保留**：frontmatter（name/description/allowed-tools/disable-model-invocation）、生成流程总览（每步标注读哪个 resource；第 0 步固定为「读用户配置 → 先 Read user-config.md」，最后一步固定为「使用咨询 → 读 usage-guide.md 原样输出」）、配置节、配置版本机制节、文档同步自检纪律节、规则速览（3-5 条硬性规则）+ 末尾固定「SkillForge 使用指引（整体咨询时触发）」节
 - **resources/ 一文件一职责**：按生成阶段拆分；每份独立可读，不互相引用；SKILL.md 流程节点标注 `读 resources/xxx.md`
 - **咨询应答**：用户只问用法不要求生成时，读 resources/usage-guide.md 原样输出（首行标题按技能改为「XX使用指南」），不执行任何生成动作
+- **SkillForge 指引内置（必建）**：每个锻造出的技能必须让用户能问 SkillForge 整体用法——①resources/ 必含 `skillforge-guide.txt`（AI 朗读版）与 `skillforge-guide.html`（浏览器排版版）两份，从 meta-forge 自身 resources/ 原样复制；②SKILL.md 末尾固定追加「SkillForge 使用指引（整体咨询时触发）」节：用户问「skillforge 怎么用 / 使用说明 / 技能怎么安装 / 怎么升级 / 装了哪些技能 / 技能清单 / skill-forge 命令怎么用」等（中英文近似均可，关键词可自由扩展）→ Read 同目录 `resources/skillforge-guide.txt` 全文整理回答（命令与参数以 txt 为准，勿自行编造）+ 用系统命令打开同目录 `resources/skillforge-guide.html`（macOS `open`，Windows `start`）；用户只问单个技能用法（如「日报怎么用」）不触发，走 usage-guide.md
 
 ## 三、机制体系（缺一不可）
 

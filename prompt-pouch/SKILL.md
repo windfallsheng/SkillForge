@@ -46,7 +46,7 @@ disable-model-invocation: false
    - 创建 `<DIR>/<DATA_DIR>/` 与 `<DIR>/<BACKUP_DIR>/` 子目录（配置为空串则跳过、平铺根目录）；生成 `<DIR>/<DATA_DIR>/prompts.json`：`INIT_DATA: example` 时写入「各职业通用」示例五组（写作输出/沟通协作/规划执行/复盘成长/提问艺术，每组 3 条，标题与正文按下方「## 默认示例数据」清单写，**每条必带 createdAt 当前时间（YYYY-MM-DD HH:mm:ss，写到时分秒）**）；`empty` 时写空结构（version + 空 groups/prompts）
    - 收尾提示启动方式：`cd <DIR> && python3 -m http.server <PORT>`（Windows 无 python3 时 `py -m http.server`），浏览器访问 `http://localhost:<PORT>/prompt-pouch.html`（HTTP 才能读 prompts.json；file:// 直开回退缓存快照）
 2. **维护**（页面已存在时）：读 `<DIR>/<DATA_DIR>/prompts.json` → 按用户意图修改 → 写回（UTF-8、2 空格缩进、保留 version 字段）→ 提醒用户刷新页面
-   - **落盘确认**：写回前展示将要落盘的内容（新增/修改的标题、分组、正文摘要，一句话说清改了什么），等用户确认后落盘；用户明确说「直接存/不用确认」则跳过（本次会话有效）；写回前重读最新文件合并
+   - **落盘确认**：写回前展示将要落盘的内容（新增/修改的标题、分组、正文摘要，一句话说清改了什么），等用户确认后落盘；用户明确说「直接存/不用确认」则跳过（本次会话有效）；写回前重读最新文件合并；落盘完成后对话报告产物位置：页面文件 `<DIR>/prompt-pouch.html`、数据文件 `<DIR>/<DATA_DIR>/prompts.json`、滚动备份目录 `<DIR>/<BACKUP_DIR>/`
    - **分类交互**：用户说「添加 XX」但未说分组 → 先按现有分组语义智能匹配（如内容讲周报 → 建议「写作输出 ✍️」并说明理由），匹配到则默认归入、用户可改口换组；匹配不到 → AskUserQuestion 列出全部现有分组（加「新建分组」选项）让用户选；用户指定的分组不存在 → 明确告知该分组不存在，并问是否新建（新建则补 groups 条目：id 16 位数字主键（雪花规则见 data-format.md）、name 中文、icon 一个 emoji）
 2.5 **交付前自检**（初始化与每次维护落盘后必做，硬门禁不可跳过）：
    - **json 机器校验**：`python3 -c "import json;json.load(open('<DIR>/<DATA_DIR>/prompts.json',encoding='utf-8'))"`（Windows 用 py）解析通过，且 schema 自查无缺（version/groups/prompts 齐全、group 引用存在、order 连续、新增条目 createdAt 到时分秒）
@@ -56,6 +56,7 @@ disable-model-invocation: false
    - 目标目录无页面时先执行步骤 1（初始化）
    - 后台起本地服务（`cd <DIR> && python3 -m http.server <PORT>`，Windows 用 `py -m http.server`；端口被占则换 PORT+1 再试）
    - 按平台打开浏览器：darwin → `open http://localhost:<PORT>/prompt-pouch.html`；win32 → `start` 同 URL；linux → `xdg-open` 同 URL
+   - 打开后对话中报访问地址（http://localhost:<PORT>/prompt-pouch.html）与页面文件完整路径
 4. **结构规则与维护操作** → 读 `resources/data-format.md`（schema、id 规范、createdAt、updatedAt、排序落盘、插值语法、排序模式）
 5. **批量整理入囊**（用户给一堆文字/文件/说「把最近对话框内容整理进锦囊」）——两段确认，一段不跳：
    - 读 `<DIR>/<DATA_DIR>/prompts.json` 现状
