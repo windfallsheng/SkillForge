@@ -78,7 +78,7 @@ skill-forge init --skills daily-report,weekly-report --yes
 装 skill-forge init --skills daily-report → 说「写日报」口述内容即生成 md/txt/html（自动打开）+ 截图 → 改 user-config.md 的 DIR（落盘目录）/ THEME（五主题）/ TEMPLATE（自定义模板），临时口头要求当次生效不写配置 → 官方升级后选 [2] 保留我的，对照 .upstream 合并新配置点 → 模板版本戳升了说「把我旧日报都升级成新样式」：浅升级换样式块、深升级从同目录 md 底稿重建，旧版先备份。
 
 2、锦囊 prompt-pouch：
-装 → 「做一个锦囊管理页面」生成管理台 html + data/prompts.json → 日常：分组侧栏 / 搜索 / 收藏 / 标签过滤 / {变量} 插值一键复制 / 导入导出 JSON 备份；页面与数据分离，删页面不丢数据 → 改 user-config.md 的 DIR / DATA_DIR / BACKUP_DIR → 官方升级后数据目录与数据文件一概不动，深升级沿用原页 pouch-id，收藏分组照旧读回 → 多文件隔离：两份锦囊各自独立；复制文件副本 = 同一身份共享同一份数据（要独立身份请重新生成）。
+装 → 「做一个锦囊管理页面」生成管理台 html + data/prompts.json → 日常：分组侧栏 / 搜索 / 收藏 / 标签过滤 / {变量} 插值一键复制 / 导入导出 JSON 备份；页面与数据分离，删页面不丢数据 → 改 user-config.md 的 DIR / DATA_DIR / BACKUP_DIR → 官方升级后数据目录与数据文件一概不动，深升级沿用原页 pouch-id，收藏分组照旧读回 → 页面版本升级（回炉）：官方模板版本戳升了，下次生成时 AI 主动提示「检测到 X 份旧版锦囊」→ 说「把我旧锦囊都升级成新样式」→ 选全部或部分 → 浅升级换样式块、深升级从模板重建并沿用原页 pouch-id（收藏分组照旧读回），prompts.json 数据不动、旧页先备份 → 多文件隔离：两份锦囊各自独立；复制文件副本 = 同一身份共享同一份数据（要独立身份请重新生成）。
 
 3、PPT 两形态 magic-deck / deck-stage：
 说「做个 PPT」AI 先问形态——HTML 幻灯（magic-deck）还是 .pptx 可编辑文稿（deck-stage）→ magic-deck 生成单文件 HTML 幻灯，浏览器全屏放映（自动播放 / 循环 / 热键翻页），需要图片时逐页 PNG 截图 → deck-stage 三问交互（素材 → 页骨架表 → 成片方式）生成 .pptx：常规页原生可编辑（数据卡 / 时间线 / 图表），封面与结尾页 HTML 截图保真 → deck-stage 依赖 PptxGenJS，npm 包不含 node_modules，装完按提示 cd <技能目录>/deck-stage && npm install 补装一次 → 配置（五主题 / 页面尺寸 / 演讲备注）在 user-config.md。
