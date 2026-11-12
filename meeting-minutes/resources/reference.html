@@ -160,7 +160,7 @@ body{
 .next-line{display:flex;align-items:baseline;gap:14px;padding:6px 0}
 .next-k{flex:0 0 auto;font-size:11px;color:var(--muted);letter-spacing:2px}
 .next-v{font-size:14px;line-height:1.7}
-.copy-wrap{display:flex;justify-content:center;margin:18px 0}
+.copy-wrap{display:flex;justify-content:center;margin:18px 0 0}
 .copy-btn{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;letter-spacing:2px;
   background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:999px;padding:12px 38px;cursor:pointer;
   box-shadow:0 0 30px var(--glow);transition:transform .18s ease,box-shadow .18s ease;
@@ -224,6 +224,12 @@ html.js .rv.in{ opacity:1; translate:0 0; }
     <h1>示例项目 周例会纪要</h1>
     <div class="header-sub">2026-11-11 周三 · 14:00 ~ 14:45 · 线上会议</div>
     <div class="header-badge">周例会</div>
+    <div class="copy-wrap">
+      <button class="copy-btn" id="copyBtn">
+        <svg id="copyIcon" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5.5" y="5.5" width="8.5" height="8.5" rx="1.5"/><path d="M10.5 5.5V4a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 4v5A1.5 1.5 0 0 0 4 10.5h1.5"/></svg>
+        <span id="copyText">一键复制</span>
+      </button>
+    </div>
   </div>
 
   <section class="section sec-if rv">
@@ -241,13 +247,6 @@ html.js .rv.in{ opacity:1; translate:0 0; }
       <span class="info-k">参会人</span><span class="info-v"><div class="ppl-chips"><span class="ppl-chip">李工</span><span class="ppl-chip">王工</span><span class="ppl-chip">赵工</span><span class="ppl-chip">刘工</span></div></span>
     </div>
   </section>
-
-  <div class="copy-wrap rv">
-    <button class="copy-btn" id="copyBtn">
-      <svg id="copyIcon" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5.5" y="5.5" width="8.5" height="8.5" rx="1.5"/><path d="M10.5 5.5V4a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 4v5A1.5 1.5 0 0 0 4 10.5h1.5"/></svg>
-      <span id="copyText">一键复制</span>
-    </button>
-  </div>
 
   <section class="section sec-su rv">
     <div class="sec-bar"></div>
