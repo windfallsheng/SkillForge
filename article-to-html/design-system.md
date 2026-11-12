@@ -402,6 +402,9 @@ td.hl{font-weight:700;color:var(--ink)}
 </div>
 <script>
 /* 主题换肤：html[data-theme] 切换 + 记忆上次选择（localStorage，失败静默）；?shot 截图模式隐藏坞 */
+
+/* 多文件隔离：localStorage 键按页面路径命名空间——Chrome/Safari 下 file:// 与 localhost 共享同源存储，固定键名会导致多份产物互相串台；文件改名或移动则记忆重置 */
+var SF_NS = 'sf:' + location.pathname;
 (function(){
   var THEMES=['tech','gold','forest','plum'];
   var dock=document.getElementById('themeDock');
@@ -410,11 +413,11 @@ td.hl{font-weight:700;color:var(--ink)}
   function apply(t){
     document.documentElement.setAttribute('data-theme',t);
     dock.querySelectorAll('.th-dot').forEach(function(d){ d.classList.toggle('on',d.getAttribute('data-theme')===t); });
-    try{ localStorage.setItem('sf-article-theme',t); }catch(e){}
+    try{ localStorage.setItem(SF_NS + '-theme',t); }catch(e){}
   }
   var cur=document.documentElement.getAttribute('data-theme');
   var saved=null;
-  try{ saved=localStorage.getItem('sf-article-theme'); }catch(e){}
+  try{ saved=localStorage.getItem(SF_NS + '-theme'); }catch(e){}
   if(saved && THEMES.indexOf(saved)!==-1 && saved!==cur){ apply(saved); }
   else{ dock.querySelectorAll('.th-dot').forEach(function(d){ d.classList.toggle('on',d.getAttribute('data-theme')===(cur||'tech')); }); }
   dock.querySelectorAll('.th-dot').forEach(function(d){ d.addEventListener('click',function(){ apply(d.getAttribute('data-theme')); }); });

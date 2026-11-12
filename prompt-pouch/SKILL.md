@@ -80,7 +80,7 @@ disable-model-invocation: false
 
 **执行本 skill 前必须先 Read 同目录 `user-config.md`**：目录（DIR/DIR_WIN）、端口（PORT）、初始化数据（INIT_DATA）、确认开关（CONFIRM）、主题（THEME）等默认配置都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留。
 
-**THEME 主题机制**：页面内置五套主题——gold 暖棕金（默认）/ tech 深蓝科技 / mono IDEA 黑亮（JetBrains New UI Dark 官方色系，编辑区 #1e1f22 + 面板 #2b2d30）/ light IDEA 白亮（IntelliJ Light 官方色系）/ mint 薄荷绿。初始化复制 reference.html 后，将 html 根标签 `data-theme` 属性值设为配置 `THEME`（仅此一处修改）；页面右下角「换肤坞」色点可随时切换主题，选择经浏览器 localStorage 持久（key: sf-pouch-theme），刷新后保持；localStorage 优先级高于根标签 data-theme。已初始化的页面改配置 THEME 不追溯——用户手动换过主题即以其选择为准。
+**THEME 主题机制**：页面内置五套主题——gold 暖棕金（默认）/ tech 深蓝科技 / mono IDEA 黑亮（JetBrains New UI Dark 官方色系，编辑区 #1e1f22 + 面板 #2b2d30）/ light IDEA 白亮（IntelliJ Light 官方色系）/ mint 薄荷绿。初始化复制 reference.html 后，将 html 根标签 `data-theme` 属性值设为配置 `THEME`（仅此一处修改）；页面右下角「换肤坞」色点可随时切换主题，选择经浏览器 localStorage 持久（key: sf:<页面路径>-theme，按页面路径命名空间隔离、多份锦囊互不串台；文件改名/移动则记忆重置），刷新后保持；localStorage 优先级高于根标签 data-theme。已初始化的页面改配置 THEME 不追溯——用户手动换过主题即以其选择为准。
 
 **配置版本机制（升级保护）**：user-config.md 头部 `CONFIG_VERSION` 标识结构版本，本 skill 当前要求版本为 4；配置结构如有变化必须同步更新此版本号与迁移说明。升级 skill 后若发现新版本结构（如 v2 新增 THEME 字段）而用户配置是旧版：先备份旧配置为 `user-config.md.bak-时间戳`，将旧值迁移进新结构（保留用户已有 DIR/PORT/INIT_DATA/CONFIRM，缺失字段补默认值），更新 CONFIG_VERSION，最后用一句话告知用户配置已升级、旧文件备份在哪。v4 特例：用户配置 DATA_DIR: cache（v3 旧默认、非用户显式自定义）→ 目录改名 cache→data（先复制 .bak-时间戳）并同步更新配置值；用户显式自定义过其它目录名则尊重其选择不动。 **无法迁移项处理**（值域失效 / 语义漂移 / 数据不兼容）：三绝不——绝不静默（无法迁移项停下问，不猜值）、绝不丢失（旧值永远在备份）、一次说清（升级报告三段式：⚠️ 版本与备份路径 / ✅ 已自动迁移 / 🟡 无法迁移项逐条附原因+影响+建议替代）；随后 AskUserQuestion 三选项（A 用建议值 / B 用户给新值 / C 保持旧配置——不更新 CONFIG_VERSION，每次执行再提醒）；报告必附回滚一句话；数据文件（prompts.json）迁移前先复制 .bak-时间戳，能映射则映射、不能则写兼容层（旧 id 兼容保留即范例）或留备份提示手动整理
 

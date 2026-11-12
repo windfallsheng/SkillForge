@@ -1875,6 +1875,9 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
   });
 
   /* ---------- 本地持久化（IndexedDB + localStorage 镜像） ---------- */
+  /* 多文件隔离：localStorage 键按页面路径命名空间——Chrome/Safari 下 file:// 与 localhost 共享同源存储，固定键名会导致多份产物互相串台；文件改名或移动则记忆重置 */
+  var SF_NS = 'sf:' + location.pathname;
+
   var localState = null;
   var db = null;
   function withTimeout(p, ms, fallback){
@@ -1932,7 +1935,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     if (!state.data) return;
     localState = snapshotUserState();
     idbSet('userState', localState);
-    try{ localStorage.setItem('pouch-userstate', JSON.stringify(localState)); }catch(e){}
+    try{ var usJson = JSON.stringify(localState); localStorage.setItem(SF_NS + '-userstate', usJson); localStorage.setItem('pouch-userstate', usJson); }catch(e){}
   }
   function applyUserStateFrom(us){
     if (!us || !state.data) return;
@@ -1960,7 +1963,8 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     return idbGet('userState').then(function(us){
       if (us){ localState = us; return; }
       try{
-        var raw = localStorage.getItem('pouch-userstate');
+        var raw = localStorage.getItem(SF_NS + '-userstate');
+        if (!raw) raw = localStorage.getItem('pouch-userstate'); /* 兜底：文件改名/移动后路径键失效，用最近快照自愈 */
         if (raw){ localState = JSON.parse(raw); idbSet('userState', localState); }
       }catch(e){}
     });
@@ -1972,8 +1976,8 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
   var lastBackupTs = 0;
   var pendingAuth = false;
   var bkDeclined = false;
-  try{ lastBackupTs = parseInt(localStorage.getItem('pouch-last-backup') || '0', 10) || 0; }catch(e){}
-  try{ bkDeclined = localStorage.getItem('pouch-bk-declined') === '1'; }catch(e){}
+  try{ lastBackupTs = parseInt(localStorage.getItem(SF_NS + '-last-backup') || '0', 10) || 0; }catch(e){}
+  try{ bkDeclined = localStorage.getItem(SF_NS + '-bk-declined') === '1'; }catch(e){}
   function bkSupported(){ return 'showDirectoryPicker' in window; }
   function fmtTime(ts){
     var d = ts instanceof Date ? ts : new Date(ts);
@@ -2044,7 +2048,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
       });
     }).then(function(){
       lastBackupTs = Date.now();
-      try{ localStorage.setItem('pouch-last-backup', String(lastBackupTs)); }catch(e){}
+      try{ localStorage.setItem(SF_NS + '-last-backup', String(lastBackupTs)); }catch(e){}
       updateBkUI();
       return true;
     }).catch(function(){
@@ -2061,7 +2065,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
       return idbSet('snapRing', ring);
     }).then(function(){
       lastBackupTs = Date.now();
-      try{ localStorage.setItem('pouch-last-backup', String(lastBackupTs)); }catch(e){}
+      try{ localStorage.setItem(SF_NS + '-last-backup', String(lastBackupTs)); }catch(e){}
       updateBkUI();
       return true;
     }).catch(function(){
@@ -2090,14 +2094,14 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     var ok = window.confirm('锦囊自动备份\n\n数据一有变更就会自动备份，建议授权写入 prompt-pouch.html 所在目录（首次弹窗选一次，浏览器会记住）。\n\n点「确定」打开目录选择 → 选 prompt-pouch.html 所在文件夹即可；\n点「取消」则改用浏览器本地快照（保留最近 5 份，清浏览器数据会丢）。');
     if (!ok){
       bkDeclined = true;
-      try{ localStorage.setItem('pouch-bk-declined', '1'); }catch(e){}
+      try{ localStorage.setItem(SF_NS + '-bk-declined', '1'); }catch(e){}
       return Promise.resolve(false);
     }
     pendingAuth = true; updateBkUI();
     return window.showDirectoryPicker({ id: 'pouch-backup', mode: 'readwrite' })
       .then(function(h){
         bkDirHandle = h; pendingAuth = false; bkDeclined = false; subDirCache = {};
-        try{ localStorage.removeItem('pouch-bk-declined'); }catch(e){}
+        try{ localStorage.removeItem(SF_NS + '-bk-declined'); }catch(e){}
         idbSet('bkHandle', bkDirHandle);
         updateBkUI();
         return true;
@@ -2165,7 +2169,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     window.showDirectoryPicker({ id: 'pouch-backup', mode: 'readwrite' })
       .then(function(h){
         bkDirHandle = h; pendingAuth = false; bkDeclined = false; subDirCache = {};
-        try{ localStorage.removeItem('pouch-bk-declined'); }catch(e){}
+        try{ localStorage.removeItem(SF_NS + '-bk-declined'); }catch(e){}
         idbSet('bkHandle', bkDirHandle);
         updateBkUI();
         writeBackupNow();
@@ -2178,7 +2182,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     window.showDirectoryPicker({ id: 'pouch-backup', mode: 'readwrite' })
       .then(function(h){
         bkDirHandle = h; pendingAuth = false; bkDeclined = false; subDirCache = {};
-        try{ localStorage.removeItem('pouch-bk-declined'); }catch(e){}
+        try{ localStorage.removeItem(SF_NS + '-bk-declined'); }catch(e){}
         idbSet('bkHandle', bkDirHandle);
         updateBkUI();
         writeBackupNow();
@@ -2327,6 +2331,9 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     });
 })();
 
+/* 多文件隔离：本块在大 IIFE 之外需独立声明——localStorage 键按页面路径命名空间，Chrome/Safari 下 file:// 与 localhost 共享同源存储，固定键名会导致多份产物主题互相串台 */
+var SF_NS = 'sf:' + location.pathname;
+
 /* 主题换肤：五套配色随点随换；记忆上次选择（localStorage，失败静默） */
 (function(){
   var THEMES = ['gold','tech','mono','light','mint'];
@@ -2338,11 +2345,11 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
       dock.querySelectorAll('.th-dot').forEach(function(d){
         d.classList.toggle('on', d.getAttribute('data-theme') === t);
       });
-      try{ localStorage.setItem('sf-pouch-theme', t); }catch(e){}
+      try{ localStorage.setItem(SF_NS + '-theme', t); }catch(e){}
     }
     var cur = document.documentElement.getAttribute('data-theme') || 'gold';
     var saved = null;
-    try{ saved = localStorage.getItem('sf-pouch-theme'); }catch(e){}
+    try{ saved = localStorage.getItem(SF_NS + '-theme'); }catch(e){}
     if (saved && THEMES.indexOf(saved) !== -1 && saved !== cur){ apply(saved); }
     else{
       dock.querySelectorAll('.th-dot').forEach(function(d){

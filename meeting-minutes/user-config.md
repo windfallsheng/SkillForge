@@ -16,7 +16,7 @@ DIR: auto                      # 落盘根目录：auto = 按当前系统自动�
 DIR_MAC: ~/reports                               # macOS 落盘根目录（自动按会议月份建子目录 meetings/2026-11 式样；目录不存在时回退用户主目录下 reports）
 DIR_WIN: %USERPROFILE%\reports                   # Windows 落盘根目录（自动按会议月份建子目录 meetings/2026-11 式样；目录/盘符不存在时回退用户主目录下 reports）
 OPEN_HTML: true                # 落盘后是否自动用浏览器打开 html（FORMATS 不含 html 时忽略）
-THEME: tech                    # html 页面主题：tech 深蓝科技（默认）/ biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变；生成时写 <html data-theme="THEME值"> 定默认，页面右下角换肤坞五色点随点随换（浏览器本地记忆，?shot 截图模式自动隐藏，打印隐藏）
+THEME: tech                    # html 页面主题：tech 深蓝科技（默认）/ biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变；生成时写 <html data-theme="THEME值"> 定默认，页面右下角换肤坞五色点随点随换（浏览器本地记忆（键按页面路径隔离、多份产物互不串台），?shot 截图模式自动隐藏，打印隐藏）
 TEMPLATE: default              # 纪要模板：default = 内置五段式（会议信息/会议结论/议题讨论/决议与行动项/下次会议）；custom = 使用下方「📝 自定义模板」节；口头临时指定模板仅当次生效
 ROLE: 全栈开发工程师（企业内技术开发）  # 用户默认职业角色与主要工作内容（两者并存：职业名 + 括号内工作内容，会议类型推断/术语/行动项模板全部按此画像走）；用户随口描述职业时（如「我搞装修的，天天跑工地」）→ AI 提炼为规范表述（装修项目经理（负责工地现场管理、施工进度与质量巡检））更新此处；说「以 XX 的身份写」→ 当次临时换角色不改配置；说「以后默认用 XX 角色 / 我的职业是 XX / 我的主要工作是 XX」→ 永久更新此处
 CONFIRM: never                 # 落盘前确认：never = 直接生成落盘不确认（默认）；text = 纯文字整理模式先出效果确认后再落盘；always = 任何方式生成都先确认；临时说「先看看效果」当次先确认、说「不用确认」当次跳过
