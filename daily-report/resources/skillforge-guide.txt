@@ -75,16 +75,32 @@ skill-forge init --skills daily-report,weekly-report --yes
 统一节奏：安装 → 首次生成 → 修改配置 → 官方升级后 → 旧产物回炉。
 
 1、日报（报表族代表）：
-装 skill-forge init --skills daily-report → 说「写日报」口述内容即生成 md/txt/html（自动打开）+ 截图 → 改 user-config.md 的 DIR（落盘目录）/ THEME（五主题）/ TEMPLATE（自定义模板），临时口头要求当次生效不写配置 → 官方升级后选 [2] 保留我的，对照 .upstream 合并新配置点 → 模板版本戳升了说「把我旧日报都升级成新样式」：浅升级换样式块、深升级从同目录 md 底稿重建，旧版先备份。
+- 安装：skill-forge init --skills daily-report
+- 日常生成：说「写日报」口述内容 → md/txt/html（自动打开）+ 截图
+- 修改配置：user-config.md 改 DIR（落盘目录）/ THEME（五主题）/ TEMPLATE（自定义模板）；临时口头要求当次生效不写配置
+- 官方升级后：配置冲突选 [2] 保留我的，对照 .upstream 合并新配置点
+- 旧产物回炉：模板版本戳升了说「把我旧日报都升级成新样式」——浅升级换样式块、深升级从同目录 md 底稿重建，旧版先备份
 
 2、锦囊 prompt-pouch：
-装 → 「做一个锦囊管理页面」生成管理台 html + data/prompts.json → 日常：分组侧栏 / 搜索 / 收藏 / 标签过滤 / {变量} 插值一键复制 / 导入导出 JSON 备份；页面与数据分离，删页面不丢数据 → 改 user-config.md 的 DIR / DATA_DIR / BACKUP_DIR → 官方升级后数据目录与数据文件一概不动，深升级沿用原页 pouch-id，收藏分组照旧读回 → 页面版本升级（回炉）：官方模板版本戳升了，下次生成时 AI 主动提示「检测到 X 份旧版锦囊」→ 说「把我旧锦囊都升级成新样式」→ 选全部或部分 → 浅升级换样式块、深升级从模板重建并沿用原页 pouch-id（收藏分组照旧读回），prompts.json 数据不动、旧页先备份 → 多文件隔离：两份锦囊各自独立；复制文件副本 = 同一身份共享同一份数据（要独立身份请重新生成）。
+- 安装：skill-forge init --skills prompt-pouch
+- 首次生成：「做一个锦囊管理页面」→ 生成管理台 html + data/prompts.json 数据文件
+- 日常使用：分组侧栏 / 搜索 / 收藏 / 标签点击过滤 / {变量} 插值一键复制 / 导入导出 JSON 备份；页面与数据分离，删页面不丢数据
+- 修改配置：user-config.md 改 DIR（页面目录）、DATA_DIR / BACKUP_DIR（数据与备份目录）
+- 官方升级后：数据目录与数据文件一概不动；深升级重建沿用原页 pouch-id → 收藏 / 分组照旧读回
+- 页面版本升级（回炉）：模板版本戳升了，下次生成时 AI 主动提示「检测到 X 份旧版锦囊」→ 说「把我旧锦囊都升级成新样式」→ 列清单选全部或部分 → 浅升级换样式块、深升级从模板重建沿用原页 pouch-id（收藏分组照旧读回）；prompts.json 数据不动、旧页先备份 .bak-时间戳
+- 多文件隔离：两份锦囊各自独立（内嵌 ID 命名空间）；复制文件副本 = 同一身份共享同一份数据（要独立身份请重新生成一份）
 
 3、PPT 两形态 magic-deck / deck-stage：
-说「做个 PPT」AI 先问形态——HTML 幻灯（magic-deck）还是 .pptx 可编辑文稿（deck-stage）→ magic-deck 生成单文件 HTML 幻灯，浏览器全屏放映（自动播放 / 循环 / 热键翻页），需要图片时逐页 PNG 截图 → deck-stage 三问交互（素材 → 页骨架表 → 成片方式）生成 .pptx：常规页原生可编辑（数据卡 / 时间线 / 图表），封面与结尾页 HTML 截图保真 → deck-stage 依赖 PptxGenJS，npm 包不含 node_modules，装完按提示 cd <技能目录>/deck-stage && npm install 补装一次 → 配置（五主题 / 页面尺寸 / 演讲备注）在 user-config.md。
+- 选形态：说「做个 PPT」AI 先问——HTML 幻灯（magic-deck）还是 .pptx 可编辑文稿（deck-stage）
+- HTML 幻灯：magic-deck 生成单文件 HTML 幻灯，浏览器全屏放映（自动播放 / 循环 / 热键翻页）；需要图片时逐页 PNG 截图
+- .pptx 文稿：deck-stage 三问交互（素材 → 页骨架表 → 成片方式）生成 .pptx——常规页原生可编辑（数据卡 / 时间线 / 图表），封面与结尾页 HTML 截图保真
+- 补依赖：deck-stage 依赖 PptxGenJS，npm 包不含 node_modules，装完按提示 cd <技能目录>/deck-stage && npm install 补装一次
+- 修改配置：五主题 / 页面尺寸 / 演讲备注在 user-config.md
 
 4、会议纪要 meeting-minutes：
-装 → 「记会议」口述材料生成五段式纪要（会议信息 / 会议结论 / 议题讨论 / 决议与行动项 / 下次会议），行动项带负责人与截止时间——这就是日报 / 周报 / 月报 / 季报的汇报链源头 → SERIES_GROUP 三态：auto 自动提取系列名归入 meetings/{系列名}/、series 一律按系列建目录、off 纯月份平铺；改口机制「以后这个系列叫 XX」永久生效 → 官方升级后同报表族：配置三选一保护 + 说「把旧纪要升级成新样式」回炉。
+- 日常生成：「记会议」口述材料 → 五段式纪要（会议信息 / 会议结论 / 议题讨论 / 决议与行动项 / 下次会议），行动项带负责人与截止时间——日报 / 周报 / 月报 / 季报的汇报链源头
+- 修改配置：SERIES_GROUP 三态——auto 自动提取系列名归入 meetings/{系列名}/、series 一律按系列建目录、off 纯月份平铺；改口机制「以后这个系列叫 XX」永久生效
+- 官方升级后：同报表族——配置三选一保护 + 说「把旧纪要升级成新样式」回炉
 
 ## 五、通用小抄
 
