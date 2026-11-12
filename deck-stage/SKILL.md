@@ -1,13 +1,6 @@
 ---
 name: deck-stage
-description: >
-  登台 deck-stage：把日报/周报/月报/季报/年报（md/HTML/口述大纲）或散装素材（目录/文件/随手文字）转成专业 .pptx 演示文稿。
-  三问交互——先问素材（指定目录/指定文件/贴文字/口述主题）、再报页结构大纲表确认、后选成片方式（一键成片/逐页确认）。
-  混合模式——常规页原生生成（文本/数据卡/时间线/柱图/饼图/折线，全部可编辑），封面与结尾页用 HTML 截图贴图（视觉保真）。
-  视觉与报告深蓝面板体系同源：tech 深蓝科技（默认）/biz 浅色商务/mono IDEA 黑亮/light IDEA 白亮/warm 温暖渐变五主题，
-  五段节色（蓝/绿/紫/玫红/橙）。每页可带演讲备注（notes），bullets 页可配图。
-  数据经结构化 data.json 交给 resources/pptx-builder.js（PptxGenJS，本目录 node_modules 离线可用）产出 16:9 pptx。
-  当用户请求把报告/日报/周报/月报/季报/年报转成 PPT、做成 PPT、导出 pptx、生成演示文稿、登台，或询问本 skill 用法时使用。用户要 HTML 网页幻灯（网页放映/分享）时不用本 skill（交给 magic-deck）；「做 PPT/演示文稿」未言明产出形态时先 AskUserQuestion 二选一（.pptx 可编辑文件 → 本 skill；HTML 网页幻灯 → magic-deck），不擅自默认。
+description: 登台 deck-stage：把日报/周报/月报/季报/年报（md/HTML/口述大纲）或散装素材（目录/文件/随手文字）转成专业 .pptx 演示文稿。 三问交互——先问素材（指定目录/指定文件/贴文字/口述主题）、再报页结构大纲表确认、后选成片方式（一键成片/逐页确认）。 混合模式——常规页原生生成（文本/数据卡/时间线/柱图/饼图/折线，全部可编辑），封面与结尾页用 HTML 截图贴图（视觉保真）。 视觉与报告深蓝面板体系同源：tech 深蓝科技（默认）/biz 浅色商务/mono IDEA 黑亮/light IDEA 白亮/warm 温暖渐变五主题， 五段节色（蓝/绿/紫/玫红/橙）。每页可带演讲备注（notes），bullets 页可配图。 数据经结构化 data.json 交给 resources/pptx-builder.js（PptxGenJS，本目录 node_modules 离线可用）产出 16:9 pptx。 当用户请求把报告/日报/周报/月报/季报/年报转成 PPT、做成 PPT、导出 pptx、生成演示文稿、登台，或询问本 skill 用法时使用。用户要 HTML 网页幻灯（网页放映/分享）时不用本 skill（交给 magic-deck）；「做 PPT/演示文稿」未言明产出形态时先 AskUserQuestion 二选一（.pptx 可编辑文件 → 本 skill；HTML 网页幻灯 → magic-deck），不擅自默认。
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 disable-model-invocation: false
 ---

@@ -1,12 +1,6 @@
 ---
 name: spec-doc2spec
-description: >
-  文档转高质量 Markdown Skill（doc2spec）。把 Word / PDF / Markdown 文档转成结构化 Markdown——Pandoc 负责机械转换，AI 全程校对防错（量化校验断言、双通道完整性比对、表格列表修复、图片提取与 EMF/WMF 自动转 PNG、乱码与修订痕清理），转换后整理成干净的正文稿落盘。
-  可选「需求加工档」：用户要求整理成需求规格时，另出需求点+验收标准与功能单元切片。
-  图片自动提取到 assets/images（可配置 IMG_DIR）；输出默认源文档同目录下 {文档名}-spec/ 子目录，可配置 OUTPUT_DIR（绝对路径同样按文档名建子目录，多文档互不覆盖）。
-  跨系统适配 macOS / Windows / Linux（Pandoc 安装、EMF 转换工具链探测）。支持 .docx（Pandoc 转换）/ .md（直接读取）/ .pdf（LibreOffice 转 docx 优先保留图片版式，降级 pdftotext 纯文本）。
-  不处理一般性的文档内容讨论（如「帮我看看这份文档讲了什么」），只处理「文档 → Markdown / 需求规格」的转换任务。
-  用户询问用法（doc2spec 怎么用/使用说明/能干什么）时走使用说明应答：读 resources/usage-guide.md 原样输出（首行标题改为「doc2spec 使用指南」），不执行任何转换命令。
+description: 文档转高质量 Markdown Skill（doc2spec）。把 Word / PDF / Markdown 文档转成结构化 Markdown——Pandoc 负责机械转换，AI 全程校对防错（量化校验断言、双通道完整性比对、表格列表修复、图片提取与 EMF/WMF 自动转 PNG、乱码与修订痕清理），转换后整理成干净的正文稿落盘。 可选「需求加工档」：用户要求整理成需求规格时，另出需求点+验收标准与功能单元切片。 图片自动提取到 assets/images（可配置 IMG_DIR）；输出默认源文档同目录下 {文档名}-spec/ 子目录，可配置 OUTPUT_DIR（绝对路径同样按文档名建子目录，多文档互不覆盖）。 跨系统适配 macOS / Windows / Linux（Pandoc 安装、EMF 转换工具链探测）。支持 .docx（Pandoc 转换）/ .md（直接读取）/ .pdf（LibreOffice 转 docx 优先保留图片版式，降级 pdftotext 纯文本）。 不处理一般性的文档内容讨论（如「帮我看看这份文档讲了什么」），只处理「文档 → Markdown / 需求规格」的转换任务。 用户询问用法（doc2spec 怎么用/使用说明/能干什么）时走使用说明应答：读 resources/usage-guide.md 原样输出（首行标题改为「doc2spec 使用指南」），不执行任何转换命令。
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 disable-model-invocation: false
 ---
