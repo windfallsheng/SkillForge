@@ -1,5 +1,5 @@
 # user-config.md（本文件不会被 skill 升级覆盖，你的修改永久保留）
-# 官方配置更新时，另存 user-config.md.upstream 对照文件，可手动合并新配置点
+# 官方配置更新时，另存 user-config.upstream.md 对照文件，可手动合并新配置点
 
 ```yaml
 CONFIG_VERSION: 1  # 配置结构版本，skill 升级迁移依据

@@ -21,13 +21,13 @@ disable-model-invocation: false
 
 ## ⚙️ 配置与自定义
 
-**执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（DIR/REGISTER/CONFIG_VERSION）都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留；官方更新配置时另存 `user-config.md.upstream` 对照文件，可按需手动合并新配置点。
+**执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（DIR/REGISTER/CONFIG_VERSION）都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留；官方更新配置时另存 `user-config.upstream.md` 对照文件，可按需手动合并新配置点。
 
 ## 配置版本机制（升级保护）
 
 本 skill 当前配置版本为 `1`（对应 user-config.md 中的 `CONFIG_VERSION`）。执行时若发现 user-config.md 的 CONFIG_VERSION 与本节声明的当前版本不一致：
 
-1. 先将旧 user-config.md 备份为 `user-config.md.bak-<时间戳>`（同目录，绝不删除旧值）
+1. 先将旧 user-config.md 备份为 `user-config.bak-<时间戳>.md`（同目录，绝不删除旧值）
 2. 按本节「配置升级规则」迁移字段：新增字段补默认值、改名字段按映射改写、删除字段的值保留在备份中并在对话提示用户手动确认
 3. 更新 CONFIG_VERSION 为当前版本
 4. 对话中明确告知用户「检测到配置版本从 X 升级到 Y，旧配置已备份至 <路径>」

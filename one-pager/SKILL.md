@@ -22,7 +22,7 @@ disable-model-invocation: false
 
 ## ⚙️ 配置与自定义
 
-**执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（TEMPLATE/THEME/DIR/OPEN_HTML/SHOT/ASPECT）都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留；官方更新配置时另存 `user-config.md.upstream` 对照文件，可按需手动合并新配置点。
+**执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（TEMPLATE/THEME/DIR/OPEN_HTML/SHOT/ASPECT）都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留；官方更新配置时另存 `user-config.upstream.md` 对照文件，可按需手动合并新配置点。
 
 - **TEMPLATE**：海报布局模板，classic 经典舞台（默认，徽章+渐变巨字+三列要点卡）/ minimal 极简留白（瑞士平面，衬线巨字+编号竖排要点）/ magazine 杂志社论（刊头通栏线+左文右栏+首字下沉金句）/ hero 巨幕大字（电影海报式巨型关键词+底部要点横条）/ timeline 时间叙事（中央竖线+要点左右交替卡片）/ grid 卡片栅格（2×2 大圆角卡片+描边编号角标）/ dashboard 数据仪表（KPI 环形图+要点进度条）/ brutalist 新粗野（撞色块+4px 粗框+硬阴影）；生成时写 `<html data-template="TEMPLATE值">` 定默认，页面右下角模板坞八标签随点随换、与十主题正交组合出 80 种版式（localStorage 记忆，键按页内嵌唯一 ID 隔离、多份产物互不串台、改名/移动目录记忆不丢；生成时头部写 `<meta name="poster-id" content="<UUID>">`，每次 crypto.randomUUID() 生成标准 UUID v4（8-4-4-4-12 十六进制，禁止手写变体、禁止沿用占位与旧值）；落盘写文件前顺扫落盘目录下本技能命名的 html，读各文件 id meta 查重，撞号重掷至不重复）
 - **THEME**：海报主题，tech 深蓝科技（默认）/ biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变 / ink 水墨国风 / jade 翡翠绿 / rose 玫瑰金 / midnight 午夜金 / violet 霓虹紫；生成时写 `<html data-theme="THEME值">` 定默认，页面右下角主题坞十色点两行随点随换（记忆与隔离机制同 TEMPLATE）
@@ -32,7 +32,7 @@ disable-model-invocation: false
 
 本 skill 当前配置版本为 `2`（对应 user-config.md 中的 `CONFIG_VERSION`）。执行时若发现 user-config.md 的 CONFIG_VERSION 与本节声明不一致：
 
-1. 先将旧 user-config.md 备份为 `user-config.md.bak-<时间戳>`（同目录，绝不删除旧值）
+1. 先将旧 user-config.md 备份为 `user-config.bak-<时间戳>.md`（同目录，绝不删除旧值）
 2. 按本节「配置升级规则」迁移字段：新增字段补默认值、改名字段按映射改写、删除字段的值保留在备份中并在对话提示用户手动确认
 3. 更新 CONFIG_VERSION 为当前版本
 4. 对话中明确告知用户「检测到配置版本从 X 升级到 Y，旧配置已备份至 <路径>」

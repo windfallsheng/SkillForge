@@ -162,17 +162,18 @@ function copyDir(src, dest, preserve, hits, upstreams, genUpstream, rel, files) 
       files.push(r);
       if (preserve.has(entry.toLowerCase()) && fs.existsSync(d)) {
         hits.push(d);
-        // 配置演进：官方版与本地版内容不同时，另存 .upstream 对照文件，供用户手动合并新配置点
+        // 配置演进：官方版与本地版内容不同时，另存 user-config.upstream.md 对照文件（.md 结尾双击即开），供用户手动合并新配置点
         const sData = fs.readFileSync(s, "utf8");
         const dData = fs.readFileSync(d, "utf8");
         if (sData !== dData) {
           if (genUpstream !== false) {
-            fs.writeFileSync(d + ".upstream", sData);
-            upstreams.push(d + ".upstream");
+            const upFile = d.replace(/\.md$/i, "") + ".upstream.md"; // 保留 .md 结尾，双击即开
+            fs.writeFileSync(upFile, sData);
+            upstreams.push(upFile);
           }
         } else {
           // 内容已一致（用户已手动合并或本就相同），旧对照文件已无意义
-          try { fs.unlinkSync(d + ".upstream"); } catch (e) {}
+          try { fs.unlinkSync(d.replace(/\.md$/i, "") + ".upstream.md"); } catch (e) {}
         }
       }
       else fs.copyFileSync(s, d);
@@ -187,7 +188,7 @@ function pruneDir(src, dest, preserve, manifest, rel) {
   for (const entry of fs.readdirSync(dest)) {
     const lower = entry.toLowerCase();
     if (COPY_EXCLUDE.has(lower)) continue;
-    if (lower === "node_modules" || lower === MANIFEST_FILE || lower.endsWith(".upstream") || lower.includes(".bak-")) continue;
+    if (lower === "node_modules" || lower === MANIFEST_FILE || lower.includes(".upstream") || lower.includes(".bak-")) continue;
     if (preserve.has(lower)) continue; // 用户文件永不删除
     const d = path.join(dest, entry);
     const s = path.join(src, entry);
@@ -333,26 +334,26 @@ async function upgradeSkill(src, dest, argv, existed) {
     const officialVer = parseUserConfigVersion(officialCfg);
     const localVer = parseUserConfigVersion(localCfg);
     if (officialVer > localVer) {
-      bakFile = localCfg + ".bak-" + stamp();
+      bakFile = localCfg.replace(/\.md$/i, "") + ".bak-" + stamp() + ".md"; // 保留 .md 结尾，双击即开
       fs.copyFileSync(localCfg, bakFile);
       console.log(`\n⚠️  ${path.basename(dest)} 配置结构升级：官方 v${officialVer} > 你的 v${localVer}`);
       console.log(`   已备份你的配置：${path.basename(bakFile)}`);
       if (process.stdin.isTTY && !argv.yes) {
         console.log("   [1] 官方覆盖 —— 用官方新配置替换（旧配置在备份中，随时找回）");
-        console.log("   [2] 保留我的 —— 不覆盖，官方新配置另存 .upstream 对照（默认）");
+        console.log("   [2] 保留我的 —— 不覆盖，官方新配置另存 user-config.upstream.md 对照（默认）");
         console.log("   [3] 稍后处理 —— 本次只升级技能文件，不生成对照文件，配置改天自己合并");
         const ans = await ask("   你的选择（回车默认 2）：");
         if (ans === "1") mode = "official";
         else if (ans === "3") mode = "later";
       } else {
-        console.log("   非交互/--yes：默认保留你的配置，官方新版另存 .upstream 对照");
+        console.log("   非交互/--yes：默认保留你的配置，官方新版另存 user-config.upstream.md 对照");
       }
     }
   }
 
   if (mode === "official") {
     fs.unlinkSync(localCfg); // 备份已做，移除后 copyDir 正常覆盖
-    try { fs.unlinkSync(localCfg + ".upstream"); } catch (e) {} // 旧对照已无意义，清理
+    try { fs.unlinkSync(localCfg.replace(/\.md$/i, "") + ".upstream.md"); } catch (e) {} // 旧对照已无意义，清理
   }
   const preserve = loadPreserveSet(src);
   const manifest = loadManifest(dest);
@@ -556,8 +557,8 @@ function printHelp() {
 升级保护（init/update 均生效）：
   · 目标目录已存在的 user-config.md（及技能 .preserve 清单声明的文件）不会被覆盖
   · 官方 user-config.md 的 CONFIG_VERSION 高于你的本地版本（配置结构变化）时：
-    先备份你的配置为 user-config.md.bak-<时间戳>，再询问三选一——
-    [1] 官方覆盖（备份在侧，随时找回）/ [2] 保留我的 + 官方版另存 .upstream 对照（默认）
+    先备份你的配置为 user-config.bak-<时间戳>.md（保留 .md 结尾，双击即开），再询问三选一——
+    [1] 官方覆盖（备份在侧，随时找回）/ [2] 保留我的 + 官方版另存 user-config.upstream.md 对照（默认）
     [3] 稍后处理（不生成对照文件）；--yes 或非交互时默认 [2]
   · 升级按 .installed-manifest 安装清单同步官方文件增删：只清理清单内官方已删除的文件，
     用户自建文件不动；旧版本安装无清单时跳过清理，升级后补写

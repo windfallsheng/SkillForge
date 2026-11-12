@@ -2,7 +2,7 @@
 
 > 你的个人配置全放在这里。skill-forge 升级技能时官方只更新 SKILL.md、design-system.md 与 resources/scripts，
 > 本文件始终保留你的版本——页面主题色默认值放心改。
-> 官方升级若带来新配置点，会另存 `user-config.md.upstream` 对照文件到同目录，
+> 官方升级若带来新配置点，会另存 `user-config.upstream.md` 对照文件到同目录，
 > 你按需查看并手动合并新配置点到本文件。
 
 ## ⚙️ 默认配置（用户可手动修改；临时口头要求永远优先）

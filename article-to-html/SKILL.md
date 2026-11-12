@@ -18,7 +18,7 @@ Turn any Word/Markdown/plain-text article into a standalone styled HTML page and
 ## 配置版本机制（升级保护）
 
 本 skill 当前配置版本为 `2`（对应 user-config.md 中的 `CONFIG_VERSION`）。执行时若发现 user-config.md 的 CONFIG_VERSION 与本节声明不一致：
-1. 将旧 user-config.md 备份为 `user-config.md.bak-<时间戳>`
+1. 将旧 user-config.md 备份为 `user-config.bak-<时间戳>.md`
 2. 保留用户全部自定义字段，按本节「当前版本变更记录」逐项改写旧字段
 3. 更新 CONFIG_VERSION 为当前版本
 4. 对话中明确告知用户「检测到配置版本从 X 升级到 Y，旧配置已备份至 <路径>」

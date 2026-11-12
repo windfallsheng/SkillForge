@@ -41,7 +41,7 @@ disable-model-invocation: false
 
 ## ⚙️ 配置与自定义
 
-**执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（TEMPLATE/THEME/TRANSITION/ANIM/WIDTH/HEIGHT/SEC/FILENAME/DIR 等）与用户模板都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留；官方更新配置时另存 `user-config.md.upstream` 对照文件，可按需手动合并新配置点。
+**执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（TEMPLATE/THEME/TRANSITION/ANIM/WIDTH/HEIGHT/SEC/FILENAME/DIR 等）与用户模板都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留；官方更新配置时另存 `user-config.upstream.md` 对照文件，可按需手动合并新配置点。
 
 ## 规则速览
 
@@ -64,7 +64,7 @@ disable-model-invocation: false
 
 `user-config.md` 首行有 `CONFIG_VERSION` 字段，声明配置结构版本。本 skill 当前要求版本为 2。每次执行前先读 user-config.md：
 
-1. 若 CONFIG_VERSION 缺失或小于当前要求版本：先将旧 `user-config.md` 备份为 `user-config.md.bak-<时间戳>`
+1. 若 CONFIG_VERSION 缺失或小于当前要求版本：先将旧 `user-config.md` 备份为 `user-config.bak-<时间戳>.md`
 2. 按版本迁移规则迁移字段（新增字段补默认值、改名字段按映射改名、删除字段保留在备份并在对话中提示用户）
 3. 更新 `CONFIG_VERSION` 为当前版本
 4. 对话告知用户「配置已升级到 vN：新增 X、改名 Y」
@@ -73,7 +73,7 @@ disable-model-invocation: false
 
 **无法迁移项处理**（值域失效 / 语义漂移 / 数据不兼容）：三情形——①旧值不在新值域（如旧模板/主题名已移除）②同名键含义变化（单位/枚举变更）③数据文件 schema 不兼容。三绝不：绝不静默（无法迁移项停下问，不猜值）、绝不丢失（旧值永远在 .bak-时间戳）、一次说清（升级报告三段式：⚠️ 版本与备份路径 → ✅ 已自动迁移清单 → 🟡 无法迁移项逐条附原因+影响+建议替代）；随后 AskUserQuestion 三选项（A 用建议值 / B 用户给新值 / C 保持旧配置——不更新 CONFIG_VERSION，每次执行再提醒）；报告必附回滚一句话；数据文件迁移前先复制 .bak-时间戳，能映射则映射、不能则写兼容层或留备份提示手动整理
 
-升级技能时 user-config.md 不会被覆盖（官方更新另存 `user-config.md.upstream` 对照文件）。
+升级技能时 user-config.md 不会被覆盖（官方更新另存 `user-config.upstream.md` 对照文件）。
 
 ## 产物升级（回炉）
 

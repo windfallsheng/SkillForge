@@ -86,9 +86,9 @@ skill-forge update --skills daily-report        # upgrade just one
 ```
 
 - **Config structure unchanged**: silent upgrade — skill files update, your `user-config.md` stays untouched
-- **Config structure changed** (official `CONFIG_VERSION` bumped): your config is first backed up as `user-config.md.bak-<timestamp>`, then a three-way choice:
+- **Config structure changed** (official `CONFIG_VERSION` bumped): your config is first backed up as `user-config.bak-<timestamp>.md`, then a three-way choice:
   - `[1] official overwrite`: take the fresh official config (your old one is recoverable from the backup)
-  - `[2] keep mine` (default, safest): your config stays, the official version is saved as `user-config.md.upstream` for you to compare and merge new config points manually
+  - `[2] keep mine` (default, safest): your config stays, the official version is saved as `user-config.upstream.md` for you to compare and merge new config points manually
   - `[3] decide later`: skip this time, no companion file generated
 - **Official files deleted**: cleaned up precisely via the `.installed-manifest` (only files the official version deleted, plus now-empty directories); your self-created files are never touched
 
@@ -116,7 +116,7 @@ Run `npm i -g skill-forge-hub && skill-forge init` in the new environment; to ca
 
 - **Always preserved**: an existing `user-config.md` in the target directory (and any files declared in the skill's `.preserve` list) is never overwritten — your local config persists forever; when the official config gains updates, a `.upstream` companion file is saved so you can merge new config points manually
 - **Version aware**: when the official `user-config.md` declares a `CONFIG_VERSION` on its first line higher than your local version (config structure grew / shrank / was renamed) —
-  1. your config is first backed up as `user-config.md.bak-<timestamp>`
+  1. your config is first backed up as `user-config.bak-<timestamp>.md`
   2. interactive three-way choice: `[1] official overwrite` (old config recoverable from the backup) / `[2] keep mine` + official copy saved as `.upstream` (default) / `[3] decide later` (no companion file generated this time)
   3. `--yes` or non-interactive environments default to `[2]`, the safest option
 - **Version match**: silent upgrade — only skill files are updated, config stays untouched
