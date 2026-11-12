@@ -314,7 +314,7 @@ function main() {
   pptx.layout = 'WIDE';
   SHAPES = pptx.ShapeType;
   CHART_TYPES = pptx.ChartType;
-  pptx.author = 'SPECCORE TEAM';
+  pptx.author = 'AI TEAM';
   pptx.title = meta.title || '报告';
 
   for (const page of data.pages || []) {
