@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="sf-template" content="prompt-pouch@8">
+<meta name="sf-template" content="prompt-pouch@9">
 <meta name="pouch-id" content="REF-POUCH-0000">
 <title>锦囊 Prompt Pouch — 提示词管理台</title>
 <style>
@@ -248,17 +248,37 @@ main{ flex:1; min-width:0; }
 }
 .bar .total{ font-size:12px; color:var(--muted); }
 .sort-box{ margin-left:auto; display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted); position:relative; }
-.sort-box select{
+.sort-sel{
+  display:flex; align-items:center; gap:7px;
   background:var(--panel2); border:1px solid var(--border); color:var(--text);
   font-family:inherit; font-size:12px; letter-spacing:1px;
-  border-radius:999px; padding:5px 30px 5px 12px; outline:none; cursor:pointer;
-  appearance:none; -webkit-appearance:none; -moz-appearance:none;
+  border-radius:999px; padding:5px 13px; outline:none; cursor:pointer;
+  transition:border-color .15s ease;
 }
-.sort-box::after{
-  content:'▾'; position:absolute; right:12px; top:50%; transform:translateY(-50%);
-  font-size:10px; color:var(--gold); pointer-events:none; line-height:1;
+.sort-sel:hover,.sort-sel.open{ border-color:var(--gold); }
+.sort-arrow{ font-size:9px; color:var(--gold); line-height:1; transition:transform .2s ease; }
+.sort-sel.open .sort-arrow{ transform:rotate(180deg); }
+.sort-menu{
+  position:absolute; top:calc(100% + 6px); right:0; z-index:130;
+  display:flex; flex-direction:column; gap:2px; min-width:136px;
+  background:var(--panel2); border:1px solid var(--border); border-radius:12px;
+  padding:5px; box-shadow:0 12px 32px rgba(0,0,0,.45);
+  animation:sortMenuIn .16s ease;
 }
-.sort-box select:focus{ border-color:var(--gold); }
+.sort-menu[hidden]{ display:none; }
+@keyframes sortMenuIn{ from{ opacity:0; transform:translateY(-4px); } to{ opacity:1; transform:none; } }
+.sort-opt{
+  display:flex; align-items:center; gap:8px; width:100%;
+  background:transparent; border:none; border-radius:8px;
+  color:var(--text); font-family:inherit; font-size:12px; letter-spacing:1px;
+  padding:7px 10px; cursor:pointer; text-align:left;
+  transition:background .12s ease,color .12s ease;
+}
+.sort-opt:hover{ background:var(--gold-dim); color:var(--gold); }
+.sort-check{ width:14px; font-size:11px; color:var(--gold); opacity:0; flex:0 0 auto; }
+.sort-opt.on{ color:var(--gold); font-weight:600; }
+.sort-opt.on .sort-check{ opacity:1; }
+[data-theme="light"] .sort-menu{ box-shadow:0 10px 28px rgba(30,31,34,.16); }
 .sort-status{
   font-size:12px; color:var(--muted);
   display:flex; align-items:center; gap:10px;
@@ -643,13 +663,16 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
       <span class="tag-filter" id="tagFilterChip" style="display:none"><span class="tf-ico">🏷</span><b id="tagFilterName"></b><button class="tf-x" id="tagFilterClear" title="清除标签过滤">✕</button></span>
       <button class="btn primary" id="btnAddItem">＋ 新增提示词</button>
       <div class="sort-box">
-        <label for="sortSel">排序</label>
-        <select id="sortSel" title="切换卡片排序方式">
-          <option value="added">最新添加</option>
-          <option value="recent">最近使用</option>
-          <option value="freq">使用频率</option>
-          <option value="manual">手动顺序</option>
-        </select>
+        <label>排序</label>
+        <button class="sort-sel" id="sortSel" type="button" title="切换卡片排序方式">
+          <span class="sort-sel-txt" id="sortTxt">最新添加</span><span class="sort-arrow">▾</span>
+        </button>
+        <div class="sort-menu" id="sortMenu" hidden>
+          <button class="sort-opt on" data-mode="added" type="button"><span class="sort-check">✓</span>最新添加</button>
+          <button class="sort-opt" data-mode="recent" type="button"><span class="sort-check">✓</span>最近使用</button>
+          <button class="sort-opt" data-mode="freq" type="button"><span class="sort-check">✓</span>使用频率</button>
+          <button class="sort-opt" data-mode="manual" type="button"><span class="sort-check">✓</span>手动顺序</button>
+        </div>
       </div>
       <div class="sort-status" id="sortStatus">
         <button class="btn" id="btnSortCmd" disabled>📋 复制变更指令</button>
@@ -819,6 +842,9 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
   var searchClear = document.getElementById('searchClear');
   var sortStatus = document.getElementById('sortStatus');
   var sortSel = document.getElementById('sortSel');
+  var sortMenu = document.getElementById('sortMenu');
+  var sortTxt = document.getElementById('sortTxt');
+  var SORT_LABELS = { added:'最新添加', recent:'最近使用', freq:'使用频率', manual:'手动顺序' };
   var btnSortCmd = document.getElementById('btnSortCmd');
   var btnMarkSaved = document.getElementById('btnMarkSaved');
   var bkStatus = document.getElementById('bkStatus');
@@ -1204,7 +1230,12 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     persistUserState();
     scheduleBackup();
   }
-  function syncSortUI(){ if (sortSel) sortSel.value = state.sortMode; }
+  function syncSortUI(){
+    if (sortTxt) sortTxt.textContent = SORT_LABELS[state.sortMode] || SORT_LABELS.added;
+    if (sortMenu) sortMenu.querySelectorAll('.sort-opt').forEach(function(o){
+      o.classList.toggle('on', o.getAttribute('data-mode') === state.sortMode);
+    });
+  }
   function ensureManual(){
     if (state.sortMode === 'manual') return;
     state.sortMode = 'manual';
@@ -1285,10 +1316,30 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
       if (!gpopEl.contains(e.target) && !onAnchor){ closeGpop(); }
     }
   });
-  sortSel.addEventListener('change', function(){
-    state.sortMode = sortSel.value;
+  function toggleSortMenu(force){
+    if (!sortMenu) return;
+    var willOpen = (force !== undefined) ? force : sortMenu.hidden;
+    sortMenu.hidden = !willOpen;
+    sortSel.classList.toggle('open', willOpen);
+  }
+  sortSel.addEventListener('click', function(e){
+    e.stopPropagation();
+    toggleSortMenu();
+  });
+  sortMenu.addEventListener('click', function(e){
+    var opt = e.target.closest('.sort-opt');
+    if (!opt) return;
+    state.sortMode = opt.getAttribute('data-mode');
     persistUserState();
     render();
+    syncSortUI();
+    toggleSortMenu(false);
+  });
+  document.addEventListener('click', function(e){
+    if (!sortMenu.hidden){
+      var onSel = e.target.closest && e.target.closest('#sortSel');
+      if (!sortMenu.contains(e.target) && !onSel){ toggleSortMenu(false); }
+    }
   });
 
   /* ---------- 模板插值（{{变量}} / {变量}） ---------- */
@@ -1876,6 +1927,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     if (e.key === 'Escape'){
       closeFillPanel();
       closeGpop();
+      toggleSortMenu(false);
       closeItemForm();
       closeGroupForm();
       document.getElementById('bkMask').classList.remove('open');
