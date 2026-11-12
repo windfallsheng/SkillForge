@@ -1,6 +1,6 @@
 # magic-deck HTML 幻灯片完整规范
 
-> ⛔ **Reference 铁律（最高优先）**：本目录 `reference.html` 是定稿骨架源码（默认 classic 模板 + 十六套版式模板 + 十七主题 + 全部组件 + 播放引擎 + 单页主题 + 模板预览/撤销重做/右侧边栏双 Tab（页面管理 + 动画工具））。生成 HTML 时必须先 Read `resources/reference.html` 与本文件两份，以 reference.html 为骨架逐处替换内容；两者冲突时**以 reference.html 为准**。修改本 skill 的 HTML 效果时，必须同步更新 `resources/reference.html` 与本文档的对应描述，禁止只改一处。
+> ⛔ **Reference 铁律（最高优先）**：本目录 `reference.html` 是定稿骨架源码（默认 classic 模板 + 十七套版式模板 + 十七主题 + 全部组件 + 播放引擎 + 单页主题 + 模板预览/撤销重做/右侧边栏双 Tab（页面管理 + 动画工具））。生成 HTML 时必须先 Read `resources/reference.html` 与本文件两份，以 reference.html 为骨架逐处替换内容；两者冲突时**以 reference.html 为准**。修改本 skill 的 HTML 效果时，必须同步更新 `resources/reference.html` 与本文档的对应描述，禁止只改一处。
 
 生成单文件 HTML 幻灯片（HTML 形态、PPT 体验），所有实现细节以本文为准。
 
@@ -187,9 +187,9 @@
 - 单页主题的 slide 上保留 data-theme 属性持久生效；截图（§7）克隆 slide 时该属性自然入图，无需特殊处理
 - 生成时按 user-config 的 THEME 给 documentElement 设默认主题，单页差异化主题由用户放映时点选
 
-## 2.2 模板库（十六套版式骨架，运行时即点即换，与主题正交：模板管版式结构、主题管配色）
+## 2.2 模板库（十七套版式骨架，运行时即点即换，与主题正交：模板管版式结构、主题管配色）
 
-十六套模板随放映随时切换——工具栏「🎨 模板」打开模板应用面板，选模板卡（每卡带 mini 结构示意图）+ 应用范围（全部页面/仅本页/选择页面）；点「👁 预览本页」先把当前页临时套上看效果（可连续换卡即时换预览、再点「还原本页」或取消自动还原，预览不落 data-template），点应用才生效。**标题自动映射**：模板的固定标题位自动吃进页面里对应的标题（语义节点）。
+十七套模板随放映随时切换——工具栏「🎨 模板」打开模板应用面板，选模板卡（每卡带 mini 结构示意图）+ 应用范围（全部页面/仅本页/选择页面）；点「👁 预览本页」先把当前页临时套上看效果（可连续换卡即时换预览、再点「还原本页」或取消自动还原，预览不落 data-template），点应用才生效。**标题自动映射**：模板的固定标题位自动吃进页面里对应的标题（语义节点）。
 
 ### 语义节点约定（标题自动映射的根基）
 
@@ -266,6 +266,10 @@
 - slide 挂 `[data-template="dark"]` 即整页反色：--bg 深黑、--text 浅灰、--accent 蓝/绿（GitHub Dark 系），浅色主题下同样全黑
 - CSS：`[data-template="dark"]{ --bg:#0d1117; … }` 八变量全套覆盖
 
+### T17 stats 统计图表（纯 CSS，无包装器）
+- 数据看板风：`.s-head` 底部 2px accent 双线、标题 30px；`.bignum` 去边框改顶部 3px accent 横条、数字放大 56px；`.chart-card` 加 accent 描边框架
+- CSS：`[data-template="stats"]` 看板风
+
 ### T16 nature 自然清新（纯 CSS，无包装器）
 - 有机圆角：卡片/标签/目录条目不对称圆角（24/8 交替）、hover 轻旋 -0.6deg；色点改旋转叶片形
 - CSS：`[data-template="nature"]` 圆润形状语言
@@ -295,16 +299,16 @@
 
 模板不再只限生成时定版式：user-config 的 `TEMPLATE` 是生成默认（AI 每页写语义结构 + 对应 slide 挂 data-template），用户放映时随时在模板面板切换（全部/仅本页/勾选页）；`?tpl=xxx` URL 参数全局应用（headless 截图用）。
 
-## 2.3 领域/业务成套模板（面板「💼 领域」Tab，二十一套一键生成整套页面）
+## 2.3 领域/业务成套模板（面板「💼 领域」Tab，二十二套一键生成整套页面）
 
-模板面板头部双 Tab：「🎨 版式」（16 版式应用全部/仅本页/勾选页，原逻辑）与「💼 领域」（21 套成套模板）。领域 Tab 隐藏范围选择与「预览本页」，tplDo 变「生成成套页面（N 页）」并带两段确认（profArmed：第一击变「⚠ 确认：整份替换为「xx」（可撤销）」，第二击才执行）。
+模板面板头部双 Tab：「🎨 版式」（17 版式应用全部/仅本页/勾选页，原逻辑）与「💼 领域」（22 套成套模板）。领域 Tab 隐藏范围选择与「预览本页」，tplDo 变「生成成套页面（N 页）」并带两段确认（profArmed：第一击变「⚠ 确认：整份替换为「xx」（可撤销）」，第二击才执行）。
 
-- **PROF 数据**：`PROF_CATS` 六分类（教育学术 / 职场商务 / 企业运营 / 专业领域 / 党政政务 / 生活场景）；`PROF` 21 套，每套 `{ id, cat, name, ds, main, pages[] }`，main 指向 16 版式之一，卡片迷你预览取 `tplById(main).mini`
+- **PROF 数据**：`PROF_CATS` 六分类（教育学术 / 职场商务 / 企业运营 / 专业领域 / 党政政务 / 生活场景）；`PROF` 22 套，每套 `{ id, cat, name, ds, main, pages[] }`，main 指向 16 版式之一，卡片迷你预览取 `tplById(main).mini`
 - **P 生成器**（8 函数，产物=语义骨架页字符串，页内结构与演示页一致：s-head/grid/card/points/bignum）：`cover(标题,副题)`（class="slide cover" 特殊页）/ `toc(标题,条目[])`（toc-item data-goto=2+i 自动指向内容页）/ `points(title,tag,tpl,pts[])` / `cards(title,tag,tpl,{h,en,p}[])`（按 2/3/4+ 张选 grid2/3/4）/ `nums(title,tag,tpl,{b,s}[])`（grid4 bignum）/ `chartHtml(kind,spec)`（bars 最高值归一化 --h；line 300×158 均布取点；pie C=351.86 段 stroke-dasharray+rotate 按占比累加；ring CC=389.56 不写 transform——CSS 已预置 rotate(-90deg)）/ `chart(title,tag,tpl,kind,spec,noteH,notes[])`（grid2 图表卡+要点卡）/ `end()`（class="slide endpage"）
 - **applyProf 引擎**：pushUndo → deck.innerHTML = pages.join('') → refreshSlides → 非 classic 非特殊页逐页 applyTpl 跑包装器 → buildThumbs → 关面板 → cur=0 go(0) → 按钮反馈「✓ 已套用「xx」」
 - **图表页保护**：applyTpl 在 setAttribute 之后先判 `s.querySelector('[data-anim-chart]')`——含图表卡的页直接 return，跳过 timeline/keynote/magazine/steps/poster 等重排包装器（它们会替换容器或清空整页吞掉图表）；图表页保持 grid2 语义结构 + 模板配色，图表动画照常触发。运行时手动切换版式同样受保护
 - **演示页 15 联动**：21 张 .prof-demo 紧凑卡（7 列 × 3 行，data-prof + data-anim 错落），deck 点击委托 → openTplPanel + setTplTab('prof') + 选中 + renderProfCards + updateTplBtn
-- 二十一套（id · 名称 · 主版式 · 页数）：edu——thesis 毕业答辩 minimal 7 / proposal 开题报告 executive 7 / teaching 教学课件 education 7；biz——report 年终汇报 executive 8 / competition 竞聘述职 timeline 7 / plan 商业计划书 finance 7 / hiring 求职简历 timeline 6；corp——product 产品发布 keynote 7 / tech 科技发布会 blueprint 7 / marketing 营销方案 poster 7 / training 企业培训 education 7 / ceremony 年会盛典 poster 7；pro——finance 金融分析 finance 7 / medical 医疗科普 metro 7 / law 法律合规 executive 6；gov——gov 政务汇报 executive 7 / party 党建汇报 executive 7；life——food 餐饮品牌 magazine 7 / travel 旅游攻略 magazine 7 / festival 节日庆典 poster 6 / charity 公益慈善 minimal 7
+- 二十二套（id · 名称 · 主版式 · 页数）：edu——thesis 毕业答辩 minimal 7 / proposal 开题报告 executive 7 / teaching 教学课件 education 7；biz——report 年终汇报 executive 8 / competition 竞聘述职 timeline 7 / plan 商业计划书 finance 7 / hiring 求职简历 timeline 6；corp——product 产品发布 keynote 7 / tech 科技发布会 blueprint 7 / marketing 营销方案 poster 7 / sales 销售方案 executive 7 / training 企业培训 education 7 / ceremony 年会盛典 poster 7；pro——finance 金融分析 finance 7 / medical 医疗科普 metro 7 / law 法律合规 executive 6；gov——gov 政务汇报 executive 7 / party 党建汇报 executive 7；life——food 餐饮品牌 magazine 7 / travel 旅游攻略 magazine 7 / festival 节日庆典 poster 6 / charity 公益慈善 minimal 7
 - 生成后与版式/主题正交：每页照常挂 data-template 运行时任意切换，主题照常换肤；领域模板只在「生成整套」时决定页序+每页版式+图表选型，不新增版式骨架
 - 图表页生成规则不变：趋势 line / 占比 pie / 对比 bars / 达成率 ring，图表一律挂 data-anim-chart 保留自身动画（见 3.1 L6），关键数字挂 data-count 滚动
 
@@ -553,7 +557,7 @@ function prev(){ if (cur > 0) leaveThenGo(cur - 1); else if (chkLoop.checked) le
   - Ctrl+Z：撤销；Ctrl+Shift+Z / Ctrl+Y：重做（弹层面板打开时忽略）
 - **全屏**：`toggleFull()` = fullscreenElement 存在则 exitFullscreen，否则 document.documentElement.requestFullscreen
 - **主题作用域**：主题面板范围 radio 选「全部页面」时点色点 → `documentElement.setAttribute('data-theme', name)` + 遍历 slides 移除所有 slide 级 data-theme；选「仅本页」时 → `slides[cur].setAttribute('data-theme', name)`（仅当前页变色）；`?theme=biz` 参数走全局；面板色点 .on 态按 activeThemeName()（当前范围下的生效主题）显示
-- **模板应用**：TPLS 十六套元信息（id/name/ic/ds/mini 结构示意图）；applyTpl(slide, tpl) = ensureOrigin 存档首次 innerHTML → 恢复语义态 → 挂 data-template（classic 则移除属性）→ 按需 wrapTimeline/wrapKeynote/wrapMagazine/wrapSteps/wrapPoster/wrapVintage/wrapFinance（封面/结束页/目录页 isSpecialPage 保护不包装；blueprint/education/executive/metro/bento/dark/nature 纯 CSS 无包装器）；applyScope(tpl, scope, selected) 按范围应用返回页数；初始化时每页 data-template 声明自动跑 applyTpl 生效；`?tpl=xxx` 参数全局应用（只认 TPLS 内 id）
+- **模板应用**：TPLS 十七套元信息（id/name/ic/ds/mini 结构示意图）；applyTpl(slide, tpl) = ensureOrigin 存档首次 innerHTML → 恢复语义态 → 挂 data-template（classic 则移除属性）→ 按需 wrapTimeline/wrapKeynote/wrapMagazine/wrapSteps/wrapPoster/wrapVintage/wrapFinance（封面/结束页/目录页 isSpecialPage 保护不包装；blueprint/education/executive/metro/bento/dark/nature/stats 纯 CSS 无包装器）；applyScope(tpl, scope, selected) 按范围应用返回页数；初始化时每页 data-template 声明自动跑 applyTpl 生效；`?tpl=xxx` 参数全局应用（只认 TPLS 内 id）
 - **标题自动映射**：包装器从语义节点取内容重建模板结构——timeline 节点标题=卡片标题、keynote 大观点=页标题、magazine 分栏标题=页标题；内容一条不丢
 - **页内连接**：deck 上事件委托，`closest('[data-goto]')` 跳页；目录条目/任意元素都可用
 - **外部链接**：任意 `<a href="https://…">` 正常打开，不拦截

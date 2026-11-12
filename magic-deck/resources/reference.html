@@ -405,6 +405,13 @@ button,select,input{ font-family:inherit; }
 [data-template="nature"] .bignum{ border-radius:50% 50% 8px 8px; }
 [data-template="nature"] .toc-item{ border-radius:18px 6px 18px 6px; }
 [data-template="nature"] .card:hover{ transform:translateY(-4px) rotate(-.6deg); }
+/* T17 stats 统计图表：KPI 大数字顶横排 + 双线分区 + 图表框架，数据看板 */
+[data-template="stats"] .s-head{ border-bottom:2px solid var(--accent); padding-bottom:14px; }
+[data-template="stats"] .s-head h2{ font-size:30px; }
+[data-template="stats"] .bignum{ border:none; border-top:3px solid var(--accent); border-radius:0 0 10px 10px; }
+[data-template="stats"] .bignum b{ font-size:56px; }
+[data-template="stats"] .chart-card{ border:1px solid var(--accent); }
+[data-template="stats"] .card{ border-radius:8px; }
 
 /* ══════════ 6. 操作元素（固定样式） ══════════ */
 .toolbar{ position:fixed; right:18px; top:14px; z-index:10;
@@ -472,7 +479,7 @@ body:hover .nav{ opacity:1; }
 .cp-foot .tbtn{ border:1px solid var(--border); background:var(--tag-bg); cursor:pointer; }
 .cp-foot .tbtn.primary{ background:var(--accent); color:var(--bg); border-color:transparent; }
 /* ═══ 模板应用面板 ═══ */
-.tpl-panel{ width:760px; max-width:94vw; max-height:82vh; display:flex; flex-direction:column; padding:24px 26px;
+.tpl-panel{ width:1060px; max-width:96vw; max-height:90vh; display:flex; flex-direction:column; padding:24px 26px;
   border-radius:16px; background:var(--panel-solid); border:1px solid var(--border); color:var(--text); }
 .tpl-panel h3{ font-size:18px; margin:0; }
 .tpl-tabs{ display:flex; gap:8px; }
@@ -483,7 +490,7 @@ body:hover .nav{ opacity:1; }
 .tpl-cat{ grid-column:1/-1; font-size:11px; color:var(--muted); letter-spacing:2px; margin:6px 0 -4px; }
 .tpl-card .nm .pg{ font-style:normal; font-size:10px; font-weight:400; color:var(--muted); margin-left:6px; letter-spacing:.5px; }
 .tpl-head-note{ font-size:12px; color:var(--muted); }
-.tpl-cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:14px 0 12px; overflow-y:auto; max-height:46vh; padding:2px; }
+.tpl-cards{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:14px 0 12px; overflow-y:auto; max-height:64vh; padding:2px; }
 .tpl-card{ display:flex; flex-direction:column; align-items:stretch; gap:7px; padding:9px; border-radius:12px;
   background:var(--panel); border:1px solid var(--border); cursor:pointer; transition:all .15s ease; text-align:left; }
 .tpl-card:hover{ border-color:var(--accent); }
@@ -783,8 +790,8 @@ body:hover .nav{ opacity:1; }
 </div>
 <div class="toolbar">
   <div class="group">
-    <button class="tbtn" id="btnTemplate" title="十六套版式模板：可应用到全部页面 / 仅本页 / 勾选页面，支持预览本页，标题自动映射">🎨 模板</button>
-    <button class="tbtn" id="btnTheme" title="十六套主题配色面板：色点即点即换，范围可选全部页面或仅本页">🎨 主题</button>
+    <button class="tbtn" id="btnTemplate" title="十七套版式模板：可应用到全部页面 / 仅本页 / 勾选页面，支持预览本页，标题自动映射">🎨 模板</button>
+    <button class="tbtn" id="btnTheme" title="十七套主题配色面板：色点即点即换，范围可选全部页面或仅本页">🎨 主题</button>
   </div>
   <div class="group" title="编辑：撤销 / 重做（支持模板应用、增删页、换主题等所有编辑操作）">
     <button class="tbtn" id="btnUndo" title="撤销上一步（Ctrl+Z）" disabled>↶ 撤销</button>
@@ -984,7 +991,7 @@ body:hover .nav{ opacity:1; }
     <div class="s-head"><h2>里程碑</h2><span class="tag">TIMELINE</span></div>
     <div class="grid3">
       <div class="card"><h4>立项与架构<span class="en">2026 Q1</span></h4><p>完成技术选型与十六主题变量体系。</p></div>
-      <div class="card"><h4>模板库建设<span class="en">2026 Q2</span></h4><p>五套版式骨架与主题正交组合。</p></div>
+      <div class="card"><h4>模板库建设<span class="en">2026 Q2</span></h4><p>十七套版式骨架与主题正交组合。</p></div>
       <div class="card"><h4>单页换肤<span class="en">2026 Q3</span></h4><p>整份或单页自由切换主题。</p></div>
     </div>
   </section>
@@ -994,8 +1001,8 @@ body:hover .nav{ opacity:1; }
     <div class="s-head"><h2>数据一览</h2><span class="tag">DATA</span></div>
     <div class="grid4">
       <div class="bignum"><b>99.9%</b><span>可用性</span></div>
-      <div class="bignum"><b>5</b><span>版式模板</span></div>
-      <div class="bignum"><b>4</b><span>配色主题</span></div>
+      <div class="bignum"><b>17</b><span>版式模板</span></div>
+      <div class="bignum"><b>17</b><span>配色主题</span></div>
       <div class="bignum"><b>0</b><span>外部依赖</span></div>
     </div>
   </section>
@@ -1005,7 +1012,7 @@ body:hover .nav{ opacity:1; }
     <div class="s-head"><h2>发布流程四步走</h2><span class="tag">STEPS</span></div>
     <div class="grid4">
       <div class="card"><h4>撰写内容<span class="en">Draft</span></h4><p>结构与文案一气呵成。</p></div>
-      <div class="card"><h4>套用版式<span class="en">Layout</span></h4><p>十六套版式任意切换。</p></div>
+      <div class="card"><h4>套用版式<span class="en">Layout</span></h4><p>十七套版式任意切换。</p></div>
       <div class="card"><h4>细节打磨<span class="en">Polish</span></h4><p>主题配色逐页微调。</p></div>
       <div class="card"><h4>发布放映<span class="en">Publish</span></h4><p>全屏放映或分享 HTML。</p></div>
     </div>
@@ -1090,9 +1097,9 @@ body:hover .nav{ opacity:1; }
     </div>
   </section>
 
-  <!-- 页 15 领域模板库（二十一套领域 / 业务成套模板，点卡片直达面板生成整套页面） -->
+  <!-- 页 15 领域模板库（二十二套领域 / 业务成套模板，点卡片直达面板生成整套页面） -->
   <section class="slide" data-title="领域模板">
-    <div class="s-head"><h2>领域模板库 · 二十一套</h2><span class="tag">DOMAIN</span></div>
+    <div class="s-head"><h2>领域模板库 · 二十二套</h2><span class="tag">DOMAIN</span></div>
     <div class="prof-grid">
       <div class="card prof-demo" data-prof="thesis" data-anim="fade-up" data-anim-delay="40"><h4>毕业答辩<span class="en">Thesis</span></h4></div>
       <div class="card prof-demo" data-prof="proposal" data-anim="fade-up" data-anim-delay="65"><h4>开题报告<span class="en">Proposal</span></h4></div>
@@ -1104,6 +1111,7 @@ body:hover .nav{ opacity:1; }
       <div class="card prof-demo" data-prof="product" data-anim="fade-up" data-anim-delay="215"><h4>产品发布<span class="en">Product</span></h4></div>
       <div class="card prof-demo" data-prof="tech" data-anim="fade-up" data-anim-delay="240"><h4>科技发布<span class="en">Tech</span></h4></div>
       <div class="card prof-demo" data-prof="marketing" data-anim="fade-up" data-anim-delay="265"><h4>营销方案<span class="en">Marketing</span></h4></div>
+      <div class="card prof-demo" data-prof="sales" data-anim="fade-up" data-anim-delay="280"><h4>销售方案<span class="en">Sales</span></h4></div>
       <div class="card prof-demo" data-prof="training" data-anim="fade-up" data-anim-delay="290"><h4>企业培训<span class="en">Training</span></h4></div>
       <div class="card prof-demo" data-prof="ceremony" data-anim="fade-up" data-anim-delay="315"><h4>年会盛典<span class="en">Ceremony</span></h4></div>
       <div class="card prof-demo" data-prof="finance" data-anim="fade-up" data-anim-delay="340"><h4>金融分析<span class="en">Finance</span></h4></div>
@@ -1142,7 +1150,7 @@ body:hover .nav{ opacity:1; }
       <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd></td><td>撤销 / 重做</td></tr>
       <tr><td><kbd>Esc</kbd></td><td>关弹层 / 退全屏</td></tr>
     </table>
-    <div class="help-note">「🎨 主题」面板 16 套配色即点即换，范围可选全部页面或仅本页。「🎨 模板」=十六套版式模板应用到全部页/仅本页/勾选页，支持「预览本页」先看效果，标题自动映射，切回经典商务即恢复原排版。右侧边栏双 Tab：「▤ 页面」缩略图跳页、悬停操作条复页/上移/下移/删页，头部「＋新页」选版式插页；「⚙ 工具」收纳动画库（翻页八套 + 入场十二式 + 离场十二式 + 强调八式 + 标题文字逐字/逐词/逐行，可设全部页面/仅本页范围）与复制截图（本页/选页批量，只含主体内容，截图逐张下载 PNG），点选即应用并自动记忆。「↶/↷」撤销重做（Ctrl+Z）。</div>
+    <div class="help-note">「🎨 主题」面板 16 套配色即点即换，范围可选全部页面或仅本页。「🎨 模板」=十七套版式模板应用到全部页/仅本页/勾选页，支持「预览本页」先看效果，标题自动映射，切回经典商务即恢复原排版。右侧边栏双 Tab：「▤ 页面」缩略图跳页、悬停操作条复页/上移/下移/删页，头部「＋新页」选版式插页；「⚙ 工具」收纳动画库（翻页八套 + 入场十二式 + 离场十二式 + 强调八式 + 标题文字逐字/逐词/逐行，可设全部页面/仅本页范围）与复制截图（本页/选页批量，只含主体内容，截图逐张下载 PNG），点选即应用并自动记忆。「↶/↷」撤销重做（Ctrl+Z）。</div>
   </div>
 </div>
 <div class="help-mask" id="tplMask">
@@ -1377,7 +1385,9 @@ var TPLS = [
   { id:'dark', name:'暗夜深色', ic:'◐', ds:'页面级反色，浅色主题下也全黑',
     mini:'<i style="left:0;top:0;width:100%;height:100%;background:#0d1117"></i><i style="left:8%;top:20%;width:40%;height:10%;background:#58a6ff;opacity:.85"></i><i style="left:8%;top:44%;width:60%;height:6%;background:#30363d"></i><i style="left:8%;top:60%;width:50%;height:6%;background:#30363d"></i><i style="left:74%;top:18%;width:16%;height:34%;border-radius:50%;background:conic-gradient(#58a6ff 0 60%,#30363d 60% 100%)"></i>' },
   { id:'nature', name:'自然清新', ic:'❀', ds:'圆润有机形状，教育与生活主题',
-    mini:'<i style="left:8%;top:16%;width:30%;height:64%;border-radius:40% 15% 40% 15%;border:2px solid var(--accent)"></i><i style="left:44%;top:16%;width:26%;height:40%;border-radius:15% 40% 15% 40%;border:2px solid var(--accent2)"></i><i style="left:76%;top:26%;width:10%;height:22%;border-radius:50%;background:var(--accent)"></i>' }
+    mini:'<i style="left:8%;top:16%;width:30%;height:64%;border-radius:40% 15% 40% 15%;border:2px solid var(--accent)"></i><i style="left:44%;top:16%;width:26%;height:40%;border-radius:15% 40% 15% 40%;border:2px solid var(--accent2)"></i><i style="left:76%;top:26%;width:10%;height:22%;border-radius:50%;background:var(--accent)"></i>' },
+  { id:'stats', name:'统计图表', ic:'◧', ds:'KPI 大数字横排 + 图表框架，数据看板',
+    mini:'<i style="left:5%;top:8%;width:28%;height:18%;border-top:3px solid var(--accent);border-radius:0 0 4px 4px;background:var(--panel)"></i><i style="left:36%;top:8%;width:28%;height:18%;border-top:3px solid var(--accent);border-radius:0 0 4px 4px;background:var(--panel)"></i><i style="left:67%;top:8%;width:28%;height:18%;border-top:3px solid var(--accent);border-radius:0 0 4px 4px;background:var(--panel)"></i><i style="left:5%;top:40%;width:56%;height:52%;border:1px solid var(--accent);border-radius:4px"></i><i style="left:67%;top:40%;width:28%;height:52%;border:1px solid var(--border);border-radius:4px"></i>' }
 ];
 
 /* ── 成套模板生成器：领域 / 业务 21 式（面板「💼 领域」Tab 一键生成整套页面） ── */
@@ -1476,7 +1486,7 @@ var PROF_CATS = [
   { id:'life', name:'生活场景' }
 ];
 
-/* 二十一套成套模板：pages = 封面 + 目录 + 内容页 + 图表页 + 结束页，一键整份替换 */
+/* 二十二套成套模板：pages = 封面 + 目录 + 内容页 + 图表页 + 结束页，一键整份替换 */
 var PROF = [
   { id:'thesis', cat:'edu', name:'毕业答辩', ds:'课题研究 · 方法创新 · 成果致谢', main:'minimal', pages:[
     P.cover('毕业答辩<br>基于深度学习的图像分割方法研究', '答辩人：张三 · 指导教师：李四教授 · 2026 年 6 月'),
@@ -1664,6 +1674,15 @@ var PROF = [
     P.cards('行动方案', 'ACTION', 'minimal', [{h:'捐建图书角', en:'Library', p:'100 所学校落地标准图书角'}, {h:'陪伴共读', en:'Reading', p:'线上共读会每周一场'}, {h:'教师培训', en:'Training', p:'阅读指导方法进乡村课堂'}]),
     P.nums('预期成效', 'IMPACT', 'minimal', [{b:'100', s:'所学校'}, {b:'5万', s:'本图书'}, {b:'1万+', s:'儿童受益'}, {b:'200', s:'名志愿者'}]),
     P.points('如何参与', 'JOIN', 'minimal', ['捐一本书，写一句寄语', '成为线上共读志愿者', '企业冠名捐赠图书角']),
+    P.end()
+  ]},
+  { id:'sales', cat:'corp', name:'销售方案', ds:'客户痛点 · 方案价值 · 案例与报价', main:'executive', pages:[
+    P.cover('企业智能客服<br>解决方案建议书', '销售中心 · 张经理 · 2026 年 11 月'),
+    P.toc('目录', ['客户痛点', '方案价值', '成功案例', '报价与服务']),
+    P.points('客户痛点', 'PAIN', 'executive', ['人工客服成本高企，7×24 服务难以保障', '咨询渠道分散，客户问题响应不及时', '会话数据未沉淀，商机线索大量流失']),
+    P.cards('方案价值', 'VALUE', 'executive', [{h:'智能应答', en:'AI Bot', p:'常见问题秒回，拦截 80% 重复咨询'}, {h:'人机协同', en:'Hybrid', p:'复杂问题无缝转人工，情绪识别预警'}, {h:'数据洞察', en:'Insight', p:'全渠道会话分析，商机自动挖掘跟进'}]),
+    P.nums('成功案例', 'CASES', 'executive', [{b:'62%', s:'人力成本下降'}, {b:'92%', s:'客户满意度'}, {b:'3.2s', s:'平均响应'}, {b:'500+', s:'服务企业数'}]),
+    P.chart('报价与服务', 'QUOTE', 'executive', 'pie', {t:'项目投入构成', en:'PIE SWEEP', data:[{n:'软件服务', v:55}, {n:'实施交付', v:25}, {n:'培训运维', v:20}]}, '服务承诺', ['标准版年费 18 万元，30 天交付上线', '7×24 运维保障，SLA 99.9%', '免费 POC 试用 14 天，效果看得见']),
     P.end()
   ]}
 ];
@@ -2183,7 +2202,7 @@ function blankSlideHtml(tpl){
     + '<div class="s-head"><h2>新页面标题</h2><span class="tag">' + tp.name + '</span></div>'
     + '<div class="grid2">'
     + '<div class="card"><h4>要点一<span class="en">Point 1</span></h4><p>在这里写下要点内容，然后按 F 放映。</p></div>'
-    + '<div class="card"><h4>要点二<span class="en">Point 2</span></h4><p>支持全部 16 套版式与 16 套主题。</p></div>'
+    + '<div class="card"><h4>要点二<span class="en">Point 2</span></h4><p>支持全部 17 套版式与 17 套主题。</p></div>'
     + '</div></section>';
 }
 function addPage(tpl){
