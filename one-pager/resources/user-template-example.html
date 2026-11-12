@@ -1,0 +1,63 @@
+<!-- ==============================================================
+  one-pager 用户模板文件（放在 TPL_DIR 目录下，默认 ~/.skillforge/user-templates/）
+
+  ▍三个区块，缺一不可：
+
+  1) TPL_META —— 模板元信息：
+     name  英文 slug（唯一标识，禁止与官方 16 个重名：classic/minimal/
+           magazine/hero/timeline/grid/dashboard/brutalist/swiss/bauhaus/
+           mondrian/editorial/typo/memphis/exhibit/window）
+     label 中文显示名（模板坞按钮文案，≤5 字为佳）
+  2) TPL_CSS —— 模板样式：选择器一律以 .tpl-{name} 开头；颜色只准用
+     13 个主题令牌（--bg/--bg2/--panel/--panel-solid/--text/--muted/--accent/
+     --accent2/--border/--glow/--glow-soft/--title-grad/--tag-bg），
+     禁止写死色值，这样 21 套主题套上去都成立
+  3) TPL_FN —— 渲染函数：TPL['{name}'] = function(){ return 'HTML 字符串' }
+     可复用 helper：esc() 转义 / N(i) 双位序号 / F 页脚常量 / DATA 六字段
+     （DATA.tag 徽章 / DATA.title 标题 / DATA.quote 金句 / DATA.points 要点 /
+     DATA.footnote 页脚注 / DATA.kpi 仪表值）；要入场动画的元素加 class="anim"
+
+  ▍生成海报时，AI 会把三个区块分别内嵌进 reference.html 副本：
+     CSS → <style> 模板区末尾；FN → TPL 对象闭合后；按钮 + 分组标 → 模板坞；
+     name → TPLS 数组。本文件是片段包，不是海报，无需打开预览。
+
+  复制本文件改名后照葫芦画瓢即可 DIY 专属模板。
+============================================================== -->
+<!--TPL_META
+name: certificate
+label: 荣誉证书
+-->
+<!--TPL_CSS_BEGIN-->
+.tpl-cert{display:flex;flex-direction:column;justify-content:center;align-items:center;width:min(84%,1100px);height:100%;text-align:center}
+.tpl-cert .frame{position:relative;width:100%;border:3px double var(--accent);background:var(--panel);padding:6vh 4vw 4vh;display:flex;flex-direction:column;align-items:center}
+.tpl-cert .corner{position:absolute;width:28px;height:28px;border:3px solid var(--accent)}
+.tpl-cert .c1{top:-3px;left:-3px;border-right:none;border-bottom:none}
+.tpl-cert .c2{top:-3px;right:-3px;border-left:none;border-bottom:none}
+.tpl-cert .c3{bottom:-3px;left:-3px;border-right:none;border-top:none}
+.tpl-cert .c4{bottom:-3px;right:-3px;border-left:none;border-top:none}
+.tpl-cert .badge{display:inline-block;font-size:12px;letter-spacing:6px;font-weight:700;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:6px 22px;margin-bottom:3.5vh}
+.tpl-cert h1{font-family:Georgia,'Songti SC','SimSun',serif;font-size:clamp(38px,5vw,66px);font-weight:700;color:var(--text);margin-bottom:2vh;line-height:1.3}
+.tpl-cert .quote{font-size:16px;font-style:italic;color:var(--muted);margin-bottom:4vh;max-width:70%}
+.tpl-cert ul.points{list-style:none;display:flex;justify-content:center;gap:3vw;flex-wrap:wrap;margin-bottom:5vh}
+.tpl-cert ul.points li{font-size:15px;color:var(--text);line-height:1.7;border-bottom:1px solid var(--border);padding-bottom:8px;min-width:150px}
+.tpl-cert ul.points .num{color:var(--accent);font-weight:800;margin-right:8px}
+.tpl-cert .seal{position:absolute;right:9%;bottom:11%;width:94px;height:94px;border:3px solid var(--accent2);border-radius:50%;display:flex;align-items:center;justify-content:center;transform:rotate(-12deg);opacity:.88}
+.tpl-cert .seal span{font-size:13px;font-weight:900;color:var(--accent2);letter-spacing:3px;line-height:1.6}
+.tpl-cert footer{margin-top:auto;width:100%;font-size:11px;letter-spacing:3px;color:var(--muted);display:flex;justify-content:space-between}
+<!--TPL_CSS_END-->
+<!--TPL_FN_BEGIN-->
+TPL['certificate'] = function(){
+  var lis = DATA.points.map(function(p,i){ return '<li class="anim"><span class="num">'+N(i)+'</span>'+esc(p.t)+'</li>'; }).join('');
+  return '<div class="tpl-cert">'
+    + '<div class="frame anim">'
+    +   '<span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>'
+    +   '<div class="badge anim">'+esc(DATA.tag)+'</div>'
+    +   '<h1 class="anim">'+esc(DATA.title)+'</h1>'
+    +   '<div class="quote anim">'+esc(DATA.quote)+'</div>'
+    +   '<ul class="points anim">'+lis+'</ul>'
+    +   '<div class="seal anim"><span>'+esc(DATA.tag)+'<br>特此证明</span></div>'
+    +   '<footer class="anim"><span>'+F+'</span><span>'+esc(DATA.footnote||'')+'</span></footer>'
+    + '</div>'
+    + '</div>';
+};
+<!--TPL_FN_END-->

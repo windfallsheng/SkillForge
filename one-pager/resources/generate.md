@@ -1,5 +1,16 @@
 # 生成 HTML（阶段 2）
 
+## 用户模板内嵌（TPL_DIR 非空时，先于三处替换）
+
+读 user-config.md 的 `TPL_DIR`（auto = `~/.skillforge/user-templates`，Windows 下 `%USERPROFILE%\.skillforge\user-templates`）。若目录存在且有 *.html 文件，按 `resources/user-template-example.html` 三段式约定逐份解析，内嵌进 reference.html 副本四处：
+
+1. **TPL_CSS 块**（原样）：插到 CSS 内嵌点注释（`/* ▼ 用户模板 CSS 内嵌点`）**之前**
+2. **TPL_FN 块**（原样）：插到 FN 内嵌点注释（`/* ▼ 用户模板渲染函数内嵌点`）**之后**
+3. **模板坞**：在按钮内嵌点注释（`<!-- ▼ 用户模板按钮内嵌点`）**之后**插分组标 `<span class="tp-sep">我的模板</span>`（多份模板只插一次）+ 每份一个 `<button class="tp-btn" data-tpl="{name}" title="{label}">{label}</button>`
+4. **TPLS 数组**：`'window'` 之后追加 `,'{name}'`
+
+约束：name 必须唯一且不与官方 16 个（classic/minimal/magazine/hero/timeline/grid/dashboard/brutalist/swiss/bauhaus/mondrian/editorial/typo/memphis/exhibit/window）重名；缺区块/重名的文件跳过并在对话中提醒用户。TPL_DIR 不存在或无 html 文件则跳过本步。
+
 先 Read `resources/reference.html` 全文，以其为骨架模板，**只替换三处**，其余（CSS/JS/结构）一律不许动：
 
 1. **`<meta name="poster-id">`**：换成新 UUID（crypto.randomUUID() 标准 v4，落盘前顺扫落盘目录下本技能命名的 html 读 id meta 查重，撞号重掷）
