@@ -4,6 +4,14 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
+## 1.3.0 (2026-11-12)
+
+**prompt-pouch native dialogs eliminated: unified in-page confirm dialog in three modes**
+
+- New cfMask unified dialog (confirm / alert / prompt modes) with Promise-based uiConfirm / uiAlert / uiPrompt; all 11 native window.confirm / alert / prompt calls absorbed — delete prompt/group, quick tag add, overwrite import, restore backup (corrupt notices x2 + overwrite confirm), auto-backup authorization (dual-semantics "Authorize directory" / "Not now"), change backup directory — zero native white dialogs left
+- Dialog styling matches the page: reuses the .modal-mask overlay system (frosted glass + pop-in animation), adopts the five theme variables (warm gold / tech blue / IDEA dark / IDEA light / mint auto-recolor); destructive actions (delete / overwrite / restore) get a red-tinted confirm button; Esc / mask click cancel, prompt mode submits on Enter with default value prefilled
+- Version stamp prompt-pouch@9 -> @10; usage-guide gains a "unified confirm dialog" entry
+
 ## 1.2.0 (2026-11-12)
 
 **Chinese-style poster octet + collapsible dual docks + directory-visibility trio**
