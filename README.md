@@ -92,6 +92,7 @@ skill-forge update              # 升级已安装技能（配置版本感知，�
 |:---|:---|
 | [docs/install.md](docs/install.md) | 安装与升级详解：两种安装方式、命令参考、升级与配置保护机制、维护者约定（CONFIG_VERSION 递增规则）。英文版 [docs/install.en.md](docs/install.en.md) |
 | [docs/architecture.md](docs/architecture.md) | 架构与规范：目录结构、技能形态（薄入口 + resources）、八大机制、拆分规范、通用原则。英文版 [docs/architecture.en.md](docs/architecture.en.md) |
+| [docs/usage-examples.md](docs/usage-examples.md) | 技能使用场景示例：日报 / 锦囊 / PPT 两形态 / 会议纪要的安装到回炉全链路。英文版 [docs/usage-examples.en.md](docs/usage-examples.en.md) |
 | [CHANGELOG.md](CHANGELOG.md) | 版本变更记录。英文版 [CHANGELOG.en.md](CHANGELOG.en.md) |
 
 ## 许可证

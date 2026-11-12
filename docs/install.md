@@ -54,6 +54,60 @@ cp -R spec-doc2spec spec-spec2doc <你的 AI 助手技能目录>/
 
 命令别名：`list` = `ls`、`install` = `init`、`upgrade` = `update`。
 
+## 场景化使用流程
+
+### 场景一：新用户首次接入（从零到可用）
+
+```bash
+npm i -g skill-forge-hub     # 1. 全局安装 CLI
+skill-forge ls               # 2. 先浏览技能清单（只读，不写任何文件）
+skill-forge init             # 3. 交互式挑选要装的技能
+```
+
+`skill-forge init` 的交互过程：列出全部技能（分类 + 名称 + 一句话说明）→ 输入 `a` 全装，或输入编号挑选（如 `1,3,5`，已装技能标 ★）→ 确认时输 `s` 跳过已装、只装新技能 → 自动探测 AI 助手技能目录（探测到多个时按编号选择）→ 完成安装。
+
+装完即可直接对话触发：「写日报」「写周报」「写月报」「写季报」「写年报」「记会议」，或直接丢给它一个文档。
+
+### 场景二：单件补装（脚本 / 只想要某一个）
+
+```bash
+skill-forge init --skills prompt-pouch --target ~/.qoder-cn/skills
+```
+
+跳过挑选环节，只装指定技能到指定目录——适合脚本化、CI 或补装单个技能。
+
+### 场景三：官方发新版后升级
+
+```bash
+skill-forge update                              # 升级全部已装技能
+skill-forge update --skills daily-report        # 只升级某一个
+```
+
+- **配置结构没变**：无感升级——技能文件更新，你的 `user-config.md` 原样保留
+- **配置结构变了**（官方 `CONFIG_VERSION` 升了）：先自动备份 `user-config.md.bak-<时间戳>`，再交互三选一：
+  - `[1] 官方覆盖`：换成全新官方配置（旧配置随时可从备份找回）
+  - `[2] 保留我的`（默认，最安全）：你的配置不动，官方新版另存 `user-config.md.upstream` 对照文件，自己对比后按需合并新配置点
+  - `[3] 稍后处理`：本次跳过，不生成对照文件
+- **官方删了文件**：按 `.installed-manifest` 安装清单精准清理官方已删除的文件与空目录；你自建的文件一律不动
+
+### 场景四：非交互 / 自动化
+
+```bash
+skill-forge init --skills daily-report,weekly-report --yes
+```
+
+`--yes` 跳过一切确认；配置版本冲突时默认走 `[2] 保留我的`（最安全分支）。
+
+### 场景五：换机器 / 换 AI 助手
+
+新环境重新 `npm i -g skill-forge-hub && skill-forge init` 即可；要保留个人配置，把旧机器技能目录里的 `user-config.md` 一并拷过去（升级永不覆盖，覆盖安装时也保留）。
+
+### 常见问题
+
+- **装完对话没触发技能**：确认装进了当前 AI 助手实际读取的技能目录（`init` 完成时输出的路径）
+- **deck-stage 报缺依赖**：`cd <技能目录>/deck-stage && npm install` 补装 PptxGenJS 一次即可
+- **升级后配置会丢吗**：不会。`user-config.md`（与 `.preserve` 清单内文件）升级永不覆盖，本地修改永久保留
+
 ## 升级与配置保护
 
 `skill-forge update`（默认升级全部已装技能，可用 `--skills a,b` 指定）在覆盖技能文件前自动保护你的配置。

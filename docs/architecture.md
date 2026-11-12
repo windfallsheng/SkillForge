@@ -10,9 +10,10 @@
 .
 ├── README.md                    # 介绍 + 产物画廊 + 技能分类 + 技能清单（英文版 README.en.md）
 ├── CHANGELOG.md                 # 版本变更记录（英文版 CHANGELOG.en.md）
-├── docs/                        # 文档（安装升级 / 架构规范 / 产物截图，中英一一对应）
+├── docs/                        # 文档（安装升级 / 架构规范 / 使用示例 / 产物截图，中英一一对应）
 │   ├── install.md               # 安装与升级详解（英文版 install.en.md）
 │   ├── architecture.md          # 本文档（英文版 architecture.en.md）
+│   ├── usage-examples.md        # 技能使用场景示例（英文版 usage-examples.en.md）
 │   └── images/                  # 产物成品截图
 ├── cli.js                       # 安装器（ls / init / update，零依赖 Node>=14）
 ├── package.json                 # npm 包定义（skill-forge-hub，命令名 skill-forge）

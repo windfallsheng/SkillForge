@@ -54,6 +54,60 @@ Common flags (for init / update):
 
 Command aliases: `list` = `ls`, `install` = `init`, `upgrade` = `update`.
 
+## Scenario Walkthroughs
+
+### Scenario 1: first-time setup (zero to working)
+
+```bash
+npm i -g skill-forge-hub     # 1. global install of the CLI
+skill-forge ls               # 2. browse the skill list first (read-only, writes nothing)
+skill-forge init             # 3. interactively pick the skills to install
+```
+
+How `skill-forge init` works: lists every skill (category + name + one-line description) → type `a` to install all, or type numbers to pick (e.g. `1,3,5`; installed skills are marked ★) → on confirm, type `s` to skip installed and install only new ones → auto-detect the AI assistant's skill directory (pick by number when several are found) → done.
+
+After that, just talk to it: "write a daily report", "write a weekly report", "write a monthly report", "write a quarterly report", "write an annual report", "take meeting minutes", or hand it a document.
+
+### Scenario 2: single-skill install (scripts / just one)
+
+```bash
+skill-forge init --skills prompt-pouch --target ~/.qoder-cn/skills
+```
+
+Skips the picker and installs exactly the named skill to the named directory — good for scripting, CI, or topping up a single skill.
+
+### Scenario 3: upgrading after an official release
+
+```bash
+skill-forge update                              # upgrade all installed skills
+skill-forge update --skills daily-report        # upgrade just one
+```
+
+- **Config structure unchanged**: silent upgrade — skill files update, your `user-config.md` stays untouched
+- **Config structure changed** (official `CONFIG_VERSION` bumped): your config is first backed up as `user-config.md.bak-<timestamp>`, then a three-way choice:
+  - `[1] official overwrite`: take the fresh official config (your old one is recoverable from the backup)
+  - `[2] keep mine` (default, safest): your config stays, the official version is saved as `user-config.md.upstream` for you to compare and merge new config points manually
+  - `[3] decide later`: skip this time, no companion file generated
+- **Official files deleted**: cleaned up precisely via the `.installed-manifest` (only files the official version deleted, plus now-empty directories); your self-created files are never touched
+
+### Scenario 4: non-interactive / automation
+
+```bash
+skill-forge init --skills daily-report,weekly-report --yes
+```
+
+`--yes` skips every confirmation; on config-version conflict it defaults to `[2] keep mine` (the safest branch).
+
+### Scenario 5: new machine / new AI assistant
+
+Run `npm i -g skill-forge-hub && skill-forge init` in the new environment; to carry your personal config over, copy the old `user-config.md` from the previous skill directory (never overwritten on upgrade, kept on install too).
+
+### FAQ
+
+- **Skills don't trigger after install**: check the CLI installed into the skill directory your AI assistant actually reads (the path printed when init finishes)
+- **deck-stage complains about a missing dependency**: run `cd <skill dir>/deck-stage && npm install` once for PptxGenJS
+- **Will upgrades wipe my config**: never. `user-config.md` (and `.preserve`-listed files) are never overwritten on upgrade — your local edits persist forever
+
 ## Upgrade & Config Protection
 
 `skill-forge update` (all installed skills by default, or `--skills a,b`) protects your config before overwriting any skill files.

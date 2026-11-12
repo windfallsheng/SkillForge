@@ -10,9 +10,10 @@
 .
 ├── README.md                    # intro + output gallery + categories + skill list (English: README.en.md)
 ├── CHANGELOG.md                 # version changelog (English: CHANGELOG.en.md)
-├── docs/                        # docs (install / architecture / output screenshots; Chinese & English one-to-one)
+├── docs/                        # docs (install / architecture / usage examples / output screenshots; Chinese & English one-to-one)
 │   ├── install.md               # installation & upgrade in depth (English: install.en.md)
 │   ├── architecture.md          # this document (English: architecture.en.md)
+│   ├── usage-examples.md        # skill usage scenario examples (English: usage-examples.en.md)
 │   └── images/                  # output screenshots
 ├── cli.js                       # installer (ls / init / update, zero-dependency Node>=14)
 ├── package.json                 # npm package definition (skill-forge-hub, command name skill-forge)

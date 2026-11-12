@@ -92,6 +92,7 @@ After installation, just say "write a daily report", "write a weekly report", "w
 |:---|:---|
 | [docs/install.en.md](docs/install.en.md) | Installation & upgrade in depth: both install methods, command reference, upgrade & config-protection mechanics, maintainer conventions (CONFIG_VERSION bump rules). Chinese version [docs/install.md](docs/install.md) |
 | [docs/architecture.en.md](docs/architecture.en.md) | Architecture & conventions: directory layout, skill anatomy (thin entry + resources), the eight mechanisms, splitting conventions, general principles. Chinese version [docs/architecture.md](docs/architecture.md) |
+| [docs/usage-examples.en.md](docs/usage-examples.en.md) | Skill usage scenario examples: daily-report / prompt-pouch / both PPT forms / meeting-minutes, full chain from install to reforge. Chinese version [docs/usage-examples.md](docs/usage-examples.md) |
 | [CHANGELOG.en.md](CHANGELOG.en.md) | Version changelog. Chinese version [CHANGELOG.md](CHANGELOG.md) |
 
 ## License
