@@ -4,6 +4,16 @@
 
 SkillForge（技能锻造坊）npm 包 `skill-forge-hub`（命令名 `skill-forge`）版本变更记录。
 
+## 1.2.0（2026-11-12）
+
+**海报国风八式 + 双坞折叠 + 目录能见度三件套**
+
+- one-pager 国风雅韵组三套（水墨 / 红金宫廷 / 青绿山水，风格本体固定色相特许）+ 场景专用水印公文一套（跟随主题令牌）：28 → 32 套布局模板，七组流派 × 25 套配色主题 = 800 种版式（one-pager@2 → @10）；主题坞升级三件套——色点 14 → 18px、hover 弹出主题名浮签、把手常显「主题 · 当前主题名」
+- one-pager 模板坞 / 主题坞折叠展开：默认折叠成胶囊把手不遮主体（把手实时显示当前模板名 / 主题名），点把手展开、选中自动收起
+- prompt-pouch 排序下拉改自绘组件（弹框吃五主题变量，下拉选项与弹框统一主题渲染）+ 排序箭头贴边修复（自定义箭头留出边距）
+- 目录能见度三件套：新增 SKILLS_CATALOG.md（21 技能逐条中英双语独立简介，供 skills.sh / awesome-claude-skills 等目录收录与文章引用时整段摘录）；README 双版 one-pager 漂移修复（8 套×10 主题 80 种 → 32 套七组×25 主题 800 种）+ 文档导航挂 CATALOG / 文章 / 素材包；新增 docs/articles/ 两篇实操文章（用 AI 技能包管提示词、AI 写日报的正确姿势）；新增 docs/directory-submission.md 目录收录素材包（awesome-claude-skills PR 素材与步骤 / skills.sh 发布指引 / gh 登录指引）
+- skillforge-guide（根引导页 + 21 技能内置 txt/html 双版）通用小抄补文档入口行：SKILLS_CATALOG.md / docs/articles/ / docs/directory-submission.md
+
 ## 1.1.0（2026-11-12）
 
 **技能丰收季 8 连发：13 技能扩至 21 技能七分类 + 内置使用指引 + 主题体系对齐**

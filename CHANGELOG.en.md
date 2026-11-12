@@ -4,6 +4,16 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
+## 1.2.0 (2026-11-12)
+
+**Chinese-style poster octet + collapsible dual docks + directory-visibility trio**
+
+- one-pager gains the Chinese-style school (inkwash / red-gold palace / blue-green landscape, style-native fixed palettes by charter) plus the scenario-specific watermark memo template (follows theme tokens): 28 → 32 layout templates, seven schools × 25 color themes = 800 combos (one-pager@2 → @10); theme dock trio upgrade — dots 14 → 18px, hover shows a theme-name tooltip, the handle always displays "Theme · current name"
+- one-pager template dock / theme dock collapsible: folded into capsule handles by default so they never block the poster (handles show the current template / theme name in real time); click to expand, auto-collapse after selection
+- prompt-pouch sort dropdown rebuilt as a self-drawn component (the dialog adopts the five-theme variables, dropdown options rendered with the unified theme) + sort-arrow edge fix (custom arrow with proper margin)
+- Directory-visibility trio: new SKILLS_CATALOG.md (per-skill bilingual standalone profiles for all 21 skills, ready to excerpt for skills.sh / awesome-claude-skills submissions and article citations); both READMEs fix the one-pager drift (8 templates × 10 themes / 80 combos → 32 templates in seven schools × 25 themes / 800 combos) + documentation navigation links the catalog / articles / submission kit; new docs/articles/ with two hands-on articles (managing prompts with AI skill packs, the right way to write daily reports with AI); new docs/directory-submission.md submission kit (awesome-claude-skills PR material & steps / skills.sh publishing guide / gh login guide)
+- skillforge-guide (root page + the 21 skills' bundled txt/html copies) gains a document-entry row in the cheat sheet: SKILLS_CATALOG.md / docs/articles/ / docs/directory-submission.md
+
 ## 1.1.0 (2026-11-12)
 
 **Harvest season: 8 new skills (13 → 21, seven categories) + built-in usage guide + theme system alignment**

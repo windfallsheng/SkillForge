@@ -1,6 +1,6 @@
 {
   "name": "skill-forge-hub",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "SkillForge (技能锻造坊) — a curated collection of AI craft skills. Install once, then pick skills interactively: daily/weekly/monthly/quarterly/annual reports, meeting minutes, article-to-HTML, magic-deck slides, deck-stage PPTX, prompt-pouch manager, Pandoc doc converters, meta-forge.",
   "bin": {
     "skill-forge": "cli.js"
@@ -34,7 +34,8 @@
     "CHANGELOG.md",
     "LICENSE",
     "README.en.md",
-    "CHANGELOG.en.md"
+    "CHANGELOG.en.md",
+    "SKILLS_CATALOG.md"
   ],
   "keywords": [
     "skillforge",

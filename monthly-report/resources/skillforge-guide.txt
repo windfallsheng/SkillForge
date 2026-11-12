@@ -122,6 +122,7 @@ skill-forge init --skills daily-report,weekly-report --yes
 | 查全部命令 | skill-forge --help |
 | 问单个技能用法 | 直接问「XX 技能怎么用」，AI 会读该技能的使用说明输出 |
 | 问 SkillForge 本身 | 问「skillforge 怎么用」，AI 朗读本指引并打开排版页 |
+| 查技能双语简介 / 实操文章 | SKILLS_CATALOG.md（21 技能逐条中英简介）/ docs/articles/（实操文章）/ docs/directory-submission.md（目录收录素材） |
 
 ## 六、常见问题
 
