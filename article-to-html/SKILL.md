@@ -92,6 +92,7 @@ Turn any Word/Markdown/plain-text article into a standalone styled HTML page and
 
 ### 3. Build the HTML
 
+- **先 Read `resources/reference.html`**（A 款骨架与 18 组件全集，设计真相源）再动手——骨架结构、组件用法、主题令牌以 reference.html 为准，与 design-system.md 冲突时 reference.html 说了算
 - 先写入当前工作区（如 `outputs/<标题>.html`），完成后用 Bash `cp` 到用户目标目录——Write 工具被沙盒限制在工作区内
 - 大文件分片写：Write 创建文件（head + 封面 + 前几章），后续用 SearchReplace 以文件末尾 `</section>\n</div>\n</body>\n</html>` 为锚点追加章节
 - 使用 [design-system.md](design-system.md) 中的 CSS 变量与组件模式；源文档中每张图表必须有对应的 HTML/CSS 组件；表格 `td` 一律 `vertical-align:middle`
@@ -187,7 +188,7 @@ grep -nE "PingFang|YaHei|apple-system|sans-serif|serif|monospace|SF Mono|Menlo|M
 - 等价于「更新模式」的「仅改样式保留内容」：只动 CSS（配色/间距/字号/组件样式），不动正文；若外来 HTML 缺章节骨架，可顺手改造成自家骨架（文字不动）
 - **每轮调整后重跑第 3.5 步核查**，防调整引入新字体污染
 - 第 4.5 步双确认闭环照跑：美化完先 RunPreview 问满意，点头才进入截图；至多 3 轮
-- 美化 A 款自家骨架时保留换肤坞（坞 HTML + 坞 JS + [data-theme] 块）；被误删时按 design-system.md 骨架模板补装
+- 美化 A 款自家骨架时保留换肤坞（坞 HTML + 坞 JS + [data-theme] 块）；被误删时按 reference.html 的坞 HTML/坞 JS 补装
 - 美化定稿后用户要截图 → 转 6.3；单文件版如需要，用 inline_fonts.py 重铸
 
 **6.3 只截图**
@@ -217,11 +218,11 @@ grep -nE "PingFang|YaHei|apple-system|sans-serif|serif|monospace|SF Mono|Menlo|M
 
 用户说「页面 / 截图效果不对 / 第 X 章有 XX 问题 / 布局乱了」（常附截图或指出具体现象）→ 按以下流程处理：
 
-1. **立标准**：先 Read `resources/design-system.md`——六款版式 + CSS 变量 + 组件模式就是本 skill 的设计标准（无唯一 reference.html，以设计系统为准）
+1. **立标准**：先 Read `resources/reference.html`——A 款骨架与组件全集就是本 skill 的设计真相源；六款版式参数对照根目录 `design-system.md`；两者冲突以 reference.html 为准
 2. **找问题**：Read 那份问题 html，对照 design-system.md 逐处比对（版式结构 / --accent 令牌 / 字体白名单 / 图表组件），定位跑偏处；用户给了截图则按截图现象反查
 3. **修复**：以 design-system.md 为准修复（只修跑偏处）；改完重跑「3.5 交付前零侵权核查」grep 扫描——任何字体污染命中必须清零
 4. **自证**：按第 5 步规格重截问题章节（1460px 统一宽度），Read 自查恢复标准效果；用户给了问题截图时尽量复现同视角截图做前后对比
-5. **汇报**：一句话说清问题根因 + 修复了什么 + 附截图；若根因在 design-system.md 自身（版式规范本身有缺陷），顺修 design-system.md 并在汇报中说明「设计标准已同步修正」
+5. **汇报**：一句话说清问题根因 + 修复了什么 + 附截图；若根因在 design-system.md 或 reference.html 自身（版式规范本身有缺陷），顺修这两个文件保持同步（reference.html 是真相源）并在汇报中说明「设计标准已同步修正」
 
 ## Pitfalls
 

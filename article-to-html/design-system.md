@@ -2,6 +2,8 @@
 
 本文件提供文章 HTML 的设计系统：CSS 变量 + 组件类名 + 关键样式片段。执行时按需复制到 `<style>` 中，并根据文章内容裁剪不需要的组件。
 
+> ⚠️ **真相源铁律**：本文件与 `resources/reference.html` 构成双轨——reference.html 是 A 款完整组装示范（骨架 + 18 组件实例 + 换肤坞），本文件提供六款版式参数与裁剪说明。生成 / 修复任何 A 款页面前必须先 Read 两份，**冲突以 reference.html 为准**；修改 CSS 时两份必须同步更新。
+
 ## 0. 风格菜单（构建前按文章气质选一款）
 
 六款版式范式，每款给适用气质与关键参数。选定后其余章节的组件按需裁剪。字体白名单锁死为 Roboto + 思源黑体，任何风格都不许引入其他字体。
@@ -378,7 +380,7 @@ td.hl{font-weight:700;color:var(--ink)}
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>文章标题</title>
-<style>/* 按需复制上面的变量与组件样式（A 款含四主题 data-theme 块与换肤坞 CSS） */</style>
+<style>/* 按需复制上面的变量与组件样式（A 款含四主题 data-theme 块与换肤坞 CSS）；完整组装示范见 resources/reference.html */</style>
 </head>
 <body>
 <div class="hero">…封面…</div>
