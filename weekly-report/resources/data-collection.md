@@ -1,6 +1,23 @@
 # 数据收集
 
-先检测当前系统（macOS：`uname -s` 返回 Darwin；Windows：`node -e "console.log(process.platform)"` 返回 win32），再 Read 同目录外的 `user-config.md` 顶部「默认配置」的 DATA_SOURCES 清单，按清单逐项收集（空清单 = 只按会话/文字内容生成）。每项按 type 分三种行为：
+先检测当前系统（macOS：`uname -s` 返回 Darwin；Windows：`node -e "console.log(process.platform)"` 返回 win32），再 Read 同目录外的 `user-config.md` 顶部「默认配置」的 DATA_SOURCES 清单，按清单逐项收集（空清单 = 只按会话/文字内容生成）。清单形状（每项 name 唯一名称 + type 类型 + 路径；完整填写说明见 user-config.md「默认配置」的 DATA_SOURCES 注释）：
+
+```yaml
+DATA_SOURCES:
+  - name: 主项目仓库          # name = 唯一 key（重名视为同一数据源；口述「只聚合 xxx」按 name 匹配）
+    type: git                # git = 代码仓库（git log 聚合提交）
+    mac: ~/Projects/main-app  # macOS 路径（绝对路径或 ~ 开头）
+    win: D:\Projects\main-app # Windows 路径；「-」= 该系统不存在，自动跳过
+  - name: 周例会纪要
+    type: file               # file = 普通文件/目录（直接 Read 内容聚合）
+    mac: ~/Documents/meeting-notes.md
+    win: -
+  - name: 数据接口
+    type: remote             # remote = 远程网络源（联网拉取 url 内容）
+    url: https://example.com/data.json
+```
+
+每项按 type 分三种行为：
 
 - git = 代码仓库：取 mac / win 中当前系统对应路径（「-」= 该系统不存在，跳过；当前系统全部为「-」的陌生机器时跳过 git 收集，只按会话/文字内容生成），用下方命令模板聚合该仓本周（周一至周结束日 WEEK_END，默认周五）提交，聚合产出；同时统计上周同范围（周一至上周周结束日）提交数/完成任务数，供概览卡环比行使用。只汇总有提交的仓库
 - file = 普通文件/目录：直接 Read 内容（文档/纪要/日志等素材），提取要点并入

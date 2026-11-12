@@ -4,6 +4,22 @@
 
 ## 1. 代码仓库全年提交聚合（可选，开发类用户）
 
+清单形状（每项 name 唯一名称 + type 类型 + 路径；完整填写说明见 user-config.md「默认配置」的 DATA_SOURCES 注释）：
+
+```yaml
+DATA_SOURCES:
+  - name: 主项目仓库          # name = 唯一 key（重名视为同一数据源；口述「只聚合 xxx」按 name 匹配）
+    type: git                # git = 代码仓库（git log 聚合提交）
+    mac: ~/Projects/main-app  # macOS 路径（绝对路径或 ~ 开头）
+    win: D:\Projects\main-app # Windows 路径；「-」= 该系统不存在，自动跳过
+  - name: 周例会纪要
+    type: file               # file = 普通文件/目录（直接 Read 内容聚合）
+    mac: ~/Documents/meeting-notes.md
+    win: -
+  - name: 数据接口
+    type: remote             # remote = 远程网络源（联网拉取 url 内容）
+    url: https://example.com/data.json
+```
 - 遍历 user-config.md 的 DATA_SOURCES 清单（type: git 项；个人数据源必须写在 user-config.md，本文件随升级覆盖），对每仓执行全年统计：
   - 总提交数：`git log --since={区间起} --until={区间止} --oneline | wc -l`
   - 增删行数：`git log --since=... --until=... --numstat --pretty=tformat: | awk` 汇总 add/del
