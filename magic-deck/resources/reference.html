@@ -689,6 +689,8 @@ body:hover .nav{ opacity:1; }
 /* ── L5 标题文字动画（运行时拆分 h1/h2/h3/.s-title 为 span，复用入场机制）── */
 .tchar, .tword{ display:inline-block; }
 .tline{ display:block; }
+/* 渐变字兜底：拆分 span 不继承 background，补回渐变剪裁防止标题变透明只剩辉光 */
+.s-title .tchar, .s-title .tword, .s-title .tline{ background:inherit; -webkit-background-clip:text; background-clip:text; }
 
 /* ── 入场开关（deck[data-anim="off"] 全部停用）── */
 .deck[data-anim="off"] .slide [data-anim]{ opacity:1 !important; animation:none !important; }
@@ -2693,13 +2695,25 @@ function leaveThenGo(i){
     animSlides().forEach(function(s){
       s.querySelectorAll('h1,h2,h3,.s-title').forEach(function(el){
         restoreText(el);
+        if (el.classList.contains('s-title')){
+          /* 渐变字（background-clip:text）拆 span 会丢父级渐变（span 行内块不参与文字剪裁），
+             视觉成「蒙层」，改用整体入场动画代替逐字/逐词/逐行 */
+          if (mode === 'none'){
+            if (el.hasAttribute('data-md-whole')){
+              el.removeAttribute('data-md-whole');
+              if (el.getAttribute('data-anim') === 'fade-up'){ el.removeAttribute('data-anim'); el.removeAttribute('data-anim-delay'); }
+            }
+          } else if (!el.hasAttribute('data-anim')){ el.setAttribute('data-anim', 'fade-up'); el.setAttribute('data-md-whole', '1'); }
+          return;
+        }
         if (mode !== 'none') splitText(el, mode);
       });
     });
     mark(textBtns, mode, 'data-ta');
   }
   var savedTA = null; try{ savedTA = localStorage.getItem('md-deck-text-anim'); }catch(e){}
-  if (savedTA === 'char' || savedTA === 'word' || savedTA === 'line'){ applyText(savedTA); }
+  /* 入场动画总开关关闭时不回填文字动画（与开关语义一致，避免「关不掉」） */
+  if ((savedTA === 'char' || savedTA === 'word' || savedTA === 'line') && deckEl.getAttribute('data-anim') !== 'off'){ applyText(savedTA); }
   else { mark(textBtns, 'none', 'data-ta'); }
   textBtns.forEach(function(b){ b.addEventListener('click', function(){
     var m = b.getAttribute('data-ta');

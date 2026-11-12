@@ -422,6 +422,7 @@
 ```css
 .tchar, .tword{ display:inline-block; }
 .tline{ display:block; }
+.s-title .tchar, .s-title .tword, .s-title .tline{ background:inherit; -webkit-background-clip:text; background-clip:text; }
 ```
 
 ### L6 图表动画（bars/line/pie/ring/count 五式，图表容器挂 data-anim-chart，翻页自动播放、翻回重放）
@@ -484,6 +485,7 @@
 - 元素动画区：`chkAnim` 复选框（入场动画开关，默认勾选）+ 应用范围 radio（`input[name="animScope"]`：all 全部页面 / current 仅本页，`.seg-btn.sel` 高亮）+ 三组网格——入场 12 式（`data-a` + none）、离场 12 式（`data-l` + none）、强调 8 式（`data-e` + none）；标题文字区：四选按钮（none 无动画 / char 逐字 / word 逐词 / line 逐行，`data-ta`）；页面操作区：⧉ 复制本页 / ▦ 选页复制 / 📷 截图本页 / ▦ 选页截图（原工具栏四按钮移入，ID 与事件照旧）
 - 应用范围：`animSlides()` = scope 为 all 时全部 slides、current 时仅 slides[cur]；入场/离场/强调/标题文字设置均作用于范围页；互斥规则：挂强调时移除该元素 `data-anim`（强调优先）；applyEnter none = 移除 `data-anim` 与 `data-anim-delay`；applyLeave none = 移除 `data-anim-leave`；applyEmph none = 移除 `data-anim-emphasis`
 - 标题文字拆分：splitText 按 `<br>` 分行后逐字（char）/逐词（word，按空白分）/逐行（line）包 `<span class="tchar|tword|tline" data-anim="fade-up" style="animation-delay:min(序号×60,600)ms">`，原文存 `data-md-orig`；restoreText 按原文还原；none 时还原为纯文本（默认无动画）
+- 渐变字特例：`.s-title`（background-clip:text 渐变字）不拆分——span 行内块不参与父级文字剪裁，拆分后文字全透明只剩辉光（视觉成「蒙层」），改为整体 `data-anim="fade-up"`（自加属性标 `data-md-whole`，切回 none 时移除）；CSS 兜底 `.s-title .tchar/.tword/.tline` 补 `background:inherit` + `background-clip:text` 修复历史拆分 DOM；deck `data-anim="off"`（入场开关关）时刷新不回填 localStorage 的文字动画
 - deck 根标签：`data-transition="slide-lr" data-anim="on"`；JS 初始化时读 localStorage（`md-deck-transition` / `md-deck-anim` / `md-deck-anim-scope` / `md-deck-text-anim` / `md-deck-side-tab`），命中则回填控件并设置 deck 属性，无记忆则回退 DOM 属性；事件写 deck 属性 + 写 localStorage（try-catch 静默）
 - 离场引擎：`leaveThenGo(i)` = leaving 防抖；当前页无 `[data-anim-leave]:not(none)` 或 deck `data-anim="off"` 时直切 `go(i)`；否则 slide 加 `.leaving` 类触发 CSS 离场（0.45s），并重置节点 animation 重播，480ms 后移除类再 `go(i)`；next/prev/自动播放/键盘/缩略图/数字键/Home/End/data-goto/hashchange 全走 leaveThenGo
 - 生成侧规则：生成时按 user-config `TRANSITION` 写 deck 的 `data-transition` 初始值（用户口头点名风格当次优先）；`ANIM: false` 时 deck 挂 `data-anim="off"` 且 chkAnim 不勾选
