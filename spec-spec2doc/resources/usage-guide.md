@@ -2,7 +2,7 @@
 
 ## 能干什么
 
-把 Markdown 规格 / 技术文档导出为 Word / PDF 交付文档：AI 先整理排版，Pandoc 机械转换，AI 回验纠错直到通过。Word 支持模板（默认探测源目录 template.docx，可配置）；PDF 双路径（LaTeX 或 Chrome 打印，免装 LaTeX 也有兜底）；输出默认与源文档同目录，可配置。
+把 Markdown 文档（规格/技术文档/说明文档/会议纪要等）导出为 Word / PDF 交付文档：AI 先整理排版，Pandoc 机械转换，AI 回验纠错直到通过。Word 支持模板（默认探测源目录 template.docx，可配置）；PDF 双路径（LaTeX 或 Chrome 打印，免装 LaTeX 也有兜底）；输出默认与源文档同目录，可配置。
 
 ## 使用方式
 
@@ -29,4 +29,4 @@
 
 ## 触发词
 
-导出成 Word / 生成 PDF / 规格转文档 / 打包交付文档 / /spec2doc
+md 转 Word / 导出成 Word / 生成 PDF / 打包交付文档 / /spec2doc

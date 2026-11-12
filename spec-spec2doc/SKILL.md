@@ -1,22 +1,22 @@
 ---
 name: spec-spec2doc
 description: >
-  规格转交付文档 Skill（spec2doc）。仅在用户要求把 Markdown 规格 / 技术文档导出为 Word / PDF 交付文档时使用。
+  文档转 Word/PDF 交付稿 Skill（spec2doc）。把 Markdown 文档（规格/技术文档/说明文档/会议纪要等）导出为 Word / PDF——
   Pandoc 负责机械转换，AI 负责转换前排版整理与转换后回验防错（Pandoc 对复杂表格、图片路径、中文字体有局限，
   回验发现问题修正源稿重新转换直到通过，机械产物不直接交付）。主路径 Markdown → Word（支持 --reference-doc
   模板：默认依次探测源目录 template.docx / reference.docx，可配置 TEMPLATE_DOCX）。
   Markdown → PDF 双路径：xelatex（需 LaTeX 引擎与 CJK 中文字体）或 Chrome headless 打印（免 LaTeX、跨系统兜底），
   引擎可配置 PDF_ENGINE。输出目录默认与源文档同目录，可配置 OUTPUT_DIR。
   跨系统适配 macOS / Windows / Linux（Pandoc/LaTeX 安装、中文字体探测、Chrome 路径探测）。
-  不处理一般性的文档格式转换（如「把这个 txt 转成 Word」），只处理「规格 → 交付文档」的转换任务。
+  .txt 纯文本视为无格式 md 同样可转；不处理一般性的文档内容讨论，只处理「Markdown → Word/PDF」的转换任务。
   用户询问用法（spec2doc 怎么用/使用说明/能干什么）时走使用说明应答：读 resources/usage-guide.md 原样输出（首行标题改为「spec2doc 使用指南」），不执行任何转换命令。
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 disable-model-invocation: false
 ---
 
-# 规格 → 交付文档（spec2doc）
+# Markdown → Word/PDF（spec2doc）
 
-将 Markdown 规格 / 技术文档转换为 Word / PDF 交付文档。分工原则：**Pandoc 负责机械转换，AI 负责排版整理与回验防错**——AI 转换前整理标题层级/表格/图片路径，转换后核对产出文档内容完整与格式正确，发现问题修正源稿重新转换，直到回验通过（机械产物不直接交付）。
+将 Markdown 文档（规格 / 技术文档 / 说明文档 / 会议纪要等）转换为 Word / PDF 交付文档。分工原则：**Pandoc 负责机械转换，AI 负责排版整理与回验防错**——AI 转换前整理标题层级/表格/图片路径，转换后核对产出文档内容完整与格式正确，发现问题修正源稿重新转换，直到回验通过（机械产物不直接交付）。
 
 ## 生成流程
 

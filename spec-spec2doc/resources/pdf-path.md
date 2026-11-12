@@ -15,6 +15,7 @@
 - Chrome 路径探测（跨系统）：macOS `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`；Windows 按序探测 `C:\Program Files\Google\Chrome\Application\chrome.exe` → `C:\Program Files (x86)\Google\Chrome\Application\chrome.exe` → `%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe`；Linux `google-chrome` / `chromium`；均无则换 Edge（路径同族探测）
 - 版式：可加 `--css=<样式.css>` 定制打印版式（页边距、字体）
 - 引擎决策：PDF_ENGINE=auto 时先探测 xelatex，无则走 Chrome 打印路径并在报告注明「PDF 由 HTML 打印生成」
+- 中文豆腐块检测：`pdftotext <输出.pdf> - | grep -c '�'` 应为 0、中文字符量非 0（无中文字体的 Linux 先装 Noto Sans CJK；检测方法见 checklist.md）
 
 ## 引擎缺失兜底
 
