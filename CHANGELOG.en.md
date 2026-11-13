@@ -4,6 +4,15 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
+## 1.3.14 (2026-11-13)
+
+**Custom-template upgrade protection + backup rolling cap: edits never lost, snapshots never pile up**
+
+- Six report skills (daily/weekly/monthly/quarterly/annual/meeting-minutes) now name the "📝 custom templates" section as an upgrade-protected zone in SKILL.md: edits there are never overwritten by upgrades, and official built-in template updates land as a separate user-config.upstream.md for comparison; the config-version section gains a template-preservation statement (migration touches only the yaml block, user content section kept verbatim); usage guides fixed and annotated accordingly
+- prompt-pouch backup rolling cap: AI write-back backups, repair-overwrite backups and reforge-upgrade backups all roll to keep only the latest 3 .bak files and delete older ones — dense operations no longer pile up backups (the page's own backup/ double-snapshot mechanism is unchanged)
+- meta-forge sync: mechanism 2 gains "user content section announcement" + static gate #16; mechanism 8 gains the "backup rolling cap" rule + gate #17; template/SKILL.md reforge section synced
+- docs sync: architecture (zh/en) mechanism tables and usage-examples (zh/en) reforge flows annotated with the rolling cap
+
 ## 1.3.13 (2026-11-13)
 
 **one-pager template dock slimmer, no auto-close on pick, × close button (@15); version self-check for prompt-pouch & meta-forge**
