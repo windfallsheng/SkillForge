@@ -4,6 +4,15 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
+## 1.3.4 (2026-11-13)
+
+**prompt-pouch fullscreen modals + taller fill-panel previews (@13)**
+
+- All three modals (detail / variable fill / add-edit) gain a ⛶ fullscreen button at the far right of the header: one click expands to 96vw × 96vh, click again (⤡) or close the modal to restore; detail content, fill-panel top preview and bottom live result split the remaining height via flex — both areas grow when there are few variables, shrink automatically with scrolling fallback when there are many
+- Fill panel regular-size previews taller: top preview cap 110px → 220px, bottom live result textarea 96px → 150px
+- Add-edit modal in fullscreen: content textarea flexibly fills the remaining space (min 40vh floor, still manually resizable)
+- Template stamp prompt-pouch@12 → @13 (page interaction & layout change); SKILL.md / usage-guide.md synced (also fixed the stale "detail modal capped at 52vh" note to 56vh)
+
 ## 1.3.3 (2026-11-13)
 
 **prompt-pouch "retrieval" task type + tuning/feedback loop (@12)**
