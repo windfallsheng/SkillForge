@@ -4,6 +4,16 @@
 
 SkillForge（技能锻造坊）npm 包 `skill-forge-hub`（命令名 `skill-forge`）版本变更记录。
 
+## 1.3.8（2026-11-13）
+
+**报告七技能数据收集配置归位：配置落 user-config，机制文档收敛（五件套 v4 / 会议纪要 v3）**
+
+- 数据源配置统一归位：DATA_SOURCES / REPO 等数据收集配置一律只写 user-config.md（升级保护区，永不覆盖）；机制文档（data-collection.md / content-rules.md / collect.md）顶部加「不是配置区」定位声明，内置 YAML 清单示例移除，只留收集规则（type 行为 / git 命令模板 / 行数口径 / 合并去重）
+- 日报/周报/月报/季报/年报 CONFIG_VERSION 3→4：升级后首次执行自动提示「数据收集配置归位」，已填数据源原样保留；此前误写在机制文档里的数据源，提示手动搬回 user-config.md
+- 会议纪要 CONFIG_VERSION 2→3：素材来源节加定位声明，DATA_SOURCES 注释按实际支持类型（file）修正
+- 提交热力图 / 发版说明：collect.md 顶部补定位声明（配置无变化，版本不动）
+- 种草文 prompt-pouch-intro.md 升级图文版：嵌入 10 张锦囊功能截图与 ▲ 交互说明（配图落 docs/prompt-pouch-intro/，仓库页直接渲染）
+
 ## 1.3.7（2026-11-13）
 
 **prompt-pouch 修复全屏弹框按钮被换肤坞遮挡（@15）**

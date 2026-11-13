@@ -4,6 +4,16 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
+## 1.3.8 (2026-11-13)
+
+**Data-collection config consolidation across seven report skills (five-suite v4 / meeting-minutes v3)**
+
+- Data source config (DATA_SOURCES / REPO) now lives only in user-config.md (upgrade-protected, never overwritten); mechanism docs (data-collection.md / content-rules.md / collect.md) get a "not a config zone" header, inline YAML examples removed, keeping only collection rules (type behaviors / git command templates / line-count filters / merge-dedup)
+- daily/weekly/monthly/quarterly/annual-report CONFIG_VERSION 3→4: first run after upgrade auto-prompts "data-collection config consolidated"; existing sources preserved as-is; sources mistakenly written in mechanism docs prompt manual relocation to user-config.md
+- meeting-minutes CONFIG_VERSION 2→3: source-material section gets placement note; DATA_SOURCES comments corrected to the actually supported type (file)
+- commit-heatmap / release-notes: placement note added atop collect.md (no config change, version untouched)
+- prompt-pouch-intro.md upgraded to illustrated edition: 10 pouch feature screenshots with ▲ interaction captions (images under docs/prompt-pouch-intro/, rendered directly on repo pages)
+
 ## 1.3.7 (2026-11-13)
 
 **prompt-pouch fixes theme dock covering fullscreen modal buttons (@15)**
