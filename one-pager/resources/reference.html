@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="sf-template" content="one-pager@11">
+<meta name="sf-template" content="one-pager@12">
 <meta name="poster-id" content="REF-POSTER-0000">
 <title>AI 改变工作 · 一页纸海报</title>
 <style>
@@ -644,7 +644,9 @@ body{background:linear-gradient(180deg,var(--bg) 12%,var(--bg2) 135%);color:var(
 .dock-theme.fold .bar-arrow{transform:rotate(-90deg)}
 .dock-theme .bar-arrow{transform:rotate(180deg)}
 .dock-body{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px;background:var(--panel-solid);border:1px solid var(--border);border-radius:14px;padding:8px 10px;max-width:min(720px,calc(100vw - 36px));box-shadow:0 4px 18px rgba(0,0,0,.3)}
-.dock-theme .dock-body{display:grid;grid-template-columns:repeat(5,18px);gap:11px 10px;border-radius:14px;padding:12px 13px;max-width:none}
+.dock-theme .dock-body{display:grid;grid-template-columns:repeat(5,18px);gap:11px 10px;border-radius:14px;padding:12px 13px;max-width:none;position:relative}
+.th-close{position:absolute;top:-10px;right:-10px;width:22px;height:22px;border-radius:50%;border:1px solid var(--border);background:var(--panel-solid);color:var(--muted);font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.28);padding:0}
+.th-close:hover{color:var(--text);border-color:var(--accent)}
 .tp-sep{flex-basis:100%;font-size:10px;letter-spacing:2px;color:var(--muted);margin:5px 4px 1px;text-align:right}
 .tp-sep::before{content:'— ';color:var(--accent)}
 .bar-cur{width:17px;height:17px;pointer-events:none}
@@ -777,6 +779,7 @@ html.theming, html.theming *, html.theming *::before, html.theming *::after{ tra
   <span class="th-dot" data-t="cyber" title="赛博霓虹"></span>
   <span class="th-dot" data-t="cream" title="奶油纸"></span>
   <span class="th-dot" data-t="academic" title="学术蓝"></span>
+  <button class="th-close" id="thClose" type="button" title="关闭（点底部「主题」标签可重新打开）" aria-label="关闭主题面板">×</button>
   </div>
   <button class="dock-bar" id="thBar" type="button" title="主题切换（点击展开/收起）"><span class="th-dot bar-cur" data-t="tech"></span><span class="bar-tpl-name" id="thName">主题</span><span class="bar-arrow">▾</span></button>
 </div>
@@ -1217,7 +1220,6 @@ html.theming, html.theming *, html.theming *::before, html.theming *::after{ tra
       try { localStorage.setItem(THEME_KEY, t); } catch(e) {}
       TH_DOTS.forEach(function(x){ x.classList.toggle('on', x === d); });
       updateThBar();
-      document.getElementById('themeDock').classList.add('fold');
     });
     d.addEventListener('mouseenter', function(){
       var name = TH_LABELS[d.getAttribute('data-t')];
@@ -1278,6 +1280,8 @@ html.theming, html.theming *, html.theming *::before, html.theming *::after{ tra
   }
   bindBar('tplDock');
   bindBar('themeDock');
+  var thClose = document.getElementById('thClose');
+  if (thClose) thClose.addEventListener('click', function(){ document.getElementById('themeDock').classList.add('fold'); });
   var initTplBtn = document.querySelector('#tplDock .tp-btn[data-tpl="' + curP + '"]');
   var btEl = document.querySelector('#tplBar .bar-tpl-name');
   if (btEl) btEl.textContent = '模板 · ' + (initTplBtn ? initTplBtn.textContent : '自定义');
