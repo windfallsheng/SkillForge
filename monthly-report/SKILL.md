@@ -34,11 +34,11 @@ disable-model-invocation: false
 
 ## 配置版本机制（升级保护）
 
-本 skill 当前配置版本为 `3`（对应 user-config.md 中的 `CONFIG_VERSION`）。执行时若发现 user-config.md 的 CONFIG_VERSION 与本节声明的当前版本不一致：先将旧 user-config.md 备份为 `user-config.bak-<时间戳>.md`（同目录，绝不删除旧值）→ 按本节「当前版本变更记录」迁移字段（新增字段补默认值、改名字段按映射改写、删除字段的值保留在备份中并在对话提示用户手动确认）→ 更新 CONFIG_VERSION 为当前版本 → 对话中明确告知用户「检测到配置版本从 X 升级到 Y，旧配置已备份至 <路径>」。禁止在未声明版本变更的情况下静默修改配置语义。
+本 skill 当前配置版本为 `4`（对应 user-config.md 中的 `CONFIG_VERSION`）。执行时若发现 user-config.md 的 CONFIG_VERSION 与本节声明的当前版本不一致：先将旧 user-config.md 备份为 `user-config.bak-<时间戳>.md`（同目录，绝不删除旧值）→ 按本节「当前版本变更记录」迁移字段（新增字段补默认值、改名字段按映射改写、删除字段的值保留在备份中并在对话提示用户手动确认）→ 更新 CONFIG_VERSION 为当前版本 → 对话中明确告知用户「检测到配置版本从 X 升级到 Y，旧配置已备份至 <路径>」。禁止在未声明版本变更的情况下静默修改配置语义。
 
 **无法迁移项处理**（值域失效 / 语义漂移 / 数据不兼容）：三情形——①旧值不在新值域（如旧模板/主题名已移除）②同名键含义变化（单位/枚举变更）③数据文件 schema 不兼容。三绝不：绝不静默（无法迁移项停下问，不猜值）、绝不丢失（旧值永远在 .bak-时间戳）、一次说清（升级报告三段式：⚠️ 版本与备份路径 → ✅ 已自动迁移清单 → 🟡 无法迁移项逐条附原因+影响+建议替代）；随后 AskUserQuestion 三选项（A 用建议值 / B 用户给新值 / C 保持旧配置——不更新 CONFIG_VERSION，每次执行再提醒）；报告必附回滚一句话。
 
-当前版本变更记录：v1→v2 新增 THEME 字段（默认 tech）。v2→v3 新增 DATA_SOURCES 数据源清单段（默认空清单 + git/file/remote 三类型示例注释）。
+当前版本变更记录：v1→v2 新增 THEME 字段（默认 tech）。v2→v3 新增 DATA_SOURCES 数据源清单段（默认空清单 + git/file/remote 三类型示例注释）。v3→v4 数据收集配置归位：DATA_SOURCES 清单结构与已填值不变，仅澄清唯一配置落点——数据源一律只写 user-config.md「默认配置」的 DATA_SOURCES（升级保护区，永不覆盖）；resources/data-collection.md 收敛为纯机制说明（随升级覆盖，不再内置清单示例）。迁移动作：备份 user-config.md → CONFIG_VERSION 更新为 4，DATA_SOURCES 原样保留；若此前误把数据源写在 data-collection.md（升级后已被新版覆盖），请手动搬回 user-config.md。
 
 ## 产物升级（回炉）
 

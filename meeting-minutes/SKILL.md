@@ -25,7 +25,7 @@ disable-model-invocation: false
 
 ## 配置版本机制（升级保护）
 
-本 skill 当前配置版本为 `2`（对应 user-config.md 中的 `CONFIG_VERSION`）。执行时若发现 user-config.md 的 CONFIG_VERSION 与本节声明不一致：
+本 skill 当前配置版本为 `3`（对应 user-config.md 中的 `CONFIG_VERSION`）。执行时若发现 user-config.md 的 CONFIG_VERSION 与本节声明不一致：
 
 1. 先将旧 user-config.md 备份为 `user-config.bak-<时间戳>.md`（同目录，绝不删除旧值）
 2. 按本节「配置升级规则」迁移字段：新增字段补默认值、改名字段按映射改写、删除字段的值保留在备份中并在对话提示用户手动确认
@@ -33,6 +33,8 @@ disable-model-invocation: false
 4. 对话中明确告知用户「检测到配置版本从 X 升级到 Y，旧配置已备份至 <路径>」
 
 配置升级规则（v1→v2）：新增 `SERIES_GROUP: auto`（纪要系列分组，见 user-config.md 注释）；其余字段不变。
+
+配置升级规则（v2→v3）：DATA_SOURCES 数据收集配置归位——清单结构与已填值不变，仅澄清唯一配置落点（数据源一律只写 user-config.md「默认配置」的 DATA_SOURCES，升级保护区永不覆盖；收集机制说明见 resources/content-rules.md「素材来源」节，随升级覆盖）；DATA_SOURCES 示例注释按实际支持类型（file）修正。迁移动作：备份 user-config.md → CONFIG_VERSION 更新为 3，DATA_SOURCES 原样保留；若此前误把数据源写在 resources 文档里（升级后已被新版覆盖），请手动搬回 user-config.md。
 
 **无法迁移项处理**：值域失效（旧值不在新值域）/ 语义漂移（同名键含义变化）/ 数据不兼容，停下问、不猜值；旧值永远在 .bak-时间戳备份里，报告必附回滚一句话。
 

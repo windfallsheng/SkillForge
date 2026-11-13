@@ -1,27 +1,16 @@
 # 数据收集
 
-先检测当前系统（macOS：`uname -s` 返回 Darwin；Windows：`node -e "console.log(process.platform)"` 返回 win32），再 Read 同目录外的 `user-config.md` 顶部「默认配置」的 DATA_SOURCES 清单，按清单逐项收集（空清单 = 只按会话/文字内容生成）。清单形状（每项 name 唯一名称 + type 类型 + 路径；完整填写说明见 user-config.md「默认配置」的 DATA_SOURCES 注释）：
+> ⚠️ **本文件是收集机制说明，不是配置区**——随 skill 升级会被官方版覆盖，写在这里的内容会丢。
+> 你的真实数据源只写在同目录外的 `user-config.md` 顶部「默认配置」的 `DATA_SOURCES` 数组（升级保护区，永不覆盖）。
+> 清单形状与逐字段填写说明，一律以 user-config.md「默认配置」的 DATA_SOURCES 注释为准，本文件不再重复清单示例。
 
-```yaml
-DATA_SOURCES:
-  - name: 主项目仓库          # name = 唯一 key（重名视为同一数据源；口述「只聚合 xxx」按 name 匹配）
-    type: git                # git = 代码仓库（git log 聚合提交）
-    mac: ~/Projects/main-app  # macOS 路径（绝对路径或 ~ 开头）
-    win: D:\Projects\main-app # Windows 路径；「-」= 该系统不存在，自动跳过
-  - name: 周例会纪要
-    type: file               # file = 普通文件/目录（直接 Read 内容聚合）
-    mac: ~/Documents/meeting-notes.md
-    win: -
-  - name: 数据接口
-    type: remote             # remote = 远程网络源（联网拉取 url 内容）
-    url: https://example.com/data.json
-```
+先检测当前系统（macOS：`uname -s` 返回 Darwin；Windows：`node -e "console.log(process.platform)"` 返回 win32），再 Read 同目录外的 `user-config.md` 顶部「默认配置」的 DATA_SOURCES 清单，按清单逐项收集（空清单 = 只按会话/文字内容生成）。
 
 每项按 type 分三种行为：
 
 - git = 代码仓库：取 mac / win 中当前系统对应路径（「-」= 该系统不存在，跳过；当前系统全部为「-」的陌生机器时跳过 git 收集，只按会话/文字内容生成），用下方命令模板聚合该仓当日提交，只汇总有提交的仓库
 - file = 普通文件/目录：路径指向文件 → Read 全文提取要点；指向目录 → 列目录逐个 Read 文本文件（md/txt/csv/日志等，二进制/超大文件跳过）；路径无效或全部不可读 → 静默跳过该数据源（不报错、不写入）
-- remote = 远程网络源：只需 url 字段（mac/win 忽略）；AI 联网拉取 url 内容（网页或数据接口均可）提取要点；拉取失败/超时 → 静默跳过该数据源不阻塞生成；仅收集时联网，HTML 产物仍零外链
+- remote = 远程网络源：按清单 url 联网拉取内容（网页或数据接口均可）提取要点；拉取失败/超时 → 静默跳过该数据源不阻塞生成；仅收集时联网，HTML 产物仍零外链
 - 未知 type（拼写错误/未支持）→ 忽略该项，生成时一句话提示用户该项未识别（不猜、不中断）
 - 多来源合并：同件事去重合并——量化数字以 git 提交统计为准、定性描述以口述/文件要点为准；file/remote 提取要点与口述同等对待
 

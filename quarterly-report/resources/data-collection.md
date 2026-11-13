@@ -1,25 +1,13 @@
 # 数据收集（季度）
 
+> ⚠️ **本文件是收集机制说明，不是配置区**——随 skill 升级会被官方版覆盖，写在这里的内容会丢。
+> 你的真实数据源只写在同目录外的 `user-config.md` 顶部「默认配置」的 `DATA_SOURCES` 数组（升级保护区，永不覆盖）。
+> 清单形状与逐字段填写说明，一律以 user-config.md「默认配置」的 DATA_SOURCES 注释为准，本文件不再重复清单示例。
+
 三种来源合并去重：口述与文字/文件/图片并重（业务结果以口述为准、统计数字以提交记录兜底）；没有提交记录也适用——给一段文字、文件里的描述或图片即可成稿。开发类用户可另做代码仓库当季提交聚合与环比/同比双基准统计（见第 1 节）。
 
 ## 1. 代码仓库当季提交聚合（可选，开发类用户）
 
-清单形状（每项 name 唯一名称 + type 类型 + 路径；完整填写说明见 user-config.md「默认配置」的 DATA_SOURCES 注释）：
-
-```yaml
-DATA_SOURCES:
-  - name: 主项目仓库          # name = 唯一 key（重名视为同一数据源；口述「只聚合 xxx」按 name 匹配）
-    type: git                # git = 代码仓库（git log 聚合提交）
-    mac: ~/Projects/main-app  # macOS 路径（绝对路径或 ~ 开头）
-    win: D:\Projects\main-app # Windows 路径；「-」= 该系统不存在，自动跳过
-  - name: 季度例会纪要
-    type: file               # file = 普通文件/目录（直接 Read 内容聚合）
-    mac: ~/Documents/meeting-notes.md
-    win: -
-  - name: 数据接口
-    type: remote             # remote = 远程网络源（联网拉取 url 内容）
-    url: https://example.com/data.json
-```
 - 遍历 user-config.md 的 DATA_SOURCES 清单（type: git 项；个人数据源必须写在 user-config.md，本文件随升级覆盖），对每仓执行当季统计：
   - 总提交数：`git log --since={季首} --until={季末 23:59} --oneline | wc -l`
   - 增删行数：`git log --since=... --until=... --numstat --pretty=tformat: | awk` 汇总 add/del
@@ -35,7 +23,7 @@ DATA_SOURCES:
 
 - 用户口述的季度大事（「这季度上了 XX」「Q4 初做了 YY」）逐条记录
 - 用户提供的总结草稿/文档（md/txt/docx）Read 提取要点；图片逐张 Read 识别内容
-- DATA_SOURCES 清单中 type: file 的文件 Read 全文、目录逐个 Read 文本文件提取要点（二进制跳过、路径无效静默跳过）；type: remote 只需 url 字段（mac/win 忽略）联网拉取内容提取要点（拉取失败静默跳过；仅收集时联网，HTML 产物仍零外链）；未知 type 忽略该项并在生成时提示
+- DATA_SOURCES 清单中 type: file 的文件 Read 全文、目录逐个 Read 文本文件提取要点（二进制跳过、路径无效静默跳过）；type: remote 按清单 url 联网拉取内容提取要点（拉取失败静默跳过；仅收集时联网，HTML 产物仍零外链）；未知 type 忽略该项并在生成时提示
 - 聊天记录/周报/月报/会议纪要文件也可作为素材；本季度已生成的月报直接引用其核心指标（同源数据不重复统计）
 
 ## 3. 合并去重与口径
