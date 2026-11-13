@@ -4,6 +4,15 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
+## 1.3.2 (2026-11-13)
+
+**prompt-pouch in-page usage scenarios + full functional check**
+
+- Functional check all green: 18/18 cards, zero JS errors; search/detail/delete-confirm/add/sort/theme-switch interactions verified; deleting a non-empty group triggers toast guard (confirm only for empty groups, both by design); the template page's three-tier fallback 404 probes are by design
+- In-page "usage tips" sidebar card and help panel (4 → 6 blocks) now cover conversation-saving scenarios: "save the last few rounds of chat into the pouch" with two-step confirmation, delete-first-confirm with prompts.json.bak-timestamp backup before write, and "rollback/restore pouch data" archive selection
+- usage-guide gains a "Typical scenarios" section: conversation capture / starting from scratch / delete & rollback / migration to a new machine
+- Template stamp prompt-pouch@10 → @11 (help panel structure change)
+
 ## 1.3.1 (2026-11-12)
 
 **Daily/weekly template sample data generalized + CSDN article visual refresh**

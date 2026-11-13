@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="sf-template" content="prompt-pouch@10">
+<meta name="sf-template" content="prompt-pouch@11">
 <meta name="pouch-id" content="REF-POUCH-0000">
 <title>锦囊 Prompt Pouch — 提示词管理台</title>
 <style>
@@ -852,15 +852,23 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
         <div class="hp-d">页面点 <b>「＋ 新增提示词」/「👁 详情」/「✎」/「🗑」</b>（授权目录即写即存），或对 AI 说 <b>「把 XX 加到锦囊的写作输出分组」</b>，AI 写入 data/prompts.json，刷新即见。</div>
       </div>
       <div class="hp-item">
-        <div class="hp-t">② 排序与移动</div>
+        <div class="hp-t">② 对话整理入囊</div>
+        <div class="hp-d">对 AI 说 <b>「把上一轮对话存进锦囊」「把最近几轮对话整理进锦囊」</b>——AI 提炼条目并智能打标、给 {变量} 泛化建议，确认条目后再推荐分组（装不下的建议新建），两段确认一次性入囊；还没锦囊时会先引导创建。</div>
+      </div>
+      <div class="hp-item">
+        <div class="hp-t">③ 排序与移动</div>
         <div class="hp-d">默认最新添加在前，可切「最近使用 / 使用频率 / 手动顺序」；拖动卡片或点 ▲▼ 自动切回手动、点 ⇄ 移到其它分组，点 <b>📋 复制变更指令</b> 交给 AI 落盘。</div>
       </div>
       <div class="hp-item">
-        <div class="hp-t">③ 打开方式</div>
+        <div class="hp-t">④ 删除与回退</div>
+        <div class="hp-d">页面点 🗑 删除弹统一确认框防误触（分组内有条目需先移出或删）；对 AI 说删同样先确认——AI 落盘前留 <b>prompts.json.bak-时间戳</b> 备份，说 <b>「回退/恢复锦囊数据」</b> 选档回滚。</div>
+      </div>
+      <div class="hp-item">
+        <div class="hp-t">⑤ 打开方式</div>
         <div class="hp-d">HTTP 访问读 data/prompts.json；file:// 直开则回退到本地缓存快照。</div>
       </div>
       <div class="hp-item">
-        <div class="hp-t">④ 数据安全</div>
+        <div class="hp-t">⑥ 数据安全</div>
         <div class="hp-d">收藏与排序存浏览器本地（IndexedDB）刷新不丢；每次变更 2 秒内自动备份到 backup/pouch-backup.json（滚动双备份），未授权时降级本地快照（保留 5 份）；<b>「📂 换目录」</b> 可随时重配，↩ 一键恢复。</div>
       </div>
     </div>
@@ -1033,7 +1041,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
       html += '<div class="nav-item' + (state.curGroup===g.id?' on':'') + '" data-g="' + g.id + '" draggable="true" title="拖拽调整分组顺序"><span class="icon">' + g.icon + '</span><span class="g-name">' + escapeHtml(g.name) + '</span><span class="cnt">' + n + '</span><span class="g-ops"><button class="g-edit" title="编辑分组">✎</button><button class="g-del" title="删除分组">🗑</button></span></div>';
     });
     html += '</div>';
-    html += '<div class="side-tip"><b>锦囊用法</b><br>· 页面直接增删改：＋ 新建分组 / ＋ 新增提示词 / ✎ 编辑 / 🗑 删除（授权目录即写即存）<br>· 也可对 AI 说「把 XX 加到写作输出分组」<br>· 顶栏切换排序；⇄ 移组、拖卡片排序自动保存；拖分组条调整分组顺序<br>· 点卡片标签按标签筛选（再点取消）；标签悬停 ✕ 删 / ＋ 加；⤓ 导出 / ⤒ 导入 JSON 备份<br>· ⭐ 收藏常用 · 复制次数在卡片右上角</div>';
+    html += '<div class="side-tip"><b>锦囊用法</b><br>· 页面直接增删改：＋ 新建分组 / ＋ 新增提示词 / ✎ 编辑 / 🗑 删除（授权目录即写即存）<br>· 对 AI 说「把刚才这轮对话存进锦囊」——提炼条目、推荐分组，确认后入囊；也可说「把 XX 加到写作输出分组」<br>· 顶栏切换排序；⇄ 移组、拖卡片排序自动保存；拖分组条调整分组顺序<br>· 点卡片标签按标签筛选（再点取消）；标签悬停 ✕ 删 / ＋ 加；⤓ 导出 / ⤒ 导入 JSON 备份<br>· 删错对 AI 说「回退/恢复锦囊数据」选档回滚<br>· ⭐ 收藏常用 · 复制次数在卡片右上角</div>';
     sideNav.innerHTML = html;
     sideNav.querySelectorAll('.nav-item').forEach(function(el){
       el.addEventListener('click', function(){
