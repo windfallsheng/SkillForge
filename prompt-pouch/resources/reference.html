@@ -494,7 +494,9 @@ mark.hl{ background:var(--gold-dim); color:var(--gold); border-radius:3px; paddi
 .fill-panel.full .fp-fields{ flex:1; overflow-y:auto; min-height:0; }
 .fill-panel.full .fp-live{ flex:1; display:flex; flex-direction:column; min-height:120px; }
 .fill-panel.full .fp-live textarea{ flex:1; height:auto; min-height:96px; }
-.fill-panel.full #itemContent{ min-height:40vh; resize:vertical; }
+#itemMask .fill-panel.full .fp-fields{ display:flex; flex-direction:column; gap:10px; min-height:0; }
+#itemMask .fill-panel.full .fp-field:last-child{ flex:1; display:flex; flex-direction:column; min-height:0; }
+#itemMask .fill-panel.full #itemContent{ flex:1; min-height:40vh; resize:vertical; }
 /* ============ 统一确认弹框（替代浏览器原生弹框） ============ */
 .cf-panel{
   width:460px; max-width:92vw; max-height:82vh; display:flex; flex-direction:column;
@@ -760,7 +762,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
   <div class="fill-panel">
     <div class="fp-head">
       <div class="fp-title">填写模板变量</div>
-      <div class="fp-right"><button class="fp-full" title="全屏查看">⛶</button><span class="fp-count">含 <b id="fpVarCount"></b> 个变量</span></div>
+      <div class="fp-right"><span class="fp-count">含 <b id="fpVarCount"></b> 个变量</span><button class="fp-full" title="全屏查看">⛶</button></div>
     </div>
     <div class="fp-preview" id="fpPreview"></div>
     <div class="fp-fields" id="fpFields"></div>
@@ -794,7 +796,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
   <div class="fill-panel">
     <div class="fp-head">
       <div class="fp-title" id="itemTitle">新增提示词</div>
-      <div class="fp-right"><button class="fp-full" title="全屏查看">⛶</button><span class="fp-count">落盘 data/prompts.json · 刷新即见</span></div>
+      <div class="fp-right"><span class="fp-count">落盘 data/prompts.json · 刷新即见</span><button class="fp-full" title="全屏查看">⛶</button></div>
     </div>
     <div class="fp-fields">
       <div class="fp-field"><label for="itemName">标题</label><input id="itemName" placeholder="如：日报速写" /></div>
@@ -833,7 +835,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
   <div class="fill-panel detail-panel">
     <div class="fp-head">
       <div class="fp-title" id="detailTitle">详情</div>
-      <div class="fp-right"><button class="fp-full" title="全屏查看">⛶</button><span class="fp-count" id="detailMeta"></span></div>
+      <div class="fp-right"><span class="fp-count" id="detailMeta"></span><button class="fp-full" title="全屏查看">⛶</button></div>
     </div>
     <div class="detail-times" id="detailTimes" style="display:none"></div>
     <div class="detail-content" id="detailContent"></div>
