@@ -4,7 +4,7 @@
 
 SkillForge（技能锻造坊）npm 包 `skill-forge-hub`（命令名 `skill-forge`）版本变更记录。
 
-## 1.3.5（2026-11-13）
+## 1.3.4（2026-11-13）
 
 **prompt-pouch 弹窗全屏 + 填充面板预览区加高（@13）**
 
