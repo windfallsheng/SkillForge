@@ -41,7 +41,7 @@ disable-model-invocation: false
    - 收尾提示启动方式：`cd <DIR> && python3 -m http.server <PORT>`（Windows 无 python3 时 `py -m http.server`），浏览器访问 `http://localhost:<PORT>/prompt-pouch.html`（HTTP 自动读 prompts.json；file:// 直开浏览器会拦截文件读取——已授权目录则刷新自动直读 data/prompts.json，权限需重新确认时点徽标「🔓 恢复数据」一键续权，读不到则回退本地快照/镜像，推荐 HTTP 打开）
 2. **维护**（页面已存在时）：读 `<DIR>/<DATA_DIR>/prompts.json` → 按用户意图修改 → 写回（UTF-8、2 空格缩进、保留 version 字段）→ 提醒用户刷新页面
    - **落盘确认**：写回前展示将要落盘的内容（新增/修改的标题、分组、正文摘要，一句话说清改了什么），等用户确认后落盘；用户明确说「直接存/不用确认」则跳过（本次会话有效）；写回前重读最新文件合并；落盘完成后对话报告产物位置：页面文件 `<DIR>/prompt-pouch.html`、数据文件 `<DIR>/<DATA_DIR>/prompts.json`、滚动备份目录 `<DIR>/<BACKUP_DIR>/`
-   - **写回前备份**：每次修改写回前先复制 `<DIR>/<DATA_DIR>/prompts.json` 为同级 `prompts.json.bak-时间戳`（破坏性操作——删除提示词/删除或改动分组/批量整理——必做；简单新增可免但建议保留）；页面自动滚动备份只在页面运行时生效，AI 直写不触发，回退保障必须由 AI 自己留档。用户说「回退/恢复锦囊数据」时：列 `<DIR>/<DATA_DIR>/` 下 `.bak-时间戳` 清单（含时间与条目数）让用户选 → 恢复前再备份当前版（双保险）→ 恢复后机器校验 schema → 提醒用户刷新
+   - **写回前备份**：每次修改写回前先复制 `<DIR>/<DATA_DIR>/prompts.json` 为同级 `prompts.json.bak-时间戳`（破坏性操作——删除提示词/删除或改动分组/批量整理——必做；简单新增可免但建议保留）；**滚动上限**：备份后顺扫同目录 `prompts.json.bak-*` 按时间戳排序只留最近 3 份、超出删旧——密集操作不堆积；页面自动滚动备份只在页面运行时生效，AI 直写不触发，回退保障必须由 AI 自己留档。用户说「回退/恢复锦囊数据」时：列 `<DIR>/<DATA_DIR>/` 下 `.bak-时间戳` 清单（含时间与条目数）让用户选 → 恢复前再备份当前版（双保险）→ 恢复后机器校验 schema → 提醒用户刷新
    - **分类交互**：用户说「添加 XX」但未说分组 → 先按现有分组语义智能匹配（如内容讲周报 → 建议「写作输出 ✍️」并说明理由），匹配到则默认归入、用户可改口换组；匹配不到 → AskUserQuestion 列出全部现有分组（加「新建分组」选项）让用户选；用户指定的分组不存在 → 明确告知该分组不存在，并问是否新建（新建则补 groups 条目：id 16 位数字主键（雪花规则见 data-format.md）、name 中文、icon 一个 emoji）
    - **调优**：用户说「这条不好用，帮我改」→ 读原文 + 用户反馈 → 输出改版对照（旧 → 新）→ 用户确认后写回（updatedAt 更新到时分秒，写回前重读合并 + 先备份）
    - **效果反馈**：用户说「这条好用 / 这条用着顺手」→ 定位条目，把反馈写进可选 `notes` 字段（无则新建；一段使用心得/效果备注，页面详情弹窗「📝 使用心得」只读展示，页面表单不编辑此字段）；说「这条不好用」但不想改 → 同样记入 notes 留档
@@ -79,13 +79,13 @@ disable-model-invocation: false
 
 1. **立标准**：先 Read 本 skill 目录 `resources/reference.html`——它就是设计标准答案；再 Read `<DIR>/<DATA_DIR>/prompts.json` 确认数据本身合法（schema / group 引用 / order 连续）
 2. **分诊**：数据问题（读不到 / 卡数不对 / 分组错乱）→ 修 prompts.json；页面问题（样式 / 布局 / 交互）→ 对照 reference.html 比对那份 `<DIR>/prompt-pouch.html` 的跑偏处
-3. **修复**：页面跑偏 → 以 reference.html 为准重新复制覆盖 `<DIR>/prompt-pouch.html`（用户数据 prompts.json 一概不动，绝不丢）；数据问题 → 重读最新文件后按 data-format.md 修正写回
+3. **修复**：页面跑偏 → 以 reference.html 为准重新复制覆盖 `<DIR>/prompt-pouch.html`（覆盖前先备份旧页 .bak-时间戳，滚动上限只留最近 3 份；用户数据 prompts.json 一概不动，绝不丢）；数据问题 → 重读最新文件后按 data-format.md 修正写回
 4. **自证**：Playwright headless（channel="chrome"）→ 起本地服务 → 挂 pageerror 零容忍 → 断言卡片数等于 prompts.json 条数 → 截图 Read 自查
 5. **汇报**：一句话说清问题根因 + 修复了什么 + 附截图；若根因在 reference.html 自身，顺修 reference.html 并在汇报中说明「参考模板已同步修正」
 
 ## 产物升级（回炉）
 
-生成/初始化页面时头部写版本戳 `<meta name="sf-template" content="prompt-pouch@17">`（模板升级时递增 @N 并同步 reference.html 与本文档）。用户说「升级旧锦囊/回炉旧页面/旧锦囊换新样式」时：扫 `<DIR>` 下 `prompt-pouch.html` 读版本戳筛出旧版（无版本戳或缺少 `<meta name="pouch-id">` 稳定 ID 的产物视为 v0 最旧版，一并进清单）→ 列清单（文件/旧版本/有无用户数据）→ AskUserQuestion 选全部或部分 → 逐份升级：浅升级（仅 CSS/JS 变化）对旧页替换 `<style>` 块与交互脚本；深升级（DOM 结构变化）从 reference.html 重建，**必须沿用原页 pouch-id meta 值**（IndexedDB 用户数据按 pouch-id 命名空间存取，换 ID = 数据失联，重建后原收藏/分组照旧读回），`<DIR>/<DATA_DIR>/prompts.json` 数据文件一概不动，先备份旧页 `.bak-时间戳` → 报告三段式：✅ 已升级清单 / ⚠️ 手改保留说明 / 🟡 失败项原因。模板改动分级：业务改动（板块/段落/标题体系）、数据格式改动（字段/存储结构）、页面改动（样式/布局/交互）任一发生即模板升级，版本戳 +1 并同步 reference.html 与本文档；纯措辞润色不 bump。**每次调用本 skill（生成/初始化/维护/取用/打开）都先顺扫 `<DIR>` 读版本戳**（见步骤 0.1）：发现旧版产物按场景分级提示——打开场景主动询问升级（步骤 4），维护/取用场景收尾一句话轻提示（步骤 2/3），初始化生成场景直接按当前模板生成并主动告知；用户拒绝升级后本次会话不再提示，不让用户背触发语。
+生成/初始化页面时头部写版本戳 `<meta name="sf-template" content="prompt-pouch@17">`（模板升级时递增 @N 并同步 reference.html 与本文档）。用户说「升级旧锦囊/回炉旧页面/旧锦囊换新样式」时：扫 `<DIR>` 下 `prompt-pouch.html` 读版本戳筛出旧版（无版本戳或缺少 `<meta name="pouch-id">` 稳定 ID 的产物视为 v0 最旧版，一并进清单）→ 列清单（文件/旧版本/有无用户数据）→ AskUserQuestion 选全部或部分 → 逐份升级：浅升级（仅 CSS/JS 变化）对旧页替换 `<style>` 块与交互脚本；深升级（DOM 结构变化）从 reference.html 重建，**必须沿用原页 pouch-id meta 值**（IndexedDB 用户数据按 pouch-id 命名空间存取，换 ID = 数据失联，重建后原收藏/分组照旧读回），`<DIR>/<DATA_DIR>/prompts.json` 数据文件一概不动，先备份旧页 `.bak-时间戳`（滚动上限：同目录 `prompt-pouch.html.bak-*` 只留最近 3 份、超出删旧）→ 报告三段式：✅ 已升级清单 / ⚠️ 手改保留说明 / 🟡 失败项原因。模板改动分级：业务改动（板块/段落/标题体系）、数据格式改动（字段/存储结构）、页面改动（样式/布局/交互）任一发生即模板升级，版本戳 +1 并同步 reference.html 与本文档；纯措辞润色不 bump。**每次调用本 skill（生成/初始化/维护/取用/打开）都先顺扫 `<DIR>` 读版本戳**（见步骤 0.1）：发现旧版产物按场景分级提示——打开场景主动询问升级（步骤 4），维护/取用场景收尾一句话轻提示（步骤 2/3），初始化生成场景直接按当前模板生成并主动告知；用户拒绝升级后本次会话不再提示，不让用户背触发语。
 
 ## ⚙️ 配置与自定义主题
 
