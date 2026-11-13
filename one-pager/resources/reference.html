@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="sf-template" content="one-pager@14">
+<meta name="sf-template" content="one-pager@15">
 <meta name="poster-id" content="REF-POSTER-0000">
 <title>AI 改变工作 · 一页纸海报</title>
 <style>
@@ -633,7 +633,7 @@ body{background:linear-gradient(180deg,var(--bg) 12%,var(--bg2) 135%);color:var(
 .tpl-watermark footer{display:flex;flex-direction:column;align-items:flex-end;font-size:12px;color:var(--muted);gap:6px;margin-top:auto}
 
 /* ▼ 用户模板 CSS 内嵌点（TPL_DIR 模板的 TPL_CSS 块插到本行之前，无用户模板则保持原样） */
-/* ═══ 切换坞（可折叠）：模板坞（32 标签七组流派 + 用户模板）在顶部、主题坞（25 色点 5×5）在右下角；默认折叠成胶囊把手，点开选完自动收起 ═══ */
+/* ═══ 切换坞（可折叠）：模板坞（32 标签七组流派 + 用户模板）在顶部、主题坞（25 色点 5×5）在右下角；默认折叠成胶囊把手，点开可连续试选不收起，右上角 × 圆钮关闭 ═══ */
 .dock-tpl{position:fixed;right:18px;top:18px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;z-index:1001}
 .dock-theme{position:fixed;right:18px;bottom:18px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;z-index:1001}
 .dock-bar{display:flex;align-items:center;gap:8px;background:var(--panel-solid);border:1px solid var(--border);border-radius:999px;padding:7px 13px;color:var(--text);cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.3);transition:border-color .15s ease;font-family:inherit}
@@ -644,6 +644,7 @@ body{background:linear-gradient(180deg,var(--bg) 12%,var(--bg2) 135%);color:var(
 .dock-theme.fold .bar-arrow{transform:rotate(-90deg)}
 .dock-theme .bar-arrow{transform:rotate(180deg)}
 .dock-body{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px;background:var(--panel-solid);border:1px solid var(--border);border-radius:14px;padding:8px 10px;max-width:min(720px,calc(100vw - 36px));box-shadow:0 4px 18px rgba(0,0,0,.3)}
+.dock-tpl .dock-body{max-width:min(480px,calc(100vw - 36px));position:relative}
 .dock-theme .dock-body{display:grid;grid-template-columns:repeat(5,18px);gap:11px 10px;border-radius:14px;padding:12px 13px;max-width:none;position:relative}
 .th-close{position:absolute;top:-10px;right:-10px;width:22px;height:22px;border-radius:50%;border:1px solid var(--border);background:var(--panel-solid);color:var(--muted);font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.28);padding:0}
 .th-close:hover{color:var(--text);border-color:var(--accent)}
@@ -710,6 +711,7 @@ html.theming, html.theming *, html.theming *::before, html.theming *::after{ tra
 <div class="dock-tpl fold" id="tplDock">
   <button class="dock-bar" id="tplBar" type="button" title="模板切换（点击展开/收起）"><span class="bar-tpl-name">模板</span><span class="bar-arrow">▾</span></button>
   <div class="dock-body">
+  <button class="th-close" id="tpClose" type="button" title="关闭（点顶部「模板」标签可重新打开）" aria-label="关闭模板面板">×</button>
   <span class="tp-sep">现代主义</span>
   <button class="tp-btn on" data-tpl="classic" title="经典舞台">经典</button>
   <button class="tp-btn" data-tpl="minimal" title="极简留白">极简</button>
@@ -1259,7 +1261,6 @@ html.theming, html.theming *, html.theming *::before, html.theming *::after{ tra
       try { localStorage.setItem(TPL_KEY, curP); } catch(e) {}
       document.querySelectorAll('.tp-btn').forEach(function(x){ x.classList.toggle('on', x === b); });
       var bt = document.querySelector('#tplBar .bar-tpl-name'); if (bt) bt.textContent = '模板 · ' + b.textContent;
-      document.getElementById('tplDock').classList.add('fold');
       render();
     });
   });
@@ -1282,6 +1283,8 @@ html.theming, html.theming *, html.theming *::before, html.theming *::after{ tra
   bindBar('themeDock');
   var thClose = document.getElementById('thClose');
   if (thClose) thClose.addEventListener('click', function(){ document.getElementById('themeDock').classList.add('fold'); });
+  var tpClose = document.getElementById('tpClose');
+  if (tpClose) tpClose.addEventListener('click', function(){ document.getElementById('tplDock').classList.add('fold'); });
   var initTplBtn = document.querySelector('#tplDock .tp-btn[data-tpl="' + curP + '"]');
   var btEl = document.querySelector('#tplBar .bar-tpl-name');
   if (btEl) btEl.textContent = '模板 · ' + (initTplBtn ? initTplBtn.textContent : '自定义');
