@@ -4,7 +4,7 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
-## 1.3.4 (2026-11-13)
+## 1.3.5 (2026-11-13)
 
 **prompt-pouch fullscreen modals + taller fill-panel previews (@13)**
 
