@@ -1,6 +1,6 @@
 {
   "name": "skill-forge-hub",
-  "version": "1.3.12",
+  "version": "1.3.13",
   "description": "SkillForge (技能锻造坊) — a curated collection of AI craft skills. Install once, then pick skills interactively: daily/weekly/monthly/quarterly/annual reports, meeting minutes, article-to-HTML, magic-deck slides, deck-stage PPTX, prompt-pouch manager, Pandoc doc converters, meta-forge.",
   "bin": {
     "skill-forge": "cli.js"

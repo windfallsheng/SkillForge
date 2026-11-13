@@ -4,6 +4,14 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
+## 1.3.13 (2026-11-13)
+
+**one-pager template dock slimmer, no auto-close on pick, × close button (@15); version self-check for prompt-pouch & meta-forge**
+
+- one-pager template dock: width tightened from 720px to 480px (fits the content instead of spanning 80% of the screen); picking a template no longer auto-folds the panel (users may click through to compare), close via the new × round button, handle reopens; stamp one-pager@14 → @15
+- prompt-pouch version self-check at all touchpoints: every invocation (generate / init / maintain / retrieve / open) silently compares the page stamp against the current template (two meta lines, zero network, no data touched); the result only affects prompting, never execution — open asks proactively (with an update-point list, rebuild keeps the original pouch-id, prompts.json untouched), maintain/retrieve ends with a one-line nudge, declined once means silent for the session
+- meta-forge mechanism #8 gains "tool-type product version self-check": the clarification list adds a product-type question (tool-type vs snapshot), forging tool-type skills (fixed page reopened often, accumulating data) automatically embeds the all-touchpoint self-check + per-scenario prompting; the static gate adds a matching check, and the template's rebuild section syncs the tool-type branch
+
 ## 1.3.12 (2026-11-13)
 
 **one-pager privilege templates get "mood response": six signature palettes now track the theme's light/dark mood (@14)**
