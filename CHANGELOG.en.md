@@ -4,6 +4,14 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
+## 1.3.10 (2026-11-13)
+
+**one-pager theme panel stays open on color pick, closes via a new × button (@12)**
+
+- Picking a color from the 25-swatch panel no longer auto-folds it — keep trying themes side by side; a floating circular × button sits on the panel's top-right corner to close it, and the bottom 主题 bar reopens it anytime
+- Template dock keeps its original behavior (auto-close on pick, no ×): theme picking is exploratory, template picking is decisive
+- Template stamp one-pager@11 → @12 (panel interaction change)
+
 ## 1.3.9 (2026-11-13)
 
 **Theme-switch fade across twelve templates: 0.45s color transition instead of a hard flip**
