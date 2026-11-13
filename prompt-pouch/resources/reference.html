@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="sf-template" content="prompt-pouch@14">
+<meta name="sf-template" content="prompt-pouch@15">
 <meta name="pouch-id" content="REF-POUCH-0000">
 <title>锦囊 Prompt Pouch — 提示词管理台</title>
 <style>
@@ -677,8 +677,8 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
   .list{ grid-template-columns:1fr; }
   .card-ops{ opacity:1; }
 }
-/* 主题换肤坞：右下角五色点随点随换，记忆上次选择；打印隐藏 */
-.theme-dock{ position:fixed; right:18px; bottom:18px; z-index:1001; display:flex; gap:8px;
+/* 主题换肤坞：右下角五色点随点随换，记忆上次选择；层级低于浮层（modal-mask 50），弹框全屏不遮按钮；打印隐藏 */
+.theme-dock{ position:fixed; right:18px; bottom:18px; z-index:40; display:flex; gap:8px;
   padding:8px 10px; border-radius:999px; background:var(--panel2); border:1px solid var(--border);
   box-shadow:0 4px 18px rgba(0,0,0,.3); }
 .theme-dock .th-dot{ width:22px; height:22px; border-radius:50%; cursor:pointer;

@@ -4,6 +4,13 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
+## 1.3.7 (2026-11-13)
+
+**prompt-pouch fixes theme dock covering fullscreen modal buttons (@15)**
+
+- Theme dock z-index 1001 → 40: back to page layer (below modal 50 / confirm 300 / toast 400) — fullscreen modal's bottom-right cancel/copy buttons are no longer hidden behind the color dots
+- Template stamp prompt-pouch@14 → @15 (stacking-order fix)
+
 ## 1.3.6 (2026-11-13)
 
 **prompt-pouch fullscreen fill-panel variable area shrinks, space goes to previews (@14)**
