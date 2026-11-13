@@ -205,6 +205,10 @@ footer{text-align:center;font-size:10px;color:var(--muted);letter-spacing:1px;pa
   .header-card{ padding:26px 18px 20px; }
   .header-card h1{ font-size:26px; }
 }
+/* 主题切换渐变：切换瞬间给 html 挂 .theming 类（650ms 后自动摘除），期间全页颜色属性平滑过渡（Material 标准缓动）；平时类不存在，不影响任何元素 */
+html.theming, html.theming *, html.theming *::before, html.theming *::after{ transition: background-color .45s cubic-bezier(.4,0,.2,1), color .45s cubic-bezier(.4,0,.2,1), border-color .45s cubic-bezier(.4,0,.2,1), box-shadow .45s cubic-bezier(.4,0,.2,1), fill .45s cubic-bezier(.4,0,.2,1), stroke .45s cubic-bezier(.4,0,.2,1) !important; }
+@media (prefers-reduced-motion: reduce){ html.theming, html.theming *{ transition: none !important; } }
+
 </style>
 </head>
 <body>
@@ -402,7 +406,7 @@ if (location.search.indexOf('shot=') !== -1) {
   var saved = null; try{ saved = localStorage.getItem('sf-guide-theme'); }catch(e){}
   if (saved && THEMES.indexOf(saved) !== -1 && saved !== cur){ apply(saved); }
   else{ dock.querySelectorAll('.th-dot').forEach(function(d){ d.classList.toggle('on', d.getAttribute('data-theme') === (cur || 'tech')); }); }
-  dock.querySelectorAll('.th-dot').forEach(function(d){ d.addEventListener('click', function(){ apply(d.getAttribute('data-theme')); }); });
+  dock.querySelectorAll('.th-dot').forEach(function(d){ d.addEventListener('click', function(){ var r = document.documentElement; r.classList.add('theming'); clearTimeout(r.__sfThT); r.__sfThT = setTimeout(function(){ r.classList.remove('theming'); }, 650); apply(d.getAttribute('data-theme')); }); });
 })();
 </script>
 </body>

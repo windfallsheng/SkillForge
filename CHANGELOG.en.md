@@ -4,6 +4,15 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
+## 1.3.11 (2026-11-13)
+
+**Theme-fade full coverage: 22 install guide pages get the transition, 12 templates upgrade to Material easing**
+
+- Gap audit: skillforge-guide.html install pages (repo root + 21 identical copies under skill resources) previously switched instantly — all now carry the transient .theming fade, matching the 12 product templates
+- Easing upgrade: transition curve changed from default ease to the Material Design standard cubic-bezier(.4,0,.2,1) — quick start, soft landing, crisper feel; duration stays 0.45s
+- All 12 template stamps bumped again: daily/weekly/monthly/quarterly @3→4, annual/meeting-minutes @4→5, prompt-pouch @16→17, one-pager @12→13, article-to-html @3→4, commit-heatmap/team-report-collector @2→3, magic-deck @3→4
+- Notes: the deck-stage cover template sets its theme statically at generation time (no interactive switching), so no transition is needed; View Transitions API deliberately not adopted — full-page snapshot crossfade suits route changes, while color transitions look cleaner for theme switching without double animation
+
 ## 1.3.10 (2026-11-13)
 
 **one-pager theme panel stays open on color pick, closes via a new × button (@12)**
