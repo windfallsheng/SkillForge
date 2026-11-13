@@ -31,11 +31,13 @@ disable-model-invocation: false
 1. **初始化**（目标目录无 `prompt-pouch.html` 时）：
    - **已有页面分支**：用户说「创建/生成」但目标目录已有 prompt-pouch.html → AskUserQuestion 三选项：A 打开现有页面（推荐，数据无损）；B 覆盖重建——旧页面先复制 .bak-时间戳，仅重置页面为新版 reference.html（DATA_DIR/BACKUP_DIR 数据目录一概不动，用户数据绝不丢）；C 取消不创建。默认推荐 A
    - **目录确认**：用户未提目录 → 用配置 `DIR`；`CONFIRM: true` 时先 AskUserQuestion 确认（选项：用默认目录 / 换目录）；用户已说「放到 XX 目录」→ 直接用该目录（本次会话有效，不改配置文件）
+   - **存内容触发的初始化**：用户因「把 XX 存进锦囊」而首次创建锦囊（目标目录无页面）→ 初始化前先 AskUserQuestion 询问示例数据（选项：A 生成示例五组（推荐，页面首开有内容可看）；B 空结构——直接进整理流程只存用户本次内容），用户未回应默认 A；选定后初始化继续，随后衔接步骤 2/5 完成本次入囊
    - 复制 `resources/reference.html` → `<DIR>/prompt-pouch.html`（原样复制，不修改任何样式与脚本；仅两处例外：①html 根标签 `data-theme` 属性值设为配置 `THEME`——reference 默认 "gold"，仅当配置非 gold 时替换该属性值；②head 中 `<meta name="pouch-id" content="...">` 的 content 替换为本次用 crypto.randomUUID() 新生成的全局唯一 ID——标准 UUID v4（十六进制 8-4-4-4-12 节，禁止手写变体、禁止沿用 reference 的占位 ID REF-POUCH-0000、禁止两份锦囊共用同一 ID；复制文件副本=同一身份共享数据）；落盘写文件前顺扫 <DIR> 下已有 html 的 pouch-id meta 查重，撞号重掷至不重复）
    - 创建 `<DIR>/<DATA_DIR>/` 与 `<DIR>/<BACKUP_DIR>/` 子目录（配置为空串则跳过、平铺根目录）；生成 `<DIR>/<DATA_DIR>/prompts.json`：`INIT_DATA: example` 时写入「各职业通用」示例五组（写作输出/沟通协作/规划执行/复盘成长/提问艺术，每组 3 条，标题与正文按下方「## 默认示例数据」清单写，**每条必带 createdAt 当前时间（YYYY-MM-DD HH:mm:ss，写到时分秒）**）；`empty` 时写空结构（version + 空 groups/prompts）
    - 收尾提示启动方式：`cd <DIR> && python3 -m http.server <PORT>`（Windows 无 python3 时 `py -m http.server`），浏览器访问 `http://localhost:<PORT>/prompt-pouch.html`（HTTP 自动读 prompts.json；file:// 直开浏览器会拦截文件读取——已授权目录则刷新自动直读 data/prompts.json，权限需重新确认时点徽标「🔓 恢复数据」一键续权，读不到则回退本地快照/镜像，推荐 HTTP 打开）
 2. **维护**（页面已存在时）：读 `<DIR>/<DATA_DIR>/prompts.json` → 按用户意图修改 → 写回（UTF-8、2 空格缩进、保留 version 字段）→ 提醒用户刷新页面
    - **落盘确认**：写回前展示将要落盘的内容（新增/修改的标题、分组、正文摘要，一句话说清改了什么），等用户确认后落盘；用户明确说「直接存/不用确认」则跳过（本次会话有效）；写回前重读最新文件合并；落盘完成后对话报告产物位置：页面文件 `<DIR>/prompt-pouch.html`、数据文件 `<DIR>/<DATA_DIR>/prompts.json`、滚动备份目录 `<DIR>/<BACKUP_DIR>/`
+   - **写回前备份**：每次修改写回前先复制 `<DIR>/<DATA_DIR>/prompts.json` 为同级 `prompts.json.bak-时间戳`（破坏性操作——删除提示词/删除或改动分组/批量整理——必做；简单新增可免但建议保留）；页面自动滚动备份只在页面运行时生效，AI 直写不触发，回退保障必须由 AI 自己留档。用户说「回退/恢复锦囊数据」时：列 `<DIR>/<DATA_DIR>/` 下 `.bak-时间戳` 清单（含时间与条目数）让用户选 → 恢复前再备份当前版（双保险）→ 恢复后机器校验 schema → 提醒用户刷新
    - **分类交互**：用户说「添加 XX」但未说分组 → 先按现有分组语义智能匹配（如内容讲周报 → 建议「写作输出 ✍️」并说明理由），匹配到则默认归入、用户可改口换组；匹配不到 → AskUserQuestion 列出全部现有分组（加「新建分组」选项）让用户选；用户指定的分组不存在 → 明确告知该分组不存在，并问是否新建（新建则补 groups 条目：id 16 位数字主键（雪花规则见 data-format.md）、name 中文、icon 一个 emoji）
 2.5 **交付前自检**（初始化与每次维护落盘后必做，硬门禁不可跳过）：
    - **json 机器校验**：`python3 -c "import json;json.load(open('<DIR>/<DATA_DIR>/prompts.json',encoding='utf-8'))"`（Windows 用 py）解析通过，且 schema 自查无缺（version/groups/prompts 齐全、group 引用存在、order 连续、新增条目 createdAt 到时分秒）
