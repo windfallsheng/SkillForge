@@ -4,6 +4,15 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
+## 1.3.3 (2026-11-13)
+
+**prompt-pouch "retrieval" task type + tuning/feedback loop (@12)**
+
+- New "retrieval" task (check-before-use): "what in the pouch fits XX?" → AI reads prompts.json, semantically matches and lists candidates (index/title/group/match reason), applies the chosen one directly; for daily tasks (daily/weekly reports, retrospectives, emails) AI silently scans the pouch first — reuse when a template matches, otherwise finish normally and ask once whether to stash the result; SKILL.md task types 3 → 4, usage-guide gains item 11 "retrieval" plus an "active retrieval" scenario
+- Tuning & feedback loop: "this one doesn't work, fix it" → read original + feedback → before/after diff → confirm and write back (updatedAt timeline visible); "this one is good" → recorded into the optional notes field (AI-maintained only); detail modal gains a read-only "📝 使用心得" (usage notes) section (hidden when absent, legacy data compatible); data-format.md schema example / field spec / maintenance rules updated in three places
+- user-config.md aligned to the SkillForge standard shape: yaml fence + "⚙️ 默认配置" section + upgrade-protection intro + temporary verbal override block (keys unchanged, CONFIG_VERSION still 4)
+- Template stamp prompt-pouch@11 → @12 (detail modal gains the usage-notes section, page structure change)
+
 ## 1.3.2 (2026-11-13)
 
 **prompt-pouch in-page usage scenarios + full functional check**
