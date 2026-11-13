@@ -4,6 +4,15 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
+## 1.3.12 (2026-11-13)
+
+**one-pager privilege templates get "mood response": six signature palettes now track the theme's light/dark mood (@14)**
+
+- Fix: acid / glitch / vaporwave / inkwash / palace / landscape previously hardcoded their signature hues, so theme switching only changed the page chrome (docks / container) while the poster body stayed frozen — the reported "only the browser shell changes"
+- Mood-response approach: every signature hue now uses CSS color-mix() against theme tokens — backgrounds mix var(--bg) at 22%, accents mix var(--accent) at 20%, ink text mixes var(--text) at 20%, muted text mixes var(--muted) at 25%; the signature look dominates (character preserved) while brightness/warmth subtly follow the theme (the switch is felt), covering all 25 themes with zero lookup tables
+- Fade compatibility: the transient transition list across all 34 interactive-skin HTML files now also includes background — solid backgrounds (paper base, mountain layers) fade smoothly on theme switch, gradient backgrounds switch discretely per browser standard; existing color / border / shadow fades unaffected
+- Template stamp one-pager@13 → @14
+
 ## 1.3.11 (2026-11-13)
 
 **Theme-fade full coverage: 22 install guide pages get the transition, 12 templates upgrade to Material easing**
