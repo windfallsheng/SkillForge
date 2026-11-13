@@ -4,6 +4,14 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
+## 1.3.9 (2026-11-13)
+
+**Theme-switch fade across twelve templates: 0.45s color transition instead of a hard flip**
+
+- Skin mechanism upgrade: clicking the theme dock / theme panel briefly adds a transient .theming class to <html> (auto-removed after 650ms), during which background/text/border/shadow/SVG fill-stroke colors transition smoothly at 0.45s — the switch now dissolves like ink; outside that window the class is absent, so existing element animations and hover effects stay untouched
+- Three guards: restoring a remembered theme on page load triggers no animation (no first-paint flicker); rapid consecutive theme clicks are debounced via timer reset; prefers-reduced-motion users get an instant switch (accessibility)
+- All template stamps bumped: daily/weekly/monthly/quarterly @2→3, annual/meeting-minutes @3→4, prompt-pouch @15→16, article-to-html @2→3, commit-heatmap/team-report-collector @1→2, one-pager @10→11, magic-deck @2→3 (say "upgrade my old pages" to remelt existing artifacts)
+
 ## 1.3.8 (2026-11-13)
 
 **Data-collection config consolidation across seven report skills (five-suite v4 / meeting-minutes v3)**
