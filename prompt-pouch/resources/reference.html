@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="sf-template" content="prompt-pouch@12">
+<meta name="sf-template" content="prompt-pouch@13">
 <meta name="pouch-id" content="REF-POUCH-0000">
 <title>锦囊 Prompt Pouch — 提示词管理台</title>
 <style>
@@ -435,6 +435,7 @@ mark.hl{ background:var(--gold-dim); color:var(--gold); border-radius:3px; paddi
   background:linear-gradient(180deg, var(--panel) 0%, var(--panel2) 100%);
   border:1px solid var(--border); border-radius:16px; padding:22px 24px;
   box-shadow:0 20px 60px rgba(0,0,0,.5);
+  transition:width .25s ease, max-width .25s ease, height .25s ease, max-height .25s ease;
 }
 .fp-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
 .fp-title{
@@ -445,7 +446,7 @@ mark.hl{ background:var(--gold-dim); color:var(--gold); border-radius:3px; paddi
 .fp-count{ font-size:12px; color:var(--muted); }
 .fp-count b{ color:var(--gold); }
 .fp-preview{
-  max-height:110px; overflow-y:auto; padding:10px 12px; margin-bottom:12px;
+  max-height:220px; overflow-y:auto; padding:10px 12px; margin-bottom:12px;
   background:rgba(0,0,0,.22); border:1px solid var(--border); border-radius:10px;
   font-size:12px; line-height:1.8; color:var(--muted); white-space:pre-wrap; word-break:break-word;
 }
@@ -470,11 +471,30 @@ mark.hl{ background:var(--gold-dim); color:var(--gold); border-radius:3px; paddi
   font-size:11px; color:var(--muted); margin-bottom:5px; letter-spacing:.5px;
 }
 .fp-live textarea{
-  width:100%; height:96px; resize:none; padding:9px 12px; border-radius:9px;
+  width:100%; height:150px; resize:none; padding:9px 12px; border-radius:9px;
   background:rgba(0,0,0,.25); border:1px solid var(--border); outline:none;
   color:var(--muted); font-family:inherit; font-size:12px; line-height:1.7;
 }
 .fp-ops{ display:flex; justify-content:flex-end; gap:10px; }
+.fp-right{ display:flex; align-items:center; gap:10px; }
+.fp-full{
+  background:transparent; border:1px solid var(--border); border-radius:8px;
+  color:var(--muted); cursor:pointer; font-size:13px; line-height:1; padding:5px 8px;
+  transition:color .18s ease, border-color .18s ease, background .18s ease;
+}
+.fp-full:hover{ color:var(--gold); border-color:var(--gold); background:var(--gold-dim); }
+/* 弹窗全屏态：占满 96% 视口，内容区按 flex 分食剩余空间（滚动兜底保留） */
+.fill-panel.full, #itemMask .fill-panel.full, #fillMask .fill-panel.full{
+  width:96vw; max-width:96vw; height:96vh; max-height:96vh;
+}
+.fill-panel.full .fp-head, .fill-panel.full .fp-ops{ flex:none; }
+.fill-panel.full .detail-content{ flex:1; max-height:none; }
+.fill-panel.full .detail-times, .fill-panel.full .detail-notes, .fill-panel.full .detail-vars{ flex:none; }
+.fill-panel.full .fp-preview{ flex:1; max-height:none; min-height:120px; }
+.fill-panel.full .fp-fields{ flex:1; overflow-y:auto; min-height:0; }
+.fill-panel.full .fp-live{ flex:1; display:flex; flex-direction:column; min-height:120px; }
+.fill-panel.full .fp-live textarea{ flex:1; height:auto; min-height:96px; }
+.fill-panel.full #itemContent{ min-height:40vh; resize:vertical; }
 /* ============ 统一确认弹框（替代浏览器原生弹框） ============ */
 .cf-panel{
   width:460px; max-width:92vw; max-height:82vh; display:flex; flex-direction:column;
@@ -740,7 +760,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
   <div class="fill-panel">
     <div class="fp-head">
       <div class="fp-title">填写模板变量</div>
-      <span class="fp-count">含 <b id="fpVarCount"></b> 个变量</span>
+      <div class="fp-right"><button class="fp-full" title="全屏查看">⛶</button><span class="fp-count">含 <b id="fpVarCount"></b> 个变量</span></div>
     </div>
     <div class="fp-preview" id="fpPreview"></div>
     <div class="fp-fields" id="fpFields"></div>
@@ -774,7 +794,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
   <div class="fill-panel">
     <div class="fp-head">
       <div class="fp-title" id="itemTitle">新增提示词</div>
-      <span class="fp-count">落盘 data/prompts.json · 刷新即见</span>
+      <div class="fp-right"><button class="fp-full" title="全屏查看">⛶</button><span class="fp-count">落盘 data/prompts.json · 刷新即见</span></div>
     </div>
     <div class="fp-fields">
       <div class="fp-field"><label for="itemName">标题</label><input id="itemName" placeholder="如：日报速写" /></div>
@@ -813,7 +833,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
   <div class="fill-panel detail-panel">
     <div class="fp-head">
       <div class="fp-title" id="detailTitle">详情</div>
-      <span class="fp-count" id="detailMeta"></span>
+      <div class="fp-right"><button class="fp-full" title="全屏查看">⛶</button><span class="fp-count" id="detailMeta"></span></div>
     </div>
     <div class="detail-times" id="detailTimes" style="display:none"></div>
     <div class="detail-content" id="detailContent"></div>
@@ -1473,7 +1493,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     });
     document.getElementById('fpLive').value = result;
   }
-  function closeFillPanel(){ document.getElementById('fillMask').classList.remove('open'); }
+  function closeFillPanel(){ resetFull(document.getElementById('fillMask').querySelector('.fill-panel')); document.getElementById('fillMask').classList.remove('open'); }
   function handleFillCopy(){
     var result = fillTemplateText;
     document.querySelectorAll('#fpFields input').forEach(function(inp){
@@ -1681,6 +1701,21 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
       }).catch(function(){});
   }
 
+  /* ---------- 弹窗全屏 ---------- */
+  function resetFull(panel){
+    panel.classList.remove('full');
+    var b = panel.querySelector('.fp-full');
+    if (b){ b.textContent = '⛶'; b.title = '全屏查看'; }
+  }
+  function toggleFull(btn){
+    var panel = btn.closest('.fill-panel');
+    var on = panel.classList.toggle('full');
+    btn.textContent = on ? '⤡' : '⛶';
+    btn.title = on ? '退出全屏' : '全屏查看';
+  }
+  document.querySelectorAll('.fp-full').forEach(function(b){
+    b.addEventListener('click', function(e){ e.stopPropagation(); toggleFull(b); });
+  });
   /* ---------- 提示词详情弹窗 ---------- */
   var detailTarget = null;
   var detailMask = document.getElementById('detailMask');
@@ -1721,7 +1756,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     } else { vEl.style.display = 'none'; }
     detailMask.classList.add('open');
   }
-  function closeDetail(){ detailMask.classList.remove('open'); detailTarget = null; }
+  function closeDetail(){ resetFull(detailMask.querySelector('.fill-panel')); detailMask.classList.remove('open'); detailTarget = null; }
   document.getElementById('detailClose').addEventListener('click', closeDetail);
   document.getElementById('detailEdit').addEventListener('click', function(){
     var p = detailTarget;
@@ -1769,7 +1804,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     itemMask.classList.add('open');
     setTimeout(function(){ itemName.focus(); }, 60);
   }
-  function closeItemForm(){ itemMask.classList.remove('open'); }
+  function closeItemForm(){ resetFull(itemMask.querySelector('.fill-panel')); itemMask.classList.remove('open'); }
   function saveItem(){
     var name = itemName.value.trim();
     if (!name){ toast('标题不能为空', true); return; }
