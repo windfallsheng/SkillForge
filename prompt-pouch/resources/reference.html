@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="sf-template" content="prompt-pouch@11">
+<meta name="sf-template" content="prompt-pouch@12">
 <meta name="pouch-id" content="REF-POUCH-0000">
 <title>锦囊 Prompt Pouch — 提示词管理台</title>
 <style>
@@ -625,6 +625,13 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
   font-size:11px; color:var(--muted); margin-bottom:12px;
 }
 .detail-vars b{ color:var(--gold); }
+.detail-notes{
+  display:block; margin-bottom:10px; padding:10px 14px;
+  background:rgba(0,0,0,.14); border:1px dashed var(--border); border-radius:10px;
+  font-size:12px; line-height:1.8; color:var(--muted);
+}
+.detail-notes b{ color:var(--gold); }
+.detail-notes .note-body{ margin-top:2px; color:var(--text); white-space:pre-wrap; word-break:break-word; }
 .detail-times{
   display:flex; flex-wrap:wrap; gap:4px 16px;
   font-size:11px; color:var(--muted); margin-bottom:10px;
@@ -810,6 +817,7 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     </div>
     <div class="detail-times" id="detailTimes" style="display:none"></div>
     <div class="detail-content" id="detailContent"></div>
+    <div class="detail-notes" id="detailNotes" style="display:none"></div>
     <div class="detail-vars" id="detailVars" style="display:none"></div>
     <div class="fp-ops">
       <button class="btn" id="detailClose">关闭</button>
@@ -1699,6 +1707,11 @@ footer.open .ht-arrow{ transform:rotate(180deg); }
     if (times.length){ tEl.style.display = 'flex'; tEl.innerHTML = times.join(''); }
     else { tEl.style.display = 'none'; }
     document.getElementById('detailContent').innerHTML = hlHtml(p.content, state.query);
+    var nEl = document.getElementById('detailNotes');
+    if (p.notes && String(p.notes).trim()){
+      nEl.style.display = 'block';
+      nEl.innerHTML = '<b>📝 使用心得</b><div class="note-body">' + hlHtml(p.notes, state.query) + '</div>';
+    } else { nEl.style.display = 'none'; }
     var vars = extractVars(p.content);
     var vEl = document.getElementById('detailVars');
     if (vars.length){
