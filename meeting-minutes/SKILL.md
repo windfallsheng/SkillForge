@@ -21,7 +21,7 @@ disable-model-invocation: false
 
 ## ⚙️ 配置与自定义模板
 
-**执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（DISK/FORMATS/DIR/SERIES_GROUP/OPEN_HTML/TEMPLATE/ROLE/CONFIRM）与自定义模板都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留。
+**执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（DISK/FORMATS/DIR/SERIES_GROUP/OPEN_HTML/TEMPLATE/ROLE/CONFIRM）与自定义模板都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留。**「📝 自定义模板」节是升级保护区**：改这里的内容升级永不覆盖；官方 default 内置模板有更新时另存 `user-config.upstream.md` 对照，不会动你的模板。resources/ 下的内置规则随升级覆盖，模板请只写在「📝 自定义模板」节。
 
 ## 配置版本机制（升级保护）
 
@@ -35,6 +35,8 @@ disable-model-invocation: false
 配置升级规则（v1→v2）：新增 `SERIES_GROUP: auto`（纪要系列分组，见 user-config.md 注释）；其余字段不变。
 
 配置升级规则（v2→v3）：DATA_SOURCES 数据收集配置归位——清单结构与已填值不变，仅澄清唯一配置落点（数据源一律只写 user-config.md「默认配置」的 DATA_SOURCES，升级保护区永不覆盖；收集机制说明见 resources/content-rules.md「素材来源」节，随升级覆盖）；DATA_SOURCES 示例注释按实际支持类型（file）修正。迁移动作：备份 user-config.md → CONFIG_VERSION 更新为 3，DATA_SOURCES 原样保留；若此前误把数据源写在 resources 文档里（升级后已被新版覆盖），请手动搬回 user-config.md。
+
+**模板保全（硬规则）**：迁移只动 yaml 块字段，「📝 自定义模板」节原样保留一字不碰——用户改的模板结构绝不因配置升级丢失。
 
 **无法迁移项处理**：值域失效（旧值不在新值域）/ 语义漂移（同名键含义变化）/ 数据不兼容，停下问、不猜值；旧值永远在 .bak-时间戳备份里，报告必附回滚一句话。
 

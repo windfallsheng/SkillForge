@@ -49,6 +49,7 @@
 - 用户可能改的一切配置（目录/格式/开关/角色/模板）全部放进 user-config.md，SKILL.md 只在第 0 步引用，不内嵌配置值
 - user-config.md 头部写「升级技能时本文件不会被覆盖」+ .upstream 对照说明
 - CLI 层：user-config.md 常驻保护（升级永不覆盖）+ 官方新配置另存 .upstream 对照
+- 用户内容节宣导（user-config.md 含自定义模板等非 yaml 内容节的技能）：SKILL.md 配置节显式点名用户内容节为升级保护区（「改这里升级永不覆盖；官方内置版更新另存 .upstream 对照」）；配置版本机制节含模板保全声明（「迁移只动 yaml 块字段、用户内容节原样保留一字不碰」）；resources/ 下内置规则随升级覆盖，用户内容一律只写 user-config.md
 
 ### 机制三：reference 双轨（仅含 HTML 输出的技能）
 
@@ -117,6 +118,7 @@
 13. 工具型产物版本自检（工具型技能）：SKILL.md 执行流程含「版本自检（静默前置，全时机）」步骤（静默比对版本戳、零网络不碰数据、结果只影响提示不影响执行）+ 场景分级提示（打开主动问/维护取用一句话/拒绝会话静默）
 14. 入场动画兜底（含 HTML 且含滚动入场动画的技能）：reference.html 含 2s 兜底强制全显代码（`.rv:not(.in)` 模式或等价），确保 headless 截图 / 打印预览内容全显
 15. 执行层自愈块（含 HTML 且页面有 localStorage 记忆的技能）：HTML 内嵌 JS 含 id meta 校验——非法或缺失（占位残留 / 手写变体 / 误沿用旧值）时按路径键（`sf-heal:` + location.pathname）自愈为 crypto.randomUUID() 标准 v4 并回写 meta，console.warn 显性报警
+16. 用户内容节宣导（user-config.md 含自定义模板等用户可改内容节的技能）：SKILL.md 配置节点名用户内容节为升级保护区 + 配置版本机制节含模板保全声明（迁移只动 yaml 块字段、用户内容节原样保留）
 
 ### B. 运行时实测（含 HTML 的技能必做，Playwright headless channel="chrome"）
 

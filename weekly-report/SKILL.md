@@ -27,7 +27,7 @@ disable-model-invocation: false
 
 ## ⚙️ 配置与自定义模板
 
-**执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（DISK/FORMATS/DIR/OPEN_HTML/THEME/TEMPLATE/ROLE/CONFIRM/CONFIG_VERSION/DATA_SOURCES）与自定义模板都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留；官方更新配置时另存 `user-config.upstream.md` 对照文件，可按需手动合并新配置点。
+**执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（DISK/FORMATS/DIR/OPEN_HTML/THEME/TEMPLATE/ROLE/CONFIRM/CONFIG_VERSION/DATA_SOURCES）与自定义模板都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留；官方更新配置时另存 `user-config.upstream.md` 对照文件，可按需手动合并新配置点。**「📝 自定义模板」节是升级保护区**：改这里的内容升级永不覆盖；官方 default 内置模板有更新时另存 `user-config.upstream.md` 对照，不会动你的模板。resources/ 下的内置规则随升级覆盖，模板请只写在「📝 自定义模板」节。
 
 - **THEME**：html 页面主题，tech 深蓝科技（默认）/ biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变；生成时写 `<html data-theme="THEME值">` 定默认，页面右下角换肤坞随点随换（localStorage 记忆（键按页内嵌唯一 ID 隔离、多份产物互不串台、改名/移动目录记忆不丢（生成时头部写 `<meta name="weekly-id" content="<UUID>">`，每次 crypto.randomUUID() 生成标准 UUID v4（8-4-4-4-12 十六进制，禁止手写变体、禁止沿用占位与旧值）；落盘写文件前顺扫落盘目录下本技能命名的 html，读各文件 id meta 查重，撞号重掷至不重复））、?shot 截图模式与打印隐藏）
 - **DATA_SOURCES 意图路由**：用户说「把这些 git 地址 / 目录配置到这个 skill」「数据源加一下」「以后数据从 XX 仓库取」→ 默认指配置到 `user-config.md` 的 `DATA_SOURCES` 数据源清单（不是 SKILL.md、不是 disk-and-html.md）；「git 地址」给的是 URL 或本地仓库路径、目录给的是本地路径都写进 DATA_SOURCES。用户话术只指向某个特定数据源（如「只算这个仓库」）→ 当次生效，不写配置。意图仍有歧义（如分不清「数据收集配置」与「落盘目录配置」）→ 一句话与用户确认后写入，不猜
@@ -42,6 +42,8 @@ disable-model-invocation: false
 4. 对话中明确告知用户「检测到配置版本从 X 升级到 Y，旧配置已备份至 <路径>」
 
 升级本 skill 时，配置结构如有变化必须同步更新本节的当前版本号与迁移说明；禁止在未声明版本变更的情况下静默修改配置语义。
+
+**模板保全（硬规则）**：迁移只动 yaml 块字段，「📝 自定义模板」节原样保留一字不碰——用户改的模板结构绝不因配置升级丢失。
 
 **无法迁移项处理**（值域失效 / 语义漂移 / 数据不兼容）：三情形——①旧值不在新值域（如旧模板/主题名已移除）②同名键含义变化（单位/枚举变更）③数据文件 schema 不兼容。三绝不：绝不静默（无法迁移项停下问，不猜值）、绝不丢失（旧值永远在 .bak-时间戳）、一次说清（升级报告三段式：⚠️ 版本与备份路径 → ✅ 已自动迁移清单 → 🟡 无法迁移项逐条附原因+影响+建议替代）；随后 AskUserQuestion 三选项（A 用建议值 / B 用户给新值 / C 保持旧配置——不更新 CONFIG_VERSION，每次执行再提醒）；报告必附回滚一句话；数据文件迁移前先复制 .bak-时间戳，能映射则映射、不能则写兼容层或留备份提示手动整理
 
