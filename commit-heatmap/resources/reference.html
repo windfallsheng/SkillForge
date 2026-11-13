@@ -75,7 +75,7 @@ body{background:var(--bg);color:var(--text);font-family:system-ui,'Segoe UI',Rob
 footer{text-align:center;color:var(--muted);font-size:10px;margin-top:26px}
 html[data-shot] .card{animation:none!important}
 /* 主题切换渐变：切换瞬间给 html 挂 .theming 类（650ms 后自动摘除），期间全页颜色属性平滑过渡；平时类不存在，不影响任何元素 */
-html.theming, html.theming *, html.theming *::before, html.theming *::after{ transition: background-color .45s cubic-bezier(.4,0,.2,1), color .45s cubic-bezier(.4,0,.2,1), border-color .45s cubic-bezier(.4,0,.2,1), box-shadow .45s cubic-bezier(.4,0,.2,1), fill .45s cubic-bezier(.4,0,.2,1), stroke .45s cubic-bezier(.4,0,.2,1) !important; }
+html.theming, html.theming *, html.theming *::before, html.theming *::after{ transition: background .45s cubic-bezier(.4,0,.2,1), background-color .45s cubic-bezier(.4,0,.2,1), color .45s cubic-bezier(.4,0,.2,1), border-color .45s cubic-bezier(.4,0,.2,1), box-shadow .45s cubic-bezier(.4,0,.2,1), fill .45s cubic-bezier(.4,0,.2,1), stroke .45s cubic-bezier(.4,0,.2,1) !important; }
 @media (prefers-reduced-motion: reduce){ html.theming, html.theming *{ transition: none !important; } }
 
 </style>

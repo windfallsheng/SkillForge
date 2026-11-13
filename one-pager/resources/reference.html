@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="sf-template" content="one-pager@13">
+<meta name="sf-template" content="one-pager@14">
 <meta name="poster-id" content="REF-POSTER-0000">
 <title>AI 改变工作 · 一页纸海报</title>
 <style>
@@ -463,10 +463,10 @@ body{background:linear-gradient(180deg,var(--bg) 12%,var(--bg2) 135%);color:var(
 .tpl-artnouveau ul.points .num{font-family:Georgia,serif;font-size:15px;font-style:italic;color:var(--accent);margin-right:8px}
 .tpl-artnouveau footer{font-size:10px;letter-spacing:3px;color:var(--muted);display:flex;gap:24px}
 
-/* 21. acid 酸性设计：液态金属 blob + 荧光斜切徽章（风格本体色特许：金属灰） */
+/* 21. acid 酸性设计：液态金属 blob + 荧光斜切徽章（风格本体色特许：金属灰，经 color-mix 混入主题强调色） */
 .tpl-acid{display:flex;flex-direction:column;justify-content:center;width:min(82%,1100px);height:100%;padding:6vh 0;position:relative}
 .tpl-acid .liquid{position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 42%,var(--border) 46%,transparent 52%),repeating-linear-gradient(90deg,var(--border) 0 1px,transparent 1px 90px);opacity:.8}
-.tpl-acid .blob{position:absolute;top:8%;right:6%;width:min(24vw,190px);height:min(24vw,190px);border-radius:58% 42% 55% 45% / 48% 55% 45% 52%;background:conic-gradient(from 210deg,rgba(180,180,170,.9),rgba(70,70,80,.9),rgba(220,220,210,.9),rgba(90,90,100,.9),rgba(180,180,170,.9));box-shadow:inset 0 0 24px rgba(0,0,0,.35);opacity:.85}
+.tpl-acid .blob{position:absolute;top:8%;right:6%;width:min(24vw,190px);height:min(24vw,190px);border-radius:58% 42% 55% 45% / 48% 55% 45% 52%;background:conic-gradient(from 210deg,color-mix(in srgb,rgba(180,180,170,.9) 80%,var(--accent) 20%),color-mix(in srgb,rgba(70,70,80,.9) 80%,var(--accent) 20%),color-mix(in srgb,rgba(220,220,210,.9) 80%,var(--accent) 20%),color-mix(in srgb,rgba(90,90,100,.9) 80%,var(--accent) 20%),color-mix(in srgb,rgba(180,180,170,.9) 80%,var(--accent) 20%));box-shadow:inset 0 0 24px rgba(0,0,0,.35);opacity:.85}
 .tpl-acid .badge{font-size:12px;font-weight:900;letter-spacing:3px;color:var(--bg);background:var(--accent);padding:7px 16px;border-radius:2px;transform:skewX(-12deg);margin-bottom:3vh;align-self:flex-start}
 .tpl-acid h1{font-size:clamp(44px,5.8vw,76px);font-weight:900;line-height:1.02;letter-spacing:-1px;color:var(--text);margin-bottom:2.5vh}
 .tpl-acid .quote{font-size:15px;color:var(--muted);margin-bottom:4vh;max-width:70%;border-left:4px solid var(--accent);padding-left:16px}
@@ -476,24 +476,24 @@ body{background:linear-gradient(180deg,var(--bg) 12%,var(--bg2) 135%);color:var(
 .tpl-acid ul.points .num{color:var(--accent);font-family:ui-monospace,'SF Mono',Menlo,monospace}
 .tpl-acid footer{display:flex;justify-content:space-between;font-size:10px;letter-spacing:2px;color:var(--muted);border-top:1px dashed var(--border);padding-top:12px}
 
-/* 22. glitch 故障艺术：RGB 错位标题 + 阶梯裁切卡（风格本体色特许：品红/青错位影） */
+/* 22. glitch 故障艺术：RGB 错位标题 + 阶梯裁切卡（风格本体色特许：品红/青错位影，经 color-mix 混入主题强调色） */
 .tpl-glitch{display:flex;flex-direction:column;justify-content:center;width:min(84%,1150px);height:100%;padding:6vh 0;position:relative}
-.tpl-glitch .bars{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 18px,rgba(255,0,200,.06) 18px 21px,rgba(0,255,255,.06) 21px 24px)}
+.tpl-glitch .bars{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 18px,color-mix(in srgb,var(--accent) 6%,transparent) 18px 21px,color-mix(in srgb,var(--accent2) 6%,transparent) 21px 24px)}
 .tpl-glitch .badge{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12px;letter-spacing:3px;color:var(--accent);border:1.5px solid var(--accent);padding:5px 12px;margin-bottom:3vh;align-self:flex-start}
 .tpl-glitch h1{position:relative;font-size:clamp(44px,6vw,80px);font-weight:900;line-height:1.05;color:var(--text);margin-bottom:3vh}
 .tpl-glitch h1::before,.tpl-glitch h1::after{content:attr(data-t);position:absolute;inset:0;opacity:.7}
-.tpl-glitch h1::before{color:#f0f;transform:translate(-3px,2px);clip-path:inset(12% 0 58% 0)}
-.tpl-glitch h1::after{color:#0ff;transform:translate(3px,-2px);clip-path:inset(58% 0 12% 0)}
+.tpl-glitch h1::before{color:color-mix(in srgb,#f0f 78%,var(--accent) 22%);transform:translate(-3px,2px);clip-path:inset(12% 0 58% 0)}
+.tpl-glitch h1::after{color:color-mix(in srgb,#0ff 78%,var(--accent2) 22%);transform:translate(3px,-2px);clip-path:inset(58% 0 12% 0)}
 .tpl-glitch .quote{font-size:15px;color:var(--muted);margin-bottom:4vh;max-width:70%;font-family:ui-monospace,'SF Mono',Menlo,monospace}
 .tpl-glitch ul.points{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:4vh}
 .tpl-glitch ul.points li{font-size:14px;color:var(--text);background:var(--panel-solid);border:1px solid var(--border);padding:12px 14px;display:flex;gap:10px;align-items:baseline;clip-path:polygon(0 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%)}
 .tpl-glitch ul.points .num{font-family:ui-monospace,'SF Mono',Menlo,monospace;color:var(--accent);font-weight:800}
 .tpl-glitch footer{display:flex;justify-content:space-between;font-size:10px;letter-spacing:2px;color:var(--muted);font-family:ui-monospace,'SF Mono',Menlo,monospace}
 
-/* 23. vaporwave 蒸汽波：落日渐变 + 透视网格地平线（风格本体色特许：粉紫地平线） */
+/* 23. vaporwave 蒸汽波：落日渐变 + 透视网格地平线（风格本体色特许：粉紫地平线，经 color-mix 混入主题强调色） */
 .tpl-vaporwave{display:flex;flex-direction:column;justify-content:flex-end;width:min(86%,1150px);height:100%;padding:7vh 0 6vh;position:relative}
 .tpl-vaporwave .sun{position:absolute;top:12%;left:50%;transform:translateX(-50%);width:min(34vw,260px);height:min(34vw,260px);border-radius:50%;background:linear-gradient(180deg,var(--accent2),transparent 62%);opacity:.55;pointer-events:none}
-.tpl-vaporwave .grid{position:absolute;bottom:0;left:0;right:0;height:42%;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(180,80,255,.28)),repeating-linear-gradient(90deg,rgba(255,255,255,.14) 0 1px,transparent 1px 64px),repeating-linear-gradient(0deg,rgba(255,255,255,.14) 0 1px,transparent 1px 34px);transform:perspective(340px) rotateX(58deg);transform-origin:bottom}
+.tpl-vaporwave .grid{position:absolute;bottom:0;left:0;right:0;height:42%;pointer-events:none;background:linear-gradient(180deg,transparent,color-mix(in srgb,rgba(180,80,255,.28) 76%,var(--accent) 24%)),repeating-linear-gradient(90deg,rgba(255,255,255,.14) 0 1px,transparent 1px 64px),repeating-linear-gradient(0deg,rgba(255,255,255,.14) 0 1px,transparent 1px 34px);transform:perspective(340px) rotateX(58deg);transform-origin:bottom}
 .tpl-vaporwave .badge{font-size:12px;letter-spacing:5px;color:var(--bg);background:linear-gradient(90deg,var(--accent),var(--accent2));padding:7px 18px;border-radius:999px;margin-bottom:3vh;align-self:flex-start}
 .tpl-vaporwave h1{font-size:clamp(40px,5.4vw,70px);font-weight:900;line-height:1.1;letter-spacing:1px;color:var(--text);margin-bottom:2.5vh}
 .tpl-vaporwave .quote{font-size:15px;color:var(--muted);margin-bottom:4vh;max-width:64%}
@@ -571,52 +571,52 @@ body{background:linear-gradient(180deg,var(--bg) 12%,var(--bg2) 135%);color:var(
 .tpl-notice ul.points .num{color:var(--accent);font-weight:800}
 .tpl-notice footer{display:flex;flex-direction:column;align-items:flex-end;font-size:12px;color:var(--muted);gap:6px;margin-top:auto}
 
-/* 29. inkwash 水墨：宣纸底 + 墨色远山 + 朱印落款（风格本体色特许：宣纸米/墨黑/朱砂红） */
-.tpl-inkwash{display:flex;align-items:center;justify-content:center;width:100%;height:100%;position:relative;overflow:hidden;background:#f5f0e3}
-.tpl-inkwash .mt{position:absolute;border-radius:50%;pointer-events:none;background:#26221e}
+/* 29. inkwash 水墨：宣纸底 + 墨色远山 + 朱印落款（风格本体色特许：宣纸米/墨黑/朱砂红，经 color-mix 与主题变量氛围混合） */
+.tpl-inkwash{display:flex;align-items:center;justify-content:center;width:100%;height:100%;position:relative;overflow:hidden;background:color-mix(in srgb,#f5f0e3 78%,var(--bg) 22%)}
+.tpl-inkwash .mt{position:absolute;border-radius:50%;pointer-events:none;background:color-mix(in srgb,#26221e 78%,var(--bg) 22%)}
 .tpl-inkwash .m1{width:76%;height:26%;left:-6%;bottom:-7%;opacity:.07}
 .tpl-inkwash .m2{width:92%;height:30%;left:14%;bottom:-13%;opacity:.13}
 .tpl-inkwash .m3{width:104%;height:34%;left:24%;bottom:-17%;opacity:.2}
-.tpl-inkwash .sun{position:absolute;right:15%;top:11%;width:min(15vw,110px);height:min(15vw,110px);border-radius:50%;background:#b03a2e;opacity:.92;pointer-events:none}
+.tpl-inkwash .sun{position:absolute;right:15%;top:11%;width:min(15vw,110px);height:min(15vw,110px);border-radius:50%;background:color-mix(in srgb,#b03a2e 80%,var(--accent) 20%);opacity:.92;pointer-events:none}
 .tpl-inkwash .content{position:relative;display:flex;flex-direction:column;justify-content:center;width:min(82%,1060px);height:100%;padding:7vh 0}
-.tpl-inkwash .seal{align-self:flex-start;font-family:Georgia,'Songti SC','SimSun',serif;font-size:13px;font-weight:700;letter-spacing:2px;color:#f5f0e3;background:#b03a2e;padding:8px 12px;border-radius:4px;margin-bottom:3vh}
-.tpl-inkwash h1{font-family:Georgia,'Songti SC','SimSun',serif;font-size:clamp(38px,5.2vw,66px);font-weight:700;color:#26221e;line-height:1.4;margin-bottom:2.5vh}
-.tpl-inkwash .quote{font-size:16px;font-style:italic;color:#6b645a;margin-bottom:4vh;max-width:72%;border-left:3px solid #b03a2e;padding-left:18px;line-height:1.9}
+.tpl-inkwash .seal{align-self:flex-start;font-family:Georgia,'Songti SC','SimSun',serif;font-size:13px;font-weight:700;letter-spacing:2px;color:color-mix(in srgb,#f5f0e3 78%,var(--bg) 22%);background:color-mix(in srgb,#b03a2e 80%,var(--accent) 20%);padding:8px 12px;border-radius:4px;margin-bottom:3vh}
+.tpl-inkwash h1{font-family:Georgia,'Songti SC','SimSun',serif;font-size:clamp(38px,5.2vw,66px);font-weight:700;color:color-mix(in srgb,#26221e 80%,var(--text) 20%);line-height:1.4;margin-bottom:2.5vh}
+.tpl-inkwash .quote{font-size:16px;font-style:italic;color:color-mix(in srgb,#6b645a 75%,var(--muted) 25%);margin-bottom:4vh;max-width:72%;border-left:3px solid color-mix(in srgb,#b03a2e 80%,var(--accent) 20%);padding-left:18px;line-height:1.9}
 .tpl-inkwash ul.points{list-style:none;display:flex;flex-direction:column;gap:14px;margin-bottom:4vh}
-.tpl-inkwash ul.points li{font-size:15px;color:#26221e;display:flex;gap:12px;align-items:baseline;line-height:1.8}
-.tpl-inkwash ul.points .num{font-family:Georgia,'Songti SC','SimSun',serif;color:#b03a2e;font-weight:700;flex:none}
-.tpl-inkwash footer{display:flex;justify-content:space-between;font-size:10px;letter-spacing:3px;color:#6b645a;border-top:1px solid rgba(38,34,30,.18);padding-top:14px}
+.tpl-inkwash ul.points li{font-size:15px;color:color-mix(in srgb,#26221e 80%,var(--text) 20%);display:flex;gap:12px;align-items:baseline;line-height:1.8}
+.tpl-inkwash ul.points .num{font-family:Georgia,'Songti SC','SimSun',serif;color:color-mix(in srgb,#b03a2e 80%,var(--accent) 20%);font-weight:700;flex:none}
+.tpl-inkwash footer{display:flex;justify-content:space-between;font-size:10px;letter-spacing:3px;color:color-mix(in srgb,#6b645a 75%,var(--muted) 25%);border-top:1px solid color-mix(in srgb,rgba(38,34,30,.18) 75%,var(--border) 25%);padding-top:14px}
 
-/* 30. palace 红金宫廷：朱红底 + 回纹金边双线框 + 衬线金字（风格本体色特许：朱红/鎏金/米白） */
-.tpl-palace{display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:linear-gradient(160deg,#7a1f1f,#5e1717);padding:6vh 0}
-.tpl-palace .frame{position:relative;width:min(80%,1060px);height:100%;display:flex;flex-direction:column;justify-content:center;border:2px solid #d4af37;outline:1px solid #d4af37;outline-offset:5px;padding:7vh 5vw;text-align:center;background:repeating-linear-gradient(90deg,rgba(212,175,55,.08) 0 2px,transparent 2px 34px)}
+/* 30. palace 红金宫廷：朱红底 + 回纹金边双线框 + 衬线金字（风格本体色特许：朱红/鎏金/米白，经 color-mix 与主题变量氛围混合） */
+.tpl-palace{display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:linear-gradient(160deg,color-mix(in srgb,#7a1f1f 78%,var(--bg) 22%),color-mix(in srgb,#5e1717 78%,var(--bg) 22%));padding:6vh 0}
+.tpl-palace .frame{position:relative;width:min(80%,1060px);height:100%;display:flex;flex-direction:column;justify-content:center;border:2px solid color-mix(in srgb,#d4af37 80%,var(--accent) 20%);outline:1px solid color-mix(in srgb,#d4af37 80%,var(--accent) 20%);outline-offset:5px;padding:7vh 5vw;text-align:center;background:repeating-linear-gradient(90deg,rgba(212,175,55,.08) 0 2px,transparent 2px 34px)}
 .tpl-palace .frame::after{content:'';position:absolute;inset:9px;border:1px solid rgba(212,175,55,.5);pointer-events:none}
-.tpl-palace .badge{font-size:12px;letter-spacing:8px;color:#d4af37;margin-bottom:2.5vh}
-.tpl-palace h1{font-family:Georgia,'Songti SC','SimSun',serif;font-size:clamp(36px,4.8vw,62px);font-weight:700;color:#f5ead1;margin-bottom:2vh;line-height:1.4}
-.tpl-palace .divider{display:flex;align-items:center;gap:14px;justify-content:center;color:#d4af37;font-size:13px;margin-bottom:2.5vh}
-.tpl-palace .divider::before,.tpl-palace .divider::after{content:'';height:1px;width:110px;background:linear-gradient(90deg,transparent,#d4af37)}
-.tpl-palace .divider::after{background:linear-gradient(90deg,#d4af37,transparent)}
-.tpl-palace .quote{font-size:15px;font-style:italic;color:#e8cba0;margin-bottom:3.5vh;max-width:70%;margin-left:auto;margin-right:auto}
+.tpl-palace .badge{font-size:12px;letter-spacing:8px;color:color-mix(in srgb,#d4af37 80%,var(--accent) 20%);margin-bottom:2.5vh}
+.tpl-palace h1{font-family:Georgia,'Songti SC','SimSun',serif;font-size:clamp(36px,4.8vw,62px);font-weight:700;color:color-mix(in srgb,#f5ead1 80%,var(--text) 20%);margin-bottom:2vh;line-height:1.4}
+.tpl-palace .divider{display:flex;align-items:center;gap:14px;justify-content:center;color:color-mix(in srgb,#d4af37 80%,var(--accent) 20%);font-size:13px;margin-bottom:2.5vh}
+.tpl-palace .divider::before,.tpl-palace .divider::after{content:'';height:1px;width:110px;background:linear-gradient(90deg,transparent,color-mix(in srgb,#d4af37 80%,var(--accent) 20%))}
+.tpl-palace .divider::after{background:linear-gradient(90deg,color-mix(in srgb,#d4af37 80%,var(--accent) 20%),transparent)}
+.tpl-palace .quote{font-size:15px;font-style:italic;color:color-mix(in srgb,#e8cba0 80%,var(--text) 20%);margin-bottom:3.5vh;max-width:70%;margin-left:auto;margin-right:auto}
 .tpl-palace ul.points{list-style:none;display:flex;justify-content:center;gap:3.5vw;flex-wrap:wrap;margin-bottom:3.5vh}
-.tpl-palace ul.points li{font-size:14px;color:#f5ead1;display:flex;gap:8px;align-items:center;line-height:1.8}
-.tpl-palace ul.points .num{width:22px;height:22px;border:1px solid #d4af37;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:#d4af37;flex:none}
-.tpl-palace footer{display:flex;justify-content:center;gap:26px;font-size:10px;letter-spacing:3px;color:#d8b878}
+.tpl-palace ul.points li{font-size:14px;color:color-mix(in srgb,#f5ead1 80%,var(--text) 20%);display:flex;gap:8px;align-items:center;line-height:1.8}
+.tpl-palace ul.points .num{width:22px;height:22px;border:1px solid color-mix(in srgb,#d4af37 80%,var(--accent) 20%);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:color-mix(in srgb,#d4af37 80%,var(--accent) 20%);flex:none}
+.tpl-palace footer{display:flex;justify-content:center;gap:26px;font-size:10px;letter-spacing:3px;color:color-mix(in srgb,#d8b878 75%,var(--muted) 25%)}
 
-/* 31. landscape 青绿山水：clip-path 层叠山峦 + 留白天际 + 题跋落款（风格本体色特许：青绿/赭石/留白） */
-.tpl-landscape{display:flex;align-items:center;justify-content:center;width:100%;height:100%;position:relative;overflow:hidden;background:#f4f1e8}
+/* 31. landscape 青绿山水：clip-path 层叠山峦 + 留白天际 + 题跋落款（风格本体色特许：青绿/赭石/留白，经 color-mix 与主题变量氛围混合） */
+.tpl-landscape{display:flex;align-items:center;justify-content:center;width:100%;height:100%;position:relative;overflow:hidden;background:color-mix(in srgb,#f4f1e8 78%,var(--bg) 22%)}
 .tpl-landscape .peak{position:absolute;left:-6%;right:-6%;pointer-events:none}
-.tpl-landscape .p1{bottom:36%;height:32%;background:#a8c6b4;clip-path:polygon(0 100%,8% 42%,18% 66%,30% 30%,44% 58%,56% 38%,68% 62%,80% 34%,100% 70%,100% 100%)}
-.tpl-landscape .p2{bottom:23%;height:32%;background:#6ea08d;clip-path:polygon(0 100%,12% 48%,26% 72%,40% 40%,58% 68%,72% 44%,86% 70%,100% 50%,100% 100%)}
-.tpl-landscape .p3{bottom:9%;height:30%;background:#4a8a76;clip-path:polygon(0 100%,10% 58%,30% 78%,50% 52%,70% 80%,88% 60%,100% 84%,100% 100%)}
-.tpl-landscape .p4{bottom:-5%;height:24%;background:#356b5a;clip-path:polygon(0 100%,18% 62%,42% 86%,64% 66%,84% 90%,100% 74%,100% 100%)}
+.tpl-landscape .p1{bottom:36%;height:32%;background:color-mix(in srgb,#a8c6b4 80%,var(--accent) 20%);clip-path:polygon(0 100%,8% 42%,18% 66%,30% 30%,44% 58%,56% 38%,68% 62%,80% 34%,100% 70%,100% 100%)}
+.tpl-landscape .p2{bottom:23%;height:32%;background:color-mix(in srgb,#6ea08d 80%,var(--accent) 20%);clip-path:polygon(0 100%,12% 48%,26% 72%,40% 40%,58% 68%,72% 44%,86% 70%,100% 50%,100% 100%)}
+.tpl-landscape .p3{bottom:9%;height:30%;background:color-mix(in srgb,#4a8a76 80%,var(--accent) 20%);clip-path:polygon(0 100%,10% 58%,30% 78%,50% 52%,70% 80%,88% 60%,100% 84%,100% 100%)}
+.tpl-landscape .p4{bottom:-5%;height:24%;background:color-mix(in srgb,#356b5a 80%,var(--accent) 20%);clip-path:polygon(0 100%,18% 62%,42% 86%,64% 66%,84% 90%,100% 74%,100% 100%)}
 .tpl-landscape .content{position:relative;display:flex;flex-direction:column;justify-content:center;width:min(82%,1060px);height:100%;padding:7vh 0}
-.tpl-landscape .badge{align-self:flex-start;font-family:Georgia,'Songti SC','SimSun',serif;font-size:12px;letter-spacing:6px;color:#356b5a;border:1px solid #356b5a;padding:6px 14px;margin-bottom:3vh}
-.tpl-landscape h1{font-family:Georgia,'Songti SC','SimSun',serif;font-size:clamp(36px,4.8vw,62px);font-weight:700;color:#26352e;line-height:1.45;margin-bottom:2vh;max-width:82%}
-.tpl-landscape .quote{font-size:15px;color:#5c6b62;margin-bottom:4vh;max-width:64%;line-height:1.9}
+.tpl-landscape .badge{align-self:flex-start;font-family:Georgia,'Songti SC','SimSun',serif;font-size:12px;letter-spacing:6px;color:color-mix(in srgb,#356b5a 80%,var(--accent) 20%);border:1px solid color-mix(in srgb,#356b5a 80%,var(--accent) 20%);padding:6px 14px;margin-bottom:3vh}
+.tpl-landscape h1{font-family:Georgia,'Songti SC','SimSun',serif;font-size:clamp(36px,4.8vw,62px);font-weight:700;color:color-mix(in srgb,#26352e 80%,var(--text) 20%);line-height:1.45;margin-bottom:2vh;max-width:82%}
+.tpl-landscape .quote{font-size:15px;color:color-mix(in srgb,#5c6b62 75%,var(--muted) 25%);margin-bottom:4vh;max-width:64%;line-height:1.9}
 .tpl-landscape ul.points{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:3.5vh}
-.tpl-landscape ul.points li{font-size:14px;color:#26352e;display:flex;gap:10px;align-items:baseline}
-.tpl-landscape ul.points .num{font-family:Georgia,'Songti SC','SimSun',serif;color:#b06a3b;font-weight:700;flex:none}
-.tpl-landscape footer{display:flex;justify-content:space-between;font-size:10px;letter-spacing:3px;color:#5c6b62}
+.tpl-landscape ul.points li{font-size:14px;color:color-mix(in srgb,#26352e 80%,var(--text) 20%);display:flex;gap:10px;align-items:baseline}
+.tpl-landscape ul.points .num{font-family:Georgia,'Songti SC','SimSun',serif;color:color-mix(in srgb,#b06a3b 80%,var(--accent) 20%);font-weight:700;flex:none}
+.tpl-landscape footer{display:flex;justify-content:space-between;font-size:10px;letter-spacing:3px;color:color-mix(in srgb,#5c6b62 75%,var(--muted) 25%)}
 
 /* 32. watermark 水印公文：斜置大字背景水印 + 居中公文正文（颜色跟随主题令牌） */
 .tpl-watermark{display:flex;align-items:center;justify-content:center;width:100%;height:100%;position:relative;overflow:hidden}
@@ -700,7 +700,7 @@ html[data-shot] .dock-tpl,html[data-shot] .dock-theme{display:none!important}
   .dock-body{max-width:calc(100vw - 36px)}
 }
 /* 主题切换渐变：切换瞬间给 html 挂 .theming 类（650ms 后自动摘除），期间全页颜色属性平滑过渡；平时类不存在，不影响任何元素 */
-html.theming, html.theming *, html.theming *::before, html.theming *::after{ transition: background-color .45s cubic-bezier(.4,0,.2,1), color .45s cubic-bezier(.4,0,.2,1), border-color .45s cubic-bezier(.4,0,.2,1), box-shadow .45s cubic-bezier(.4,0,.2,1), fill .45s cubic-bezier(.4,0,.2,1), stroke .45s cubic-bezier(.4,0,.2,1) !important; }
+html.theming, html.theming *, html.theming *::before, html.theming *::after{ transition: background .45s cubic-bezier(.4,0,.2,1), background-color .45s cubic-bezier(.4,0,.2,1), color .45s cubic-bezier(.4,0,.2,1), border-color .45s cubic-bezier(.4,0,.2,1), box-shadow .45s cubic-bezier(.4,0,.2,1), fill .45s cubic-bezier(.4,0,.2,1), stroke .45s cubic-bezier(.4,0,.2,1) !important; }
 @media (prefers-reduced-motion: reduce){ html.theming, html.theming *{ transition: none !important; } }
 
 </style>
