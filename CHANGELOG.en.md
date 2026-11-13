@@ -4,6 +4,15 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
+## 1.3.6 (2026-11-13)
+
+**prompt-pouch fullscreen fill-panel variable area shrinks, space goes to previews (@14)**
+
+- In fullscreen the variable input area changes from flex equal-split to content-sized (flex:0 1 auto): no more mid-panel blank gap when there are few variables — the freed space is split by the top template preview and the bottom live result; with many variables it caps at 45vh with scrolling fallback
+- Add-edit modal fullscreen keeps its flexible content textarea (fp-fields explicitly flex:1, unaffected by the base rule)
+- Template stamp prompt-pouch@13 → @14 (fullscreen layout change)
+- Note: 1.3.5 was mistakenly published due to an npm staged conflict and deprecated on the registry (content duplicated 1.3.4); version number skips to 1.3.6
+
 ## 1.3.4 (2026-11-13)
 
 **prompt-pouch fullscreen modals + taller fill-panel previews (@13)**
