@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="sf-template" content="prompt-pouch@13">
+<meta name="sf-template" content="prompt-pouch@14">
 <meta name="pouch-id" content="REF-POUCH-0000">
 <title>锦囊 Prompt Pouch — 提示词管理台</title>
 <style>
@@ -491,10 +491,10 @@ mark.hl{ background:var(--gold-dim); color:var(--gold); border-radius:3px; paddi
 .fill-panel.full .detail-content{ flex:1; max-height:none; }
 .fill-panel.full .detail-times, .fill-panel.full .detail-notes, .fill-panel.full .detail-vars{ flex:none; }
 .fill-panel.full .fp-preview{ flex:1; max-height:none; min-height:120px; }
-.fill-panel.full .fp-fields{ flex:1; overflow-y:auto; min-height:0; }
+.fill-panel.full .fp-fields{ flex:0 1 auto; overflow-y:auto; min-height:0; max-height:45vh; }
 .fill-panel.full .fp-live{ flex:1; display:flex; flex-direction:column; min-height:120px; }
 .fill-panel.full .fp-live textarea{ flex:1; height:auto; min-height:96px; }
-#itemMask .fill-panel.full .fp-fields{ display:flex; flex-direction:column; gap:10px; min-height:0; }
+#itemMask .fill-panel.full .fp-fields{ flex:1; max-height:none; display:flex; flex-direction:column; gap:10px; min-height:0; }
 #itemMask .fill-panel.full .fp-field:last-child{ flex:1; display:flex; flex-direction:column; min-height:0; }
 #itemMask .fill-panel.full #itemContent{ flex:1; min-height:40vh; resize:vertical; }
 /* ============ 统一确认弹框（替代浏览器原生弹框） ============ */
