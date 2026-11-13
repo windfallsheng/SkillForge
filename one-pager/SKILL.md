@@ -62,7 +62,7 @@ disable-model-invocation: false
 
 ## 产物升级（回炉）
 
-生成 HTML 时头部写版本戳 `<meta name="sf-template" content="one-pager@10">`（模板升级时递增 @N 并同步 reference.html 与本文档）。用户说「升级旧海报/回炉」时：顺扫海报库根目录（DIR 值）下两种形态——新子目录形态 `<slug>/poster.html` 与旧平铺形态 `poster-*.html`，读版本戳筛旧版（无版本戳或缺少 `<meta name="poster-id">` 稳定 ID 的产物视为 v0 最旧版，一并进清单）→ 列清单（文件/旧版本）→ AskUserQuestion 选全部或部分 → 逐份升级：浅升级（仅 CSS/JS 变化）对旧页替换 `<style>` 块与交互脚本、正文原样保留；深升级（DOM 结构变化）从同目录 md 底稿按当前 reference.html 重建，先备份旧版 `.bak-时间戳`，重建必须沿用原页 poster-id meta 值（换 ID = 模板/主题记忆失联）→ 报告三段式：✅ 已升级清单 / ⚠️ 手改保留说明 / 🟡 失败项原因。模板改动分级：业务改动、数据格式改动、页面改动任一发生即模板升级，版本戳 +1 并同步 reference.html 与本文档；纯措辞润色不 bump。每次生成 HTML 时顺扫落盘目录读版本戳：发现旧版产物主动告知用户「说『把我旧海报都升级成新样式』即可一键升级」。
+生成 HTML 时头部写版本戳 `<meta name="sf-template" content="one-pager@11">`（模板升级时递增 @N 并同步 reference.html 与本文档）。用户说「升级旧海报/回炉」时：顺扫海报库根目录（DIR 值）下两种形态——新子目录形态 `<slug>/poster.html` 与旧平铺形态 `poster-*.html`，读版本戳筛旧版（无版本戳或缺少 `<meta name="poster-id">` 稳定 ID 的产物视为 v0 最旧版，一并进清单）→ 列清单（文件/旧版本）→ AskUserQuestion 选全部或部分 → 逐份升级：浅升级（仅 CSS/JS 变化）对旧页替换 `<style>` 块与交互脚本、正文原样保留；深升级（DOM 结构变化）从同目录 md 底稿按当前 reference.html 重建，先备份旧版 `.bak-时间戳`，重建必须沿用原页 poster-id meta 值（换 ID = 模板/主题记忆失联）→ 报告三段式：✅ 已升级清单 / ⚠️ 手改保留说明 / 🟡 失败项原因。模板改动分级：业务改动、数据格式改动、页面改动任一发生即模板升级，版本戳 +1 并同步 reference.html 与本文档；纯措辞润色不 bump。每次生成 HTML 时顺扫落盘目录读版本戳：发现旧版产物主动告知用户「说『把我旧海报都升级成新样式』即可一键升级」。
 
 ## 规则速览
 

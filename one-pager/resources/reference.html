@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="sf-template" content="one-pager@10">
+<meta name="sf-template" content="one-pager@11">
 <meta name="poster-id" content="REF-POSTER-0000">
 <title>AI 改变工作 · 一页纸海报</title>
 <style>
@@ -697,6 +697,10 @@ html[data-shot] .dock-tpl,html[data-shot] .dock-theme{display:none!important}
   .tp-btn{font-size:11px;padding:4px 8px}
   .dock-body{max-width:calc(100vw - 36px)}
 }
+/* 主题切换渐变：切换瞬间给 html 挂 .theming 类（650ms 后自动摘除），期间全页颜色属性平滑过渡；平时类不存在，不影响任何元素 */
+html.theming, html.theming *, html.theming *::before, html.theming *::after{ transition: background-color .45s ease, color .45s ease, border-color .45s ease, box-shadow .45s ease, fill .45s ease, stroke .45s ease !important; }
+@media (prefers-reduced-motion: reduce){ html.theming, html.theming *{ transition: none !important; } }
+
 </style>
 </head>
 <body>
@@ -1208,6 +1212,7 @@ html[data-shot] .dock-tpl,html[data-shot] .dock-theme{display:none!important}
     d.addEventListener('click', function(){
       var t = d.getAttribute('data-t');
       curT = t;
+      var r = document.documentElement; r.classList.add('theming'); clearTimeout(r.__sfThT); r.__sfThT = setTimeout(function(){ r.classList.remove('theming'); }, 650);
       document.documentElement.setAttribute('data-theme', t);
       try { localStorage.setItem(THEME_KEY, t); } catch(e) {}
       TH_DOTS.forEach(function(x){ x.classList.toggle('on', x === d); });
