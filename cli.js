@@ -25,8 +25,9 @@ const CATEGORIES = [
   { name: "文档装裱", en: "Documents", skills: ["article-to-html", "twin-docs", "one-pager"] },
   { name: "工程提效", en: "Engineering", skills: ["spec-doc2spec", "spec-spec2doc", "release-notes"] },
   { name: "演示汇演", en: "Slides", skills: ["magic-deck", "deck-stage"] },
-  { name: "数据整备", en: "Data", skills: ["data-prepper", "commit-heatmap"] },
+  { name: "数据整备", en: "Data", skills: ["data-prepper", "commit-heatmap", "report-collector"] },
   { name: "沟通协作", en: "Communication", skills: ["meeting-minutes", "prompt-pouch", "decision-log"] },
+  { name: "投资辅助", en: "Investing", skills: ["mentor"] },
   { name: "技能自造", en: "Meta", skills: ["meta-forge", "skill-doctor"] },
 ];
 

@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="sf-template" content="mentor@3">
+<meta name="mentor-id" content="3f8224dd-9456-425e-906f-4240c0a66e48">
+<title>谋定 · 个人投资罗盘</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='none' stroke='%23f0b90b' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%23f0b90b'/%3E%3Cpath d='M32 32 L44 20 A14 14 0 0 0 20 22 Z' fill='%23f9dd7d'/%3E%3C/svg%3E">
+<style>
+/* ══════════ 谋定 · 单文件看板样式（真相源 reference.html @1）══════════
+   七套主题变量 + 45 色 @property 渐变换肤 + 三层底纹 + 卡片流 + 徽章表格 +
+   三区弹框（⛶ 全屏）+ 换肤坞；字体继承系统默认，零外部依赖（echarts 本地文件） */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--px-bg); color: var(--px-text);
+  min-height: 100vh; overflow-x: hidden;
+  background-image: repeating-linear-gradient(0deg, var(--px-stripes) 0 1px, transparent 1px 8px);
+}
+
+/* ── 三层底纹（fixed，不占位）── */
+.bg-grid, .bg-stars, .bg-glow, .bg-scan {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+}
+.bg-grid {
+  background-image: linear-gradient(var(--px-grid-line) 1px, transparent 1px),
+                    linear-gradient(90deg, var(--px-grid-line) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.bg-stars {
+  background-image:
+    radial-gradient(1px 1px at 18% 22%, var(--px-star-a), transparent),
+    radial-gradient(1px 1px at 64% 12%, var(--px-star-b), transparent),
+    radial-gradient(1.5px 1.5px at 82% 38%, var(--px-star-c), transparent),
+    radial-gradient(1px 1px at 36% 62%, var(--px-star-d), transparent),
+    radial-gradient(1px 1px at 52% 82%, var(--px-star-e), transparent),
+    radial-gradient(1.5px 1.5px at 12% 88%, var(--px-star-f), transparent),
+    radial-gradient(1px 1px at 74% 70%, var(--px-star-g), transparent),
+    radial-gradient(1px 1px at 42% 34%, var(--px-star-h), transparent);
+  background-size: 220px 220px;
+}
+.bg-glow {
+  background: radial-gradient(640px 300px at 50% -120px, var(--px-glow-color), transparent);
+}
+.bg-scan {
+  background: repeating-linear-gradient(0deg, var(--px-scan-line) 0 1px, transparent 1px 4px);
+}
+
+/* ── 布局 ── */
+.wrap { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 0 20px 96px; }
+.hero { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 24px 0 16px; }
+.hero .logo { width: 48px; height: 48px; flex: 0 0 auto; }
+.hero .titles { flex: 1 1 auto; min-width: 200px; }
+.hero h1 { font-size: 1.9rem; letter-spacing: .5px; line-height: 1.15; }
+.hero h1 .en { font-size: .85rem; color: var(--px-accent); margin-left: 10px; letter-spacing: 2px; }
+.hero .sub { color: var(--px-sub); font-size: .9rem; margin-top: 3px; }
+.statusbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.bd {
+  display: inline-flex; align-items: center; gap: 6px; padding: 3px 11px;
+  border-radius: 999px; font-size: .8rem; border: 1px solid; white-space: nowrap;
+}
+.bd::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 6px currentColor; }
+.bd.ok   { color: var(--px-ok-text);   background: var(--px-ok-bg);   border-color: var(--px-ok-border); }
+.bd.warn { color: var(--px-warn-text); background: var(--px-warn-bg); border-color: var(--px-warn-border); }
+.bd.bad  { color: var(--px-down);      background: rgba(248,113,113,.07); border-color: rgba(248,113,113,.28); }
+.bd.info { color: var(--px-info-text); background: var(--px-info-bg); border-color: var(--px-info-border); }
+.bd.flat { color: var(--px-sub);       background: transparent;          border-color: var(--px-border); }
+.bd.flat::before { display: none; }
+
+/* ── 区块网格与卡片 ── */
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid .wide { grid-column: 1 / -1; }
+@media (max-width: 920px) { .grid { grid-template-columns: 1fr; } }
+.card {
+  background: var(--px-card);
+  border: 1px solid var(--px-border); border-left: 3px solid var(--px-accent);
+  border-radius: 8px; box-shadow: var(--px-shadow);
+  padding: 18px 20px;
+  background-image: repeating-linear-gradient(0deg, var(--px-stripes) 0 1px, transparent 1px 8px);
+  transition: border-color .2s;
+}
+.card:hover { border-color: var(--px-accent); }
+.card h2 { font-size: 1.02rem; color: var(--px-accent-2); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; letter-spacing: .4px; }
+.card h2 svg.ico { width: 1.08em; height: 1.08em; flex: 0 0 auto; color: var(--px-accent-2); }
+.dock-btn svg { width: 1.2rem; height: 1.2rem; display: block; }
+.dialog-title svg.ico { width: 1.05em; height: 1.05em; vertical-align: -0.15em; }
+.card .hint { color: var(--px-muted); font-size: .78rem; margin-bottom: 10px; }
+.card .empty { color: var(--px-muted); font-size: .85rem; padding: 14px 0; }
+
+/* ── 轻提示 toast（导出/导入反馈）── */
+.toast {
+  position: fixed; bottom: 88px; left: 50%; transform: translateX(-50%);
+  z-index: 300; background: var(--px-metric-bg); color: var(--px-text);
+  border: 1px solid var(--px-accent); border-radius: 8px;
+  padding: 10px 18px; font-size: .85rem; box-shadow: var(--px-shadow);
+  opacity: 0; pointer-events: none; transition: opacity .3s; max-width: 72vw;
+}
+.toast.on { opacity: 1; }
+.toast.bad { border-color: var(--px-down); color: var(--px-down); }
+
+/* ── file:// 拦截横幅 ── */
+.file-banner {
+  position: sticky; top: 0; z-index: 60; display: none;
+  background: var(--px-warn-bg); color: var(--px-warn-text);
+  border-bottom: 1px solid var(--px-warn-border);
+  padding: 10px 20px; font-size: .85rem;
+}
+.file-banner code { color: var(--px-accent-2); }
+
+/* ── 表格（自绘，部署版 .px-table 同源）── */
+.tb-wrap { overflow-x: auto; }
+table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
+.tb th {
+  background: var(--px-table-head-bg); color: var(--px-table-head-text);
+  text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--px-border);
+  white-space: nowrap; font-weight: 600;
+}
+.tb td { padding: 8px 10px; border-bottom: 1px solid var(--px-border); color: var(--px-table-text); }
+.tb tbody tr:hover { background: var(--px-hover); }
+.tb .num { text-align: right; font-variant-numeric: tabular-nums; }
+.tb .reason { color: var(--px-muted); font-size: .78rem; }
+
+/* ── 操作徽章（buy/sell/paused/observe/hold 语义色）── */
+.op { display: inline-block; padding: 2px 9px; border-radius: 5px; font-size: .78rem; font-weight: 600; }
+.op.buy     { color: #86efac; background: rgba(22,163,74,.16);  border: 1px solid rgba(22,163,74,.4); }
+.op.sell    { color: #fca5a5; background: rgba(220,38,38,.16);  border: 1px solid rgba(220,38,38,.4); }
+.op.paused  { color: #fbbf24; background: rgba(245,158,11,.15); border: 1px solid rgba(245,158,11,.4); }
+.op.observe { color: #fda4af; background: rgba(244,114,182,.13); border: 1px solid rgba(244,114,182,.38); }
+.op.hold    { color: var(--px-sub); background: var(--px-metric-bg); border: 1px solid var(--px-border); }
+
+/* ── 指标卡 / 持仓卡 ── */
+.metrics { display: flex; gap: 10px; flex-wrap: wrap; }
+.metric {
+  flex: 1 1 130px; background: var(--px-metric-bg);
+  border: 1px solid var(--px-metric-border); border-radius: 8px; padding: 10px 12px;
+}
+.metric .k { font-size: .75rem; color: var(--px-sub); }
+.metric .v { font-size: 1.12rem; margin-top: 3px; font-variant-numeric: tabular-nums; }
+.metric .v.up { color: var(--px-up); } .metric .v.down { color: var(--px-down); }
+.hold-card {
+  background: var(--px-metric-bg); border: 1px solid var(--px-metric-border);
+  border-radius: 8px; padding: 12px 14px; margin-bottom: 10px;
+}
+.hold-card .top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.hold-card .nm { font-weight: 600; }
+.hold-card .code { color: var(--px-sub); font-size: .78rem; margin-left: 6px; }
+.hold-card .pnl { font-weight: 700; font-variant-numeric: tabular-nums; }
+.hold-card .pnl.up { color: var(--px-up); } .hold-card .pnl.down { color: var(--px-down); }
+.hold-card .meta { display: flex; gap: 14px; flex-wrap: wrap; color: var(--px-sub); font-size: .8rem; margin-top: 7px; }
+.pos-bar { height: 5px; background: var(--px-border); border-radius: 3px; margin-top: 8px; overflow: hidden; }
+.pos-bar i { display: block; height: 100%; background: var(--px-accent); border-radius: 3px; }
+
+/* ── 芯片墙 / 标签 ── */
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 3px 11px;
+  border: 1px solid var(--px-border); border-radius: 999px;
+  background: var(--px-metric-bg); font-size: .8rem; color: var(--px-sub);
+}
+.chip b { color: var(--px-text); font-weight: 600; }
+
+/* ── AI 隔离区 ── */
+.ai-box {
+  background: var(--px-ai-bg); border: 1px dashed var(--px-ai-border);
+  border-radius: 8px; padding: 12px 14px; color: var(--px-ai-text);
+  font-size: .86rem; line-height: 1.65; white-space: pre-wrap;
+}
+
+/* ── ECharts 容器与降级 ── */
+.ech { width: 100%; height: 300px; }
+.ech.off { display: none; }
+.ech-off { display: none; color: var(--px-muted); font-size: .82rem; padding: 20px 0; }
+.ech-off.on { display: block; }
+.ech-sm { width: 100%; height: 150px; }
+@property --px-bg { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-card { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-side { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-border { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-accent { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-accent-2 { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-text { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-sub { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-muted { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-metric-bg { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-metric-border { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-stripes { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-grid-line { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-scan-line { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-glow-color { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-star-a { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-star-b { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-star-c { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-star-d { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-star-e { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-star-f { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-star-g { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-star-h { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-ai-bg { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-ai-border { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-ai-text { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-ai-text-bg { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-ai-text-border { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-table-head-bg { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-table-head-text { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-table-text { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-hover { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-warn-bg { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-warn-border { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-warn-text { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-ok-bg { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-ok-border { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-ok-text { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-info-bg { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-info-border { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-info-text { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-up { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-down { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-buy { syntax: '<color>'; inherits: true; initial-value: #888888; }
+@property --px-sell { syntax: '<color>'; inherits: true; initial-value: #888888; }
+:root { transition: --px-bg, --px-card, --px-side, --px-border, --px-accent, --px-accent-2, --px-text, --px-sub, --px-muted, --px-metric-bg, --px-metric-border, --px-stripes, --px-grid-line, --px-scan-line, --px-glow-color, --px-star-a, --px-star-b, --px-star-c, --px-star-d, --px-star-e, --px-star-f, --px-star-g, --px-star-h, --px-ai-bg, --px-ai-border, --px-ai-text, --px-ai-text-bg, --px-ai-text-border, --px-table-head-bg, --px-table-head-text, --px-table-text, --px-hover, --px-warn-bg, --px-warn-border, --px-warn-text, --px-ok-bg, --px-ok-border, --px-ok-text, --px-info-bg, --px-info-border, --px-info-text, --px-up, --px-down, --px-buy, --px-sell 450ms cubic-bezier(.4,0,.2,1); }
+
+:root, [data-theme="night-gold"] {
+  --px-bg: #0a1929;
+  --px-card: #0b1e37;
+  --px-side: #050f1d;
+  --px-border: #0f3350;
+  --px-accent: #f0b90b;
+  --px-accent-2: #fbbf24;
+  --px-text: #f8fafc;
+  --px-sub: #94a3b8;
+  --px-muted: #64748b;
+  --px-metric-bg: rgba(240,185,11,.05);
+  --px-metric-border: rgba(240,185,11,.16);
+  --px-stripes: rgba(255,255,255,.014);
+  --px-shadow: 0 4px 18px rgba(0,0,0,.35);
+  --px-left-glow: -3px 0 14px rgba(240,185,11,.10);
+  --px-side-shadow: 4px 0 18px rgba(0,0,0,.35);
+  --px-grid-line: rgba(240,185,11,.025);
+  --px-scan-line: rgba(240,185,11,.012);
+  --px-glow-color: rgba(240,185,11,.10);
+  --px-star-a: rgba(255,255,255,.4);
+  --px-star-b: rgba(240,185,11,.5);
+  --px-star-c: rgba(255,255,255,.32);
+  --px-star-d: rgba(168,85,247,.38);
+  --px-star-e: rgba(240,185,11,.45);
+  --px-star-f: rgba(255,255,255,.3);
+  --px-star-g: rgba(0,255,136,.32);
+  --px-star-h: rgba(240,185,11,.35);
+  --px-ai-bg: #3b2f0d;
+  --px-ai-border: rgba(240,185,11,.35);
+  --px-ai-text: #fcd34d;
+  --px-ai-text-bg: rgba(240,185,11,.04);
+  --px-ai-text-border: rgba(240,185,11,.25);
+  --px-table-head-bg: rgba(240,185,11,.09);
+  --px-table-head-text: #fbbf24;
+  --px-table-text: #cbd5e1;
+  --px-hover: rgba(240,185,11,.05);
+  --px-warn-bg: #3b2f0d;
+  --px-warn-border: rgba(240,185,11,.35);
+  --px-warn-text: #fcd34d;
+  --px-ok-bg: #0c2b22;
+  --px-ok-border: rgba(74,222,128,.3);
+  --px-ok-text: #86efac;
+  --px-info-bg: #0c2438;
+  --px-info-border: rgba(56,189,248,.3);
+  --px-info-text: #7dd3fc;
+  --px-up: #4ade80;
+  --px-down: #f87171;
+  --px-buy: #16a34a;
+  --px-sell: #dc2626;
+}
+[data-theme="tech-blue"] {
+  --px-bg: #06121f;
+  --px-card: #08243a;
+  --px-side: #030b14;
+  --px-border: #0b3a5e;
+  --px-accent: #00e5ff;
+  --px-accent-2: #67e8f9;
+  --px-text: #e6fbff;
+  --px-sub: #7ea8bd;
+  --px-muted: #56788c;
+  --px-metric-bg: rgba(0,229,255,.06);
+  --px-metric-border: rgba(0,229,255,.2);
+  --px-stripes: rgba(255,255,255,.014);
+  --px-shadow: 0 4px 18px rgba(0,0,0,.4);
+  --px-left-glow: -3px 0 14px rgba(0,229,255,.14);
+  --px-side-shadow: 4px 0 18px rgba(0,0,0,.4);
+  --px-grid-line: rgba(0,240,255,.03);
+  --px-scan-line: rgba(0,240,255,.015);
+  --px-glow-color: rgba(0,229,255,.09);
+  --px-star-a: rgba(255,255,255,.4);
+  --px-star-b: rgba(0,240,255,.5);
+  --px-star-c: rgba(255,255,255,.32);
+  --px-star-d: rgba(168,85,247,.4);
+  --px-star-e: rgba(0,240,255,.45);
+  --px-star-f: rgba(255,255,255,.3);
+  --px-star-g: rgba(0,255,136,.4);
+  --px-star-h: rgba(0,240,255,.35);
+  --px-ai-bg: #0a2e33;
+  --px-ai-border: rgba(0,229,255,.3);
+  --px-ai-text: #67e8f9;
+  --px-ai-text-bg: rgba(0,229,255,.04);
+  --px-ai-text-border: rgba(0,229,255,.22);
+  --px-table-head-bg: rgba(0,229,255,.08);
+  --px-table-head-text: #67e8f9;
+  --px-table-text: #b7dbe8;
+  --px-hover: rgba(0,229,255,.06);
+  --px-warn-bg: #0a2e33;
+  --px-warn-border: rgba(0,229,255,.3);
+  --px-warn-text: #67e8f9;
+  --px-ok-bg: #0c2b22;
+  --px-ok-border: rgba(74,222,128,.3);
+  --px-ok-text: #86efac;
+  --px-info-bg: #0c2438;
+  --px-info-border: rgba(56,189,248,.3);
+  --px-info-text: #7dd3fc;
+  --px-up: #4ade80;
+  --px-down: #f87171;
+  --px-buy: #16a34a;
+  --px-sell: #dc2626;
+}
+[data-theme="warm-gold"] {
+  --px-bg: #191309;
+  --px-card: #261d10;
+  --px-side: #100b05;
+  --px-border: #453218;
+  --px-accent: #e8a33d;
+  --px-accent-2: #f5c06a;
+  --px-text: #fdf6e9;
+  --px-sub: #b09c7e;
+  --px-muted: #827152;
+  --px-metric-bg: rgba(232,163,61,.06);
+  --px-metric-border: rgba(232,163,61,.2);
+  --px-stripes: rgba(255,255,255,.014);
+  --px-shadow: 0 4px 18px rgba(0,0,0,.4);
+  --px-left-glow: -3px 0 14px rgba(232,163,61,.14);
+  --px-side-shadow: 4px 0 18px rgba(0,0,0,.4);
+  --px-grid-line: rgba(232,163,61,.03);
+  --px-scan-line: rgba(232,163,61,.012);
+  --px-glow-color: rgba(232,163,61,.10);
+  --px-star-a: rgba(255,255,255,.4);
+  --px-star-b: rgba(232,163,61,.5);
+  --px-star-c: rgba(255,255,255,.32);
+  --px-star-d: rgba(168,85,247,.38);
+  --px-star-e: rgba(232,163,61,.45);
+  --px-star-f: rgba(255,255,255,.3);
+  --px-star-g: rgba(0,255,136,.32);
+  --px-star-h: rgba(232,163,61,.35);
+  --px-ai-bg: #33260f;
+  --px-ai-border: rgba(232,163,61,.35);
+  --px-ai-text: #f5c06a;
+  --px-ai-text-bg: rgba(232,163,61,.05);
+  --px-ai-text-border: rgba(232,163,61,.25);
+  --px-table-head-bg: rgba(232,163,61,.09);
+  --px-table-head-text: #f5c06a;
+  --px-table-text: #d9c9a8;
+  --px-hover: rgba(232,163,61,.06);
+  --px-warn-bg: #33260f;
+  --px-warn-border: rgba(232,163,61,.35);
+  --px-warn-text: #f5c06a;
+  --px-ok-bg: #0c2b22;
+  --px-ok-border: rgba(74,222,128,.3);
+  --px-ok-text: #86efac;
+  --px-info-bg: #0c2438;
+  --px-info-border: rgba(56,189,248,.3);
+  --px-info-text: #7dd3fc;
+  --px-up: #4ade80;
+  --px-down: #f87171;
+  --px-buy: #16a34a;
+  --px-sell: #dc2626;
+}
+[data-theme="mint"] {
+  --px-bg: #eef4f1;
+  --px-card: #ffffff;
+  --px-side: #e0ebe4;
+  --px-border: #c9dcd1;
+  --px-accent: #0ea371;
+  --px-accent-2: #0d9c6b;
+  --px-text: #1a2e26;
+  --px-sub: #5b6f66;
+  --px-muted: #84958c;
+  --px-metric-bg: rgba(14,163,113,.07);
+  --px-metric-border: rgba(14,163,113,.25);
+  --px-stripes: rgba(14,163,113,.03);
+  --px-shadow: 0 3px 12px rgba(26,46,38,.08);
+  --px-left-glow: -3px 0 12px rgba(14,163,113,.14);
+  --px-side-shadow: 4px 0 14px rgba(26,46,38,.07);
+  --px-grid-line: rgba(14,163,113,.05);
+  --px-scan-line: rgba(14,163,113,.02);
+  --px-glow-color: rgba(14,163,113,.08);
+  --px-star-a: rgba(14,163,113,.4);
+  --px-star-b: rgba(14,163,113,.5);
+  --px-star-c: rgba(14,163,113,.32);
+  --px-star-d: rgba(168,85,247,.38);
+  --px-star-e: rgba(14,163,113,.45);
+  --px-star-f: rgba(14,163,113,.3);
+  --px-star-g: rgba(20,184,166,.32);
+  --px-star-h: rgba(14,163,113,.35);
+  --px-ai-bg: #eaf6f0;
+  --px-ai-border: rgba(14,163,113,.35);
+  --px-ai-text: #0e9f6e;
+  --px-ai-text-bg: rgba(14,163,113,.05);
+  --px-ai-text-border: rgba(14,163,113,.28);
+  --px-table-head-bg: rgba(14,163,113,.08);
+  --px-table-head-text: #0e9f6e;
+  --px-table-text: #33473d;
+  --px-hover: rgba(14,163,113,.06);
+  --px-warn-bg: #eaf6f0;
+  --px-warn-border: rgba(14,163,113,.35);
+  --px-warn-text: #0e9f6e;
+  --px-ok-bg: #e9f9f1;
+  --px-ok-border: rgba(22,163,74,.3);
+  --px-ok-text: #15803d;
+  --px-info-bg: #eaf4fb;
+  --px-info-border: rgba(2,132,199,.3);
+  --px-info-text: #0369a1;
+  --px-up: #4ade80;
+  --px-down: #f87171;
+  --px-buy: #16a34a;
+  --px-sell: #dc2626;
+}
+[data-theme="paper"] {
+  --px-bg: #f6f7f9;
+  --px-card: #ffffff;
+  --px-side: #ecedf2;
+  --px-border: #dfe3ea;
+  --px-accent: #2563eb;
+  --px-accent-2: #1d4ed8;
+  --px-text: #17233a;
+  --px-sub: #5b6b84;
+  --px-muted: #8593a8;
+  --px-metric-bg: rgba(37,99,235,.06);
+  --px-metric-border: rgba(37,99,235,.22);
+  --px-stripes: rgba(37,99,235,.025);
+  --px-shadow: 0 3px 12px rgba(23,35,58,.08);
+  --px-left-glow: -3px 0 12px rgba(37,99,235,.16);
+  --px-side-shadow: 4px 0 14px rgba(23,35,58,.07);
+  --px-grid-line: rgba(37,99,235,.05);
+  --px-scan-line: rgba(37,99,235,.018);
+  --px-glow-color: rgba(37,99,235,.07);
+  --px-star-a: rgba(37,99,235,.38);
+  --px-star-b: rgba(37,99,235,.5);
+  --px-star-c: rgba(37,99,235,.3);
+  --px-star-d: rgba(168,85,247,.38);
+  --px-star-e: rgba(37,99,235,.42);
+  --px-star-f: rgba(37,99,235,.28);
+  --px-star-g: rgba(13,148,136,.32);
+  --px-star-h: rgba(37,99,235,.32);
+  --px-ai-bg: #eef4ff;
+  --px-ai-border: rgba(37,99,235,.3);
+  --px-ai-text: #2563eb;
+  --px-ai-text-bg: rgba(37,99,235,.05);
+  --px-ai-text-border: rgba(37,99,235,.25);
+  --px-table-head-bg: rgba(37,99,235,.07);
+  --px-table-head-text: #2563eb;
+  --px-table-text: #33405a;
+  --px-hover: rgba(37,99,235,.05);
+  --px-warn-bg: #eef4ff;
+  --px-warn-border: rgba(37,99,235,.3);
+  --px-warn-text: #2563eb;
+  --px-ok-bg: #e9f9f1;
+  --px-ok-border: rgba(22,163,74,.3);
+  --px-ok-text: #15803d;
+  --px-info-bg: #eaf4fb;
+  --px-info-border: rgba(2,132,199,.3);
+  --px-info-text: #0369a1;
+  --px-up: #4ade80;
+  --px-down: #f87171;
+  --px-buy: #16a34a;
+  --px-sell: #dc2626;
+}
+[data-theme="bull-red"] {
+  --px-bg: #150a0d;
+  --px-card: #221014;
+  --px-side: #0d0508;
+  --px-border: #4a1f26;
+  --px-accent: #e53935;
+  --px-accent-2: #ff6b5e;
+  --px-text: #fdf2f2;
+  --px-sub: #b98b90;
+  --px-muted: #8a5f65;
+  --px-metric-bg: rgba(229,57,53,.07);
+  --px-metric-border: rgba(229,57,53,.22);
+  --px-stripes: rgba(255,255,255,.014);
+  --px-shadow: 0 4px 18px rgba(0,0,0,.42);
+  --px-left-glow: -3px 0 14px rgba(229,57,53,.14);
+  --px-side-shadow: 4px 0 18px rgba(0,0,0,.42);
+  --px-grid-line: rgba(229,57,53,.04);
+  --px-scan-line: rgba(229,57,53,.015);
+  --px-glow-color: rgba(229,57,53,.10);
+  --px-star-a: rgba(255,255,255,.4);
+  --px-star-b: rgba(255,107,94,.5);
+  --px-star-c: rgba(255,255,255,.32);
+  --px-star-d: rgba(255,176,0,.4);
+  --px-star-e: rgba(229,57,53,.45);
+  --px-star-f: rgba(255,255,255,.3);
+  --px-star-g: rgba(255,176,0,.38);
+  --px-star-h: rgba(229,57,53,.4);
+  --px-ai-bg: #33202a;
+  --px-ai-border: rgba(255,107,94,.3);
+  --px-ai-text: #ff8a80;
+  --px-ai-text-bg: rgba(229,57,53,.05);
+  --px-ai-text-border: rgba(229,57,53,.25);
+  --px-table-head-bg: rgba(229,57,53,.10);
+  --px-table-head-text: #ff6b5e;
+  --px-table-text: #d9b8bc;
+  --px-hover: rgba(229,57,53,.06);
+  --px-warn-bg: #33202a;
+  --px-warn-border: rgba(229,57,53,.35);
+  --px-warn-text: #ff8a80;
+  --px-ok-bg: #12301f;
+  --px-ok-border: rgba(74,222,128,.3);
+  --px-ok-text: #86efac;
+  --px-info-bg: #261019;
+  --px-info-border: rgba(255,107,94,.3);
+  --px-info-text: #ff8a80;
+  --px-up: #ff5b52;
+  --px-down: #4ade80;
+  --px-buy: #ff5b52;
+  --px-sell: #4ade80;
+}
+[data-theme="terminal"] {
+  --px-bg: #060906;
+  --px-card: #0c100c;
+  --px-side: #030503;
+  --px-border: #1f2b1f;
+  --px-accent: #ffb000;
+  --px-accent-2: #ffcf4d;
+  --px-text: #e9f2e9;
+  --px-sub: #8fa38f;
+  --px-muted: #5d705d;
+  --px-metric-bg: rgba(0,230,118,.05);
+  --px-metric-border: rgba(0,230,118,.16);
+  --px-stripes: rgba(255,255,255,.012);
+  --px-shadow: 0 4px 18px rgba(0,0,0,.5);
+  --px-left-glow: -3px 0 14px rgba(0,230,118,.10);
+  --px-side-shadow: 4px 0 18px rgba(0,0,0,.5);
+  --px-grid-line: rgba(0,230,118,.03);
+  --px-scan-line: rgba(0,230,118,.012);
+  --px-glow-color: rgba(0,230,118,.07);
+  --px-star-a: rgba(255,255,255,.38);
+  --px-star-b: rgba(0,230,118,.5);
+  --px-star-c: rgba(255,255,255,.3);
+  --px-star-d: rgba(255,176,0,.35);
+  --px-star-e: rgba(0,230,118,.45);
+  --px-star-f: rgba(255,255,255,.28);
+  --px-star-g: rgba(0,230,118,.4);
+  --px-star-h: rgba(255,176,0,.32);
+  --px-ai-bg: #0d2312;
+  --px-ai-border: rgba(0,230,118,.3);
+  --px-ai-text: #34d399;
+  --px-ai-text-bg: rgba(0,230,118,.05);
+  --px-ai-text-border: rgba(0,230,118,.25);
+  --px-table-head-bg: rgba(0,230,118,.08);
+  --px-table-head-text: #34d399;
+  --px-table-text: #b6c9b6;
+  --px-hover: rgba(0,230,118,.05);
+  --px-warn-bg: #231a08;
+  --px-warn-border: rgba(255,176,0,.35);
+  --px-warn-text: #ffcf4d;
+  --px-ok-bg: #0c2314;
+  --px-ok-border: rgba(0,230,118,.3);
+  --px-ok-text: #86efac;
+  --px-info-bg: #0c1f2e;
+  --px-info-border: rgba(56,189,248,.3);
+  --px-info-text: #7dd3fc;
+  --px-up: #00e676;
+  --px-down: #ff5252;
+  --px-buy: #00e676;
+  --px-sell: #ff5252;
+}
+
+/* ── 表单控件：随主题（写回 JSON 的输入项） ── */
+.f-row { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; }
+.f-item { display: flex; flex-direction: column; gap: 4px; min-width: 130px; }
+.f-item label { font-size: .78rem; color: var(--px-sub); letter-spacing: .3px; }
+.f-item input, .f-item select {
+  background: var(--px-metric-bg); color: var(--px-text);
+  border: 1px solid var(--px-border); border-radius: 6px;
+  padding: 7px 10px; font-size: .88rem; outline: none;
+  transition: border-color .15s; width: 100%; box-sizing: border-box;
+}
+.f-item input:focus, .f-item select:focus { border-color: var(--px-accent); }
+.f-note { font-size: .76rem; color: var(--px-muted); margin: 6px 0 0; }
+.f-save { margin-top: 14px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.f-msg { font-size: .82rem; min-height: 1.2em; }
+.f-msg.ok { color: var(--px-up); }
+.f-msg.bad { color: var(--px-down); }
+
+/* ── 三区弹框：浮起态（尺寸无 transition，杜绝后台冻结残影） ── */
+.dialog-mask {
+  position: fixed; inset: 0; z-index: 80;
+  background: rgba(4, 10, 22, .55); backdrop-filter: blur(3px);
+  display: none; align-items: center; justify-content: center;
+}
+.dialog-mask.open { display: flex; }
+.dialog {
+  width: min(1120px, 94vw); height: min(92vh, 960px);
+  background: var(--px-card); border: 1px solid var(--px-border);
+  border-left: 3px solid var(--px-accent); border-radius: 12px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, .45);
+  display: flex; flex-direction: column; overflow: hidden;
+  transition: border-radius .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+.dialog-head {
+  flex: 0 0 auto; display: flex; align-items: center; gap: 10px;
+  padding: 14px 18px; border-bottom: 1px solid var(--px-border);
+}
+.dialog-title { font-size: 1.02rem; font-weight: 700; color: var(--px-accent-2); letter-spacing: .4px; flex: 1; }
+.dlg-tgl {
+  width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--px-border);
+  background: var(--px-metric-bg); color: var(--px-sub); cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 1.05rem; transition: color .15s, border-color .15s;
+}
+.dlg-tgl:hover { color: var(--px-accent-2); border-color: var(--px-accent); }
+.dlg-tgl input { display: none; }
+.dlg-tgl span::before { content: "⛶"; }
+.dialog-mask:has(#fsChk:checked) .dlg-tgl { color: var(--px-accent-2); border-color: var(--px-accent); }
+.dialog-mask:has(#fsChk:checked) .dlg-tgl span::before { content: "⤡"; }
+.dialog-mask:has(#fsChk:checked) .dialog {
+  width: 100vw; height: 100vh; border-radius: 0; border: none; box-shadow: none;
+}
+.dlg-close {
+  width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--px-border);
+  background: var(--px-metric-bg); color: var(--px-sub); cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; font-size: 1rem;
+  transition: color .15s, border-color .15s;
+}
+.dlg-close:hover { color: var(--px-down); border-color: var(--px-down); }
+.dialog-tabs { flex: 0 0 auto; display: flex; gap: 4px; padding: 10px 16px 0; overflow-x: auto; }
+.dlg-tab {
+  padding: 8px 14px; border-radius: 8px 8px 0 0; cursor: pointer;
+  font-size: .86rem; color: var(--px-sub); border-bottom: 2px solid transparent;
+  white-space: nowrap; transition: color .15s;
+}
+.dlg-tab:hover { color: var(--px-text); }
+.dlg-tab.on { color: var(--px-accent-2); border-bottom-color: var(--px-accent); font-weight: 600; }
+.dialog-body { flex: 1 1 auto; min-height: 38vh; overflow-y: auto; padding: 16px 20px; }
+.dlg-pane { display: none; }
+.dlg-pane.on { display: block; }
+.dialog-foot {
+  flex: 0 0 auto; display: flex; gap: 10px; align-items: center;
+  padding: 12px 18px; border-top: 1px solid var(--px-border);
+}
+.btn {
+  padding: 8px 18px; border-radius: 8px; border: 1px solid var(--px-accent);
+  background: var(--px-accent); color: #101827; font-size: .88rem; font-weight: 600;
+  cursor: pointer; transition: background .15s, color .15s;
+}
+.btn:hover { background: var(--px-accent-2); border-color: var(--px-accent-2); }
+.btn.ghost { background: transparent; color: var(--px-sub); border-color: var(--px-border); }
+.btn.ghost:hover { color: var(--px-accent-2); border-color: var(--px-accent); }
+/* 标的池动态行 */
+.tgt-row { display: flex; gap: 10px; margin-bottom: 8px; align-items: center; }
+.tgt-row .f-item { flex: 1; min-width: 90px; }
+.tgt-row .rm {
+  width: 30px; height: 30px; flex: 0 0 auto; border-radius: 6px; cursor: pointer;
+  border: 1px solid var(--px-border); background: var(--px-metric-bg); color: var(--px-sub);
+}
+.tgt-row .rm:hover { color: var(--px-down); border-color: var(--px-down); }
+
+/* ── 方案匣（配置弹框 t5 页签） ── */
+.preset-cur {
+  display: inline-block; padding: 6px 14px; border-radius: 999px;
+  border: 1px solid var(--px-accent); background: var(--px-metric-bg);
+  color: var(--px-accent-2); font-weight: 600; font-size: .86rem; letter-spacing: .3px;
+}
+.preset-acts { display: flex; gap: 8px; flex-wrap: wrap; }
+.preset-acts .btn { padding: 6px 14px; font-size: .84rem; }
+.preset-acts .btn.danger { color: var(--px-down); border-color: rgba(248,113,113,.35); background: transparent; }
+.preset-acts .btn.danger:hover { border-color: var(--px-down); }
+#presetSel { min-width: 180px; }
+
+/* ── 换肤坞（右下角） ── */
+.dock {
+  position: fixed; right: 22px; bottom: 22px; z-index: 90;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.dock-btn {
+  width: 44px; height: 44px; border-radius: 12px; cursor: pointer;
+  border: 1px solid var(--px-border); background: var(--px-card);
+  color: var(--px-accent-2); font-size: 1.15rem; box-shadow: var(--px-shadow);
+  display: flex; align-items: center; justify-content: center;
+  transition: color .15s, border-color .15s, transform .15s;
+}
+.dock-btn:hover { transform: translateY(-2px); border-color: var(--px-accent); }
+.skin-panel {
+  display: none; flex-direction: column; gap: 8px;
+  background: var(--px-card); border: 1px solid var(--px-border);
+  border-radius: 12px; padding: 10px; box-shadow: var(--px-shadow);
+}
+.skin-panel.open { display: flex; }
+.skin-dot { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+.skin-dot:hover, .skin-dot.on { border-color: var(--px-text); }
+
+/* ── 响应式：窄屏收紧 ── */
+@media (max-width: 768px) {
+  .grid { grid-template-columns: 1fr; }
+  .wrap { padding: 14px 12px 80px; }
+  .hero { padding: 26px 16px; }
+  .dialog { width: 100vw; height: 100vh; border-radius: 0; }
+  .dock { right: 12px; bottom: 12px; }
+}
+/* 弹框二（持仓）全屏态：checkbox 各自独立 */
+.dialog-mask:has(#fsChk2:checked) .dlg-tgl { color: var(--px-accent-2); border-color: var(--px-accent); }
+.dialog-mask:has(#fsChk2:checked) .dlg-tgl span::before { content: "⤡"; }
+.dialog-mask:has(#fsChk2:checked) .dialog {
+  width: 100vw; height: 100vh; border-radius: 0; border: none; box-shadow: none;
+}
+
+</style>
+</head>
+
+<body>
+<div class="bg-grid"></div><div class="bg-stars"></div><div class="bg-glow"></div><div class="bg-scan"></div>
+
+<!-- file:// 直开横幅：数据访问受限提示（JS 检测协议后显示） -->
+<div class="file-banner" id="fileBanner">
+  ⚠ 检测到 file:// 直开：浏览器禁止本地文件跨目录读写，数据加载与表单写回不可用。
+  请让助手帮你起本地服务后访问 <code>http://127.0.0.1:8933/</code>，或自行运行 <code>python3 scripts/serve.py &lt;看板目录&gt;</code>（scripts/ 在谋定技能包内）
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <svg class="logo" viewBox="0 0 64 64" aria-hidden="true">
+      <circle cx="32" cy="32" r="28" fill="none" stroke="var(--px-accent)" stroke-width="3"/>
+      <circle cx="32" cy="32" r="5" fill="var(--px-accent)"/>
+      <path d="M32 32 L44 20 A14 14 0 0 0 20 22 Z" fill="var(--px-accent-2)"/>
+    </svg>
+    <div class="titles">
+      <h1>谋定 <span class="en">MENTOR</span></h1>
+      <div class="sub">个人投资罗盘 · 网格 + 转债双引擎 · 本地数据零上传</div>
+    </div>
+    <div class="statusbar" id="statusbar">
+      <span class="bd flat" id="st-gen">数据未加载</span>
+      <span class="bd flat" id="st-src">—</span>
+      <span class="bd flat" id="st-gate">风控 —</span>
+      <span class="bd flat" id="st-preset">方案 —</span>
+    </div>
+  </header>
+
+  <main class="grid">
+    <!-- 区块 0.5 行情快照 -->
+    <section class="card" id="sec-quotes">
+      <h2><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/><path d="M12 12 18.5 5.5"/></svg> 行情快照</h2>
+      <p class="hint">最近一次刷新拉取的收盘价与涨跌（signals.json · quotes）</p>
+      <div class="tb-wrap"><table class="tb">
+        <thead><tr><th>标的</th><th>代码</th><th class="num">收盘</th><th class="num">涨跌%</th></tr></thead>
+        <tbody id="q-body"><tr><td colspan="4" class="empty">暂无行情数据——请先刷新信号</td></tr></tbody>
+      </table></div>
+    </section>
+
+    <!-- 区块 1 信号操作清单（wide） -->
+    <section class="card wide" id="sec-sig">
+      <h2><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M9 6h12M9 12h12M9 18h12"/><circle cx="4.5" cy="6" r=".9" fill="currentColor" stroke="none"/><circle cx="4.5" cy="12" r=".9" fill="currentColor" stroke="none"/><circle cx="4.5" cy="18" r=".9" fill="currentColor" stroke="none"/></svg> 今日信号 · 操作清单</h2>
+      <p class="hint">由 refresh.py 按规则引擎落盘（signals.json · signals），页面只读展示</p>
+      <div class="tb-wrap"><table class="tb">
+        <thead><tr><th>标的</th><th>动作</th><th>理由</th><th class="num">参考价</th><th class="num">建议仓位</th><th>风险态</th></tr></thead>
+        <tbody id="sig-body"><tr><td colspan="6" class="empty">暂无信号——请先刷新信号</td></tr></tbody>
+      </table></div>
+    </section>
+
+    <!-- 区块 2 AI 隔离区 -->
+    <section class="card" id="sec-ai">
+      <h2><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3.5 13.8 9.2 19.5 11 13.8 12.8 12 18.5 10.2 12.8 4.5 11 10.2 9.2z"/><path d="M19 3v3.5M17.2 4.8h3.5"/></svg> AI 提示（隔离区）</h2>
+      <p class="hint">助手口述的解读会写进 signals.json · ai_review 的隔离字段，不污染规则引擎</p>
+      <div class="ai-box" id="ai-body">（空）——刷新信号后可让助手补充一句话解读。</div>
+    </section>
+
+    <!-- 区块 3 持仓组合 -->
+    <section class="card" id="sec-pf">
+      <h2><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7.5" width="18" height="12.5" rx="2"/><path d="M9 7.5V5.8A1.8 1.8 0 0 1 10.8 4h2.4A1.8 1.8 0 0 1 15 5.8v1.7M3 12.5h18M11 12.5v2h2v-2"/></svg> 持仓组合</h2>
+      <p class="hint">回填的持仓与最新行情联动（signals.json · portfolio）</p>
+      <div class="metrics" id="pf-metrics"></div>
+      <div id="pf-body"><div class="empty">暂无持仓——右下角「持仓回填」添加后刷新信号</div></div>
+    </section>
+
+    <!-- 区块 4 网格阶梯（wide，ECharts） -->
+    <section class="card wide" id="sec-lv">
+      <h2><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="4" y="4" width="6.5" height="6.5" rx="1.2"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.2"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.2"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.2"/></svg> 网格阶梯</h2>
+      <p class="hint">各标的的买/卖档位价（signals.json · levels）——加载失败自动降级为文字清单</p>
+      <div class="ech" id="lv-chart"></div>
+      <div class="ech-off" id="lv-off">图表组件未加载，改用下方文字清单展示档位。</div>
+      <div class="tb-wrap" id="lv-tb"></div>
+    </section>
+
+    <!-- 区块 5 转债 -->
+    <section class="card" id="sec-cb">
+      <h2><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12a7.5 7.5 0 0 1 13-5.1L20 9.4"/><path d="M20 4.5v5h-5"/><path d="M19.5 12a7.5 7.5 0 0 1-13 5.1L4 14.6"/><path d="M4 19.5v-5h5"/></svg> 转债双低</h2>
+      <p class="hint">候选（买入条件）与卖出（持有中达标）</p>
+      <div class="chips" id="cb-chips"></div>
+      <div class="tb-wrap" id="cb-buy-tb"></div>
+      <div class="tb-wrap" id="cb-sell-tb"></div>
+    </section>
+
+    <!-- 区块 6 数据健康 -->
+    <section class="card" id="sec-h">
+      <h2><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2.2-6.5L12.6 18l2.1-6H21"/></svg> 数据健康</h2>
+      <p class="hint">拉数源可用性与全局告警（signals.json · health）</p>
+      <div class="chips" id="h-body"><span class="chip">暂无健康信息</span></div>
+    </section>
+  </main>
+</div>
+
+<!-- ══ 换肤坞（右下角：参数配置 / 持仓回填 / 换肤 / 导出 ⇩ / 导入 ⇧） ══ -->
+<div class="dock">
+  <div class="skin-panel" id="skinPanel"></div>
+  <button class="dock-btn" id="cfgBtn" title="参数配置"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="3.4"/><path d="M12 2.8v2.9M12 18.3v2.9M2.8 12h2.9M18.3 12h2.9M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1"/></svg></button>
+  <button class="dock-btn" id="holdBtn" title="持仓回填"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4.5" width="14" height="16.5" rx="2"/><path d="M9 4.5V3.8A1.8 1.8 0 0 1 10.8 2h2.4A1.8 1.8 0 0 1 15 3.8v.7M9 9.5h6M9 13.5h6M9 17.5h3.5"/></svg></button>
+  <button class="dock-btn" id="skinBtn" title="换肤"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5a8.5 8.5 0 1 0 0 17c1.4 0 2.2-.8 2.2-1.8 0-1.4-1-2-1-3.3 0-1.2 1-1.9 2.3-1.9h1.3a2.6 2.6 0 0 0 2.6-2.6c0-4.1-3.3-7.4-7.4-7.4z"/><circle cx="7.8" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="10.6" cy="7.4" r="1" fill="currentColor" stroke="none"/><circle cx="14.8" cy="7.2" r="1" fill="currentColor" stroke="none"/></svg></button>
+  <button class="dock-btn" id="expBtn" title="导出备份：三份 JSON 合成一个文件下载">⇩</button>
+  <button class="dock-btn" id="impBtn" title="导入恢复：选备份文件校验后写回">⇧</button>
+  <input type="file" id="impFile" accept=".json,application/json" style="display:none">
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- ══ 弹框一：参数配置（五 tab，写回 data/config.json） ══ -->
+<div class="dialog-mask" id="cfgMask">
+  <div class="dialog" role="dialog" aria-label="参数配置">
+    <div class="dialog-head">
+      <div class="dialog-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="3.4"/><path d="M12 2.8v2.9M12 18.3v2.9M2.8 12h2.9M18.3 12h2.9M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1"/></svg> 参数配置</div>
+      <label class="dlg-tgl" title="全屏：点击铺满视口，再点恢复浮起"><input type="checkbox" id="fsChk"><span></span></label>
+      <button class="dlg-close" id="cfgClose" title="关闭">✕</button>
+    </div>
+    <div class="dialog-tabs" id="cfgTabs">
+      <div class="dlg-tab on" data-tab="t0">资金</div>
+      <div class="dlg-tab" data-tab="t1">网格</div>
+      <div class="dlg-tab" data-tab="t2">风控</div>
+      <div class="dlg-tab" data-tab="t3">转债</div>
+      <div class="dlg-tab" data-tab="t4">标的池</div>
+      <div class="dlg-tab" data-tab="t5">方案</div>
+    </div>
+    <div class="dialog-body">
+      <div class="dlg-pane on" id="t0">
+        <div class="f-row">
+          <div class="f-item"><label>总资金（元）</label><input type="number" id="cfg-capital" min="10000" step="1000"></div>
+        </div>
+        <p class="f-note">所有信号按这笔钱算账；与部署版 config.yaml 同源。</p>
+      </div>
+      <div class="dlg-pane" id="t1">
+        <div class="f-row">
+          <div class="f-item"><label>网格间距（%）</label><input type="number" id="cfg-grid_step" min="0.5" max="20" step="0.1"></div>
+          <div class="f-item"><label>底仓占比（%）</label><input type="number" id="cfg-base_ratio" min="0" max="100" step="1"></div>
+          <div class="f-item"><label>档位数</label><input type="number" id="cfg-levels" min="2" max="20" step="1"></div>
+          <div class="f-item"><label>每档金额（元）</label><input type="number" id="cfg-level_amount" min="100" step="100"></div>
+        </div>
+        <div class="f-row">
+          <div class="f-item"><label>单标的上限（%）</label><input type="number" id="cfg-max_position_ratio" min="1" max="100" step="1"></div>
+          <div class="f-item"><label>止损线（%）</label><input type="number" id="cfg-stop_loss_ratio" min="1" max="50" step="1"></div>
+          <div class="f-item"><label>下限缓冲（%）</label><input type="number" id="cfg-floor_buffer" min="0" max="50" step="1"></div>
+          <div class="f-item"><label>回看窗口（天）</label><input type="number" id="cfg-lookback_days" min="20" max="500" step="1"></div>
+        </div>
+      </div>
+      <div class="dlg-pane" id="t2">
+        <div class="f-row">
+          <div class="f-item"><label>预留流动性（%）</label><input type="number" id="cfg-reserve_liquidity" min="0" max="50" step="1"></div>
+          <div class="f-item"><label>总仓位上限（%）</label><input type="number" id="cfg-max_total_position" min="10" max="100" step="1"></div>
+          <div class="f-item"><label>单边下跌观察（天）</label><input type="number" id="cfg-single_side_down_days" min="1" max="10" step="1"></div>
+        </div>
+      </div>
+      <div class="dlg-pane" id="t3">
+        <div class="f-row">
+          <div class="f-item"><label>最多持有（只）</label><input type="number" id="cfg-max_holdings" min="1" max="20" step="1"></div>
+          <div class="f-item"><label>每只金额（元）</label><input type="number" id="cfg-per_amount" min="500" step="100"></div>
+          <div class="f-item"><label>单只上限（%）</label><input type="number" id="cfg-cb_max_position_ratio" min="1" max="100" step="1"></div>
+          <div class="f-item"><label>双低候选（只）</label><input type="number" id="cfg-double_low_top" min="1" max="50" step="1"></div>
+        </div>
+        <div class="f-row">
+          <div class="f-item"><label>买入价上限（元）</label><input type="number" id="cfg-buy_price_max" min="50" max="300" step="0.1"></div>
+          <div class="f-item"><label>买入溢价上限（%）</label><input type="number" id="cfg-buy_premium_max" min="0" max="100" step="0.1"></div>
+          <div class="f-item"><label>卖出价阈值（元）</label><input type="number" id="cfg-sell_price_gt" min="50" max="500" step="0.1"></div>
+          <div class="f-item"><label>卖出溢价阈值（%）</label><input type="number" id="cfg-sell_premium_gt" min="0" max="200" step="0.1"></div>
+        </div>
+        <div class="f-row">
+          <div class="f-item"><label>双低排名阈值（%）</label><input type="number" id="cfg-sell_double_low_pct" min="1" max="100" step="1"></div>
+          <div class="f-item"><label>组合止损（%）</label><input type="number" id="cfg-combo_stop_loss" min="1" max="50" step="1"></div>
+        </div>
+      </div>
+      <div class="dlg-pane" id="t4">
+        <div id="cfg-targets"></div>
+        <button class="btn ghost" id="cfgAddTgt" type="button">＋ 添加标的</button>
+        <p class="f-note">symbol 为 6 位代码；类型 etf / index / stock；每档金额留 0 或缺省 = 用全局每档金额。</p>
+      </div>
+      <div class="dlg-pane" id="t5">
+        <div class="f-row">
+          <div class="f-item"><label>当前方案</label><div class="preset-cur" id="presetCur">—</div></div>
+        </div>
+        <div class="f-row">
+          <div class="f-item" style="flex:2"><label>方案列表</label><select id="presetSel"></select></div>
+        </div>
+        <div class="f-row">
+          <div class="f-item"><label>操作</label><div class="preset-acts">
+            <button class="btn ghost" id="presetSwitch" type="button">切换选中方案</button>
+            <button class="btn ghost" id="presetSave" type="button">另存当前为方案</button>
+            <button class="btn ghost danger" id="presetDel" type="button">删除选中方案</button>
+          </div></div>
+        </div>
+        <p class="f-note">方案 = 完整参数快照（data/presets.json）。切换 = 用方案覆盖当前 config.json（写前自动备份）；另存 = 把当前已生效参数存为新方案；删除 = 只删快照，不影响当前参数。「default」为内置兜底方案，不可删除。切换后需重新刷新信号才生效。</p>
+      </div>
+    </div>
+    <div class="dialog-foot">
+      <button class="btn" id="cfgSave" type="button">保存</button>
+      <button class="btn ghost" id="cfgCancel" type="button">取消</button>
+      <span class="f-msg" id="cfgMsg"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 弹框二：持仓回填（写回 data/holdings.json） ══ -->
+<div class="dialog-mask" id="holdMask">
+  <div class="dialog" role="dialog" aria-label="持仓回填">
+    <div class="dialog-head">
+      <div class="dialog-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4.5" width="14" height="16.5" rx="2"/><path d="M9 4.5V3.8A1.8 1.8 0 0 1 10.8 2h2.4A1.8 1.8 0 0 1 15 3.8v.7M9 9.5h6M9 13.5h6M9 17.5h3.5"/></svg> 持仓回填</div>
+      <label class="dlg-tgl" title="全屏"><input type="checkbox" id="fsChk2"><span></span></label>
+      <button class="dlg-close" id="holdClose" title="关闭">✕</button>
+    </div>
+    <div class="dialog-body">
+      <div id="hold-positions"></div>
+      <button class="btn ghost" id="holdAdd" type="button">＋ 添加持仓</button>
+      <p class="f-note">current_price 由行情自动回填（不在表单）；code 与 config 标的池对齐才能联动信号。</p>
+    </div>
+    <div class="dialog-foot">
+      <button class="btn" id="holdSave" type="button">保存</button>
+      <button class="btn ghost" id="holdCancel" type="button">取消</button>
+      <span class="f-msg" id="holdMsg"></span>
+    </div>
+  </div>
+</div>
+
+<script src="assets/echarts.min.js"></script>
+
+<script>
+(function () {
+"use strict";
+/* ═══ 谋定看板脚本（真相源 reference.html @2）═══
+   区块渲染 + 表单写回 + 换肤坞 + ECharts 降级；数据三份 JSON 只读/表单 PUT。 */
+
+/* ── 0. 内嵌稳定 ID 自愈（机制六）──────────────────────── */
+var META = document.querySelector('meta[name="mentor-id"]');
+var ID = META ? META.content : "";
+var UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+var HEAL_KEY = "sf-heal:" + location.pathname;
+if (!UUID_RE.test(ID)) {
+  ID = localStorage.getItem(HEAL_KEY) || "";
+  if (!UUID_RE.test(ID)) { ID = crypto.randomUUID(); localStorage.setItem(HEAL_KEY, ID); }
+  if (META) { META.content = ID; }
+  else {
+    META = document.createElement("meta");
+    META.name = "mentor-id"; META.content = ID;
+    document.head.appendChild(META);
+  }
+  console.warn("[mentor] mentor-id 缺失或非法，已按路径键自愈为", ID);
+}
+var NS = "mentor:" + ID + "-";   // localStorage 键命名空间（多份产物互不串台）
+
+/* ── 1. 主题与换肤坞 ────────────────────────────────────── */
+var THEMES = [
+  ["night-gold", "夜金", "#f0b90b"],
+  ["tech-blue", "科技蓝", "#38bdf8"],
+  ["warm-gold", "暖金", "#d4a574"],
+  ["mint", "薄荷", "#6ee7b7"],
+  ["paper", "素纸", "#e8e4dc"],
+  ["bull-red", "红牛", "#ef4444"],
+  ["terminal", "终端", "#10b981"]
+];
+function applyTheme(name) {
+  var hit = THEMES.some(function (t) { return t[0] === name; });
+  document.documentElement.setAttribute("data-theme", hit ? name : "night-gold");
+  try { localStorage.setItem(NS + "theme", hit ? name : "night-gold"); } catch (e) {}
+  markSkin();
+}
+function markSkin() {
+  var cur = document.documentElement.getAttribute("data-theme") || "night-gold";
+  document.querySelectorAll("#skinPanel .skin-dot").forEach(function (d) {
+    d.classList.toggle("on", d.getAttribute("data-theme") === cur);
+  });
+}
+function buildSkinPanel() {
+  var p = document.getElementById("skinPanel");
+  THEMES.forEach(function (t) {
+    var d = document.createElement("div");
+    d.className = "skin-dot"; d.title = t[1];
+    d.setAttribute("data-theme", t[0]);
+    d.style.background = t[1];
+    d.addEventListener("click", function () { applyTheme(t[0]); renderLevels(); });
+    p.appendChild(d);
+  });
+}
+var saved = null;
+try { saved = localStorage.getItem(NS + "theme"); } catch (e) {}
+applyTheme(saved || "night-gold");
+buildSkinPanel();
+document.getElementById("skinBtn").addEventListener("click", function () {
+  document.getElementById("skinPanel").classList.toggle("open");
+});
+
+/* ── 2. 数据加载（失败优雅降级）────────────────────────── */
+var state = { cfg: null, hold: null, sig: null };
+function jget(url) {
+  return fetch(url, { cache: "no-store" }).then(function (r) {
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    return r.json();
+  });
+}
+function esc(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+/* ── 内置预置方案种子（与 data-contract.md 4.5 模板同源同值；presets.json 缺失/损坏时兜底，深拷贝防污染）── */
+var BUILTIN_PRESETS = {
+  active: "default",
+  presets: {
+    "default": {
+      "capital": 50000,
+      "grid": {
+        "grid_step": 0.025, "base_ratio": 0.4, "levels": 5, "level_amount": 4000,
+        "max_position_ratio": 0.2, "stop_loss_ratio": 0.1, "floor_buffer": 0.1, "lookback_days": 120,
+        "targets": [
+          {"symbol": "510888", "name": "示例ETF", "type": "etf"},
+          {"symbol": "600000", "name": "示例银行", "type": "stock", "level_amount": 3000}
+        ]
+      },
+      "risk": {"reserve_liquidity": 0.12, "max_total_position": 0.88, "single_side_down_days": 3},
+      "convertible_bond": {
+        "max_holdings": 7, "per_amount": 3500, "max_position_ratio": 0.15,
+        "double_low_top": 7, "buy_price_max": 124.0, "buy_premium_max": 20.0,
+        "sell_price_gt": 130.0, "sell_premium_gt": 30.0,
+        "sell_double_low_pct": 0.2, "combo_stop_loss": 0.08
+      }
+    },
+    "新手稳健": {
+      "capital": 50000,
+      "grid": {
+        "grid_step": 0.03, "base_ratio": 0.5, "levels": 5, "level_amount": 3000,
+        "max_position_ratio": 0.15, "stop_loss_ratio": 0.08, "floor_buffer": 0.15, "lookback_days": 120,
+        "targets": []
+      },
+      "risk": {"reserve_liquidity": 0.25, "max_total_position": 0.6, "single_side_down_days": 3},
+      "convertible_bond": {
+        "max_holdings": 3, "per_amount": 3000, "max_position_ratio": 0.12,
+        "double_low_top": 5, "buy_price_max": 115.0, "buy_premium_max": 15.0,
+        "sell_price_gt": 125.0, "sell_premium_gt": 25.0,
+        "sell_double_low_pct": 0.25, "combo_stop_loss": 0.06
+      }
+    },
+    "均衡成长": {
+      "capital": 50000,
+      "grid": {
+        "grid_step": 0.025, "base_ratio": 0.45, "levels": 5, "level_amount": 4000,
+        "max_position_ratio": 0.2, "stop_loss_ratio": 0.1, "floor_buffer": 0.1, "lookback_days": 120,
+        "targets": []
+      },
+      "risk": {"reserve_liquidity": 0.15, "max_total_position": 0.75, "single_side_down_days": 3},
+      "convertible_bond": {
+        "max_holdings": 5, "per_amount": 3500, "max_position_ratio": 0.15,
+        "double_low_top": 6, "buy_price_max": 120.0, "buy_premium_max": 18.0,
+        "sell_price_gt": 128.0, "sell_premium_gt": 28.0,
+        "sell_double_low_pct": 0.2, "combo_stop_loss": 0.08
+      }
+    },
+    "进取积极": {
+      "capital": 50000,
+      "grid": {
+        "grid_step": 0.02, "base_ratio": 0.35, "levels": 6, "level_amount": 5000,
+        "max_position_ratio": 0.25, "stop_loss_ratio": 0.12, "floor_buffer": 0.08, "lookback_days": 120,
+        "targets": []
+      },
+      "risk": {"reserve_liquidity": 0.08, "max_total_position": 0.9, "single_side_down_days": 2},
+      "convertible_bond": {
+        "max_holdings": 7, "per_amount": 3500, "max_position_ratio": 0.18,
+        "double_low_top": 7, "buy_price_max": 124.0, "buy_premium_max": 20.0,
+        "sell_price_gt": 130.0, "sell_premium_gt": 30.0,
+        "sell_double_low_pct": 0.18, "combo_stop_loss": 0.1
+      }
+    }
+  }
+};
+function freshPresets() { return JSON.parse(JSON.stringify(BUILTIN_PRESETS)); }
+function loadAll() {
+  jget("data/config.json").then(function (v) { state.cfg = v; renderQuotes(); })
+    .catch(function () { console.warn("[mentor] config.json 加载失败，行情名称以代码显示"); renderQuotes(); });
+  jget("data/holdings.json").then(function (v) { state.hold = v; renderPortfolio(); })
+    .catch(function () { console.warn("[mentor] holdings.json 加载失败"); renderPortfolio(); });
+  jget("data/presets.json").then(function (v) {
+    state.presets = v;
+    document.getElementById("st-preset").textContent = "方案 " + (v.active || "default");
+  }).catch(function () {
+    state.presets = freshPresets();
+  });
+  jget("outputs/signals.json").then(function (v) {
+    state.sig = v;
+    renderStatus(); renderSignals(); renderAI();
+    renderPortfolio(); renderQuotes(); renderLevels(); renderCB(); renderHealth();
+  }).catch(function () {
+    console.warn("[mentor] signals.json 加载失败——请先刷新信号");
+    document.getElementById("st-gen").textContent = "暂无信号——请先刷新信号";
+  });
+}
+
+/* ── 3. 八区块渲染 ─────────────────────────────────────── */
+var OP_CLS = { buy: "buy", sell: "sell", paused: "paused", observe: "observe", hold: "hold" };
+var OP_TXT = { buy: "买入", sell: "卖出", paused: "暂停", observe: "观察", hold: "持有" };
+
+function renderStatus() {
+  var s = state.sig;
+  document.getElementById("st-gen").textContent = "生成 " + (s.generated_at || "—");
+  document.getElementById("st-src").textContent = "来源 " + (s.source || "—");
+  var g = document.getElementById("st-gate");
+  var ms = (s.risk_gate || {}).market_status || "normal";
+  g.className = "bd " + (ms === "normal" ? "ok" : ms === "observe" ? "warn" : "bad");
+  g.textContent = ms === "normal" ? "风控通行" : ms === "observe" ? "风控观察" : "风控拦截";
+}
+
+function nameOf(symbol) {
+  var ts = state.cfg ? ((state.cfg.grid || {}).targets || []) : [];
+  for (var i = 0; i < ts.length; i++) {
+    if (String(ts[i].symbol) === String(symbol)) return ts[i].name || symbol;
+  }
+  var ps = state.hold ? (state.hold.positions || []) : [];
+  for (var j = 0; j < ps.length; j++) {
+    if (String(ps[j].code) === String(symbol)) return ps[j].name || symbol;
+  }
+  return symbol;
+}
+
+function renderQuotes() {
+  var s = state.sig, body = document.getElementById("q-body");
+  if (!s) return;
+  var rows = Object.keys(s.quotes || {});
+  if (!rows.length) {
+    body.innerHTML = '<tr><td colspan="4" class="empty">暂无行情数据——请先刷新信号</td></tr>';
+    return;
+  }
+  body.innerHTML = rows.map(function (sym) {
+    var q = s.quotes[sym] || {};
+    return '<tr><td>' + esc(nameOf(sym)) + '</td><td>' + esc(sym) +
+      '</td><td class="num">' + esc(q.price == null ? "—" : q.price) +
+      '</td><td class="num">—</td></tr>';
+  }).join("");
+}
+
+function renderSignals() {
+  var s = state.sig, body = document.getElementById("sig-body");
+  var sigs = s.signals || [];
+  if (!sigs.length) {
+    body.innerHTML = '<tr><td colspan="6" class="empty">暂无信号——请先刷新信号</td></tr>';
+    return;
+  }
+  body.innerHTML = sigs.map(function (r) {
+    var act = String(r.action || "hold").toLowerCase();
+    var cls = OP_CLS[act] || "hold", txt = OP_TXT[act] || r.action;
+    var q = (s.quotes || {})[String(r.target_code)] || {};
+    var risk = r.risk_status === "blocked" ? '<span class="op observe">拦截</span>'
+      : r.risk_status === "observe" ? '<span class="op observe">观察</span>'
+      : '<span class="op hold">通过</span>';
+    return '<tr><td>' + esc(r.target_name || r.target_code) + ' <span style="color:var(--px-muted)">' +
+      esc(r.target_code || "") + '</span></td><td><span class="op ' + cls + '">' + esc(txt) +
+      '</span></td><td class="reason">' + esc(r.trigger_reason || "") + '</td>' +
+      '<td class="num">' + esc(q.price == null ? "—" : q.price) + '</td>' +
+      '<td class="num">' + esc(r.amount || "—") + '</td><td>' + risk + '</td></tr>';
+  }).join("");
+}
+
+function renderAI() {
+  var s = state.sig;
+  var v = s ? s.ai_review : "";
+  document.getElementById("ai-body").textContent = v || "（空）——刷新信号后可让助手补充一句话解读。";
+}
+
+function renderPortfolio() {
+  var s = state.sig, snap = s ? s.portfolio : null;
+  var pm = document.getElementById("pf-metrics");
+  if (!snap || !Object.keys(snap).length) {
+    pm.innerHTML = ""; return;
+  }
+  pm.innerHTML =
+    '<div class="metric"><div class="k">总资产</div><div class="v">' + esc(snap.total_asset) + '</div></div>' +
+    '<div class="metric"><div class="k">现金</div><div class="v">' + esc(snap.cash) + '</div></div>' +
+    '<div class="metric"><div class="k">网格市值</div><div class="v">' + esc(snap.grid_value) + '</div></div>' +
+    '<div class="metric"><div class="k">转债市值</div><div class="v">' + esc(snap.cb_value) + '</div></div>' +
+    '<div class="metric"><div class="k">总仓位</div><div class="v">' + esc(snap.position_pct) + '%</div></div>' +
+    '<div class="metric"><div class="k">组合盈亏</div><div class="v ' +
+    ((snap.combo_pnl_pct || 0) >= 0 ? "up" : "down") + '">' + esc(snap.combo_pnl_pct) + '%</div></div>';
+  var pb = document.getElementById("pf-body");
+  var pos = (state.hold && state.hold.positions) || [];
+  if (!pos.length) {
+    pb.innerHTML = '<div class="empty">暂无持仓——右下角「持仓回填」添加后刷新信号</div>';
+    return;
+  }
+  var quotes = s ? s.quotes || {} : {};
+  pb.innerHTML = pos.map(function (p) {
+    var q = quotes[String(p.code)] || {};
+    var price = q.price != null ? q.price : (p.cost_price || 0);
+    var pnl = p.cost_price ? (price / p.cost_price - 1) * 100 : 0;
+    var cls = pnl >= 0 ? "up" : "down";
+    var mv = (p.quantity || 0) * price;
+    return '<div class="hold-card"><div class="top"><span class="nm">' + esc(p.name) +
+      '<span class="code">' + esc(p.code) + '</span></span>' +
+      '<span class="pnl ' + cls + '">' + (pnl >= 0 ? "+" : "") + pnl.toFixed(2) + '%</span></div>' +
+      '<div class="meta"><span>数量 ' + esc(p.quantity) + '</span><span>成本 ' + esc(p.cost_price) +
+      '</span><span>现价 ' + esc(price) + '</span><span>市值 ' + mv.toFixed(0) + '</span></div>' +
+      '<div class="pos-bar"><i style="width:' + Math.min(100, Math.abs(pnl) * 4) + '%"></i></div></div>';
+  }).join("");
+}
+
+/* ── 4. ECharts 阶梯图（加载失败自动降级文字清单）───────── */
+function renderLevels() {
+  var s = state.sig;
+  var lv = (s && s.levels) || [];
+  var tb = document.getElementById("lv-tb");
+  // 文字清单兜底表格（无论图表成败都渲染）
+  if (lv.length) {
+    tb.innerHTML = '<table class="tb"><thead><tr><th>标的</th><th>档位</th>' +
+      '<th class="num">下档买入</th><th class="num">上档卖出</th><th class="num">现价</th>' +
+      '<th class="num">下限价</th></tr></thead><tbody>' +
+      lv.map(function (r) {
+        return '<tr><td>' + esc(r.name || r.symbol) + '</td><td>' + esc(r.level) +
+          '</td><td class="num">' + esc(r.lower_buy) + '</td><td class="num">' + esc(r.upper_sell) +
+          '</td><td class="num">' + esc(r.current_price) + '</td><td class="num">' + esc(r.floor_price) + '</td></tr>';
+      }).join("") + '</tbody></table>';
+  } else {
+    tb.innerHTML = "";
+  }
+  var el = document.getElementById("lv-chart");
+  var off = document.getElementById("lv-off");
+  if (typeof echarts === "undefined") {
+    el.classList.add("off"); off.classList.add("on"); return;
+  }
+  if (!lv.length) {
+    el.classList.add("off"); off.classList.add("on");
+    off.textContent = "暂无档位数据——请先刷新信号。";
+    return;
+  }
+  el.classList.remove("off"); off.classList.remove("on");
+  var groups = {};
+  lv.forEach(function (r) {
+    var key = String(r.symbol);
+    if (!groups[key]) groups[key] = { name: r.name || key, rows: [] };
+    groups[key].rows.push(r);
+  });
+  var css = getComputedStyle(document.documentElement);
+  var acc = css.getPropertyValue("--px-accent").trim() || "#f0b90b";
+  var acc2 = css.getPropertyValue("--px-accent-2").trim() || "#f9dd7d";
+  var sub = css.getPropertyValue("--px-sub").trim() || "#9aa4b2";
+  var border = css.getPropertyValue("--px-border").trim() || "#1f2937";
+  var keys = Object.keys(groups);
+  var maxLevel = 0;
+  lv.forEach(function (r) { maxLevel = Math.max(maxLevel, r.level); });
+  var xAxis = [];
+  for (var i = 1; i <= maxLevel; i++) xAxis.push("第" + i + "档");
+  var series = [];
+  keys.forEach(function (key, idx) {
+    var g = groups[key];
+    var ups = [], lows = [], curs = [];
+    for (var i = 0; i < maxLevel; i++) {
+      var r = g.rows[i];
+      ups.push(r ? r.upper_sell : null);
+      lows.push(r ? r.lower_buy : null);
+      curs.push(i === 0 ? (r ? r.current_price : null) : null);
+    }
+    series.push({ name: g.name + "·卖", type: "line", data: ups, smooth: false,
+      connectNulls: true, lineStyle: { width: 2, color: acc2 },
+      itemStyle: { color: acc2 }, symbolSize: 6 });
+    series.push({ name: g.name + "·买", type: "line", data: lows, smooth: false,
+      connectNulls: true, lineStyle: { width: 2, color: acc },
+      itemStyle: { color: acc }, symbolSize: 6 });
+    series.push({ name: g.name + "·现价", type: "line", data: curs, smooth: false,
+      lineStyle: { width: 1.5, type: "dashed", color: sub },
+      itemStyle: { color: sub }, symbol: "none" });
+  });
+  var chart = echarts.getInstanceByDom(el) || echarts.init(el);
+  chart.setOption({
+    backgroundColor: "transparent",
+    grid: { left: 60, right: 24, top: 42, bottom: 34 },
+    legend: { textStyle: { color: sub }, top: 6 },
+    tooltip: { trigger: "axis" },
+    xAxis: { type: "category", data: xAxis, axisLine: { lineStyle: { color: border } },
+      axisLabel: { color: sub } },
+    yAxis: { type: "value", scale: true, splitLine: { lineStyle: { color: border } },
+      axisLabel: { color: sub } },
+    series: series
+  }, true);
+  window.addEventListener("resize", function () { chart.resize(); });
+}
+
+function renderCB() {
+  var s = state.sig;
+  var cb = s ? s.cb : null;
+  var chips = document.getElementById("cb-chips");
+  var buyTb = document.getElementById("cb-buy-tb");
+  var sellTb = document.getElementById("cb-sell-tb");
+  if (!cb || (!(cb.candidates || []).length && !(cb.sells || []).length)) {
+    chips.innerHTML = '<span class="chip">暂无转债信号</span>';
+    buyTb.innerHTML = ""; sellTb.innerHTML = "";
+    return;
+  }
+  chips.innerHTML =
+    '<span class="chip">候选 <b>' + (cb.candidates || []).length + '</b> 只</span>' +
+    '<span class="chip">卖出 <b>' + (cb.sells || []).length + '</b> 只</span>';
+  function cbTable(rows, head) {
+    if (!rows.length) return "";
+    return '<table class="tb"><thead><tr>' + head.map(function (h) { return "<th>" + h + "</th>"; }).join("") +
+      '</tr></thead><tbody>' + rows.map(function (r) {
+        return '<tr><td>' + esc(r.target_name || r.target_code) + '</td><td>' + esc(r.target_code) +
+          '</td><td class="num">' + esc(r.amount) + '</td><td class="reason">' + esc(r.trigger_reason || "") + '</td></tr>';
+      }).join("") + '</tbody></table>';
+  }
+  buyTb.innerHTML = cbTable(cb.candidates, ["候选", "代码", "金额", "理由"]);
+  sellTb.innerHTML = cbTable(cb.sells, ["卖出", "代码", "金额", "理由"]);
+}
+
+function renderHealth() {
+  var s = state.sig;
+  var h = s ? s.health : null;
+  var body = document.getElementById("h-body");
+  if (!h) { body.innerHTML = '<span class="chip">暂无健康信息</span>'; return; }
+  var chips = [];
+  Object.keys(h.markets || {}).forEach(function (sym) {
+    var m = h.markets[sym];
+    chips.push('<span class="chip">' + esc(nameOf(sym)) + ' · ' + esc(m.source || "—") +
+      (m.stale ? ' <b style="color:var(--px-warn-text)">过期</b>' : ' ✓') + '</span>');
+  });
+  if (h.cb) {
+    chips.push('<span class="chip">转债 · ' + esc(h.cb.source || "—") +
+      ((h.cb.warnings || []).length ? ' <b style="color:var(--px-warn-text)">警告</b>' : ' ✓') + '</span>');
+  }
+  (h.global_warnings || []).forEach(function (w) {
+    chips.push('<span class="chip" style="border-color:var(--px-warn-border);color:var(--px-warn-text)">⚠ ' +
+      esc(w) + '</span>');
+  });
+  body.innerHTML = chips.length ? chips.join("") : '<span class="chip">全部正常</span>';
+}
+
+/* ── 5. 弹框开关 ────────────────────────────────────────── */
+var cfgMask = document.getElementById("cfgMask");
+var holdMask = document.getElementById("holdMask");
+function openMask(m) { m.classList.add("open"); document.body.style.overflow = "hidden"; }
+function closeMask(m) { m.classList.remove("open"); document.body.style.overflow = ""; }
+document.getElementById("cfgBtn").addEventListener("click", function () { openCfg(); });
+document.getElementById("holdBtn").addEventListener("click", function () { openHold(); });
+document.getElementById("cfgClose").addEventListener("click", function () { closeMask(cfgMask); });
+document.getElementById("holdClose").addEventListener("click", function () { closeMask(holdMask); });
+document.getElementById("cfgCancel").addEventListener("click", function () { closeMask(cfgMask); });
+document.getElementById("holdCancel").addEventListener("click", function () { closeMask(holdMask); });
+cfgMask.addEventListener("click", function (e) { if (e.target === cfgMask) closeMask(cfgMask); });
+holdMask.addEventListener("click", function (e) { if (e.target === holdMask) closeMask(holdMask); });
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Escape") { closeMask(cfgMask); closeMask(holdMask); }
+});
+// tab 切换
+document.querySelectorAll("#cfgTabs .dlg-tab").forEach(function (t) {
+  t.addEventListener("click", function () {
+    document.querySelectorAll("#cfgTabs .dlg-tab").forEach(function (x) { x.classList.remove("on"); });
+    t.classList.add("on");
+    document.querySelectorAll("#cfgMask .dlg-pane").forEach(function (p) { p.classList.remove("on"); });
+    document.getElementById(t.getAttribute("data-tab")).classList.add("on");
+  });
+});
+
+/* ── 6. 表单辅助 ────────────────────────────────────────── */
+function num(id) { var v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; }
+function iint(id) { return Math.round(num(id)); }
+function pct(id) { return Math.round(num(id)) / 100; }   // % 显示 → 小数存储
+function fmtPct(v) { return v == null ? "" : Math.round(v * 1000) / 10; }
+
+/* ── 7. 标的池动态行（config.grid.targets）─────────────── */
+var TGT_TYPES = ["etf", "index", "stock"];
+function addTgtRow(t) {
+  t = t || {};
+  var wrap = document.getElementById("cfg-targets");
+  var row = document.createElement("div");
+  row.className = "tgt-row";
+  var opts = TGT_TYPES.map(function (x) {
+    return '<option value="' + x + '"' + ((t.type || "etf") === x ? " selected" : "") + ">" + x + "</option>";
+  }).join("");
+  row.innerHTML =
+    '<div class="f-item"><label>代码</label><input type="text" class="t-sym" maxlength="6" value="' + esc(t.symbol || "") + '"></div>' +
+    '<div class="f-item"><label>名称</label><input type="text" class="t-name" value="' + esc(t.name || "") + '"></div>' +
+    '<div class="f-item"><label>类型</label><select class="t-type">' + opts + "</select></div>" +
+    '<div class="f-item"><label>每档金额（0=全局）</label><input type="number" class="t-amt" min="0" step="100" value="' + (t.level_amount || 0) + '"></div>' +
+    '<button class="rm" type="button" title="删除">✕</button>';
+  row.querySelector(".rm").addEventListener("click", function () { row.remove(); });
+  wrap.appendChild(row);
+}
+document.getElementById("cfgAddTgt").addEventListener("click", function () { addTgtRow(); });
+
+/* ── 8. 持仓动态行（holdings.positions）────────────────── */
+var HOLD_TYPES = ["stock", "etf", "index", "cb"];
+function addHoldRow(p) {
+  p = p || {};
+  var wrap = document.getElementById("hold-positions");
+  var row = document.createElement("div");
+  row.className = "tgt-row";
+  var opts = HOLD_TYPES.map(function (x) {
+    return '<option value="' + x + '"' + ((p.type || "stock") === x ? " selected" : "") + ">" + x + "</option>";
+  }).join("");
+  row.innerHTML =
+    '<div class="f-item"><label>代码</label><input type="text" class="h-code" maxlength="6" value="' + esc(p.code || "") + '"></div>' +
+    '<div class="f-item"><label>名称</label><input type="text" class="h-name" value="' + esc(p.name || "") + '"></div>' +
+    '<div class="f-item"><label>类型</label><select class="h-type">' + opts + "</select></div>" +
+    '<div class="f-item"><label>数量</label><input type="number" class="h-qty" min="0" step="1" value="' + (p.quantity || 0) + '"></div>' +
+    '<div class="f-item"><label>成本价</label><input type="number" class="h-cost" min="0" step="0.01" value="' + (p.cost_price || 0) + '"></div>' +
+    '<div class="f-item"><label>备注</label><input type="text" class="h-note" value="' + esc(p.note || "") + '"></div>' +
+    '<button class="rm" type="button" title="删除">✕</button>';
+  row.querySelector(".rm").addEventListener("click", function () { row.remove(); });
+  wrap.appendChild(row);
+}
+document.getElementById("holdAdd").addEventListener("click", function () { addHoldRow(); });
+
+/* ── 9. 打开弹框时填充表单 ─────────────────────────────── */
+function openCfg() {
+  jget("data/presets.json").then(function (v) { state.presets = v; renderPresets(); })
+    .catch(function () { state.presets = freshPresets(); renderPresets(); });
+  var done = function (cfg) {
+    document.getElementById("cfg-capital").value = cfg.capital;
+    var g = cfg.grid || {}, r = cfg.risk || {}, b = cfg.convertible_bond || {};
+    document.getElementById("cfg-grid_step").value = fmtPct(g.grid_step);
+    document.getElementById("cfg-base_ratio").value = fmtPct(g.base_ratio);
+    document.getElementById("cfg-levels").value = g.levels;
+    document.getElementById("cfg-level_amount").value = g.level_amount;
+    document.getElementById("cfg-max_position_ratio").value = fmtPct(g.max_position_ratio);
+    document.getElementById("cfg-stop_loss_ratio").value = fmtPct(g.stop_loss_ratio);
+    document.getElementById("cfg-floor_buffer").value = fmtPct(g.floor_buffer);
+    document.getElementById("cfg-lookback_days").value = g.lookback_days;
+    document.getElementById("cfg-reserve_liquidity").value = fmtPct(r.reserve_liquidity);
+    document.getElementById("cfg-max_total_position").value = fmtPct(r.max_total_position);
+    document.getElementById("cfg-single_side_down_days").value = r.single_side_down_days;
+    document.getElementById("cfg-max_holdings").value = b.max_holdings;
+    document.getElementById("cfg-per_amount").value = b.per_amount;
+    document.getElementById("cfg-cb_max_position_ratio").value = fmtPct(b.max_position_ratio);
+    document.getElementById("cfg-double_low_top").value = b.double_low_top;
+    document.getElementById("cfg-buy_price_max").value = b.buy_price_max;
+    document.getElementById("cfg-buy_premium_max").value = b.buy_premium_max;
+    document.getElementById("cfg-sell_price_gt").value = b.sell_price_gt;
+    document.getElementById("cfg-sell_premium_gt").value = b.sell_premium_gt;
+    document.getElementById("cfg-sell_double_low_pct").value = fmtPct(b.sell_double_low_pct);
+    document.getElementById("cfg-combo_stop_loss").value = fmtPct(b.combo_stop_loss);
+    document.getElementById("cfg-targets").innerHTML = "";
+    (g.targets || []).forEach(addTgtRow);
+    if (!(g.targets || []).length) addTgtRow();
+    document.getElementById("cfgMsg").textContent = "";
+    document.getElementById("cfgMsg").className = "f-msg";
+    openMask(cfgMask);
+  };
+  if (state.cfg) { done(state.cfg); return; }
+  jget("data/config.json").then(function (v) { state.cfg = v; done(v); })
+    .catch(function () {
+      document.getElementById("cfgMsg").textContent = "config.json 读取失败，无法编辑";
+      document.getElementById("cfgMsg").className = "f-msg bad";
+      openMask(cfgMask);
+    });
+}
+function openHold() {
+  var done = function (h) {
+    document.getElementById("hold-positions").innerHTML = "";
+    (h.positions || []).forEach(addHoldRow);
+    if (!(h.positions || []).length) addHoldRow();
+    document.getElementById("holdMsg").textContent = "";
+    document.getElementById("holdMsg").className = "f-msg";
+    openMask(holdMask);
+  };
+  if (state.hold) { done(state.hold); return; }
+  jget("data/holdings.json").then(function (v) { state.hold = v; done(v); })
+    .catch(function () {
+      document.getElementById("holdMsg").textContent = "holdings.json 读取失败，无法编辑";
+      document.getElementById("holdMsg").className = "f-msg bad";
+      openMask(holdMask);
+    });
+}
+
+/* ── 9.5 方案匣（data/presets.json：多套参数快照的保存/切换/删除）── */
+function getPresets() {
+  return state.presets || freshPresets();
+}
+function renderPresets() {
+  var p = getPresets();
+  document.getElementById("presetCur").textContent = p.active || "—";
+  var sel = document.getElementById("presetSel");
+  var names = Object.keys(p.presets || {});
+  sel.innerHTML = names.length ? names.map(function (n) {
+    return '<option value="' + esc(n) + '"' + (n === p.active ? " selected" : "") + '>' + esc(n) + "</option>";
+  }).join("") : '<option value="">（尚无方案，先「另存当前为方案」）</option>';
+}
+function putPresets(p, okText, failText) {
+  return fetch("data/presets.json", {
+    method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(p)
+  }).then(function (r) {
+    if (!r.ok) throw new Error("presets.json HTTP " + r.status);
+    state.presets = p;
+    var cur = document.getElementById("st-preset");
+    if (cur) cur.textContent = "方案 " + (p.active || "default");
+    renderPresets();
+    toast(okText, true);
+  }).catch(function (e) { toast(failText + "：" + e.message, false); });
+}
+document.getElementById("presetSwitch").addEventListener("click", function () {
+  var p = getPresets();
+  var name = document.getElementById("presetSel").value;
+  if (!name || !(p.presets || {})[name]) { toast("请先选择有效方案", false); return; }
+  var cfg = p.presets[name];
+  fetch("data/config.json", {
+    method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cfg)
+  }).then(function (r) {
+    if (!r.ok) throw new Error("config.json HTTP " + r.status);
+    state.cfg = cfg;
+    p.active = name;
+    return putPresets(p, '已切换到方案「' + name + '」，参数已生效（需重新刷新信号）', "切换失败");
+  }).catch(function (e) { toast("切换失败：" + e.message, false); });
+});
+document.getElementById("presetSave").addEventListener("click", function () {
+  var p = getPresets();
+  var def = "方案" + (Object.keys(p.presets || {}).length + 1);
+  var name = prompt("新方案名（同名将覆盖）：", def);
+  if (name == null) return;
+  name = name.trim();
+  if (!name) { toast("方案名不能为空", false); return; }
+  var done = function (cfg) {
+    p.presets[name] = cfg;
+    p.active = name;
+    putPresets(p, "已把当前参数另存为方案「" + name + "」", "另存失败");
+  };
+  if (state.cfg) { done(state.cfg); return; }
+  jget("data/config.json").then(function (v) { state.cfg = v; done(v); })
+    .catch(function (e) { toast("读取 config.json 失败：" + e.message, false); });
+});
+document.getElementById("presetDel").addEventListener("click", function () {
+  var p = getPresets();
+  var name = document.getElementById("presetSel").value;
+  if (!name) { toast("没有可删除的方案", false); return; }
+  if (name === "default") { toast("default 是内置兜底方案，不可删除", false); return; }
+  if (!confirm("确认删除方案「" + name + "」？只删快照，不影响当前生效参数。")) return;
+  delete p.presets[name];
+  if (p.active === name) p.active = "default";
+  putPresets(p, "已删除方案「" + name + "」", "删除失败");
+});
+
+/* ── 10. 收集、校验与 PUT 写回 ─────────────────────────── */
+function collectTargets(errs) {
+  var list = [];
+  document.querySelectorAll("#cfg-targets .tgt-row").forEach(function (row) {
+    var sym = row.querySelector(".t-sym").value.trim();
+    var nm = row.querySelector(".t-name").value.trim();
+    var tp = row.querySelector(".t-type").value;
+    var amt = parseInt(row.querySelector(".t-amt").value, 10) || 0;
+    if (!sym || !nm) { errs.push("标的「" + (nm || sym || "空") + "」：代码与名称不能为空"); return; }
+    if (!/^\d{6}$/.test(sym)) { errs.push(sym + "：代码应为 6 位数字"); return; }
+    if (TGT_TYPES.indexOf(tp) < 0) { errs.push(sym + "：类型应为 etf / index / stock"); return; }
+    var item = { symbol: sym, name: nm, type: tp };
+    if (amt > 0) item.level_amount = amt;
+    list.push(item);
+  });
+  if (!list.length) errs.push("标的池不能为空，至少保留一个标的");
+  return list;
+}
+function collectHoldings(errs) {
+  var list = [];
+  document.querySelectorAll("#hold-positions .tgt-row").forEach(function (row) {
+    var code = row.querySelector(".h-code").value.trim();
+    var nm = row.querySelector(".h-name").value.trim();
+    var tp = row.querySelector(".h-type").value;
+    var qty = parseFloat(row.querySelector(".h-qty").value) || 0;
+    var cost = parseFloat(row.querySelector(".h-cost").value) || 0;
+    var note = row.querySelector(".h-note").value.trim();
+    if (!code || !nm) { errs.push("持仓「" + (nm || code || "空") + "」：代码与名称不能为空"); return; }
+    if (!/^\d{6}$/.test(code)) { errs.push(code + "：代码应为 6 位数字"); return; }
+    list.push({ type: tp, code: code, name: nm, quantity: qty,
+      cost_price: cost, note: note });
+  });
+  return list;
+}
+function showMsg(el, text, ok) {
+  el.textContent = text;
+  el.className = "f-msg " + (ok ? "ok" : "bad");
+}
+document.getElementById("cfgSave").addEventListener("click", function () {
+  var errs = [];
+  var targets = collectTargets(errs);
+  var cfg = {
+    capital: iint("cfg-capital"),
+    grid: {
+      grid_step: Math.round(pct("cfg-grid_step") * 10000) / 10000,
+      base_ratio: Math.round(pct("cfg-base_ratio") * 10000) / 10000,
+      levels: iint("cfg-levels"),
+      level_amount: iint("cfg-level_amount"),
+      max_position_ratio: Math.round(pct("cfg-max_position_ratio") * 10000) / 10000,
+      stop_loss_ratio: Math.round(pct("cfg-stop_loss_ratio") * 10000) / 10000,
+      floor_buffer: Math.round(pct("cfg-floor_buffer") * 10000) / 10000,
+      lookback_days: iint("cfg-lookback_days"),
+      targets: targets
+    },
+    risk: {
+      reserve_liquidity: Math.round(pct("cfg-reserve_liquidity") * 10000) / 10000,
+      max_total_position: Math.round(pct("cfg-max_total_position") * 10000) / 10000,
+      single_side_down_days: iint("cfg-single_side_down_days")
+    },
+    convertible_bond: {
+      max_holdings: iint("cfg-max_holdings"),
+      per_amount: iint("cfg-per_amount"),
+      max_position_ratio: Math.round(pct("cfg-cb_max_position_ratio") * 10000) / 10000,
+      double_low_top: iint("cfg-double_low_top"),
+      buy_price_max: num("cfg-buy_price_max"),
+      buy_premium_max: num("cfg-buy_premium_max"),
+      sell_price_gt: num("cfg-sell_price_gt"),
+      sell_premium_gt: num("cfg-sell_premium_gt"),
+      sell_double_low_pct: Math.round(pct("cfg-sell_double_low_pct") * 10000) / 10000,
+      combo_stop_loss: Math.round(pct("cfg-combo_stop_loss") * 10000) / 10000
+    }
+  };
+  var msg = document.getElementById("cfgMsg");
+  if (errs.length) { showMsg(msg, errs.join("；"), false); return; }
+  fetch("data/config.json", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(cfg)
+  }).then(function (r) {
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    state.cfg = cfg;
+    showMsg(msg, "已保存 ✔ 参数改动需重新刷新信号才生效", true);
+  }).catch(function (e) {
+    showMsg(msg, "保存失败：" + e.message + "（file:// 直开不支持写回，请走本地服务）", false);
+  });
+});
+document.getElementById("holdSave").addEventListener("click", function () {
+  var errs = [];
+  var positions = collectHoldings(errs);
+  var msg = document.getElementById("holdMsg");
+  if (errs.length) { showMsg(msg, errs.join("；"), false); return; }
+  var payload = { positions: positions, updated_at: new Date().toISOString() };
+  fetch("data/holdings.json", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  }).then(function (r) {
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    state.hold = payload;
+    showMsg(msg, "已保存 ✔ 持仓改动需重新刷新信号才联动组合", true);
+  }).catch(function (e) {
+    showMsg(msg, "保存失败：" + e.message + "（file:// 直开不支持写回，请走本地服务）", false);
+  });
+});
+
+/* ── 11. 导出 / 导入备份 ─────────────────────────────────── */
+function toast(text, ok) {
+  var t = document.getElementById("toast");
+  t.textContent = text;
+  t.className = "toast on" + (ok ? "" : " bad");
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function () { t.className = "toast"; }, 3600);
+}
+function stamp() {
+  var d = new Date();
+  function p2(n) { return (n < 10 ? "0" : "") + n; }
+  return d.getFullYear() + p2(d.getMonth() + 1) + p2(d.getDate()) +
+    "-" + p2(d.getHours()) + p2(d.getMinutes()) + p2(d.getSeconds());
+}
+document.getElementById("expBtn").addEventListener("click", function () {
+  Promise.all([
+    jget("data/config.json"),
+    jget("data/holdings.json"),
+    jget("outputs/signals.json").catch(function () { return null; }),
+    jget("data/presets.json").catch(function () { return null; })
+  ]).then(function (arr) {
+    var payload = { exported_at: new Date().toISOString(), config: arr[0], holdings: arr[1], signals: arr[2], presets: arr[3] };
+    var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "mentor-backup-" + stamp() + ".json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 8000);
+    toast("已导出 mentor-backup-" + stamp() + ".json ✔", true);
+  }).catch(function (e) {
+    toast("导出失败：" + e.message, false);
+  });
+});
+function vBackup(d) {
+  if (!d || typeof d !== "object") return "备份文件不是 JSON 对象";
+  var cfg = d.config, hold = d.holdings;
+  if (!cfg || typeof cfg !== "object" || typeof cfg.capital !== "number") return "config 缺失或 capital 非数值";
+  if (!cfg.grid || !Array.isArray(cfg.grid.targets) || !cfg.risk || !cfg.convertible_bond) return "config 缺少 grid/risk/convertible_bond 段";
+  for (var i = 0; i < cfg.grid.targets.length; i++) {
+    var t = cfg.grid.targets[i];
+    if (!t || !/^\d{6}$/.test(String(t.symbol || ""))) return "标的第 " + (i + 1) + " 行 symbol 非 6 位数字";
+    if (TGT_TYPES.indexOf(t.type) < 0) return "标的第 " + (i + 1) + " 行 type 非法";
+  }
+  if (!hold || !Array.isArray(hold.positions)) return "holdings 缺失或 positions 非数组";
+  for (var j = 0; j < hold.positions.length; j++) {
+    var q = hold.positions[j];
+    if (!q || !/^\d{6}$/.test(String(q.code || "")) || !q.name) return "持仓第 " + (j + 1) + " 行 code/name 非法";
+  }
+  if (d.signals != null && (typeof d.signals !== "object" || !Array.isArray(d.signals.signals))) return "signals 段格式非法";
+  if (d.presets != null && (typeof d.presets !== "object" || typeof d.presets.presets !== "object")) return "presets 段格式非法";
+  return null;
+}
+document.getElementById("impBtn").addEventListener("click", function () {
+  document.getElementById("impFile").click();
+});
+document.getElementById("impFile").addEventListener("change", function (ev) {
+  var f = ev.target.files[0];
+  ev.target.value = "";
+  if (!f) return;
+  var rd = new FileReader();
+  rd.onload = function () {
+    var data;
+    try { data = JSON.parse(rd.result); } catch (e) { toast("导入失败：文件不是合法 JSON", false); return; }
+    var err = vBackup(data);
+    if (err) { toast("导入失败：" + err, false); return; }
+    var seq = [["data/config.json", data.config], ["data/holdings.json", data.holdings]];
+    if (data.signals != null) seq.push(["outputs/signals.json", data.signals]);
+    if (data.presets != null) seq.push(["data/presets.json", data.presets]);
+    var chain = Promise.resolve();
+    seq.forEach(function (pair) {
+      chain = chain.then(function () {
+        return fetch(pair[0], {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(pair[1])
+        }).then(function (r) {
+          if (!r.ok) throw new Error(pair[0] + " HTTP " + r.status);
+        });
+      });
+    });
+    chain.then(function () {
+      toast("导入成功 ✔ 页面数据已恢复", true);
+      loadAll();
+    }).catch(function (e) {
+      toast("导入失败：" + e.message, false);
+    });
+  };
+  rd.readAsText(f);
+});
+
+/* ── 12. file:// 拦截横幅 ───────────────────────────────── */
+if (location.protocol === "file:") {
+  document.getElementById("fileBanner").style.display = "block";
+}
+
+/* ── 13. 启动 ───────────────────────────────────────────── */
+loadAll();
+})();
+</script>
+</body>
+</html>

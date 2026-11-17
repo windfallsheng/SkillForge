@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="sf-template" content="quarterly-report@4">
+<meta name="sf-template" content="quarterly-report@5">
 <meta name="quarterly-id" content="REF-QUARTERLY-0000">
 <title>2026-Q4 研发季度总结</title>
 <style>
@@ -278,7 +278,7 @@ html.theming, html.theming *, html.theming *::before, html.theming *::after{ tra
     </div>
     <div class="cb-wrap">
       <div class="cb-title">Q1-Q4 季度走势（提交数）</div>
-      <div class="ech" id="quarterChart" data-off="图表需联网加载 echarts，离线环境不显示"></div>
+      <div class="ech" id="quarterChart" data-off="图表组件未加载，图表不显示"></div>
     </div>
   </section>
 
@@ -348,7 +348,8 @@ html.theming, html.theming *, html.theming *::before, html.theming *::after{ tra
   <button class="th-dot" type="button" data-theme="warm" title="温暖渐变"></button>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+<script src="assets/echarts.min.js"></script>
+<script>if(typeof echarts==='undefined')document.write('<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"><\/script>');</script>
 <script>
 // 复制源 = txt 纯文本全文
 var TXT = "2026-Q4 研发季度总结\n\n生成时间：2026-11-12 19:10:38\n\n季度概览\nTL;DR：收敛与沉淀的一季：双周聚合发布全面落地，季度版本数从上季度 42 个收敛到 25 个，质量门禁覆盖全部命令族，示例项目 进入稳定迭代期。\n1、季度提交数：256 次（10-01 ~ 11-12，较上季度 +12%，较去年同期 +35%）\n2、版本发布：25 个（v8.3.377 → v8.3.412，较上季度 -40% 主动收敛，较去年同期 +8%）\n3、净增代码：+4.6 万行（+6.2 万 / -1.6 万，较上季度 +5%，较去年同期 +20%）\n4、质量门禁通过率：96%（较上季度 +11%，较去年同期 +24%）\n\n季度关键成果\n1、双周聚合发布机制上线：v8.3.377 起按双周批次发布，单批 ≤10 版本（82 次提交、+1.9 万行）- M1 · 10 月\n2、发布平台 v0.4.0 发布：WebAuthn 破局发布认证，CI 自动建仓通道打通（18 个版本）- M1 · 10 月\n3、反推域隔离上线：global from-source 与 global analyze 职责彻底分离（36 次提交）- M1 · 10 月\n4、质量门禁补全：execute 用例核对闸覆盖全部命令族，error 拦截率 100%（52 次提交、+1.1 万行）- M2 · 11 月\n5、v8.3.412 累积发布：文档生成器升格、澄清链修复、测试工具 CLI v0.1.0 首发（12 个版本）- M2 · 11 月\n6、季报技能孵化：Q1-Q4 时间线 + 环比/同比双基准，汇报链补全五选一（技能仓库）- M2 · 11 月\n\n问题与改进\n1、版本发布节奏季度内波动明显：10 月 18 个版本、11 月仅 12 个，双周批次粒度仍需校准。\n影响：回归验证耗时拖慢交付节奏，季度后半程发力不均。\n改进：Q1 起固定单批 ≤6 版本，验证前置到开发期，季度内月度版本数波动控制在 ±30% 内。\n2、季度数据画像不完整：热力图仅覆盖主仓库，辅助仓库提交未纳入统计。\n影响：季度工作量画像与环比/同比口径偏窄，双基准可比性打折。\n改进：数据收集层支持多仓合并去重，本季度内上线，下季度双基准全面覆盖。\n\n下季度计划\n1、发布节奏固化：单批 ≤6 版本、双周一档，季度版本发布总量 ≤20 个（M1 建立模板、M2 稳定运行、M3 季度复盘）。\n2、多仓数据画像：数据收集层多仓合并去重上线，双基准口径全覆盖（M1 开发、M2 上线）。\n3、质量门禁全覆盖：全部命令族门禁通过率 ≥95%，季度内无重大回退（M2 补齐、M3 验收）。";
@@ -397,7 +398,7 @@ if (location.search.indexOf('shot=content') > -1) {
   });
 }
 
-// Q1-Q4 季度走势图（echarts CDN 渲染；离线时容器降级提示；?shot 截图模式停动画——headless 虚拟时间下动画帧不推进会停在初始帧）
+// Q1-Q4 季度走势图（echarts 本地渲染、CDN 回退；离线时容器降级提示；?shot 截图模式停动画——headless 虚拟时间下动画帧不推进会停在初始帧）
 (function(){
   var el = document.getElementById('quarterChart');
   if (!el) return;

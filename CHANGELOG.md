@@ -4,6 +4,17 @@
 
 SkillForge（技能锻造坊）npm 包 `skill-forge-hub`（命令名 `skill-forge`）版本变更记录。
 
+## 1.3.15（2026-11-17）
+
+**新技能 report-collector 通用数据采集器：五报表技能统一数据源**
+
+- 新技能 report-collector（数据整备）：零依赖 Python 采集脚本，git（提交聚合 + 增删行数 + 日/周/月分布 + tag/merge 里程碑，内置生成物剔除表防 graph.json 噪音）/ file（文件与目录要点提取）/ remote（网络源拉取，失败静默跳过）三通道 → 标准 JSON 契约（schema_version 1）+ report-state.json 增量缓存 + 采集摘要反馈；全通道失败自动退回口述模式
+- 五报表技能接入：日报/周报/月报/季报/年报的 SKILL.md 第 2 步与 DATA_SOURCES 意图路由改为「先跑 report-collector 取数（未安装则按 data-collection.md 手工路径降级）」，DATA_SOURCES 唯一真相源收敛到 report-collector 的 user-config.md（五报通用），各报自己的 DATA_SOURCES 为单技能补充源；五份 data-collection.md 重写为「运行通用采集器（首选）→ 手工收集（fallback）→ 会话口述 → 合并去重」四节，含各周期窗口参数与环比/同比另跑说明
+
+- 四报表技能（周报/月报/季报/年报）echarts 本地化：skill 自带 assets/echarts.min.js（5.5.0）随产物一并落盘、页面改相对路径引用（内网离线可用），本地缺失自动回退 CDN 5.5.0（双保险）；reference.html 版本戳 +1（weekly@5/monthly@5/quarterly@5/annual@6）、SKILL.md 与 disk-and-html.md 同步（落盘清单补拷库步骤）；data-off 降级文案统一「图表组件未加载，图表不显示」
+- 谋定方案匣内置四套预置策略：default（兜底）+ 新手稳健/均衡成长/进取积极（分阶段/分行情完整参数快照，普通投资者按阶段与行情一键切换；capital 占位与 targets 空池的切换提醒写入契约与指南）；SKILL.md 版本自检表述改动态（修复 @1/@2 漂移）+ 任务①/方案匣/规则速览同步，新增「补预置方案」入口（同名跳过、保留用户方案）；usage-guide 增「四套预置方案怎么选」选型表；reference.html 兜底内嵌同款四套种子（presets.json 缺失/损坏时方案匣仍显示四套预置方案）+ 版本戳 @3
+- 五报表技能首次使用引导：SKILL.md 第 2 步加「首次使用引导」动作、五份 data-collection.md 追加第 5 节——无任何数据（数据源空 + 无口述）时先向用户说清三种取数方式（口述 / 贴文字文件图片 / 配置 git 数据源自动聚合）再生成，有 git 数据无口述时轻提示可补充业务结果；有数据时直接生成不打扰
+
 ## 1.3.14（2026-11-13）
 
 **自定义模板升级保护宣导 + 备份滚动上限：改模板不丢、留档不堆**

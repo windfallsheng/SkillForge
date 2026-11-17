@@ -32,11 +32,11 @@
 - 说「不落盘/别写文件」时跳过确认，直接对话输出
 
 ## 自定义模板（适配各类岗位）
-- 内置模板为四段式（月度概览/本月关键成果/问题与改进/下月计划），适合开发岗位；其他岗位可自定义模板
-- 临时换模板：说「这次按 xxx 来」→ 口头描述结构（如"按三段：本月工作概述/重点成果与经验/下月计划"），当次按该结构生成，不改配置
-- 永久换模板：把顶部配置 TEMPLATE 改为 custom，并按 user-config.md 的「📝 自定义模板」节说明修改段结构，之后默认按新模板生成
-- 说「以后都用这个模板」→ 自动把当前口述的结构写入「📝 自定义模板」节并把 TEMPLATE 改为 custom
-- 升级保护：「📝 自定义模板」节改的内容升级永不覆盖——skill-forge 升级技能只更新 SKILL.md 与 resources/，user-config.md 永远保留你的版本；官方内置模板更新另存 user-config.upstream.md 对照，不影响你的模板
+- 内置模板：`templates/default.md`（内置四段式：月度概览/本月关键成果/问题与改进/下月计划），适合开发岗位；其他岗位可自建模板
+- 用户模板目录 `user-templates/`：一个模板一个 .md 文件，**文件名即模板名**（如 custom.md）；只写段结构与条目格式，未写明的细节沿用默认规范；升级永不覆盖你的模板文件（写法与示例见该目录 README）
+- 临时换模板：说「这次按 XX 模板来」→ 当次用 user-templates/XX.md 或 templates/XX.md（都找不到则按口述结构当次生成），不改配置
+- 永久换模板：把 user-config.md 顶部 TEMPLATE 改为模板名（如 custom）→ 之后默认按该模板生成
+- 说「把这段结构存成 XX 模板」→ 写入 user-templates/XX.md（不改 TEMPLATE）；说「以后都用这个模板」→ 写入并把 TEMPLATE 改为对应名
 - 模板优先于纯文字模式的信号词归类：指定了段名后，文字按段名归类填充
 
 ## 角色定制（我的职业画像）
@@ -61,7 +61,7 @@
 | FORMATS | 落盘哪些格式（数组） | [md, txt, html, content-png]（默认，含内容区截图）/ [md, html] / [md, txt, html]（不截图）；content-png = 四张分节卡片整体截图（四周约 40px 留白），不含头部标题/复制按钮/页脚 |
 | DIR | 落盘根目录 | auto（按当前系统自动选 DIR_MAC / DIR_WIN，默认）；DIR_MAC = macOS 根目录（模板默认 ~/reports，可改）；DIR_WIN = Windows 根目录（模板默认 %USERPROFILE%\reports，可改） |
 | OPEN_HTML | 落盘后是否自动打开 html | true（自动打开，默认）/ false（不打开） |
-| TEMPLATE | 报告模板 | default（内置四段式，默认）/ custom（按「📝 自定义模板」节的结构生成） |
+| TEMPLATE | 报告模板（模板名） | default（内置四段式：月度概览/本月关键成果/问题与改进/下月计划，默认）/ custom 或任意 user-templates/ 下的模板文件名（查模板顺序 user-templates/ → templates/ → default 兜底） |
 | ROLE | 默认职业角色画像 | 全栈开发工程师（企业内技术开发）等；职业名 + 括号内工作内容 |
 | CONFIRM | 落盘前先出效果确认 | never（直接生成不确认，默认）/ text（纯文字整理模式确认）/ always（所有生成都确认） |
 - 优先级：临时口头要求（不落盘/写到桌面/只要 md/只要内容区截图/这次不截图/别开浏览器/临时换模板等）永远优先于默认配置，仅对当次生效、不改配置

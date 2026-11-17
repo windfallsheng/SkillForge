@@ -4,6 +4,17 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
+## 1.3.15 (2026-11-17)
+
+**New skill report-collector: a universal data collector unifying all five report skills**
+
+- New report-collector skill (Data preparation): a zero-dependency Python collection script with three channels — git (commit aggregation, additions/deletions, daily/weekly/monthly distributions, tag/merge milestones, built-in generated-file exclusion list against graph.json noise), file (key-point extraction from files and directories) and remote (web fetch, silent skip on failure) — producing a standard JSON contract (schema_version 1), incremental caching via report-state.json, and a collection summary; falls back to dictation mode when all channels fail
+- Five report skills wired in: daily/weekly/monthly/quarterly/annual SKILL.md step 2 and the DATA_SOURCES intent routing now read "run report-collector first (fall back to the manual path in data-collection.md if not installed)"; the single source of truth for DATA_SOURCES converges on report-collector's user-config.md (shared by all five reports), while each report's own DATA_SOURCES becomes a per-skill supplement; all five data-collection.md files rewritten into four sections — run the universal collector (preferred) → manual collection (fallback) → session dictation → merge & dedupe — with per-period window parameters and MoM/YoY re-run instructions
+
+- Four report skills (weekly/monthly/quarterly/annual) echarts localization: each skill bundles assets/echarts.min.js (5.5.0) that lands next to the generated HTML and is referenced by a relative path (works offline on intranet), with automatic CDN 5.5.0 fallback when the local copy is missing; reference.html version stamps bumped (weekly@5/monthly@5/quarterly@5/annual@6) with SKILL.md and disk-and-html.md synced (copy-library step added to the landing checklist); data-off fallback text unified to 「图表组件未加载，图表不显示」
+- Mentor preset drawer ships four built-in strategies: default (fallback) plus novice-conservative / balanced-growth / aggressive-positive (complete per-stage & per-market parameter snapshots, one-click switching for ordinary investors; the capital-placeholder and empty-targets caveats documented in the contract and guide); SKILL.md version self-check reworded to be dynamic (fixes the @1/@2 drift) with step ①, the preset drawer and the rules digest synced, plus a new "restore built-in presets" entry (skips same-named user presets); usage-guide gains a "how to pick a preset" selection table; reference.html fallback embeds the same four built-in preset seeds (drawer stays populated if presets.json is missing/corrupt) + template stamp @3
+- Five report skills first-use onboarding: SKILL.md step 2 gains a "first-use onboarding" action and all five data-collection.md files append section 5 — when there is no data at all (empty sources and no dictation), the skill first explains the three data channels (dictation / paste text-file-image / configure git sources for auto aggregation) before generating; with git data but no dictation it hints that business results can be added; with any data it generates directly without interruption
+
 ## 1.3.14 (2026-11-13)
 
 **Custom-template upgrade protection + backup rolling cap: edits never lost, snapshots never pile up**

@@ -53,8 +53,9 @@
 | 文档装裱 | 文档转换与美化：Word / Markdown / 纯文本 → 精美 HTML + 逐章截图；中文 ↔ 英文孪生文档；一页纸海报 | article-to-html、twin-docs、one-pager |
 | 工程提效 | 基于 Pandoc 的文档 ↔ 规格互转（需求文档切片 / 规格导出 Word·PDF），Pandoc 机械转换 + AI 校对防错；发版说明与 CHANGELOG 生成 | spec-doc2spec、spec-spec2doc、release-notes |
 | 演示汇演 | 从内容到演示：HTML 形态的魔法幻灯（放映 + 模板 + 主题）与 .pptx 登台文稿（原生可编辑页 + 封面截图） | magic-deck、deck-stage |
-| 数据整备 | Excel / CSV / JSON 清洗结构化（清洗项明示、每步留痕、概览报告）与 git 提交热力图 | data-prepper、commit-heatmap |
+| 数据整备 | Excel / CSV / JSON 清洗结构化（清洗项明示、每步留痕、概览报告）、git 提交热力图与通用数据采集器（git/file/remote 三通道 → 标准 JSON，五报表技能统一数据源） | data-prepper、commit-heatmap、report-collector |
 | 沟通协作 | 会议纪要（行动项带负责人与截止时间，汇报链源头）、提示词管理（锦囊本地管理台）与决策日志 | meeting-minutes、prompt-pouch、decision-log |
+| 投资辅助 | 个人投资罗盘看板：单文件 HTML（行情/信号/持仓/网格阶梯/转债/健康八区块）+ 本地 JSON 数据契约 + Python 计算链一键刷新 | mentor |
 | 技能自造 | 锻造技能本身的元技能（创建技能 / 插件）与技能体检 | meta-forge、skill-doctor |
 
 ## 技能清单
@@ -77,11 +78,13 @@
 | deck-stage | 演示汇演 | [deck-stage/](deck-stage/) | 报告/素材 → 专业 .pptx 登台文稿：三问交互（素材 → 页骨架表 → 成片方式），常规页原生可编辑（数据卡/时间线/柱图/饼图/折线），封面与结尾页 HTML 截图保真，每页可带演讲备注；视觉与报表同源（tech/biz/mono/light/warm 五主题） |
 | data-prepper | 数据整备 | [data-prepper/](data-prepper/) | Excel / CSV / JSON 散装数据清洗为结构化数据：格式探测 → 清洗（清洗项明示、逐条留痕、不猜不编）→ JSON/CSV 落盘 → 数据概览报告（字段画像 / 分布 / 异常值 / 清洗清单） |
 | commit-heatmap | 数据整备 | [commit-heatmap/](commit-heatmap/) | git 近一年提交 → GitHub 风格提交热力图 HTML（53 周×7 天格子五档深浅 + 总提交数/最长连续天数/活跃占比/最活跃日统计卡），离线零依赖、三主题切换 |
+| report-collector | 数据整备 | [report-collector/](report-collector/) | 通用数据采集器：git（提交聚合/增删行数/日周月分布/里程碑，内置生成物剔除表）/ file（要点提取）/ remote（网络源拉取）三通道 → 标准 JSON + report-state.json 增量缓存 + 采集摘要反馈；日报/周报/月报/季报/年报五技能的 DATA_SOURCES 唯一真相源 |
 | meta-forge | 技能自造 | [meta-forge/](meta-forge/) | 元技能：从需求出发锻造完整技能包（薄入口 + resources 拆分 + user-config），自动植入八大机制（CONFIG_VERSION 钥匙 / user-config 抽离 / reference 双轨 / 自检纪律 / preserve 保护清单 / 多文件隔离 / 零侵权脱敏离线 / 产物升级回炉），入仓库时自动登记 README 分类表、cli.js CATEGORIES 与 package.json files（npm 包内容不遗漏） |
 | skill-doctor | 技能自造 | [skill-doctor/](skill-doctor/) | 技能体检：对技能目录跑静态检查（frontmatter 与目录名一致 / 资源引用可达 / 配置版本 / 占位符残留 / HTML 技能字体脱敏与多文件隔离与版本戳），三段式体检报告带文件行级定位 |
 | meeting-minutes | 沟通协作 | [meeting-minutes/](meeting-minutes/) | 多源材料生成会议纪要（五段式：会议信息/会议结论/议题讨论/决议与行动项/下次会议）：行动项带负责人与截止时间（汇报链源头，可被日报/周报/月报/季报引用）；内置 12 类会议类型词典，支持自定义模板 |
 | prompt-pouch | 沟通协作 | [prompt-pouch/](prompt-pouch/) | 锦囊提示词管理台：生成并维护本地 HTML 管理页面（分组侧栏/搜索/拖拽与按钮排序/收藏/{变量}插值/一键复制/标签全交互/导入导出 JSON 备份/分组 emoji 快捷面板），数据存 data/prompts.json、滚动备份在 backup/ 子目录，页面与数据分离，双笔协作（页面直写 + AI 代笔） |
 | decision-log | 沟通协作 | [decision-log/](decision-log/) | 重要决策四元组日志（结论 / 取舍权衡 / 被否方案 / 适用与失效条件）：按主题聚合落盘、INDEX 索引、随时检索复盘 |
+| mentor | 投资辅助 | [mentor/](mentor/) | 个人投资罗盘看板：单文件 HTML（换肤坞 + 三区弹框表单 + ECharts 阶梯图 + 芯片墙）+ 本地 JSON 三件套（config/holdings/signals）+ Python 计算链挂载 Pyxis 引擎（拉数→信号→落盘），页面只读数据、表单 PUT 写回 |
 
 ## 快速开始
 
@@ -103,7 +106,7 @@ skill-forge update              # 升级已安装技能（配置版本感知，�
 | [docs/architecture.md](docs/architecture.md) | 架构与规范：目录结构、技能形态（薄入口 + resources）、八大机制、拆分规范、通用原则。英文版 [docs/architecture.en.md](docs/architecture.en.md) |
 | [docs/usage-examples.md](docs/usage-examples.md) | 技能使用场景示例：日报 / 锦囊 / PPT 两形态 / 会议纪要的安装到回炉全链路。英文版 [docs/usage-examples.en.md](docs/usage-examples.en.md) |
 | [skillforge-guide](https://windfallsheng.github.io/SkillForge/) | 内置使用指引（每个技能 resources/ 均含 txt + html 双版）：对 AI 说「skillforge 怎么用」即朗读指引并打开排版页；在线引导页见 GitHub Pages 公网地址（长期有效） |
-| [SKILLS_CATALOG.md](SKILLS_CATALOG.md) | 技能目录简介册：21 技能逐条中英双语独立简介（每技能一段可直接摘录），供 skills.sh / awesome-claude-skills 等目录收录与文章引用时锚点链接 |
+| [SKILLS_CATALOG.md](SKILLS_CATALOG.md) | 技能目录简介册：23 技能逐条中英双语独立简介（每技能一段可直接摘录），供 skills.sh / awesome-claude-skills 等目录收录与文章引用时锚点链接 |
 | [docs/articles/](docs/articles/) | 实操文章：《用 AI 技能包管提示词》《AI 写日报的正确姿势》；[docs/directory-submission.md](docs/directory-submission.md) 目录收录素材包（awesome-claude-skills PR 素材与步骤 / skills.sh 发布指引 / gh 登录指引） |
 | [CHANGELOG.md](CHANGELOG.md) | 版本变更记录。英文版 [CHANGELOG.en.md](CHANGELOG.en.md) |
 

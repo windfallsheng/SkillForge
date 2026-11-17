@@ -7,6 +7,7 @@
 ## 落盘
 
 - FORMATS 默认 [md, txt, html, content-png]：md/txt/html 文件名 `quarterly-report-YYYY-QN.<格式>`、截图 `quarterly-report-YYYY-QN-content.png`；txt 为纯文本版；DISK: false 时全部不落盘
+- 落盘 html 时连同本 skill 的 assets/echarts.min.js 一并拷入产物目录（产物目录内建 assets/ 子目录，页面图表依赖该本地库、内网离线可用；本地库缺失时页面自动回退 CDN 加载）；图表渲染用 echarts@5.5.0（本地库缺失时回退 https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js，两者都加载失败时图表容器显示 data-off 降级提示文字、页面其余内容正常浏览不受影响）
 - 目录：`{DIR}/YYYY-QN/`（DIR 按系统取 DIR_MAC/DIR_WIN，不存在回退用户主目录下 reports）；目录已存在直接复用，只覆盖本清单内同名文件；目录内存在非本 skill 命名的其它文件时对话中提示用户「该目录内已有其它文件，本次季度总结已与它们并列存放，未做任何改动」
 - 对话中照常输出 md 正文（不受 FORMATS 影响）；OPEN_HTML: true 且落盘了 html 时自动打开浏览器（macOS：open <html文件>；Windows PowerShell：Start-Process <html文件>）
 - 落盘完成后，对话回复必须向用户报告落盘位置：列出实际写入的目录完整路径与文件清单（如「已落盘到 ~/reports/2026-Q4/：quarterly-report-2026-Q4.md、.txt、.html、quarterly-report-2026-Q4-content.png」），并注明 html 是否已在浏览器打开、截图是否跳过（Chrome/Edge 都不存在时）；DISK=false 或未落盘时注明「本次仅对话输出，未落盘」

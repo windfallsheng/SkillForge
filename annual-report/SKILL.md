@@ -12,10 +12,10 @@ disable-model-invocation: false
 ## 生成流程
 
 0.5 **周期歧义分流**：用户说「写总结/工作总结/写个汇报/做一份总结」等未言明周期的词 → AskUserQuestion 五选一（日报/周报/月报/季报/年报）确认周期再继续，不擅自默认
-0. **读用户配置**（DISK/FORMATS/DIR/OPEN_HTML/THEME/TEMPLATE/ROLE/CONFIRM/CONFIG_VERSION/DATA_SOURCES、自定义模板）→ 先 Read 同目录 `user-config.md`
+0. **读用户配置**（DISK/FORMATS/DIR/OPEN_HTML/THEME/TEMPLATE/ROLE/CONFIRM/CONFIG_VERSION/DATA_SOURCES）→ 先 Read 同目录 `user-config.md`，再按 TEMPLATE 值查模板文件并 Read（顺序：user-templates/{名}.md → templates/{名}.md → templates/default.md 兜底）
 1. **解析年度**（自然语言 → 目标年度区间）→ 读 `resources/date-parsing.md`
-2. **收集数据**（多源：会话口述 / 文字 / 文件 / 图片 / 代码提交记录，合并去重）→ 读 `resources/data-collection.md`
-3. **内容归类与润色**（五段式结构 / 聚合来源 / 纯文字模式 / 输出格式 / 写作风格）→ 读 `resources/content-rules.md`
+2. **收集数据**（先跑 report-collector 采集器取数（未安装则按 data-collection.md 手工路径降级）+ 会话口述 / 文字 / 文件 / 图片，合并去重；生成前先回采集摘要反馈；首次使用引导（无任何数据时先说明三种取数方式再生成，见 data-collection.md 第 5 节）→ 读 `resources/data-collection.md`
+3. **内容归类与润色**（五段式结构 / 聚合来源 / 纯文字模式 / 写作风格）→ 读 `resources/content-rules.md`；输出结构按 TEMPLATE 指向的模板文件生成（见「⚙️ 配置与自定义模板」节）
 4. **行业词条**（话术含职业词时按词典取词）→ 读 `resources/industry-dictionary.md`
 5. **落盘与截图**（md/txt/html/content-png + 自动打开 html）→ 读 `resources/disk-and-html.md`
 5.5 **交付前自检**（落盘与截图前必做，硬门禁不可跳过）：annual-report-YYYY.html 文件写好后——
@@ -27,14 +27,14 @@ disable-model-invocation: false
 
 ## ⚙️ 配置与自定义模板
 
-**执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（DISK/FORMATS/DIR/OPEN_HTML/THEME/TEMPLATE/ROLE/CONFIRM/CONFIG_VERSION/DATA_SOURCES）与自定义模板都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留；官方更新配置时另存 `user-config.upstream.md` 对照文件，可按需手动合并新配置点。**「📝 自定义模板」节是升级保护区**：改这里的内容升级永不覆盖；官方 default 内置模板有更新时另存 `user-config.upstream.md` 对照，不会动你的模板。resources/ 下的内置规则随升级覆盖，模板请只写在「📝 自定义模板」节。
+**执行本 skill 前必须先 Read 同目录 `user-config.md`**：默认配置（DISK/FORMATS/DIR/OPEN_HTML/THEME/TEMPLATE/ROLE/CONFIRM/CONFIG_VERSION/DATA_SOURCES）与自定义模板都在该文件中，以它为准。升级技能时 user-config.md 不会被覆盖，你的修改永久保留；官方更新配置时另存 `user-config.upstream.md` 对照文件，可按需手动合并新配置点。**模板机制（v5+）**：报告结构由模板文件决定——内置模板在 `templates/`（随升级更新，勿改），用户模板在 `user-templates/`（升级永不覆盖）。查模板顺序：user-templates/{名}.md → templates/{名}.md → templates/default.md 兜底（同名时用户模板优先，免配置覆盖）；TEMPLATE: {模板名} 定默认模板。口头「按 XX 模板来」当次生效；「把这段结构存成 XX 模板」写入 user-templates/XX.md（不改 TEMPLATE）；「以后都用这个模板」写入并把 TEMPLATE 改为对应名。模板文件写法与示例见 user-templates/README.md；resources/ 下的内置规则随升级覆盖，内置模板文件随升级更新。
 
 - **THEME**：html 页面主题，tech 深蓝科技（默认）/ biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变；生成时写 `<html data-theme="THEME值">` 定默认，页面右下角换肤坞随点随换（localStorage 记忆（键按页内嵌唯一 ID 隔离、多份产物互不串台、改名/移动目录记忆不丢（生成时头部写 `<meta name="annual-id" content="<UUID>">`，每次 crypto.randomUUID() 生成标准 UUID v4（8-4-4-4-12 十六进制，禁止手写变体、禁止沿用占位与旧值）；落盘写文件前顺扫落盘目录下本技能命名的 html，读各文件 id meta 查重，撞号重掷至不重复））、?shot 截图模式与打印隐藏）
-- **DATA_SOURCES 意图路由**：用户说「把这些 git 地址 / 目录配置到这个 skill」「数据源加一下」「以后数据从 XX 仓库取」→ 默认指配置到 `user-config.md` 的 `DATA_SOURCES` 数据源清单（不是 SKILL.md、不是 disk-and-html.md）；「git 地址」给的是 URL 或本地仓库路径、目录给的是本地路径都写进 DATA_SOURCES。用户话术只指向某个特定数据源（如「只算这个仓库」）→ 当次生效，不写配置。意图仍有歧义（如分不清「数据收集配置」与「落盘目录配置」）→ 一句话与用户确认后写入，不猜
+- **DATA_SOURCES 意图路由**：用户说「把这些 git 地址 / 目录配置到这个 skill」「数据源加一下」「以后数据从 XX 仓库取」→ 默认指配置到 report-collector 技能的 `user-config.md` `DATA_SOURCES` 清单（数据源唯一真相源，五报通用）；本 skill 的 `DATA_SOURCES` 为单技能补充源（一般不填，只在单技能生成时追加采集）（不是 SKILL.md、不是 disk-and-html.md）；「git 地址」给的是 URL 或本地仓库路径、目录给的是本地路径都写进 DATA_SOURCES。用户话术只指向某个特定数据源（如「只算这个仓库」）→ 当次生效，不写配置。意图仍有歧义（如分不清「数据收集配置」与「落盘目录配置」）→ 一句话与用户确认后写入，不猜
 
 ## 配置版本机制（升级保护）
 
-本 skill 当前配置版本为 `4`（对应 user-config.md 中的 `CONFIG_VERSION`）。执行时若发现 user-config.md 的 CONFIG_VERSION 与本节声明的当前版本不一致：
+本 skill 当前配置版本为 `5`（对应 user-config.md 中的 `CONFIG_VERSION`）。执行时若发现 user-config.md 的 CONFIG_VERSION 与本节声明的当前版本不一致：
 
 1. 先将旧 user-config.md 备份为 `user-config.bak-<时间戳>.md`（同目录，绝不删除旧值）
 2. 按本节「配置升级规则」迁移字段：新增字段补默认值、改名字段按映射改写、删除字段的值保留在备份中并在对话提示用户手动确认
@@ -43,11 +43,11 @@ disable-model-invocation: false
 
 升级本 skill 时，配置结构如有变化必须同步更新本节的当前版本号与迁移说明；禁止在未声明版本变更的情况下静默修改配置语义。
 
-**模板保全（硬规则）**：迁移只动 yaml 块字段，「📝 自定义模板」节原样保留一字不碰——用户改的模板结构绝不因配置升级丢失。
+**模板保全（硬规则）**：迁移只动 yaml 块字段；「📝 用户模板」节与 user-templates/ 目录下的用户模板文件原样保留一字不碰——用户改的模板结构绝不因配置升级丢失。
 
 **无法迁移项处理**（值域失效 / 语义漂移 / 数据不兼容）：三情形——①旧值不在新值域（如旧模板/主题名已移除）②同名键含义变化（单位/枚举变更）③数据文件 schema 不兼容。三绝不：绝不静默（无法迁移项停下问，不猜值）、绝不丢失（旧值永远在 .bak-时间戳）、一次说清（升级报告三段式：⚠️ 版本与备份路径 → ✅ 已自动迁移清单 → 🟡 无法迁移项逐条附原因+影响+建议替代）；随后 AskUserQuestion 三选项（A 用建议值 / B 用户给新值 / C 保持旧配置——不更新 CONFIG_VERSION，每次执行再提醒）；报告必附回滚一句话；数据文件迁移前先复制 .bak-时间戳，能映射则映射、不能则写兼容层或留备份提示手动整理
 
-当前版本变更记录：v1→v2 新增 THEME 字段（默认 tech；发现旧配置时按迁移规则补默认值）。v2→v3 新增 DATA_SOURCES 数据源清单段（默认空清单 + git/file/remote 三类型示例注释；DIR_MAC/DIR_WIN 默认值通用化——已配置用户保留原值不受影响）。v3→v4 数据收集配置归位：DATA_SOURCES 清单结构与已填值不变，仅澄清唯一配置落点——数据源一律只写 user-config.md「默认配置」的 DATA_SOURCES（升级保护区，永不覆盖）；resources/data-collection.md 收敛为纯机制说明（随升级覆盖，不再内置清单示例）。迁移动作：备份 user-config.md → CONFIG_VERSION 更新为 4，DATA_SOURCES 原样保留；若此前误把数据源写在 data-collection.md（升级后已被新版覆盖），请手动搬回 user-config.md。
+当前版本变更记录：v1→v2 新增 THEME 字段（默认 tech；发现旧配置时按迁移规则补默认值）。v2→v3 新增 DATA_SOURCES 数据源清单段（默认空清单 + git/file/remote 三类型示例注释；DIR_MAC/DIR_WIN 默认值通用化——已配置用户保留原值不受影响）。v3→v4 数据收集配置归位：DATA_SOURCES 清单结构与已填值不变，仅澄清唯一配置落点——数据源一律只写 user-config.md「默认配置」的 DATA_SOURCES（升级保护区，永不覆盖）；resources/data-collection.md 收敛为纯机制说明（随升级覆盖，不再内置清单示例）。迁移动作：备份 user-config.md → CONFIG_VERSION 更新为 4，DATA_SOURCES 原样保留；若此前误把数据源写在 data-collection.md（升级后已被新版覆盖），请手动搬回 user-config.md。v4→v5 模板文件化：新增 templates/（内置模板，随升级更新）+ user-templates/（用户模板，升级永不覆盖）双目录机制，TEMPLATE 字段从「default/custom 二选一」升级为「模板名」语义（查模板顺序 user-templates/{名}.md → templates/{名}.md → default 兜底）。迁移动作：备份 user-config.md → 旧「📝 自定义模板」节的内容若与官方默认示例不同（用户改过）→ 写入 user-templates/custom.md，TEMPLATE: custom 保留（自动命中该文件）；若内容仍是官方示例（用户未改）→ 删除该节，TEMPLATE: custom 改回 default → CONFIG_VERSION 更新为 5。user-templates/ 目录已列入 .preserve 保护清单（升级永不覆盖）。
 
 ## 文档同步自检纪律（维护者必读）
 
@@ -55,7 +55,7 @@ disable-model-invocation: false
 
 ## 产物升级（回炉）
 
-生成 HTML 时头部写版本戳 `<meta name="sf-template" content="annual-report@5">`（模板升级时递增 @N 并同步 reference.html 与本文档）。用户说「升级旧产物/回炉旧页面/旧年报换新样式」时：扫落盘目录下本技能命名的 html，读版本戳筛出旧版（无版本戳或缺少 `<meta name="annual-id">` 稳定 ID 的产物视为 v0 最旧版，一并进清单） → 列清单（文件/旧版本/手改状态——旧 html 正文与同目录 md 正文对比，不一致视为可能手改过）→ AskUserQuestion 选全部或部分 → 逐份升级：浅升级（仅 CSS/JS 变化）对旧页替换 `<style>` 块与交互脚本、正文内容原样保留；深升级（DOM 结构变化）从同目录 md 底稿按当前 reference.html 重建，先备份旧版 `.bak-时间戳` → 报告三段式：✅ 已升级清单 / ⚠️ 手改保留说明 / 🟡 失败项原因。模板改动分级：业务改动（板块/段落/标题体系）、数据格式改动（字段/存储结构）、页面改动（样式/布局/交互）任一发生即模板升级，版本戳 +1 并同步 reference.html 与本文档；纯措辞润色不 bump。每次生成 HTML 时顺扫落盘目录读版本戳：发现旧版产物主动告知「技能模板已升级至 vN，检测到 X 份旧版年报（vN-1 或无版本戳的历史产物），说『把我旧年报都升级成新样式』即可一键升级」，不让用户背触发语。
+生成 HTML 时头部写版本戳 `<meta name="sf-template" content="annual-report@6">`（模板升级时递增 @N 并同步 reference.html 与本文档）。用户说「升级旧产物/回炉旧页面/旧年报换新样式」时：扫落盘目录下本技能命名的 html，读版本戳筛出旧版（无版本戳或缺少 `<meta name="annual-id">` 稳定 ID 的产物视为 v0 最旧版，一并进清单） → 列清单（文件/旧版本/手改状态——旧 html 正文与同目录 md 正文对比，不一致视为可能手改过）→ AskUserQuestion 选全部或部分 → 逐份升级：浅升级（仅 CSS/JS 变化）对旧页替换 `<style>` 块与交互脚本、正文内容原样保留；深升级（DOM 结构变化）从同目录 md 底稿按当前 reference.html 重建，先备份旧版 `.bak-时间戳` → 报告三段式：✅ 已升级清单 / ⚠️ 手改保留说明 / 🟡 失败项原因。模板改动分级：业务改动（板块/段落/标题体系）、数据格式改动（字段/存储结构）、页面改动（样式/布局/交互）任一发生即模板升级，版本戳 +1 并同步 reference.html 与本文档；纯措辞润色不 bump。每次生成 HTML 时顺扫落盘目录读版本戳：发现旧版产物主动告知「技能模板已升级至 vN，检测到 X 份旧版年报（vN-1 或无版本戳的历史产物），说『把我旧年报都升级成新样式』即可一键升级」，不让用户背触发语。
 
 ## 🔧 报修处理流程（用户报页面问题时）
 
@@ -73,6 +73,7 @@ disable-model-invocation: false
 - 中文顿号序号（1、2、3）；段内无内容写「暂无」；量化优先（业务结果指标优先于提交统计），杜绝空话套话；落笔前五问自检（结论/基准/闭环/可验证/归属）
 - 行业术语/指标/里程碑主题/风险话术/标题按 `resources/industry-dictionary.md` 职业词典取词（未提职业按 ROLE 画像；标题 = 年份前缀 + 词典「标题」变量，如「2026 研发年度总结」）
 - 页面主题五选一（tech 深蓝科技默认 / biz 浅色商务 / mono IDEA 黑亮 / light IDEA 白亮 / warm 温暖渐变）：THEME 配置定默认，右下角换肤坞随点随换
+- 模板机制：TEMPLATE 是模板名；查模板顺序 user-templates/{名}.md → templates/{名}.md → default 兜底；用户模板存 user-templates/（文件名即模板名，升级不覆盖）
 - 完整规则（聚合来源 / 纯文字模式 / 写作风格约束 / 使用提示）见 `resources/content-rules.md`
 
 

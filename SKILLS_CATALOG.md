@@ -3,8 +3,8 @@
 > 本文件供技能目录收录引用（skills.sh / awesome-claude-skills 等）：每个技能一段**独立可引用**的双语简介，目录维护者可直接整段摘录；提交 PR 或发布时请引用本文件对应锚点（如 `SKILLS_CATALOG.md#daily-report`）。
 > Each section is a self-contained, citable profile for directory submissions (skills.sh, awesome-claude-skills, etc.). Link to anchors like `SKILLS_CATALOG.md#daily-report` when submitting.
 
-**仓库一览**：21 个可复用 Agent 技能（SKILL.md 为入口，一次生成，跨宿主迁移），覆盖报表汇报、文档装裱、工程提效、演示汇演、数据整备、沟通协作、技能自造七类。全部离线可用、零外部依赖、配置抽离（user-config.md，升级不覆盖）。
-**Repository at a glance**: 21 reusable agent skills (SKILL.md as entry point, generated once, portable across hosts), covering reporting, document beautification, engineering efficiency, presentations, data preparation, collaboration, and meta-skill crafting. Fully offline, zero external dependencies, user config isolated in user-config.md.
+**仓库一览**：23 个可复用 Agent 技能（SKILL.md 为入口，一次生成，跨宿主迁移），覆盖报表汇报、文档装裱、工程提效、演示汇演、数据整备、沟通协作、投资辅助、技能自造八类。全部离线可用、零外部依赖、配置抽离（user-config.md，升级不覆盖）。
+**Repository at a glance**: 23 reusable agent skills (SKILL.md as entry point, generated once, portable across hosts), covering reporting, document beautification, engineering efficiency, presentations, data preparation, collaboration, and meta-skill crafting. Fully offline, zero external dependencies, user config isolated in user-config.md.
 
 ---
 
@@ -82,6 +82,10 @@ Cleans scattered Excel / CSV / JSON into structured data: format detection, tran
 git 近一年提交 → GitHub 风格提交热力图 HTML（53 周 × 7 天格子五档深浅 + 总提交数 / 最长连续天数 / 活跃占比 / 最活跃日统计卡），离线零依赖、三主题切换。
 Renders a GitHub-style commit heatmap (53×7 grid, five intensity levels, stats cards for total commits, longest streak, activity ratio, busiest day) from a year of git history; offline, zero dependencies, three themes.
 
+### report-collector 数据采集器 / Report Collector
+通用数据采集器：git（提交聚合 + 增删行数 + 日/周/月分布 + tag/merge 里程碑，内置生成物剔除表防 graph.json 噪音）/ file（文件与目录要点提取）/ remote（网络源拉取，失败静默跳过）三通道 → 标准 JSON 契约 + report-state.json 增量缓存 + 采集摘要反馈；日报/周报/月报/季报/年报五报表技能的 DATA_SOURCES 唯一真相源，全通道失败自动退回口述模式。
+A universal data collector with three channels — git (commit aggregation, additions/deletions, daily/weekly/monthly distributions, tag/merge milestones, built-in generated-file exclusion list), file (key-point extraction from files and directories) and remote (web fetch, silent skip on failure) — producing a standard JSON contract with incremental caching (report-state.json) and a collection summary; the single source of truth (DATA_SOURCES) for the five report skills (daily/weekly/monthly/quarterly/annual), falling back to dictation when all channels fail.
+
 ## 沟通协作 · Communication & Collaboration
 
 ### meeting-minutes 会议纪要 / Meeting Minutes
@@ -95,6 +99,12 @@ A local prompt management console: groups, search, drag-and-drop sorting, favori
 ### decision-log 决策日志 / Decision Log
 重要决策四元组日志（结论 / 取舍权衡 / 被否方案 / 适用与失效条件）：按主题聚合落盘、INDEX 索引、随时检索复盘。
 Logs important decisions as four-tuples (conclusion / trade-offs / rejected alternatives / applicability & expiry conditions), aggregated by topic with an index for retrieval and review.
+
+## 投资辅助 · Investing Assistance
+
+### mentor 谋定 / Mentor
+个人投资罗盘看板：单文件 HTML（行情/信号/持仓/网格阶梯/转债/健康八区块 + 七套主题 + 换肤坞）+ 本地 JSON 数据契约（config/holdings/presets）+ Python 计算链一键刷新信号（AkShare/BaoStock/集思录 → 网格/转债/风控引擎 → 落 JSON）；页面表单写回 JSON、数据走本地 HTTP 服务。
+A personal investment compass dashboard: single-file HTML (quotes/signals/portfolio/grid ladder/convertible bonds/health blocks + seven themes + skin dock) with local JSON data contracts (config/holdings/presets) and a one-click Python computation chain to refresh signals (AkShare/BaoStock/Jisilu → grid/convertible/risk engines → JSON); forms write back to JSON, data served over a local HTTP server.
 
 ## 技能自造 · Meta Skills
 
