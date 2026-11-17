@@ -27,7 +27,7 @@ python3 "<report-collector 技能目录>/scripts/report-collect.py" \
 - **Q1-Q4 走势**：对当年各季度分别跑一次窗口统计（当年未到的季度不统计），取各次 summary.commits_total 喂 HTML 概览区的 Q1-Q4 季度走势图
 - 解读 JSON 按 report-collector 的 `resources/json-contract.md` 契约：先看 summary（ok == 0 时告知用户并退回纯口述）；量化数字只认 git 数组的 commits_total/additions/deletions/files_touched 聚合字段；commits_total == 0 的仓库不写入季报；monthly 分布聚合 M1/M2/M3 月时间线；milestones 的 tag（版本发布）/merge（重要合并）筛选落在目标季度内的进成果段
 - **采集摘要反馈**：生成前先回一句数据来源摘要（引用脚本 stderr），如「已从 3 个仓库聚合 47 次提交、2 个文件提取要点、1 个远程源失败已跳过」
-- 采集器未安装 / Python 不可用 → 走第 2 节手工路径
+- 采集器未安装 → 走第 2 节手工路径，成稿末尾轻提示用户「装 report-collector 技能可自动聚合数据（说『装数据采集器』即可）」；Python 不可用（采集器已装）→ 走第 2 节手工路径
 
 ## 2. 手工收集（fallback：采集器未安装或 Python 不可用时）
 

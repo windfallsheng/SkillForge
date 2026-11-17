@@ -21,7 +21,7 @@ python3 "<report-collector 技能目录>/scripts/report-collect.py" \
 - 窗口参数：目标日当天（YYYY-MM-DD，含端点）
 - 解读 JSON 按 report-collector 的 `resources/json-contract.md` 契约：先看 summary（ok == 0 时告知用户并退回纯口述）；量化数字只认 git 数组的 commits_total/additions/deletions/files_touched 聚合字段；commits_total == 0 的仓库不写入日报；daily 分布喂节奏条；同主题多提交（含多次提交与 MR 合并记录）合并为一条任务点、量化数据累加
 - **采集摘要反馈**：生成前先回一句数据来源摘要（引用脚本 stderr），如「已从 3 个仓库聚合 47 次提交、2 个文件提取要点、1 个远程源失败已跳过」
-- 采集器未安装 / Python 不可用 → 走第 2 节手工路径
+- 采集器未安装 → 走第 2 节手工路径，成稿末尾轻提示用户「装 report-collector 技能可自动聚合数据（说『装数据采集器』即可）」；Python 不可用（采集器已装）→ 走第 2 节手工路径
 
 ## 2. 手工收集（fallback：采集器未安装或 Python 不可用时）
 

@@ -4,7 +4,7 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
-## 1.3.15 (2026-11-17)
+## 1.3.16 (2026-11-17)
 
 **New skill report-collector: a universal data collector unifying all five report skills**
 
@@ -15,6 +15,7 @@ Version history of the SkillForge npm package `skill-forge-hub` (command name `s
 - Mentor preset drawer ships four built-in strategies: default (fallback) plus novice-conservative / balanced-growth / aggressive-positive (complete per-stage & per-market parameter snapshots, one-click switching for ordinary investors; the capital-placeholder and empty-targets caveats documented in the contract and guide); SKILL.md version self-check reworded to be dynamic (fixes the @1/@2 drift) with step ①, the preset drawer and the rules digest synced, plus a new "restore built-in presets" entry (skips same-named user presets); usage-guide gains a "how to pick a preset" selection table; reference.html fallback embeds the same four built-in preset seeds (drawer stays populated if presets.json is missing/corrupt) + template stamp @3
 - Five report skills first-use onboarding: SKILL.md step 2 gains a "first-use onboarding" action and all five data-collection.md files append section 5 — when there is no data at all (empty sources and no dictation), the skill first explains the three data channels (dictation / paste text-file-image / configure git sources for auto aggregation) before generating; with git data but no dictation it hints that business results can be added; with any data it generates directly without interruption
 
+- report-collector install guidance: the fallback line in the five data-collection.md files now adds a light end-of-report hint ("install report-collector for auto aggregation") when the collector is missing, and all five usage-guides gain an "auto data collection (optional: install report-collector)" section (3 steps: install the collector → add data sources → auto aggregation; without it, falls back to dictation only)
 ## 1.3.14 (2026-11-13)
 
 **Custom-template upgrade protection + backup rolling cap: edits never lost, snapshots never pile up**
