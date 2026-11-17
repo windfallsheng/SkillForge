@@ -41,6 +41,16 @@
   <sub>锦囊提示词管理台（分组 / 搜索 / 收藏 / 标签 / 导入导出）</sub>
 </td>
 </tr>
+<tr>
+<td align="center" width="50%">
+  <img src="docs/images/mentor.png" alt="谋定个人投资罗盘" width="100%"/><br/>
+  <sub>谋定个人投资罗盘（行情快照 / 今日信号 / 网格阶梯 / 风控闸门八区块）</sub>
+</td>
+<td align="center" width="50%">
+  <img src="docs/images/mentor-backtest.png" alt="谋定网格回测报告" width="100%"/><br/>
+  <sub>谋定网格回测报告（最大回撤 / 净值曲线 / 分年收益 / 风险事件账本）</sub>
+</td>
+</tr>
 </table>
 
 ## 技能分类
@@ -55,7 +65,7 @@
 | 演示汇演 | 从内容到演示：HTML 形态的魔法幻灯（放映 + 模板 + 主题）与 .pptx 登台文稿（原生可编辑页 + 封面截图） | magic-deck、deck-stage |
 | 数据整备 | Excel / CSV / JSON 清洗结构化（清洗项明示、每步留痕、概览报告）、git 提交热力图与通用数据采集器（git/file/remote 三通道 → 标准 JSON，五报表技能统一数据源） | data-prepper、commit-heatmap、report-collector |
 | 沟通协作 | 会议纪要（行动项带负责人与截止时间，汇报链源头）、提示词管理（锦囊本地管理台）与决策日志 | meeting-minutes、prompt-pouch、decision-log |
-| 投资辅助 | 个人投资罗盘看板：单文件 HTML（行情/信号/持仓/网格阶梯/转债/健康八区块）+ 本地 JSON 数据契约 + Python 计算链一键刷新 | mentor |
+| 投资辅助 | 个人投资罗盘看板：单文件 HTML（行情/信号/持仓/网格阶梯/转债/健康八区块）+ 本地 JSON 数据契约 + Python 计算链一键刷新 + 锚定网格回测（独立 HTML 报告：回撤/净值/分年收益/风险事件账本） | mentor |
 | 技能自造 | 锻造技能本身的元技能（创建技能 / 插件）与技能体检 | meta-forge、skill-doctor |
 
 ## 技能清单
@@ -84,7 +94,7 @@
 | meeting-minutes | 沟通协作 | [meeting-minutes/](meeting-minutes/) | 多源材料生成会议纪要（五段式：会议信息/会议结论/议题讨论/决议与行动项/下次会议）：行动项带负责人与截止时间（汇报链源头，可被日报/周报/月报/季报引用）；内置 12 类会议类型词典，支持自定义模板 |
 | prompt-pouch | 沟通协作 | [prompt-pouch/](prompt-pouch/) | 锦囊提示词管理台：生成并维护本地 HTML 管理页面（分组侧栏/搜索/拖拽与按钮排序/收藏/{变量}插值/一键复制/标签全交互/导入导出 JSON 备份/分组 emoji 快捷面板），数据存 data/prompts.json、滚动备份在 backup/ 子目录，页面与数据分离，双笔协作（页面直写 + AI 代笔） |
 | decision-log | 沟通协作 | [decision-log/](decision-log/) | 重要决策四元组日志（结论 / 取舍权衡 / 被否方案 / 适用与失效条件）：按主题聚合落盘、INDEX 索引、随时检索复盘 |
-| mentor | 投资辅助 | [mentor/](mentor/) | 个人投资罗盘看板：单文件 HTML（换肤坞 + 三区弹框表单 + ECharts 阶梯图 + 芯片墙）+ 本地 JSON 三件套（config/holdings/signals）+ Python 计算链挂载 Pyxis 引擎（拉数→信号→落盘），页面只读数据、表单 PUT 写回 |
+| mentor | 投资辅助 | [mentor/](mentor/) | 个人投资罗盘看板：单文件 HTML（换肤坞 + 三区弹框表单 + ECharts 阶梯图 + 芯片墙）+ 本地 JSON 三件套（config/holdings/signals）+ Python 计算链挂载 Pyxis 引擎（拉数→信号→落盘），页面只读数据、表单 PUT 写回；回测模块：锚定网格规则重放 + 风控闸门同源，产出独立 HTML 报告（回撤/净值/分年收益/风险事件账本） |
 
 ## 快速开始
 
@@ -107,7 +117,7 @@ skill-forge update              # 升级已安装技能（配置版本感知，�
 | [docs/usage-examples.md](docs/usage-examples.md) | 技能使用场景示例：日报 / 锦囊 / PPT 两形态 / 会议纪要的安装到回炉全链路。英文版 [docs/usage-examples.en.md](docs/usage-examples.en.md) |
 | [skillforge-guide](https://windfallsheng.github.io/SkillForge/) | 内置使用指引（每个技能 resources/ 均含 txt + html 双版）：对 AI 说「skillforge 怎么用」即朗读指引并打开排版页；在线引导页见 GitHub Pages 公网地址（长期有效） |
 | [SKILLS_CATALOG.md](SKILLS_CATALOG.md) | 技能目录简介册：23 技能逐条中英双语独立简介（每技能一段可直接摘录），供 skills.sh / awesome-claude-skills 等目录收录与文章引用时锚点链接 |
-| [docs/articles/](docs/articles/) | 实操文章：《用 AI 技能包管提示词》《AI 写日报的正确姿势》；[docs/directory-submission.md](docs/directory-submission.md) 目录收录素材包（awesome-claude-skills PR 素材与步骤 / skills.sh 发布指引 / gh 登录指引） |
+| [docs/articles/](docs/articles/) | 实操文章：《用 AI 技能包管提示词》《AI 写日报的正确姿势》《谋定而后动：给你的投资上一道风控闸门》（[mentor-intro.md](mentor-intro.md)）；[docs/directory-submission.md](docs/directory-submission.md) 目录收录素材包（awesome-claude-skills PR 素材与步骤 / skills.sh 发布指引 / gh 登录指引） |
 | [CHANGELOG.md](CHANGELOG.md) | 版本变更记录。英文版 [CHANGELOG.en.md](CHANGELOG.en.md) |
 
 ## 许可证

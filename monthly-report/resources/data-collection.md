@@ -24,9 +24,9 @@ python3 "<report-collector 技能目录>/scripts/report-collect.py" \
 - **上月环比**：另跑一次 `--since <上月首> --until <上月末>`，取 summary.commits_total 供概览卡「较上月」环比行使用（同口径：同数据源、同剔除规则）
 - 解读 JSON 按 report-collector 的 `resources/json-contract.md` 契约：先看 summary（ok == 0 时告知用户并退回纯口述）；量化数字只认 git 数组的 commits_total/additions/deletions/files_touched 聚合字段；commits_total == 0 的仓库不写入月报；daily 分布喂日历热力图；milestones 的 tag（版本发布）/merge（重要合并）筛选落在目标月内的进成果段
 - **采集摘要反馈**：生成前先回一句数据来源摘要（引用脚本 stderr），如「已从 3 个仓库聚合 47 次提交、2 个文件提取要点、1 个远程源失败已跳过」
-- 采集器未安装 → 走第 2 节手工路径，成稿末尾轻提示用户「装 report-collector 技能可自动聚合数据（说『装数据采集器』即可）」；Python 不可用（采集器已装）→ 走第 2 节手工路径
+- 采集器未安装 → 走第 2 节手工路径，成稿末尾轻提示用户「装 report-collector 技能可自动聚合数据（说『装数据采集器』即可）」；已安装但 DATA_SOURCES 为空清单 → 走第 2 节手工路径，成稿末尾轻提示「数据采集器已装、还没配数据源——说『数据源加一下』把仓库路径/目录告诉它，以后自动取数」；Python 不可用（采集器已装）→ 走第 2 节手工路径
 
-## 2. 手工收集（fallback：采集器未安装或 Python 不可用时）
+## 2. 手工收集（fallback：采集器未安装 / 未配数据源 / Python 不可用时）
 
 先 Read 本 skill 的 `user-config.md` 与 report-collector 的 `user-config.md` 两份 DATA_SOURCES 清单（重名以 report-collector 为准），对每仓（type: git 项；个人数据源必须写在 user-config.md，本文件随升级覆盖）执行当月统计：
 

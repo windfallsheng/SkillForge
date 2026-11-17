@@ -1,4 +1,4 @@
-# 别再从零教 AI：我把 21 种重复劳动，锻成了开箱即用的技能包
+# 别再从零教 AI：我把几十种重复劳动，锻成了开箱即用的技能包
 
 > 项目：SkillForge（技能锻造坊） · 开源协议：MIT · 仓库：https://github.com/windfallsheng/SkillForge
 > 一句话安装：`npm i -g skill-forge-hub && skill-forge init`
@@ -15,20 +15,21 @@
 
 于是有了 SkillForge——一个「AI 手艺」的锻造坊：把日复一日的重复劳作，锻造成一句指令就能完成的顺手工具。每个技能都是一份写给 AI 的手艺说明：入口薄薄一张 SKILL.md，重内容按阶段拆成资源分册，AI 执行到哪一步才读哪一册，上下文占用极小。
 
-## 二、21 个技能，七个车间
+## 二、23 个技能，八个车间
 
-目前工坊里锻造了 21 件技能，按「最终产出什么」分七类：
+目前工坊里锻造了 23 件技能（还在持续锻造中），按「最终产出什么」分八类：
 
 ```mermaid
 graph TB
-    SF[SkillForge 技能锻造坊<br/>21 件技能 · 七个车间]
+    SF[SkillForge 技能锻造坊<br/>23 件技能 · 八个车间]
     SF --> A[报表汇演 6 件<br/>日报 / 周报 / 月报 / 季报 / 年报 / 收集台]
     SF --> B[演示汇演 2 件<br/>magic-deck / deck-stage]
     SF --> C[文档装裱 3 件<br/>article-to-html / twin-docs / one-pager]
     SF --> D[沟通协作 3 件<br/>meeting-minutes / prompt-pouch / decision-log]
     SF --> E[工程提效 3 件<br/>doc2spec / spec2doc / release-notes]
-    SF --> F[数据整备 2 件<br/>data-prepper / commit-heatmap]
-    SF --> G[技能自造 2 件<br/>meta-forge / skill-doctor]
+    SF --> F[数据整备 3 件<br/>data-prepper / commit-heatmap / report-collector]
+    SF --> G[投资辅助 1 件<br/>mentor 谋定]
+    SF --> H[技能自造 2 件<br/>meta-forge / skill-doctor]
 ```
 
 ### 1. 报表汇演（6 件）——从一句话到五件套汇报
@@ -87,12 +88,26 @@ graph TB
 - **spec-spec2doc**：Markdown 规格 → Word/PDF 交付文档；
 - **release-notes**：git 两个版本标签之间的提交 → 中英双语发版说明 + CHANGELOG 条目。
 
-### 6. 数据整备（2 件）——把散装数据收拾利落
+### 6. 数据整备（3 件）——把散装数据收拾利落
 
 - **data-prepper**：Excel/CSV/JSON 清洗结构化，清洗项明示、每步留痕、不猜不编，附数据概览报告；
-- **commit-heatmap**：git 近一年提交 → GitHub 风格热力图（53 周 × 7 天格子 + 统计卡），离线零依赖。
+- **commit-heatmap**：git 近一年提交 → GitHub 风格热力图（53 周 × 7 天格子 + 统计卡），离线零依赖；
+- **report-collector**：日报五件套的统一取数入口——git / 本地文件 / 远程 URL 三通道聚合为标准 JSON，增量缓存免重扫。
 
-### 7. 技能自造（2 件）——工坊的自我复制
+### 7. 投资辅助（1 件）——把「乱买乱卖」换成「按规矩出牌」
+
+- **mentor 谋定**：个人投资罗盘。一句「刷新信号」，拉行情、按你的网格参数与风控闸门算出一份操作清单——买、卖、暂停、观察，每条都带理由；回填持仓后总资产、仓位、盈亏一目了然。数据四份 JSON 全在本机，七套主题可换肤；
+- **回测报告**：谋定内置锚定网格回测——把当前这套参数丢回历史重放一遍，回答三个问题：最坏亏多少（最大回撤）、什么行情失效（分年收益 vs 买入持有）、风控起了什么作用（风险事件账本），产出独立 HTML 报告。
+
+![谋定个人投资罗盘](../images/mentor.png)
+
+*一句「刷新信号」，规则引擎给出带理由的操作清单——规则出指令，人工执行，AI 附注。*
+
+![谋定网格回测报告](../images/mentor-backtest.png)
+
+*回测报告：6.8 年真实行情重放，回撤、净值、分年收益、风险事件账本一页看全。*
+
+### 8. 技能自造（2 件）——工坊的自我复制
 
 - **meta-forge**：从需求出发锻造新技能的元技能，自动植入配置保护、版本钥匙、双轨文档等八大机制；
 - **skill-doctor**：给技能目录做体检，frontmatter、资源引用、占位符残留逐项静态检查，报告行级定位。
@@ -118,11 +133,11 @@ graph TB
 
 ```bash
 npm i -g skill-forge-hub   # 全局安装 CLI
-skill-forge ls            # 浏览 21 件技能（只读）
+skill-forge ls            # 浏览 23 件技能（只读）
 skill-forge init          # 交互挑选，自动探测 AI 助手技能目录
 ```
 
-装完直接对话触发：「写日报」「写周报」「记会议」「做个 PPT」「做张海报」，或者干脆丢给它一个文档。
+装完直接对话触发：「写日报」「写周报」「记会议」「做个 PPT」「做张海报」「刷新信号」，或者干脆丢给它一个文档。
 
 升级同样轻松：`npm update -g skill-forge-hub` 升 CLI 本体，`skill-forge update` 升技能——升级清单支持 a=全部 / 编号挑选 / q=取消，你的配置全程受保护。
 
@@ -130,4 +145,4 @@ skill-forge init          # 交互挑选，自动探测 AI 助手技能目录
 
 AI 时代最贵的不再是「知道什么」，而是「把会做的事稳定复现」。SkillForge 的每一件技能，都是一次被验证过的调教被固化成了永久工艺——今天调好的手感，明天、下个月、换台机器、换个助手，都还在。
 
-仓库已开源（MIT），21 件技能双语简介见 [SKILLS_CATALOG.md](https://github.com/windfallsheng/SkillForge/blob/main/SKILLS_CATALOG.md)，另有两篇实操文章（《用 AI 技能包管提示词》《AI 写日报的正确姿势》）见 docs/articles/。欢迎 Star、试用、一起锻造。
+仓库已开源（MIT），23 件技能双语简介见 [SKILLS_CATALOG.md](https://github.com/windfallsheng/SkillForge/blob/main/SKILLS_CATALOG.md)，另有三篇实操文章（《用 AI 技能包管提示词》《AI 写日报的正确姿势》见 docs/articles/，《谋定而后动：给你的投资上一道风控闸门》见仓库根目录）。欢迎 Star、试用、一起锻造。

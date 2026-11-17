@@ -81,13 +81,16 @@
 
 ## 4.3 outputs/signals.json —— 信号结果（refresh.py 落盘，页面只读）
 
-一张 JSON 聚合部署版全部输出，页面一次 fetch 渲染 8 区块：
+一张 JSON 聚合部署版全部输出，页面一次 fetch 渲染 9 区块：
 
 ```json
 {
   "generated_at": "2026-11-13T15:35:00+08:00",
   "source": "RULE",
-  "quotes": {"510888": {"price": 4.114, "date": "2026-11-12", "src": "baostock"}},
+  "quotes": {"510888": {"price": 4.114, "pct_change": 0.52, "date": "2026-11-12", "src": "baostock"}},
+  "market": {"updated_at": "2026-11-13T15:35:00+08:00",
+             "indices": [{"code": "s_sh000001", "name": "上证指数", "market": "A股", "price": 3584.58,
+                          "pct_change": -0.5, "source": "sina-hq"}]},
   "signals": [
     {"priority": 1, "target_type": "etf", "target_code": "510888", "target_name": "示例ETF",
      "action": "paused", "amount": 0.0, "trigger_reason": "现价已跌破下限，暂停买入",
@@ -108,7 +111,8 @@
 | 字段 | 区块 | 语义 |
 |:---|:---|:---|
 | generated_at / source | 0 状态栏 | 生成时间、来源恒为 RULE |
-| quotes | 0.5 实时快照 | 各标的现价快照（price/date/src） |
+| quotes | 0.5 实时快照 | 各标的现价快照（price/pct_change/date/src；pct_change 为当日涨跌幅百分比，缺失时按前收自算） |
+| market | 0 大盘行情 | indices 指数列表（code/name/market/price/pct_change/source）；market ∈ A股/港股/美股 |
 | signals[] | 1 操作清单 | priority 1-3 排序；action ∈ buy/sell/paused/observe/hold；risk_status ∈ pass/blocked |
 | levels[] | 4 网格档位 | 每标的档位表：current_price/level/upper_sell/lower_buy/distance_pct/level_amount |
 | portfolio | 3 组合总览 | 总资产/现金/网格市值/转债市值/仓位比/单标最大/组合盈亏 |

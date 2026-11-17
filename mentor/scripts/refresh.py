@@ -47,21 +47,26 @@ def _load_json(path: Path, fallback):
 
 
 def _last_close(market_dir: Path, symbol: str):
-    """parquet 最新收盘（quotes 区块用）。"""
+    """parquet 最新收盘、日期与涨跌幅%（quotes 区块用；无 pct_change 列时按前收自算）。"""
     f = market_dir / f"{symbol}.parquet"
     if not f.exists():
-        return None, None
+        return None, None, None
     try:
         import pandas as pd
         df = pd.read_parquet(f)
         if df.empty:
-            return None, None
+            return None, None, None
         last = df.iloc[-1]
         close = last.get("close", last.get("price", None))
         date_str = str(last.get("date", ""))[:10]
-        return (float(close) if close is not None else None), date_str
+        pct = last.get("pct_change", None)
+        if pct is None and len(df) > 1:
+            prev = float(df.iloc[-2].get("close"))
+            pct = round((float(close) / prev - 1) * 100, 2) if prev else None
+        return ((float(close) if close is not None else None), date_str,
+                (float(pct) if pct is not None else None))
     except Exception:
-        return None, None
+        return None, None, None
 
 
 def _backup(wd, target) -> None:
@@ -112,6 +117,7 @@ def main() -> int:
     try:
         import pyxis.fetch_market as fetch_market
         import pyxis.fetch_cb as fetch_cb
+        import pyxis.fetch_indices as fetch_indices
         import pyxis.grid_engine as grid_engine
         import pyxis.cb_engine as cb_engine
         import pyxis.risk_gate as risk_gate
@@ -146,15 +152,28 @@ def main() -> int:
     out_dir = wd / "outputs"
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    # ── 3/4/5. 拉行情与转债 ────────────────────────────────
+    # ── 3/4/5. 拉行情与转债（并发 4 路：akshare 慢时总耗时≈单标的 × 批数，不再串行累加） ──
     health_markets: dict = {}
-    for t in cfg["grid"].get("targets", []):
+    targets = cfg["grid"].get("targets", [])
+
+    def _fetch_one(t):
         symbol, mtype = str(t["symbol"]), t.get("type", "etf")
         try:
             status = fetch_market.fetch(symbol, mtype, market_dir / f"{symbol}.parquet")
         except Exception as e:
             status = {"ok": False, "source": "none", "last_date": "", "stale": True, "warnings": [str(e)]}
-        health_markets[symbol] = status
+        return symbol, status
+
+    if len(targets) > 1:
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=min(4, len(targets))) as ex:
+            for symbol, status in ex.map(_fetch_one, targets):
+                health_markets[symbol] = status
+    else:
+        for t in targets:
+            symbol, status = _fetch_one(t)
+            health_markets[symbol] = status
+    for symbol, status in health_markets.items():
         for w in status.get("warnings", []):
             warnings.append(f"[{symbol}] {w}")
 
@@ -164,6 +183,13 @@ def main() -> int:
         health_cb = {"ok": False, "warnings": [str(e)]}
     for w in health_cb.get("warnings", []):
         warnings.append(f"[cb] {w}")
+
+    # ── 5.5 大盘指数（A股/港股/美股，新浪轻量源 + BaoStock 备源） ──
+    try:
+        idx_list, idx_warns = fetch_indices.fetch()
+    except Exception as e:
+        idx_list, idx_warns = [], [f"指数拉取失败：{e}"]
+    warnings.extend(f"[index] {w}" for w in idx_warns)
 
     # ── 6. 引擎计算 ───────────────────────────────────────
     levels, grid_sigs = grid_engine.run(cfg, market_dir, holdings)
@@ -204,9 +230,10 @@ def main() -> int:
     quotes = {}
     for t in cfg["grid"].get("targets", []):
         symbol = str(t["symbol"])
-        close, date_str = _last_close(market_dir, symbol)
+        close, date_str, pct = _last_close(market_dir, symbol)
         if close is not None:
             quotes[symbol] = {"price": close, "date": date_str or "",
+                              "pct_change": pct,
                               "src": health_markets.get(symbol, {}).get("source", "unknown")}
 
     risk_statuses = [str(s.get("risk_status", "pass")) for s in _records(signals)]
@@ -232,6 +259,8 @@ def main() -> int:
         "generated_at": datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z") + "+08:00",
         "source": "RULE",
         "quotes": quotes,
+        "market": {"indices": idx_list,
+                   "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")},
         "signals": _records(signals),
         "levels": _records(levels),
         "portfolio": snap,

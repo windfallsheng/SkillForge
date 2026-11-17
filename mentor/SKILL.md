@@ -1,6 +1,6 @@
 ---
 name: mentor
-description: 谋定个人投资罗盘技能：生成并维护本地单文件投资看板页面（mentor.html，夜空金七套主题 + 换肤坞 + 8 数据区块 + 三区配置弹框 + 持仓表单 + 方案匣 + ECharts 图表，区块标题与按钮为内联 SVG 图标随主题色），数据契约 data/config.json（参数配置）+ data/holdings.json（持仓回填）+ data/presets.json（方案匣多套参数快照）+ outputs/signals.json（信号结果），页面表单写回 JSON、数据走本地 HTTP 服务（file:// 陷阱绕开），「刷新信号」由助手代跑 Python 计算链（拉数 AkShare/BaoStock/集思录 → 网格/转债/风控引擎计算 → 落 JSON，页面刷新即见）。当用户说「谋定/投资看板/投资罗盘/刷新信号/更新信号/持仓回填/打开谋定」，或询问谋定用法（谋定怎么用/谋定使用说明）时使用。
+description: 谋定个人投资罗盘技能：生成并维护本地单文件投资看板页面（mentor.html，夜空金七套主题 + 换肤坞 + 9 数据区块（含大盘行情：A股/港股/美股指数 + 黄金白银贵金属行情（国际惯例涨绿跌红，仅行情参考不参与网格））+ 三区配置弹框 + 持仓表单 + 方案匣 + 卡片式档位带（数字带 + SVG 价格阶梯图）+ 持仓市值占比堆叠条，区块标题与按钮为内联 SVG 图标随主题色、页面响应式适配手机端（375px 窄屏：网格单列、弹框全屏、表单两列换行、坞栏图标化）、卡片标题右侧统计徽章（数据健康三态计数/大盘指数分组数/快照涨跌家数/信号买卖计数/持仓只数/阶梯标的数）、表格隔行斑马纹）），数据契约 data/config.json（参数配置）+ data/holdings.json（持仓回填）+ data/presets.json（方案匣多套参数快照）+ outputs/signals.json（信号结果），页面表单写回 JSON、数据走本地 HTTP 服务（file:// 陷阱绕开），「刷新信号」异步后台跑 Python 计算链（页面「刷新」按钮一键触发，跑完页面自动更新；助手代跑亦可；「回测」按钮后台跑网格回测压力测试，跑完自动打开报告）（拉数 AkShare/BaoStock/集思录 + 新浪指数源 → 网格/转债/风控引擎计算 → 落 JSON，页面刷新即见）。当用户说「谋定/投资看板/投资罗盘/刷新信号/更新信号/持仓回填/打开谋定」，或询问谋定用法（谋定怎么用/谋定使用说明）时使用。
 allowed-tools: Read, Write, Bash, Grep, Glob
 disable-model-invocation: true
 ---
@@ -24,16 +24,15 @@ disable-model-invocation: true
 
 **第 0 步（固定）**：读用户配置 → 先 Read 同目录 `user-config.md`（DIR/PYXIS_HOME/THEME/PORT/CONFIG_VERSION）。
 
-**版本自检（静默前置，全时机）**：每次调用本 skill 先静默比对——读目标页面 `mentor.html` 版本戳（`<meta name="sf-template" content="mentor@N">`）与 reference.html 当前版（读 resources/reference.html 的 sf-template meta 值），零网络、不碰数据；结果只影响提示不影响执行，版本旧也绝不拒绝本次任务。提示分场景：打开场景主动问（起服务前 AskUserQuestion：A 升级后打开（推荐）——走回炉流程、沿用原页 mentor-id meta 值、数据文件一概不动；B 直接打开旧版——本次会话不再询问；附更新点 2-5 条）；维护/取用场景照常执行、收尾一句轻提示（「页面还是旧版（@N，当前 @1），说『升级谋定』即可换新」）；用户拒绝过升级则本次会话静默。
+**版本自检（静默前置，全时机）**：每次调用本 skill 先静默比对——读目标页面 `mentor.html` 版本戳（`<meta name="sf-template" content="mentor@N">`）与 reference.html 当前版（读 resources/reference.html 的 sf-template meta 值），零网络、不碰数据；结果只影响提示不影响执行，版本旧也绝不拒绝本次任务。提示分场景：打开场景主动问（起服务前 AskUserQuestion：A 升级后打开（推荐）——走回炉流程、沿用原页 mentor-id meta 值、数据文件一概不动；B 直接打开旧版——本次会话不再询问；附更新点 2-5 条）；维护/取用场景照常执行、收尾一句轻提示（「页面还是旧版（@N，当前 @18），说『升级谋定』即可换新」）；用户拒绝过升级则本次会话静默。
 
 ### 任务① 初始化（建看板）
 
 1. 确认目标目录：默认 user-config 的 `DIR`；目录不存在时回退用户主目录；用户口头指定目录永远优先。
 2. 生成页面：拷 `resources/reference.html` → `<DIR>/mentor.html`；用 Bash 在 `<head>` 内注入全局唯一内嵌 ID `<meta name="mentor-id" content="<UUID>">`（UUID 用 `python3 -c "import uuid;print(uuid.uuid4())"` 生成标准 v4，禁止手写；落盘前顺扫 `<DIR>/` 下 mentor 命名的 html 读 id meta 查重，撞号重掷）。
 3. 建数据：`<DIR>/data/config.json`（默认参数，见 data-contract.md 4.1 默认值）、`<DIR>/data/holdings.json`（空持仓模板，positions: []）、`<DIR>/data/presets.json`（方案匣模板：active=default，内置四套预置方案——default 兜底 + 新手稳健/均衡成长/进取积极，各为完整参数快照，见 data-contract.md 4.5）；`<DIR>/outputs/`（空目录，刷新信号落盘）。
-4. 拷 ECharts：`assets/echarts.min.js` → `<DIR>/assets/echarts.min.js`（离线可用，页面图表依赖）。
-5. 起服务并打开：`python3 scripts/serve.py <DIR> <PORT>`（默认 8933，占用则顺延 8934/8935）→ 打开浏览器访问 `http://localhost:<PORT>/mentor.html`。
-6. 收尾告知：页面首屏无信号时显示「尚未刷新」占位，告诉用户「对助手说『刷新信号』即可出首批信号」；并说明 file:// 直开会被浏览器拦 JSON 读取，务必走 HTTP 服务。
+4. 起服务并打开：`python3 scripts/serve.py <DIR> <PORT>`（默认 8933，占用则顺延 8934/8935）→ 打开浏览器访问 `http://localhost:<PORT>/mentor.html`。
+5. 收尾告知：页面首屏无信号时显示「尚未刷新」占位，告诉用户「对助手说『刷新信号』即可出首批信号」；并说明 file:// 直开会被浏览器拦 JSON 读取，务必走 HTTP 服务。
 
 ### 任务② 维护（改参数 / 回填持仓 / 答疑）
 
@@ -51,9 +50,13 @@ disable-model-invocation: true
 
 `python3 scripts/serve.py <DIR> <PORT>` 起服务（端口占用顺延）→ 按平台打开浏览器（macOS `open`，Windows `start`）访问 `http://localhost:<PORT>/mentor.html`。
 
-## 刷新信号（助手代跑）
+## 刷新信号（页面按钮异步 / 助手代跑双通道）
 
-用户说「刷新信号/更新信号/跑一下计算」→ 读 `resources/refresh-guide.md` → 执行 `python3 scripts/refresh.py --dir <DIR> --pyxis <PYXIS_HOME>`（PYXIS_HOME 取 user-config）→ 成功落 `outputs/signals.json` → 告知「已刷新，页面刷新即见新信号」。失败按 guide 的失败处理表逐项处理，不硬来。
+用户说「刷新信号/更新信号/跑一下计算」→ 优先引导用户点页面右下角「刷新」按钮：POST api/refresh 立即返回 202 后台跑，按钮变「刷新中」转圈，轮询 api/refresh-status（5s 间隔）跑完自动重载；服务未开/后端旧时按钮会友好提示。助手代跑通道（备用）：读 `resources/refresh-guide.md` → 执行 `python3 scripts/refresh.py --dir <DIR> --pyxis <PYXIS_HOME>`（PYXIS_HOME 取 user-config）→ 成功落 `outputs/signals.json` → 告知「已刷新，页面刷新即见新信号」。失败按 guide 的失败处理表逐项处理，不硬来。
+
+## 回测（页面按钮异步 / 助手代跑双通道）
+
+用户说「跑回测/网格回测/回测一下」→ 优先引导用户点页面右下角「回测」按钮：POST api/backtest（仅 admin）立即返回 202 后台跑，按钮变「回测中」转圈，轮询 api/backtest-status（5s 间隔）跑完自动新窗口打开报告 `outputs/backtest_report.html`（服务未开/后端旧时按钮会友好提示）。助手代跑通道（备用）：cwd=PYXIS_HOME 执行 `python3 -m pyxis.backtest --config config.yaml --html --out outputs/backtest_report.html` → 成功告知「回测完成，报告已生成，打开 outputs/backtest_report.html 即见」。历史回测 ≠ 未来收益，报告仅用于压力测试与风控认知，不构成投资建议。
 
 ## ⚙️ 配置与自定义
 
@@ -74,7 +77,7 @@ disable-model-invocation: true
 
 ## 产物升级（回炉）
 
-看板生成时头部写版本戳 `<meta name="sf-template" content="mentor@3">`（模板升级时递增 @N 并同步 reference.html 与本文档）。用户说「升级谋定/回炉谋定页面」时：扫 `<DIR>` 下 mentor 生成的 html 读版本戳筛旧版（无版本戳或缺少 mentor-id meta 的产物视为 v0 最旧版，一并进清单）→ 列清单（文件/旧版本）→ AskUserQuestion 选全部或部分 → 逐份升级：浅升级（仅 CSS/JS 变化）对旧页替换 `<style>` 块与交互脚本、正文与数据契约不变；深升级（DOM 结构变化）从 reference.html 重建（先备份旧版 `.bak-<时间戳>`，滚动上限：同目录 `mentor.html.bak-*` 只留最近 3 份、超出删旧），**重建必须沿用原页 mentor-id meta 值**（换 ID = 换肤记忆失联），`<DIR>/data/`、`<DIR>/outputs/` 数据文件一概不动。版本递增判定：业务改动（区块/表单/标题体系）、数据格式改动（JSON 字段/存储结构）、页面改动（样式/布局/交互）任一发生即模板升级，版本戳 +1 并同步 reference.html 与本文档；纯措辞润色不 bump。
+看板生成时头部写版本戳 `<meta name="sf-template" content="mentor@18">`（模板升级时递增 @N 并同步 reference.html 与本文档）。用户说「升级谋定/回炉谋定页面」时：扫 `<DIR>` 下 mentor 生成的 html 读版本戳筛旧版（无版本戳或缺少 mentor-id meta 的产物视为 v0 最旧版，一并进清单）→ 列清单（文件/旧版本）→ AskUserQuestion 选全部或部分 → 逐份升级：浅升级（仅 CSS/JS 变化）对旧页替换 `<style>` 块与交互脚本、正文与数据契约不变；深升级（DOM 结构变化）从 reference.html 重建（先备份旧版 `.bak-<时间戳>`，滚动上限：同目录 `mentor.html.bak-*` 只留最近 3 份、超出删旧），**重建必须沿用原页 mentor-id meta 值**（换 ID = 换肤记忆失联），`<DIR>/data/`、`<DIR>/outputs/` 数据文件一概不动。版本递增判定：业务改动（区块/表单/标题体系）、数据格式改动（JSON 字段/存储结构）、页面改动（样式/布局/交互）任一发生即模板升级，版本戳 +1 并同步 reference.html 与本文档，同时在本技能 CHANGELOG.md 记一条（版本/日期/改了什么）；纯措辞润色不 bump。
 
 ## 文档同步自检纪律（维护者必读）
 

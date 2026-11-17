@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""谋定 · 本地静态服务：GET 静态 + PUT 写回 data/*.json 白名单。
+"""谋定 · 本地静态服务：GET 静态 + PUT 写回 data/*.json 白名单 + 异步刷新链。
 
 用法：python3 serve.py <看板目录> [端口，默认 8933，占用自动顺延 5 次]
 设计：零依赖（仅标准库）；PUT 仅允许白名单三文件，JSON 校验 + tmp+rename 原子写；
@@ -8,7 +8,9 @@
 import json
 import os
 import shutil
+import subprocess
 import sys
+import threading
 import time
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -19,6 +21,81 @@ PORT = int(sys.argv[2]) if len(sys.argv) > 2 else 8933
 ALLOWED_PUT = {"data/config.json", "data/holdings.json", "data/presets.json",
                "outputs/signals.json"}  # 白名单（相对 ROOT）
 BACKUP_KEEP = 3  # 滚动备份上限：每文件只留最近 N 份
+
+# ── 刷新链：PYXIS_HOME 优先环境变量，其次 user-config.md（含存在性校验）──
+_CFG_FILE = Path(__file__).resolve().parent.parent / "user-config.md"
+PYXIS_HOME = os.environ.get("PYXIS_HOME", "").strip() or None
+if not PYXIS_HOME and _CFG_FILE.exists():
+    import re as _re
+    try:
+        _m = _re.search(r"PYXIS_HOME:\s*(\S+)", _CFG_FILE.read_text(encoding="utf-8"))
+        if _m:
+            PYXIS_HOME = Path(_m.group(1)).expanduser()
+    except Exception:
+        PYXIS_HOME = None
+if PYXIS_HOME is not None and not (Path(PYXIS_HOME) / "pyxis").is_dir():
+    PYXIS_HOME = None  # 配置过时/失效一律视为未配置，刷新时友好报错
+
+# 后台刷新任务状态（异步化：点刷新立即返回，跑完页面自动重载）
+_REFRESH_LOCK = threading.Lock()
+_REFRESH = {"running": False, "started_at": None, "finished_at": None, "ok": None, "detail": ""}
+
+
+def _run_refresh_job() -> None:
+    """后台线程跑 refresh.py（--dir ROOT --pyxis PYXIS_HOME，单槽互斥）。"""
+    ok, detail = False, ""
+    try:
+        refresh = Path(__file__).resolve().parent / "refresh.py"
+        if PYXIS_HOME is None:
+            detail = "PYXIS_HOME 未配置或失效：请编辑 user-config.md 填 Pyxis 仓库实际路径"
+        elif not refresh.exists():
+            detail = "scripts/refresh.py 缺失"
+        else:
+            proc = subprocess.run([sys.executable, str(refresh), "--dir", str(ROOT), "--pyxis", str(PYXIS_HOME)],
+                                  capture_output=True, text=True, timeout=3600)
+            if proc.returncode != 0:
+                tail = (proc.stderr or proc.stdout or "")[-400:]
+                detail = f"刷新链失败：{tail}"
+            else:
+                ok, detail = True, (proc.stdout or "").strip()[-200:]
+    except subprocess.TimeoutExpired:
+        detail = "刷新超时（3600s）"
+    except Exception as e:
+        detail = f"刷新失败: {e}"
+    with _REFRESH_LOCK:
+        _REFRESH.update(running=False, finished_at=time.strftime("%Y-%m-%d %H:%M:%S"), ok=ok, detail=detail)
+
+
+# 后台回测任务状态（照刷新模式：POST 立即 202，跑完页面打开报告）
+_BACKTEST_LOCK = threading.Lock()
+_BACKTEST = {"running": False, "started_at": None, "finished_at": None, "ok": None, "detail": ""}
+
+
+def _run_backtest_job() -> None:
+    """后台线程跑网格回测（cwd=PYXIS_HOME，报告落到看板 outputs/，页面自动打开）。"""
+    ok, detail = False, ""
+    try:
+        bt = Path(PYXIS_HOME) / "pyxis" / "backtest.py"
+        if PYXIS_HOME is None:
+            detail = "PYXIS_HOME 未配置或失效：请编辑 user-config.md 填 Pyxis 仓库实际路径"
+        elif not bt.exists():
+            detail = "Pyxis 仓库缺少 pyxis/backtest.py（回测引擎缺失）"
+        else:
+            proc = subprocess.run(
+                [sys.executable, "-m", "pyxis.backtest", "--config", "config.yaml",
+                 "--html", "--out", str(ROOT / "outputs" / "backtest_report.html")],
+                cwd=str(PYXIS_HOME), capture_output=True, text=True, timeout=900)
+            if proc.returncode != 0:
+                tail = (proc.stderr or proc.stdout or "")[-400:]
+                detail = f"回测失败：{tail}"
+            else:
+                ok, detail = True, (proc.stdout or "").strip()[-200:]
+    except subprocess.TimeoutExpired:
+        detail = "回测超时（900s）"
+    except Exception as e:
+        detail = f"回测失败: {e}"
+    with _BACKTEST_LOCK:
+        _BACKTEST.update(running=False, finished_at=time.strftime("%Y-%m-%d %H:%M:%S"), ok=ok, detail=detail)
 
 def _validate_config(data, prefix="config.json") -> str | None:
     """config 结构校验（config.json 与 presets.json 的方案快照共用同一契约）。"""
@@ -115,6 +192,43 @@ class Handler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def do_POST(self):
+        rel = self.path.lstrip("/").split("?")[0]
+        if rel == "api/refresh":
+            with _REFRESH_LOCK:
+                if _REFRESH["running"]:
+                    self._send_json_error(409, f"已在刷新中（{_REFRESH['started_at']} 启动）")
+                    return
+                _REFRESH.update(running=True, started_at=time.strftime("%Y-%m-%d %H:%M:%S"),
+                                finished_at=None, ok=None, detail="")
+            threading.Thread(target=_run_refresh_job, daemon=True).start()
+            body = json.dumps({"ok": True, "code": "started"}, ensure_ascii=False).encode("utf-8")
+            self.send_response(202)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+        if rel == "api/backtest":
+            if PYXIS_HOME is None:
+                self._send_json_error(501, "本机模式未配置 Pyxis：请编辑 user-config.md 填 Pyxis 仓库实际路径，或对助手说「跑回测」")
+                return
+            with _BACKTEST_LOCK:
+                if _BACKTEST["running"]:
+                    self._send_json_error(409, f"回测已在运行中（{_BACKTEST['started_at']} 启动）")
+                    return
+                _BACKTEST.update(running=True, started_at=time.strftime("%Y-%m-%d %H:%M:%S"),
+                                 finished_at=None, ok=None, detail="")
+            threading.Thread(target=_run_backtest_job, daemon=True).start()
+            body = json.dumps({"ok": True, "code": "started"}, ensure_ascii=False).encode("utf-8")
+            self.send_response(202)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+        self._send_json_error(404, "未知接口")
+
     def _send_json_error(self, code, msg):
         """send_error 的状态行只能 latin-1，中文消息会炸连接；错误一律走 UTF-8 JSON 体。"""
         body = json.dumps({"ok": False, "error": msg}, ensure_ascii=False).encode("utf-8")
@@ -134,6 +248,26 @@ class Handler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         if self._guard_backup():
+            return
+        rel = self.path.lstrip("/").split("?")[0]
+        if rel == "api/refresh-status":
+            with _REFRESH_LOCK:
+                body = json.dumps({"ok": True, "refresh": dict(_REFRESH)}, ensure_ascii=False).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+        if rel == "api/backtest-status":
+            with _BACKTEST_LOCK:
+                body = json.dumps({"ok": True, "backtest": dict(_BACKTEST),
+                                   "report_url": "outputs/backtest_report.html"}, ensure_ascii=False).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
             return
         super().do_GET()
 

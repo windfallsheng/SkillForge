@@ -4,6 +4,16 @@
 
 Version history of the SkillForge npm package `skill-forge-hub` (command name `skill-forge`).
 
+## 1.3.17（2026-11-17）
+
+**Mentor: skill-level changelog added + page backfill & today's upgrades (@4 → @18)**
+
+- New CHANGELOG.md inside the mentor skill: per-version history @1→@18 (the repo CHANGELOG previously only covered up to @3); SKILL.md version-bump rule now mandates a CHANGELOG entry for every upgrade
+- Backfill @4→@9: three hard fixes (dead pct_change column / A-share red-up-green-down colors / default theme swap), hero rebranding (bronze astrolabe logo + slogan, unified across editions), modal mask z-index + sticky header, grid-ladder card redesign (ECharts removed), dock icons + text labels, market indices section (8 indices, US-style color inversion)
+- Backfill @10→@13: async refresh button with 409 polling, backtest button + /api/backtest (auto-opens report; popup-block and button-reuse fixes), SVG price-ladder chart + holding-ratio stacked bar, modal footer consistency
+- Backfill @14→@17: 375px mobile adaptation (five overflow classes fixed, dvh viewport, chip ellipsis), per-card header stat badges (6 cards), zebra table striping (incl. /admin tables), precious-metals quotes section (London/NY gold & silver, reference-only) + Hua'an Gold ETF added to the grid pool
+- Today's two upgrades (@18): ① header "Plan" pill → dropdown — native select embedded in the pill (appearance:none + SVG arrow, native scroller on mobile), fed from the same data/presets.json as the preset drawer; change = instant switch (applyPreset extracted for reuse: PUT config.json → active update → PUT presets.json → toast, failure rollback re-syncs the dropdown); ② backtest report opens in a new tab — on click a blank tab pre-opens with a "backtest running" wait page (async-callback window.open gets popup-blocked), then points at the report when done; falls back to a same-page redirect if the popup is blocked — the main page stays put
+
 ## 1.3.16 (2026-11-17)
 
 **New skill report-collector: a universal data collector unifying all five report skills**

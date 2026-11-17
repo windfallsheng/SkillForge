@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="sf-template" content="mentor@3">
-<meta name="mentor-id" content="3f8224dd-9456-425e-906f-4240c0a66e48">
+<meta name="sf-template" content="mentor@18">
+<meta name="mentor-id" content="REPLACE-WITH-INSTANCE-ID">
 <title>谋定 · 个人投资罗盘</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='none' stroke='%23f0b90b' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%23f0b90b'/%3E%3Cpath d='M32 32 L44 20 A14 14 0 0 0 20 22 Z' fill='%23f9dd7d'/%3E%3C/svg%3E">
 <style>
 /* ══════════ 谋定 · 单文件看板样式（真相源 reference.html @1）══════════
    七套主题变量 + 45 色 @property 渐变换肤 + 三层底纹 + 卡片流 + 徽章表格 +
-   三区弹框（⛶ 全屏）+ 换肤坞；字体继承系统默认，零外部依赖（echarts 本地文件） */
+   三区弹框（⛶ 全屏）+ 换肤坞；字体继承系统默认，零外部依赖 */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
@@ -49,7 +49,12 @@ body {
 
 /* ── 布局 ── */
 .wrap { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 0 20px 96px; }
-.hero { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 24px 0 16px; }
+.hero {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--px-bg);
+  border-bottom: 1px solid var(--px-border);
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 16px 0 12px;
+}
 .hero .logo { width: 48px; height: 48px; flex: 0 0 auto; }
 .hero .titles { flex: 1 1 auto; min-width: 200px; }
 .hero h1 { font-size: 1.9rem; letter-spacing: .5px; line-height: 1.15; }
@@ -60,18 +65,30 @@ body {
   display: inline-flex; align-items: center; gap: 6px; padding: 3px 11px;
   border-radius: 999px; font-size: .8rem; border: 1px solid; white-space: nowrap;
 }
+.bd.watch { color: #fbbf24; background: rgba(245,158,11,.15); border-color: rgba(245,158,11,.4); }
 .bd::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 6px currentColor; }
 .bd.ok   { color: var(--px-ok-text);   background: var(--px-ok-bg);   border-color: var(--px-ok-border); }
 .bd.warn { color: var(--px-warn-text); background: var(--px-warn-bg); border-color: var(--px-warn-border); }
-.bd.bad  { color: var(--px-down);      background: rgba(248,113,113,.07); border-color: rgba(248,113,113,.28); }
+.bd.bad  { color: var(--px-danger);     background: rgba(248,113,113,.07); border-color: rgba(248,113,113,.28); }
 .bd.info { color: var(--px-info-text); background: var(--px-info-bg); border-color: var(--px-info-border); }
 .bd.flat { color: var(--px-sub);       background: transparent;          border-color: var(--px-border); }
 .bd.flat::before { display: none; }
+/* 头部方案下拉：pill 内嵌原生 select（移动端走原生滚轮，option 跟随卡片底色） */
+.preset-head { padding: 0 0 0 11px; cursor: pointer; }
+.preset-head select.preset-head-sel {
+  appearance: none; -webkit-appearance: none; -moz-appearance: none;
+  border: 0; outline: 0; background: transparent; cursor: pointer;
+  color: var(--px-sub); font-size: .8rem; line-height: inherit;
+  padding: 3px 16px 3px 2px; max-width: 132px; text-align: right;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath d='M1 1l3 3 3-3' fill='none' stroke='%2399a3b0' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 2px center;
+}
+.preset-head select.preset-head-sel option { background: var(--px-card); color: var(--px-text); }
 
 /* ── 区块网格与卡片 ── */
-.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
 .grid .wide { grid-column: 1 / -1; }
-@media (max-width: 920px) { .grid { grid-template-columns: 1fr; } }
+@media (max-width: 920px) { .grid { grid-template-columns: minmax(0, 1fr); } }
 .card {
   background: var(--px-card);
   border: 1px solid var(--px-border); border-left: 3px solid var(--px-accent);
@@ -81,7 +98,21 @@ body {
   transition: border-color .2s;
 }
 .card:hover { border-color: var(--px-accent); }
-.card h2 { font-size: 1.02rem; color: var(--px-accent-2); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; letter-spacing: .4px; }
+.card h2 { font-size: 1.02rem; color: var(--px-accent-2); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; letter-spacing: .4px; flex-wrap: wrap; }
+/* 标题右侧统计徽章组（数据健康 / 大盘行情 / 快照 / 信号 / 持仓 / 阶梯） */
+.h-stats { margin-left: auto; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+.h-stat {
+  display: inline-flex; align-items: baseline; gap: 4px; padding: 2px 9px;
+  border-radius: 999px; border: 1px solid var(--px-border);
+  background: var(--px-metric-bg); font-size: .74rem; color: var(--px-sub);
+  white-space: nowrap; line-height: 1.55;
+}
+.h-stat b { font-size: .8rem; font-weight: 700; }
+.h-stat.ok { color: var(--px-ok-text); border-color: var(--px-ok-border); background: var(--px-ok-bg); }
+.h-stat.warn { color: var(--px-warn-text); border-color: var(--px-warn-border); background: var(--px-warn-bg); }
+.h-stat.bad { color: var(--px-danger); border-color: rgba(248,113,113,.28); background: rgba(248,113,113,.07); }
+.h-stat.up { color: var(--px-up); }
+.h-stat.down { color: var(--px-down); }
 .card h2 svg.ico { width: 1.08em; height: 1.08em; flex: 0 0 auto; color: var(--px-accent-2); }
 .dock-btn svg { width: 1.2rem; height: 1.2rem; display: block; }
 .dialog-title svg.ico { width: 1.05em; height: 1.05em; vertical-align: -0.15em; }
@@ -97,7 +128,7 @@ body {
   opacity: 0; pointer-events: none; transition: opacity .3s; max-width: 72vw;
 }
 .toast.on { opacity: 1; }
-.toast.bad { border-color: var(--px-down); color: var(--px-down); }
+.toast.bad { border-color: var(--px-danger); color: var(--px-danger); }
 
 /* ── file:// 拦截横幅 ── */
 .file-banner {
@@ -117,6 +148,8 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
   white-space: nowrap; font-weight: 600;
 }
 .tb td { padding: 8px 10px; border-bottom: 1px solid var(--px-border); color: var(--px-table-text); }
+/* 隔行斑马纹：中性灰蓝半透明，深色主题轻微提亮、浅色主题轻微变暗，全主题通吃 */
+.tb tbody tr:nth-child(even) { background: rgba(127, 140, 160, .06); }
 .tb tbody tr:hover { background: var(--px-hover); }
 .tb .num { text-align: right; font-variant-numeric: tabular-nums; }
 .tb .reason { color: var(--px-muted); font-size: .78rem; }
@@ -128,6 +161,9 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
 .op.paused  { color: #fbbf24; background: rgba(245,158,11,.15); border: 1px solid rgba(245,158,11,.4); }
 .op.observe { color: #fda4af; background: rgba(244,114,182,.13); border: 1px solid rgba(244,114,182,.38); }
 .op.hold    { color: var(--px-sub); background: var(--px-metric-bg); border: 1px solid var(--px-border); }
+.op.pass    { color: #86efac; background: rgba(22,163,74,.16);  border: 1px solid rgba(22,163,74,.4); }
+.op.watch   { color: #fbbf24; background: rgba(245,158,11,.15); border: 1px solid rgba(245,158,11,.4); }
+.op.block   { color: #fca5a5; background: rgba(220,38,38,.16);  border: 1px solid rgba(220,38,38,.4); }
 
 /* ── 指标卡 / 持仓卡 ── */
 .metrics { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -154,9 +190,10 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
 /* ── 芯片墙 / 标签 ── */
 .chips { display: flex; gap: 8px; flex-wrap: wrap; }
 .chip {
-  display: inline-flex; align-items: center; gap: 6px; padding: 3px 11px;
+  display: inline-block; padding: 3px 11px;
   border: 1px solid var(--px-border); border-radius: 999px;
   background: var(--px-metric-bg); font-size: .8rem; color: var(--px-sub);
+  max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .chip b { color: var(--px-text); font-weight: 600; }
 
@@ -168,11 +205,47 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
 }
 
 /* ── ECharts 容器与降级 ── */
-.ech { width: 100%; height: 300px; }
-.ech.off { display: none; }
-.ech-off { display: none; color: var(--px-muted); font-size: .82rem; padding: 20px 0; }
-.ech-off.on { display: block; }
-.ech-sm { width: 100%; height: 150px; }
+/* ── 网格阶梯：卡片式档位带 ── */
+.lv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: 12px; }
+.lv-card { background: var(--px-metric-bg); border: 1px solid var(--px-border); border-radius: 10px; padding: 12px 14px; }
+.lv-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.lv-name { font-weight: 600; color: var(--px-text); font-size: .92rem; }
+.lv-code { color: var(--px-muted); font-size: .8rem; margin-left: 4px; }
+.lv-cur { color: var(--px-accent-2); font-size: .85rem; font-weight: 700; }
+.lv-steps { display: flex; gap: 6px; }
+.lv-step {
+  flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  background: var(--px-card); border: 1px solid var(--px-border); border-radius: 8px; padding: 6px 2px;
+}
+.lv-sell { color: var(--px-sell); font-size: .8rem; font-weight: 600; }
+.lv-buy { color: var(--px-buy); font-size: .8rem; font-weight: 600; }
+.lv-lv { color: var(--px-muted); font-size: .68rem; }
+.lv-floor { margin-top: 8px; color: var(--px-muted); font-size: .74rem; }
+
+.lv-chart { margin: 8px 0 10px; }
+.lv-chart svg { display: block; width: 100%; height: auto; }
+.pf-alloc { display: flex; height: 22px; border-radius: 6px; overflow: hidden; margin: 12px 0 2px; }
+.pf-seg { display: flex; align-items: center; justify-content: center; font-size: .68rem; color: #0b1120; font-weight: 700; white-space: nowrap; overflow: hidden; min-width: 0; }
+.pf-seg + .pf-seg { border-left: 1px solid rgba(11, 17, 32, .35); }
+.pf-alloc-title { font-size: .72rem; color: var(--px-muted); margin-top: 6px; }
+
+/* ── 大盘行情：指数卡片（美股涨绿跌红） ── */
+.mkt-group { margin-bottom: 10px; }
+.mkt-group:last-child { margin-bottom: 0; }
+.mkt-label { font-size: .74rem; color: var(--px-muted); letter-spacing: 1px; margin-bottom: 6px; }
+.mkt-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.mkt-card {
+  flex: 1 1 150px; min-width: 140px;
+  background: var(--px-metric-bg); border: 1px solid var(--px-border);
+  border-radius: 10px; padding: 10px 12px;
+}
+.mkt-name { font-size: .8rem; color: var(--px-sub); }
+.mkt-price { font-size: 1.22rem; font-weight: 700; color: var(--px-text); margin: 2px 0 4px; }
+.mkt-pct { display: inline-block; font-size: .78rem; font-weight: 600; padding: 1px 8px; border-radius: 999px; }
+.mkt-pct.up { color: var(--px-up); background: rgba(248,113,113,.12); }
+.mkt-pct.down { color: var(--px-down); background: rgba(74,222,128,.12); }
+.mkt-card.us .mkt-pct.up { color: var(--px-down); background: rgba(74,222,128,.12); }
+.mkt-card.us .mkt-pct.down { color: var(--px-up); background: rgba(248,113,113,.12); }
 @property --px-bg { syntax: '<color>'; inherits: true; initial-value: #888888; }
 @property --px-card { syntax: '<color>'; inherits: true; initial-value: #888888; }
 @property --px-side { syntax: '<color>'; inherits: true; initial-value: #888888; }
@@ -218,7 +291,7 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
 @property --px-down { syntax: '<color>'; inherits: true; initial-value: #888888; }
 @property --px-buy { syntax: '<color>'; inherits: true; initial-value: #888888; }
 @property --px-sell { syntax: '<color>'; inherits: true; initial-value: #888888; }
-:root { transition: --px-bg, --px-card, --px-side, --px-border, --px-accent, --px-accent-2, --px-text, --px-sub, --px-muted, --px-metric-bg, --px-metric-border, --px-stripes, --px-grid-line, --px-scan-line, --px-glow-color, --px-star-a, --px-star-b, --px-star-c, --px-star-d, --px-star-e, --px-star-f, --px-star-g, --px-star-h, --px-ai-bg, --px-ai-border, --px-ai-text, --px-ai-text-bg, --px-ai-text-border, --px-table-head-bg, --px-table-head-text, --px-table-text, --px-hover, --px-warn-bg, --px-warn-border, --px-warn-text, --px-ok-bg, --px-ok-border, --px-ok-text, --px-info-bg, --px-info-border, --px-info-text, --px-up, --px-down, --px-buy, --px-sell 450ms cubic-bezier(.4,0,.2,1); }
+:root { --px-danger: #f87171; transition: --px-bg, --px-card, --px-side, --px-border, --px-accent, --px-accent-2, --px-text, --px-sub, --px-muted, --px-metric-bg, --px-metric-border, --px-stripes, --px-grid-line, --px-scan-line, --px-glow-color, --px-star-a, --px-star-b, --px-star-c, --px-star-d, --px-star-e, --px-star-f, --px-star-g, --px-star-h, --px-ai-bg, --px-ai-border, --px-ai-text, --px-ai-text-bg, --px-ai-text-border, --px-table-head-bg, --px-table-head-text, --px-table-text, --px-hover, --px-warn-bg, --px-warn-border, --px-warn-text, --px-ok-bg, --px-ok-border, --px-ok-text, --px-info-bg, --px-info-border, --px-info-text, --px-up, --px-down, --px-buy, --px-sell 450ms cubic-bezier(.4,0,.2,1); }
 
 :root, [data-theme="night-gold"] {
   --px-bg: #0a1929;
@@ -265,8 +338,8 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
   --px-info-bg: #0c2438;
   --px-info-border: rgba(56,189,248,.3);
   --px-info-text: #7dd3fc;
-  --px-up: #4ade80;
-  --px-down: #f87171;
+  --px-up: #f87171;
+  --px-down: #4ade80;
   --px-buy: #16a34a;
   --px-sell: #dc2626;
 }
@@ -315,8 +388,8 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
   --px-info-bg: #0c2438;
   --px-info-border: rgba(56,189,248,.3);
   --px-info-text: #7dd3fc;
-  --px-up: #4ade80;
-  --px-down: #f87171;
+  --px-up: #f87171;
+  --px-down: #4ade80;
   --px-buy: #16a34a;
   --px-sell: #dc2626;
 }
@@ -365,8 +438,8 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
   --px-info-bg: #0c2438;
   --px-info-border: rgba(56,189,248,.3);
   --px-info-text: #7dd3fc;
-  --px-up: #4ade80;
-  --px-down: #f87171;
+  --px-up: #f87171;
+  --px-down: #4ade80;
   --px-buy: #16a34a;
   --px-sell: #dc2626;
 }
@@ -415,8 +488,8 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
   --px-info-bg: #eaf4fb;
   --px-info-border: rgba(2,132,199,.3);
   --px-info-text: #0369a1;
-  --px-up: #4ade80;
-  --px-down: #f87171;
+  --px-up: #f87171;
+  --px-down: #4ade80;
   --px-buy: #16a34a;
   --px-sell: #dc2626;
 }
@@ -465,8 +538,8 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
   --px-info-bg: #eaf4fb;
   --px-info-border: rgba(2,132,199,.3);
   --px-info-text: #0369a1;
-  --px-up: #4ade80;
-  --px-down: #f87171;
+  --px-up: #f87171;
+  --px-down: #4ade80;
   --px-buy: #16a34a;
   --px-sell: #dc2626;
 }
@@ -565,8 +638,8 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
   --px-info-bg: #0c1f2e;
   --px-info-border: rgba(56,189,248,.3);
   --px-info-text: #7dd3fc;
-  --px-up: #00e676;
-  --px-down: #ff5252;
+  --px-up: #ff5252;
+  --px-down: #00e676;
   --px-buy: #00e676;
   --px-sell: #ff5252;
 }
@@ -585,18 +658,21 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
 .f-note { font-size: .76rem; color: var(--px-muted); margin: 6px 0 0; }
 .f-save { margin-top: 14px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 .f-msg { font-size: .82rem; min-height: 1.2em; }
-.f-msg.ok { color: var(--px-up); }
-.f-msg.bad { color: var(--px-down); }
+.f-msg.ok { color: var(--px-ok-text); }
+.f-msg.bad { color: var(--px-danger); }
 
-/* ── 三区弹框：浮起态（尺寸无 transition，杜绝后台冻结残影） ── */
+/* ── 三区弹框：浮起态（尺寸无 transition，杜绝后台冻结残影）；z 层高于换肤坞，弹开时盖住右下角操作按钮 ── */
 .dialog-mask {
-  position: fixed; inset: 0; z-index: 80;
+  position: fixed; inset: 0; z-index: 200;
   background: rgba(4, 10, 22, .55); backdrop-filter: blur(3px);
   display: none; align-items: center; justify-content: center;
 }
-.dialog-mask.open { display: flex; }
+.dialog-mask.open { display: flex; animation: dlg-fade .18s ease; }
+.dialog-mask.open .dialog { animation: dlg-pop .22s cubic-bezier(.2, .9, .3, 1.2); }
+@keyframes dlg-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dlg-pop { from { opacity: 0; transform: translateY(10px) scale(.985); } to { opacity: 1; transform: none; } }
 .dialog {
-  width: min(1120px, 94vw); height: min(92vh, 960px);
+  width: min(1120px, 94vw); height: min(92vh, 960px); height: min(92dvh, 960px);
   background: var(--px-card); border: 1px solid var(--px-border);
   border-left: 3px solid var(--px-accent); border-radius: 12px;
   box-shadow: 0 24px 64px rgba(0, 0, 0, .45);
@@ -620,7 +696,7 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
 .dialog-mask:has(#fsChk:checked) .dlg-tgl { color: var(--px-accent-2); border-color: var(--px-accent); }
 .dialog-mask:has(#fsChk:checked) .dlg-tgl span::before { content: "⤡"; }
 .dialog-mask:has(#fsChk:checked) .dialog {
-  width: 100vw; height: 100vh; border-radius: 0; border: none; box-shadow: none;
+  width: 100vw; height: 100vh; width: 100dvw; height: 100dvh; border-radius: 0; border: none; box-shadow: none;
 }
 .dlg-close {
   width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--px-border);
@@ -628,7 +704,7 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
   display: inline-flex; align-items: center; justify-content: center; font-size: 1rem;
   transition: color .15s, border-color .15s;
 }
-.dlg-close:hover { color: var(--px-down); border-color: var(--px-down); }
+.dlg-close:hover { color: var(--px-danger); border-color: var(--px-danger); }
 .dialog-tabs { flex: 0 0 auto; display: flex; gap: 4px; padding: 10px 16px 0; overflow-x: auto; }
 .dlg-tab {
   padding: 8px 14px; border-radius: 8px 8px 0 0; cursor: pointer;
@@ -644,22 +720,29 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
   flex: 0 0 auto; display: flex; gap: 10px; align-items: center;
   padding: 12px 18px; border-top: 1px solid var(--px-border);
 }
+.dialog-foot .f-msg {
+  flex: 1 1 auto; min-width: 0; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap;
+}
+.dlg-btns { margin-left: auto; flex: 0 0 auto; display: flex; gap: 10px; }
 .btn {
   padding: 8px 18px; border-radius: 8px; border: 1px solid var(--px-accent);
   background: var(--px-accent); color: #101827; font-size: .88rem; font-weight: 600;
-  cursor: pointer; transition: background .15s, color .15s;
+  cursor: pointer; box-shadow: 0 2px 8px rgba(240, 185, 11, .22);
+  transition: background .15s, color .15s, transform .15s, box-shadow .15s;
 }
-.btn:hover { background: var(--px-accent-2); border-color: var(--px-accent-2); }
-.btn.ghost { background: transparent; color: var(--px-sub); border-color: var(--px-border); }
-.btn.ghost:hover { color: var(--px-accent-2); border-color: var(--px-accent); }
+.btn:hover { background: var(--px-accent-2); border-color: var(--px-accent-2); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(240, 185, 11, .34); }
+.btn:active { transform: translateY(0); }
+.btn.ghost { background: transparent; color: var(--px-sub); border-color: var(--px-border); box-shadow: none; }
+.btn.ghost:hover { color: var(--px-accent-2); border-color: var(--px-accent); transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0, 0, 0, .3); }
 /* 标的池动态行 */
-.tgt-row { display: flex; gap: 10px; margin-bottom: 8px; align-items: center; }
+.tgt-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; align-items: center; }
 .tgt-row .f-item { flex: 1; min-width: 90px; }
 .tgt-row .rm {
   width: 30px; height: 30px; flex: 0 0 auto; border-radius: 6px; cursor: pointer;
   border: 1px solid var(--px-border); background: var(--px-metric-bg); color: var(--px-sub);
 }
-.tgt-row .rm:hover { color: var(--px-down); border-color: var(--px-down); }
+.tgt-row .rm:hover { color: var(--px-danger); border-color: var(--px-danger); }
 
 /* ── 方案匣（配置弹框 t5 页签） ── */
 .preset-cur {
@@ -669,24 +752,31 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
 }
 .preset-acts { display: flex; gap: 8px; flex-wrap: wrap; }
 .preset-acts .btn { padding: 6px 14px; font-size: .84rem; }
-.preset-acts .btn.danger { color: var(--px-down); border-color: rgba(248,113,113,.35); background: transparent; }
-.preset-acts .btn.danger:hover { border-color: var(--px-down); }
+.preset-acts .btn.danger { color: var(--px-danger); border-color: rgba(248,113,113,.35); background: transparent; }
+.preset-acts .btn.danger:hover { border-color: var(--px-danger); }
 #presetSel { min-width: 180px; }
 
-/* ── 换肤坞（右下角） ── */
+/* ── 换肤坞（右下角：图标 + 文字胶囊按钮） ── */
 .dock {
   position: fixed; right: 22px; bottom: 22px; z-index: 90;
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  display: flex; flex-direction: column; align-items: stretch; gap: 8px;
 }
 .dock-btn {
-  width: 44px; height: 44px; border-radius: 12px; cursor: pointer;
+  height: 40px; padding: 0 14px 0 12px; border-radius: 999px; cursor: pointer;
   border: 1px solid var(--px-border); background: var(--px-card);
-  color: var(--px-accent-2); font-size: 1.15rem; box-shadow: var(--px-shadow);
-  display: flex; align-items: center; justify-content: center;
+  color: var(--px-accent-2); font-size: 1.05rem; box-shadow: var(--px-shadow);
+  display: inline-flex; align-items: center; gap: 8px;
   transition: color .15s, border-color .15s, transform .15s;
 }
+.dock-btn svg { width: 1.15rem; height: 1.15rem; display: block; flex: 0 0 auto; }
+.dock-btn span { font-size: .8rem; color: var(--px-sub); letter-spacing: .5px; white-space: nowrap; }
 .dock-btn:hover { transform: translateY(-2px); border-color: var(--px-accent); }
+.dock-btn:hover span { color: var(--px-text); }
+.dock-btn:disabled { opacity: .75; cursor: wait; }
+.dock-btn.busy svg { animation: dock-spin 1.1s linear infinite; }
+@keyframes dock-spin { to { transform: rotate(360deg); } }
 .skin-panel {
+  align-self: flex-start;
   display: none; flex-direction: column; gap: 8px;
   background: var(--px-card); border: 1px solid var(--px-border);
   border-radius: 12px; padding: 10px; box-shadow: var(--px-shadow);
@@ -697,17 +787,37 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
 
 /* ── 响应式：窄屏收紧 ── */
 @media (max-width: 768px) {
-  .grid { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: minmax(0, 1fr); }
   .wrap { padding: 14px 12px 80px; }
-  .hero { padding: 26px 16px; }
-  .dialog { width: 100vw; height: 100vh; border-radius: 0; }
+  .hero { padding: 18px 0 12px; }
+  .dialog { width: 100vw; height: 100vh; width: 100dvw; height: 100dvh; border-radius: 0; }
   .dock { right: 12px; bottom: 12px; }
+}
+@media (max-width: 640px) {
+  .dock-btn { width: 40px; padding: 0; justify-content: center; }
+  .dock-btn span { display: none; }
+  /* 手机端：头部不再吸顶，压缩留白给内容 */
+  .hero { position: static; padding: 12px 0 10px; }
+  .hero .logo { width: 38px; height: 38px; }
+  .hero .titles { min-width: 0; }
+  .hero h1 { font-size: 1.5rem; }
+  .hero .sub { font-size: .82rem; }
+  /* 卡片与弹框正文收窄内边距 */
+  .card { padding: 14px 14px; }
+  .dialog-body { padding: 14px 14px; }
+  .dialog-head { padding: 12px 14px; }
+  .dialog-foot { padding: 10px 14px; }
+  /* 配置弹框页签：压缩内距全部可见（放不下仍可横滑） */
+  .dlg-tab { padding: 8px 10px; font-size: .82rem; }
+  /* 标的池/持仓动态行：两列式换行，不再横向溢出 */
+  .tgt-row { row-gap: 8px; }
+  .tgt-row .f-item { flex: 1 1 45%; min-width: 0; }
 }
 /* 弹框二（持仓）全屏态：checkbox 各自独立 */
 .dialog-mask:has(#fsChk2:checked) .dlg-tgl { color: var(--px-accent-2); border-color: var(--px-accent); }
 .dialog-mask:has(#fsChk2:checked) .dlg-tgl span::before { content: "⤡"; }
 .dialog-mask:has(#fsChk2:checked) .dialog {
-  width: 100vw; height: 100vh; border-radius: 0; border: none; box-shadow: none;
+  width: 100vw; height: 100vh; width: 100dvw; height: 100dvh; border-radius: 0; border: none; box-shadow: none;
 }
 
 </style>
@@ -724,27 +834,47 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
 
 <div class="wrap">
   <header class="hero">
-    <svg class="logo" viewBox="0 0 64 64" aria-hidden="true">
-      <circle cx="32" cy="32" r="28" fill="none" stroke="var(--px-accent)" stroke-width="3"/>
-      <circle cx="32" cy="32" r="5" fill="var(--px-accent)"/>
-      <path d="M32 32 L44 20 A14 14 0 0 0 20 22 Z" fill="var(--px-accent-2)"/>
+    <svg class="logo" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+      <defs><linearGradient id="mentor-g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#f9dd7d"/><stop offset="1" stop-color="#c98a12"/>
+      </linearGradient></defs>
+      <circle cx="24" cy="24" r="22" fill="none" stroke="var(--px-accent)" stroke-opacity=".9" stroke-width="1.6"/>
+      <circle cx="24" cy="24" r="16.5" fill="none" stroke="var(--px-accent)" stroke-opacity=".28" stroke-width="1"/>
+      <circle cx="24" cy="4.2" r="1.7" fill="var(--px-accent)"/>
+      <circle cx="24" cy="43.8" r="1.1" fill="var(--px-accent)" opacity=".5"/>
+      <circle cx="4.2" cy="24" r="1.1" fill="var(--px-accent)" opacity=".5"/>
+      <circle cx="43.8" cy="24" r="1.1" fill="var(--px-accent)" opacity=".5"/>
+      <path d="M10 33 Q14 30 18 33 T26 33 T34 33" fill="none" stroke="var(--px-accent)" stroke-opacity=".5" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M12.5 37.5 Q16.5 34.5 20.5 37.5 T28.5 37.5 T35.5 37.5" fill="none" stroke="var(--px-accent)" stroke-opacity=".26" stroke-width="1.2" stroke-linecap="round"/>
+      <text x="24" y="21.5" text-anchor="middle" dominant-baseline="central" font-size="16.5" font-weight="800" fill="url(#mentor-g)">谋</text>
     </svg>
     <div class="titles">
       <h1>谋定 <span class="en">MENTOR</span></h1>
-      <div class="sub">个人投资罗盘 · 网格 + 转债双引擎 · 本地数据零上传</div>
+      <div class="sub">先胜而后求战 · Win before you fight.</div>
+      <div class="sub" style="opacity:.72">个人投资罗盘 · 网格 + 转债双引擎</div>
     </div>
     <div class="statusbar" id="statusbar">
       <span class="bd flat" id="st-gen">数据未加载</span>
       <span class="bd flat" id="st-src">—</span>
       <span class="bd flat" id="st-gate">风控 —</span>
-      <span class="bd flat" id="st-preset">方案 —</span>
+      <label class="bd flat preset-head" id="st-preset" title="切换方案：预置参数快照（写前自动备份，切换后需重新刷新信号）">
+        <span>方案</span>
+        <select id="presetHeadSel" class="preset-head-sel"></select>
+      </label>
     </div>
   </header>
 
   <main class="grid">
+    <!-- 区块 0 大盘行情（A股/港股/美股指数） -->
+    <section class="card wide" id="sec-mkt">
+      <h2><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.9 5.6 3.9 9S14.5 18.4 12 21c-2.5-2.6-3.9-5.6-3.9-9S9.5 5.6 12 3z"/></svg> 大盘行情<span class="h-stats" id="mkt-stats"></span></h2>
+      <p class="hint">A股 / 港股 / 美股主要指数 + 黄金白银贵金属行情（signals.json · market，新浪轻量源 + BaoStock 备源；美股/贵金属按国际惯例涨绿跌红，A股港股涨红跌绿；贵金属仅行情参考，不参与网格）</p>
+      <div id="mkt-body"><div class="empty">暂无大盘行情——请先刷新信号</div></div>
+    </section>
+
     <!-- 区块 0.5 行情快照 -->
     <section class="card" id="sec-quotes">
-      <h2><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/><path d="M12 12 18.5 5.5"/></svg> 行情快照</h2>
+      <h2><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/><path d="M12 12 18.5 5.5"/></svg> 行情快照<span class="h-stats" id="q-stats"></span></h2>
       <p class="hint">最近一次刷新拉取的收盘价与涨跌（signals.json · quotes）</p>
       <div class="tb-wrap"><table class="tb">
         <thead><tr><th>标的</th><th>代码</th><th class="num">收盘</th><th class="num">涨跌%</th></tr></thead>
@@ -754,7 +884,7 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
 
     <!-- 区块 1 信号操作清单（wide） -->
     <section class="card wide" id="sec-sig">
-      <h2><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M9 6h12M9 12h12M9 18h12"/><circle cx="4.5" cy="6" r=".9" fill="currentColor" stroke="none"/><circle cx="4.5" cy="12" r=".9" fill="currentColor" stroke="none"/><circle cx="4.5" cy="18" r=".9" fill="currentColor" stroke="none"/></svg> 今日信号 · 操作清单</h2>
+      <h2><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M9 6h12M9 12h12M9 18h12"/><circle cx="4.5" cy="6" r=".9" fill="currentColor" stroke="none"/><circle cx="4.5" cy="12" r=".9" fill="currentColor" stroke="none"/><circle cx="4.5" cy="18" r=".9" fill="currentColor" stroke="none"/></svg> 今日信号 · 操作清单<span class="h-stats" id="sig-stats"></span></h2>
       <p class="hint">由 refresh.py 按规则引擎落盘（signals.json · signals），页面只读展示</p>
       <div class="tb-wrap"><table class="tb">
         <thead><tr><th>标的</th><th>动作</th><th>理由</th><th class="num">参考价</th><th class="num">建议仓位</th><th>风险态</th></tr></thead>
@@ -771,19 +901,17 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
 
     <!-- 区块 3 持仓组合 -->
     <section class="card" id="sec-pf">
-      <h2><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7.5" width="18" height="12.5" rx="2"/><path d="M9 7.5V5.8A1.8 1.8 0 0 1 10.8 4h2.4A1.8 1.8 0 0 1 15 5.8v1.7M3 12.5h18M11 12.5v2h2v-2"/></svg> 持仓组合</h2>
+      <h2><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7.5" width="18" height="12.5" rx="2"/><path d="M9 7.5V5.8A1.8 1.8 0 0 1 10.8 4h2.4A1.8 1.8 0 0 1 15 5.8v1.7M3 12.5h18M11 12.5v2h2v-2"/></svg> 持仓组合<span class="h-stats" id="pf-stats"></span></h2>
       <p class="hint">回填的持仓与最新行情联动（signals.json · portfolio）</p>
       <div class="metrics" id="pf-metrics"></div>
       <div id="pf-body"><div class="empty">暂无持仓——右下角「持仓回填」添加后刷新信号</div></div>
     </section>
 
-    <!-- 区块 4 网格阶梯（wide，ECharts） -->
+    <!-- 区块 4 网格阶梯（wide，卡片式档位带） -->
     <section class="card wide" id="sec-lv">
-      <h2><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="4" y="4" width="6.5" height="6.5" rx="1.2"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.2"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.2"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.2"/></svg> 网格阶梯</h2>
-      <p class="hint">各标的的买/卖档位价（signals.json · levels）——加载失败自动降级为文字清单</p>
-      <div class="ech" id="lv-chart"></div>
-      <div class="ech-off" id="lv-off">图表组件未加载，改用下方文字清单展示档位。</div>
-      <div class="tb-wrap" id="lv-tb"></div>
+      <h2><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="4" y="4" width="6.5" height="6.5" rx="1.2"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.2"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.2"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.2"/></svg> 网格阶梯<span class="h-stats" id="lv-stats"></span></h2>
+      <p class="hint">每标的一张卡：上行卖出档位（触价卖）、下行买入档位（触价买），现价居中锚定（signals.json · levels）</p>
+      <div class="lv-grid" id="lv-tb"></div>
     </section>
 
     <!-- 区块 5 转债 -->
@@ -797,21 +925,23 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
 
     <!-- 区块 6 数据健康 -->
     <section class="card" id="sec-h">
-      <h2><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2.2-6.5L12.6 18l2.1-6H21"/></svg> 数据健康</h2>
+      <h2><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2.2-6.5L12.6 18l2.1-6H21"/></svg> 数据健康<span class="h-stats" id="h-stats"></span></h2>
       <p class="hint">拉数源可用性与全局告警（signals.json · health）</p>
       <div class="chips" id="h-body"><span class="chip">暂无健康信息</span></div>
     </section>
   </main>
 </div>
 
-<!-- ══ 换肤坞（右下角：参数配置 / 持仓回填 / 换肤 / 导出 ⇩ / 导入 ⇧） ══ -->
+<!-- ══ 换肤坞（右下角：图标 + 文字胶囊按钮） ══ -->
 <div class="dock">
   <div class="skin-panel" id="skinPanel"></div>
-  <button class="dock-btn" id="cfgBtn" title="参数配置"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="3.4"/><path d="M12 2.8v2.9M12 18.3v2.9M2.8 12h2.9M18.3 12h2.9M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1"/></svg></button>
-  <button class="dock-btn" id="holdBtn" title="持仓回填"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4.5" width="14" height="16.5" rx="2"/><path d="M9 4.5V3.8A1.8 1.8 0 0 1 10.8 2h2.4A1.8 1.8 0 0 1 15 3.8v.7M9 9.5h6M9 13.5h6M9 17.5h3.5"/></svg></button>
-  <button class="dock-btn" id="skinBtn" title="换肤"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5a8.5 8.5 0 1 0 0 17c1.4 0 2.2-.8 2.2-1.8 0-1.4-1-2-1-3.3 0-1.2 1-1.9 2.3-1.9h1.3a2.6 2.6 0 0 0 2.6-2.6c0-4.1-3.3-7.4-7.4-7.4z"/><circle cx="7.8" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="10.6" cy="7.4" r="1" fill="currentColor" stroke="none"/><circle cx="14.8" cy="7.2" r="1" fill="currentColor" stroke="none"/></svg></button>
-  <button class="dock-btn" id="expBtn" title="导出备份：三份 JSON 合成一个文件下载">⇩</button>
-  <button class="dock-btn" id="impBtn" title="导入恢复：选备份文件校验后写回">⇧</button>
+  <button class="dock-btn" id="cfgBtn" title="参数配置"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1-2.8 2.8-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21h-4v-.2a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1-2.8-2.8.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3v-4h.2a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1 2.8-2.8.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3h4v.2a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1 2.8 2.8-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1h.2v4h-.2a1.6 1.6 0 0 0-1.5 1z"/><circle cx="12" cy="12" r="3" fill="none"/></svg><span>参数</span></button>
+  <button class="dock-btn" id="holdBtn" title="持仓回填"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18"/><path d="M16.5 14.8h2M16.5 17.5h2"/></svg><span>持仓</span></button>
+  <button class="dock-btn" id="skinBtn" title="换肤"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5a8.5 8.5 0 1 0 0 17c1.4 0 2.2-.8 2.2-1.8 0-1.4-1-2-1-3.3 0-1.2 1-1.9 2.3-1.9h1.3a2.6 2.6 0 0 0 2.6-2.6c0-4.1-3.3-7.4-7.4-7.4z"/><circle cx="7.8" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="10.6" cy="7.4" r="1" fill="currentColor" stroke="none"/><circle cx="14.8" cy="7.2" r="1" fill="currentColor" stroke="none"/></svg><span>换肤</span></button>
+  <button class="dock-btn" id="refreshBtn" title="刷新信号：重跑计算链拉最新行情"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 5v5h-5"/><path d="M3.5 12a8.5 8.5 0 0 1 14.6-6L20.5 9"/><path d="M3.5 19v-5h5"/><path d="M20.5 12a8.5 8.5 0 0 1-14.6 6L3.5 15"/></svg><span>刷新</span></button>
+  <button class="dock-btn" id="backtestBtn" title="网格回测：重放历史行情出压力测试报告"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3.5v17h17.5"/><path d="M7 15.5l3.5-4 3 2.5 4.5-6"/><circle cx="7" cy="15.5" r="1" fill="currentColor" stroke="none"/><circle cx="17.5" cy="8" r="1" fill="currentColor" stroke="none"/></svg><span>回测</span></button>
+  <button class="dock-btn" id="expBtn" title="导出备份：三份 JSON 合成一个文件下载"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5v11"/><path d="M7 10.5l5 5 5-5"/><path d="M4 17.5v2a1.5 1.5 0 0 0 1.5 1.5h13a1.5 1.5 0 0 0 1.5-1.5v-2"/></svg><span>导出</span></button>
+  <button class="dock-btn" id="impBtn" title="导入恢复：选备份文件校验后写回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17.5v-11"/><path d="M7 10.5l5-5 5 5"/><path d="M4 17.5v2a1.5 1.5 0 0 0 1.5 1.5h13a1.5 1.5 0 0 0 1.5-1.5v-2"/></svg><span>导入</span></button>
   <input type="file" id="impFile" accept=".json,application/json" style="display:none">
 </div>
 <div class="toast" id="toast"></div>
@@ -820,7 +950,7 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
 <div class="dialog-mask" id="cfgMask">
   <div class="dialog" role="dialog" aria-label="参数配置">
     <div class="dialog-head">
-      <div class="dialog-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="3.4"/><path d="M12 2.8v2.9M12 18.3v2.9M2.8 12h2.9M18.3 12h2.9M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1"/></svg> 参数配置</div>
+      <div class="dialog-title"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="3.4"/><path d="M12 2.8v2.9M12 18.3v2.9M2.8 12h2.9M18.3 12h2.9M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1"/></svg> 参数配置</div>
       <label class="dlg-tgl" title="全屏：点击铺满视口，再点恢复浮起"><input type="checkbox" id="fsChk"><span></span></label>
       <button class="dlg-close" id="cfgClose" title="关闭">✕</button>
     </div>
@@ -901,9 +1031,11 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
       </div>
     </div>
     <div class="dialog-foot">
-      <button class="btn" id="cfgSave" type="button">保存</button>
-      <button class="btn ghost" id="cfgCancel" type="button">取消</button>
       <span class="f-msg" id="cfgMsg"></span>
+      <div class="dlg-btns">
+        <button class="btn" id="cfgSave" type="button">保存</button>
+        <button class="btn ghost" id="cfgCancel" type="button">取消</button>
+      </div>
     </div>
   </div>
 </div>
@@ -912,7 +1044,7 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
 <div class="dialog-mask" id="holdMask">
   <div class="dialog" role="dialog" aria-label="持仓回填">
     <div class="dialog-head">
-      <div class="dialog-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4.5" width="14" height="16.5" rx="2"/><path d="M9 4.5V3.8A1.8 1.8 0 0 1 10.8 2h2.4A1.8 1.8 0 0 1 15 3.8v.7M9 9.5h6M9 13.5h6M9 17.5h3.5"/></svg> 持仓回填</div>
+      <div class="dialog-title"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4.5" width="14" height="16.5" rx="2"/><path d="M9 4.5V3.8A1.8 1.8 0 0 1 10.8 2h2.4A1.8 1.8 0 0 1 15 3.8v.7M9 9.5h6M9 13.5h6M9 17.5h3.5"/></svg> 持仓回填</div>
       <label class="dlg-tgl" title="全屏"><input type="checkbox" id="fsChk2"><span></span></label>
       <button class="dlg-close" id="holdClose" title="关闭">✕</button>
     </div>
@@ -922,20 +1054,20 @@ table.tb { width: 100%; border-collapse: collapse; font-size: .84rem; }
       <p class="f-note">current_price 由行情自动回填（不在表单）；code 与 config 标的池对齐才能联动信号。</p>
     </div>
     <div class="dialog-foot">
-      <button class="btn" id="holdSave" type="button">保存</button>
-      <button class="btn ghost" id="holdCancel" type="button">取消</button>
       <span class="f-msg" id="holdMsg"></span>
+      <div class="dlg-btns">
+        <button class="btn" id="holdSave" type="button">保存</button>
+        <button class="btn ghost" id="holdCancel" type="button">取消</button>
+      </div>
     </div>
   </div>
 </div>
-
-<script src="assets/echarts.min.js"></script>
 
 <script>
 (function () {
 "use strict";
 /* ═══ 谋定看板脚本（真相源 reference.html @2）═══
-   区块渲染 + 表单写回 + 换肤坞 + ECharts 降级；数据三份 JSON 只读/表单 PUT。 */
+   区块渲染 + 表单写回 + 换肤坞；数据三份 JSON 只读/表单 PUT。 */
 
 /* ── 0. 内嵌稳定 ID 自愈（机制六）──────────────────────── */
 var META = document.querySelector('meta[name="mentor-id"]');
@@ -983,7 +1115,7 @@ function buildSkinPanel() {
     var d = document.createElement("div");
     d.className = "skin-dot"; d.title = t[1];
     d.setAttribute("data-theme", t[0]);
-    d.style.background = t[1];
+    d.style.background = t[2];
     d.addEventListener("click", function () { applyTheme(t[0]); renderLevels(); });
     p.appendChild(d);
   });
@@ -994,6 +1126,162 @@ applyTheme(saved || "night-gold");
 buildSkinPanel();
 document.getElementById("skinBtn").addEventListener("click", function () {
   document.getElementById("skinPanel").classList.toggle("open");
+});
+
+/* ── 1.5 只读模式（部署版访客角色）+ 刷新信号按钮 ── */
+var MROLE = document.querySelector('meta[name="mentor-role"]');
+var READONLY = MROLE && MROLE.content === "guest";
+if (READONLY) {
+  ["cfgBtn", "holdBtn", "impBtn", "refreshBtn", "backtestBtn"].forEach(function (id) {
+    var b = document.getElementById(id);
+    if (b) b.style.display = "none";
+  });
+  var sb = document.getElementById("statusbar");
+  if (sb) {
+    var r = document.createElement("span");
+    r.className = "bd watch"; r.textContent = "访客只读";
+    sb.insertBefore(r, sb.firstChild);
+  }
+}
+/* ── 刷新按钮：异步化（POST 立即返回 202 后台跑，轮询 status，跑完自动重载） ── */
+var refreshTimer = null;
+function setRefreshBusy(on) {
+  var btn = document.getElementById("refreshBtn");
+  var span = btn.querySelector("span");
+  btn.classList.toggle("busy", on);
+  btn.disabled = on;  // 运行中防重复点击，结束/失败自动恢复
+  if (span) span.textContent = on ? "刷新中" : "刷新";
+}
+function refreshPoll() {
+  refreshTimer = null;
+  fetch("api/refresh-status", { cache: "no-store" }).then(function (r) {
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    return r.json();
+  }).then(function (j) {
+    var st = j && j.refresh;
+    if (!st) throw new Error("no refresh field");
+    if (st.running) {
+      setRefreshBusy(true);
+      refreshTimer = setTimeout(refreshPoll, 5000);
+      return;
+    }
+    setRefreshBusy(false);
+    if (st.ok) {
+      toast("信号已刷新，正在重载…", true);
+      setTimeout(function () { location.reload(); }, 800);
+    } else {
+      toast("刷新未完成：" + String(st.detail || "未知错误").slice(-80));
+    }
+  }).catch(function () {
+    setRefreshBusy(false);  // status 接口不可用（旧后端）→ 停轮询恢复按钮
+  });
+}
+document.getElementById("refreshBtn").addEventListener("click", function () {
+  var btn = this;
+  btn.disabled = true;
+  fetch("api/refresh", { method: "POST" }).then(function (r) {
+    if (r.status === 501) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        btn.disabled = false;
+        toast((j && j.error) || "本机模式请对助手说「刷新信号」");
+      });
+    }
+    if (r.status === 409) {
+      toast("已在刷新中，等待完成…", true);
+      setRefreshBusy(true);
+      refreshTimer = setTimeout(refreshPoll, 5000);
+      return;
+    }
+    if (r.status !== 202) throw new Error("HTTP " + r.status);
+    toast("刷新已在后台启动，完成后自动更新…", true);
+    setRefreshBusy(true);
+    refreshTimer = setTimeout(refreshPoll, 5000);
+  }).catch(function (e) {
+    btn.disabled = false;
+    setRefreshBusy(false);
+    toast("刷新失败：" + e.message);
+  });
+});
+
+/* ── 回测报告新窗口打开：点击时预开空白 tab（异步回调里 window.open 易被拦），完成后指向报告，不影响主页面 ── */
+var btWin = null;
+function preopenBacktestTab() {
+  var w = null;
+  try { w = window.open("", "_blank"); } catch (e) { w = null; }
+  if (w && w.document) {
+    w.document.title = "回测进行中 · 谋定";
+    try {
+      w.document.body.innerHTML = '<div style="font-family:sans-serif;color:#9aa4b2;background:#0b1020;min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;margin:0"><div style="font-size:16px">回测进行中，完成后自动打开报告…</div><div style="font-size:12px;opacity:.7">本页可先关闭，主页面不受影响</div></div>';
+    } catch (e) { /* about:blank 不可写时静默，完成后仍会指向报告 */ }
+  }
+  return w;
+}
+function openBacktestReport(url) {
+  if (btWin && !btWin.closed) { btWin.location.href = url; return; }
+  var w = null;
+  try { w = window.open(url, "_blank"); } catch (e) { w = null; }
+  if (!w) { location.href = url; }  // 弹窗被拦兜底：退回当前页跳转
+}
+
+/* ── 回测按钮：异步化（POST 立即返回 202 后台跑，轮询 status，跑完自动打开报告） ── */
+var backtestTimer = null;
+function setBacktestBusy(on) {
+  var btn = document.getElementById("backtestBtn");
+  var span = btn.querySelector("span");
+  btn.classList.toggle("busy", on);
+  btn.disabled = on;  // 运行中防重复点击，结束/失败自动恢复
+  if (span) span.textContent = on ? "回测中" : "回测";
+}
+function backtestPoll() {
+  backtestTimer = null;
+  fetch("api/backtest-status", { cache: "no-store" }).then(function (r) {
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    return r.json();
+  }).then(function (j) {
+    var st = j && j.backtest;
+    if (!st) throw new Error("no backtest field");
+    if (st.running) {
+      setBacktestBusy(true);
+      backtestTimer = setTimeout(backtestPoll, 5000);
+      return;
+    }
+    setBacktestBusy(false);
+    if (st.ok) {
+      toast("回测完成，正在打开报告…", true);
+      setTimeout(function () { openBacktestReport(j.report_url || "outputs/backtest_report.html"); }, 500);
+    } else {
+      toast("回测未完成：" + String(st.detail || "未知错误").slice(-80));
+    }
+  }).catch(function () {
+    setBacktestBusy(false);  // status 接口不可用 → 停轮询恢复按钮
+  });
+}
+document.getElementById("backtestBtn").addEventListener("click", function () {
+  var btn = this;
+  btn.disabled = true;
+  btWin = preopenBacktestTab();
+  fetch("api/backtest", { method: "POST" }).then(function (r) {
+    if (r.status === 501) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        btn.disabled = false;
+        toast((j && j.error) || "本机模式请对助手说「跑回测」");
+      });
+    }
+    if (r.status === 409) {
+      toast("回测已在运行中，等待完成…", true);
+      setBacktestBusy(true);
+      backtestTimer = setTimeout(backtestPoll, 5000);
+      return;
+    }
+    if (r.status !== 202) throw new Error("HTTP " + r.status);
+    toast("回测已在后台启动，完成后自动打开报告…", true);
+    setBacktestBusy(true);
+    backtestTimer = setTimeout(backtestPoll, 5000);
+  }).catch(function (e) {
+    btn.disabled = false;
+    setBacktestBusy(false);
+    toast("回测启动失败：" + e.message);
+  });
 });
 
 /* ── 2. 数据加载（失败优雅降级）────────────────────────── */
@@ -1086,14 +1374,15 @@ function loadAll() {
     .catch(function () { console.warn("[mentor] holdings.json 加载失败"); renderPortfolio(); });
   jget("data/presets.json").then(function (v) {
     state.presets = v;
-    document.getElementById("st-preset").textContent = "方案 " + (v.active || "default");
+    syncPresetHead();
   }).catch(function () {
     state.presets = freshPresets();
+    syncPresetHead();
   });
   jget("outputs/signals.json").then(function (v) {
     state.sig = v;
     renderStatus(); renderSignals(); renderAI();
-    renderPortfolio(); renderQuotes(); renderLevels(); renderCB(); renderHealth();
+    renderPortfolio(); renderQuotes(); renderLevels(); renderCB(); renderHealth(); renderMarket();
   }).catch(function () {
     console.warn("[mentor] signals.json 加载失败——请先刷新信号");
     document.getElementById("st-gen").textContent = "暂无信号——请先刷新信号";
@@ -1126,36 +1415,90 @@ function nameOf(symbol) {
   return symbol;
 }
 
+function renderMarket() {
+  var m = state.sig ? state.sig.market : null;
+  var box = document.getElementById("mkt-body");
+  var st = document.getElementById("mkt-stats");
+  if (!m || !(m.indices || []).length) {
+    box.innerHTML = '<div class="empty">暂无大盘行情——请先刷新信号</div>';
+    st.innerHTML = "";
+    return;
+  }
+  var order = ["A股", "港股", "美股", "贵金属"];
+  st.innerHTML = order.map(function (mk) {
+    var n = m.indices.filter(function (x) { return x.market === mk; }).length;
+    return n ? '<span class="h-stat">' + mk + ' <b>' + n + '</b></span>' : "";
+  }).join("");
+  box.innerHTML = order.map(function (mk) {
+    var list = m.indices.filter(function (x) { return x.market === mk; });
+    if (!list.length) return "";
+    var cards = list.map(function (x) {
+      var p = Number(x.pct_change);
+      var cls = p >= 0 ? "up" : "down";
+      var sign = p >= 0 ? "+" : "";
+      return '<div class="mkt-card' + (mk === "美股" || mk === "贵金属" ? " us" : "") + '">' +
+        '<div class="mkt-name">' + esc(x.name) + '</div>' +
+        '<div class="mkt-price">' + esc(x.price) + '</div>' +
+        '<span class="mkt-pct ' + cls + '">' + sign + esc(x.pct_change) + '%</span>' +
+        '</div>';
+    }).join("");
+    return '<div class="mkt-group"><div class="mkt-label">' + mk + ' · ' +
+      esc(list[0].source || "sina") + '</div><div class="mkt-row">' + cards + '</div></div>';
+  }).join("");
+}
+
 function renderQuotes() {
   var s = state.sig, body = document.getElementById("q-body");
+  var st = document.getElementById("q-stats");
   if (!s) return;
   var rows = Object.keys(s.quotes || {});
   if (!rows.length) {
     body.innerHTML = '<tr><td colspan="4" class="empty">暂无行情数据——请先刷新信号</td></tr>';
+    st.innerHTML = "";
     return;
   }
+  var upN = 0, downN = 0;
+  rows.forEach(function (sym) {
+    var p = Number((s.quotes[sym] || {}).pct_change);
+    if (p > 0) upN++; else if (p < 0) downN++;
+  });
+  st.innerHTML = '<span class="h-stat">标的 <b>' + rows.length + '</b></span>' +
+    '<span class="h-stat up">涨 <b>' + upN + '</b></span>' +
+    '<span class="h-stat down">跌 <b>' + downN + '</b></span>';
   body.innerHTML = rows.map(function (sym) {
     var q = s.quotes[sym] || {};
+    var pct = q.pct_change == null ? "—" : ((Number(q.pct_change) > 0 ? "+" : "") + Number(q.pct_change).toFixed(2) + "%");
+    var pctSty = q.pct_change == null ? "" : (Number(q.pct_change) > 0 ? ' style="color:var(--px-up)"' : (Number(q.pct_change) < 0 ? ' style="color:var(--px-down)"' : ""));
     return '<tr><td>' + esc(nameOf(sym)) + '</td><td>' + esc(sym) +
       '</td><td class="num">' + esc(q.price == null ? "—" : q.price) +
-      '</td><td class="num">—</td></tr>';
+      '</td><td class="num"' + pctSty + '>' + esc(pct) + '</td></tr>';
   }).join("");
 }
 
 function renderSignals() {
   var s = state.sig, body = document.getElementById("sig-body");
+  var st = document.getElementById("sig-stats");
   var sigs = s.signals || [];
   if (!sigs.length) {
     body.innerHTML = '<tr><td colspan="6" class="empty">暂无信号——请先刷新信号</td></tr>';
+    st.innerHTML = "";
     return;
   }
+  var cnt = { buy: 0, sell: 0, other: 0 };
+  sigs.forEach(function (r) {
+    var a = String(r.action || "hold").toLowerCase();
+    if (a === "buy") cnt.buy++; else if (a === "sell") cnt.sell++; else cnt.other++;
+  });
+  st.innerHTML = '<span class="h-stat ok">买 <b>' + cnt.buy + '</b></span>' +
+    '<span class="h-stat bad">卖 <b>' + cnt.sell + '</b></span>' +
+    (cnt.other ? '<span class="h-stat">其他 <b>' + cnt.other + '</b></span>' : "");
   body.innerHTML = sigs.map(function (r) {
     var act = String(r.action || "hold").toLowerCase();
     var cls = OP_CLS[act] || "hold", txt = OP_TXT[act] || r.action;
     var q = (s.quotes || {})[String(r.target_code)] || {};
-    var risk = r.risk_status === "blocked" ? '<span class="op observe">拦截</span>'
-      : r.risk_status === "observe" ? '<span class="op observe">观察</span>'
-      : '<span class="op hold">通过</span>';
+    var risk = r.risk_status === "blocked" ? '<span class="op block">拦截</span>'
+      : r.risk_status === "observe" ? '<span class="op watch">观察</span>'
+      : '<span class="op pass">通过</span>';
     return '<tr><td>' + esc(r.target_name || r.target_code) + ' <span style="color:var(--px-muted)">' +
       esc(r.target_code || "") + '</span></td><td><span class="op ' + cls + '">' + esc(txt) +
       '</span></td><td class="reason">' + esc(r.trigger_reason || "") + '</td>' +
@@ -1173,6 +1516,9 @@ function renderAI() {
 function renderPortfolio() {
   var s = state.sig, snap = s ? s.portfolio : null;
   var pm = document.getElementById("pf-metrics");
+  var st = document.getElementById("pf-stats");
+  var posN = (state.hold && state.hold.positions) || [];
+  st.innerHTML = posN.length ? '<span class="h-stat">持仓 <b>' + posN.length + '</b> 只</span>' : "";
   if (!snap || !Object.keys(snap).length) {
     pm.innerHTML = ""; return;
   }
@@ -1191,7 +1537,45 @@ function renderPortfolio() {
     return;
   }
   var quotes = s ? s.quotes || {} : {};
-  pb.innerHTML = pos.map(function (p) {
+  /* 持仓市值占比堆叠条（现金 + 各持仓 + 转债，一张图看组合资产结构） */
+  var allocTotal = 0, allocCash = 0;
+  var segs = pos.map(function (p) {
+    var q = quotes[String(p.code)] || {};
+    var price = q.price != null ? q.price : (p.cost_price || 0);
+    var mv = (p.quantity || 0) * price;
+    allocTotal += mv;
+    return { name: p.name, code: p.code, mv: mv };
+  }).sort(function (a, b) { return b.mv - a.mv; });
+  if (snap && snap.cash != null) { allocCash = Number(snap.cash) || 0; allocTotal += allocCash; }
+  if (snap && snap.cb_value != null) { allocTotal += Number(snap.cb_value) || 0; }
+  var allocHtml = "";
+  if (allocTotal > 0) {
+    var colIdx = 0;
+    allocHtml = segs.map(function (s) {
+      var pct = s.mv / allocTotal * 100;
+      var c = PF_COLORS[colIdx++ % PF_COLORS.length];
+      return '<div class="pf-seg" style="width:' + pct.toFixed(2) + '%;background:' + c + '" title="' +
+        esc(s.name) + ' ' + esc(s.code) + ' ' + pct.toFixed(1) + '%">' +
+        (pct >= 8 ? esc(s.name) + ' ' + pct.toFixed(0) + '%' : "") + '</div>';
+    }).join("");
+    if (allocCash > 0) {
+      var cashPct = allocCash / allocTotal * 100;
+      allocHtml += '<div class="pf-seg" style="width:' + cashPct.toFixed(2) + '%;background:#475569" title="现金 ' + cashPct.toFixed(1) + '%">' +
+        (cashPct >= 8 ? '现金 ' + cashPct.toFixed(0) + '%' : "") + '</div>';
+    }
+    if (snap && snap.cb_value != null && Number(snap.cb_value) > 0) {
+      var cbPct = Number(snap.cb_value) / allocTotal * 100;
+      allocHtml += '<div class="pf-seg" style="width:' + cbPct.toFixed(2) + '%;background:#22d3ee" title="转债 ' + cbPct.toFixed(1) + '%">' +
+        (cbPct >= 8 ? '转债 ' + cbPct.toFixed(0) + '%' : "") + '</div>';
+    }
+  }
+  if (allocHtml) {
+    pb.innerHTML = '<div class="pf-alloc">' + allocHtml + '</div>' +
+      '<div class="pf-alloc-title">持仓市值占比（色块悬停看明细；现金按 portfolio.cash）</div>';
+  } else {
+    pb.innerHTML = "";
+  }
+  pb.innerHTML += pos.map(function (p) {
     var q = quotes[String(p.code)] || {};
     var price = q.price != null ? q.price : (p.cost_price || 0);
     var pnl = p.cost_price ? (price / p.cost_price - 1) * 100 : 0;
@@ -1206,84 +1590,72 @@ function renderPortfolio() {
   }).join("");
 }
 
-/* ── 4. ECharts 阶梯图（加载失败自动降级文字清单）───────── */
+/* ── 4. 网格阶梯：卡片式档位带（数字带 + SVG 价格阶梯图） ───────────────────────── */
+var PF_COLORS = ["#f0b90b", "#7dd3fc", "#c4b5fd", "#34d399", "#f87171", "#fbbf24", "#60a5fa", "#a3e635"];
+function levelChart(rows, cur) {
+  /* 垂直价格阶梯：卖档在上（红）、买档在下（绿）、现价居中虚线，Y 轴按价格比例排布 */
+  var w = 320, h = 128, padL = 6, padR = 64, padT = 6, padB = 6;
+  var plotH = h - padT - padB;
+  /* 上界=最高卖档价（卖5），下界=最低买档价（买5）：跨距包住全部 10 档，避免越界裁切 */
+  var top = Math.max.apply(null, rows.map(function (r) { return r.upper_sell; }));
+  var bot = Math.min.apply(null, rows.map(function (r) { return r.lower_buy; }));
+  if (!(top > bot) || !cur) return "";
+  function y(p) { return padT + (top - p) / (top - bot) * plotH; }
+  var parts = [];
+  rows.forEach(function (r) {
+    var yy = y(r.upper_sell);
+    parts.push('<rect x="' + padL + '" y="' + yy.toFixed(1) + '" width="192" height="4.5" rx="2.2" fill="var(--px-sell)" opacity=".5"/>');
+    parts.push('<text x="' + (w - padR + 6) + '" y="' + (yy + 4.6).toFixed(1) + '" font-size="9.5" fill="var(--px-sell)">卖' + esc(r.level) + ' ' + esc(r.upper_sell) + '</text>');
+  });
+  rows.forEach(function (r) {
+    var yy = y(r.lower_buy);
+    parts.push('<rect x="' + padL + '" y="' + yy.toFixed(1) + '" width="192" height="4.5" rx="2.2" fill="var(--px-buy)" opacity=".5"/>');
+    parts.push('<text x="' + (w - padR + 6) + '" y="' + (yy + 4.6).toFixed(1) + '" font-size="9.5" fill="var(--px-buy)">买' + esc(r.level) + ' ' + esc(r.lower_buy) + '</text>');
+  });
+  var curY = y(cur);
+  parts.push('<line x1="' + padL + '" y1="' + curY.toFixed(1) + '" x2="' + (w - padR + 2) + '" y2="' + curY.toFixed(1) + '" stroke="var(--px-accent-2)" stroke-width="1.1" stroke-dasharray="4 3"/>');
+  parts.push('<text x="' + (w - padR + 6) + '" y="' + (curY + 4).toFixed(1) + '" font-size="10" font-weight="700" fill="var(--px-accent-2)">' + esc(cur) + '</text>');
+  return '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="xMidYMid meet">' + parts.join("") + '</svg>';
+}
 function renderLevels() {
   var s = state.sig;
   var lv = (s && s.levels) || [];
-  var tb = document.getElementById("lv-tb");
-  // 文字清单兜底表格（无论图表成败都渲染）
-  if (lv.length) {
-    tb.innerHTML = '<table class="tb"><thead><tr><th>标的</th><th>档位</th>' +
-      '<th class="num">下档买入</th><th class="num">上档卖出</th><th class="num">现价</th>' +
-      '<th class="num">下限价</th></tr></thead><tbody>' +
-      lv.map(function (r) {
-        return '<tr><td>' + esc(r.name || r.symbol) + '</td><td>' + esc(r.level) +
-          '</td><td class="num">' + esc(r.lower_buy) + '</td><td class="num">' + esc(r.upper_sell) +
-          '</td><td class="num">' + esc(r.current_price) + '</td><td class="num">' + esc(r.floor_price) + '</td></tr>';
-      }).join("") + '</tbody></table>';
-  } else {
-    tb.innerHTML = "";
-  }
-  var el = document.getElementById("lv-chart");
-  var off = document.getElementById("lv-off");
-  if (typeof echarts === "undefined") {
-    el.classList.add("off"); off.classList.add("on"); return;
-  }
+  var box = document.getElementById("lv-tb");
+  var st = document.getElementById("lv-stats");
   if (!lv.length) {
-    el.classList.add("off"); off.classList.add("on");
-    off.textContent = "暂无档位数据——请先刷新信号。";
+    box.innerHTML = '<div class="empty">暂无档位数据——请先刷新信号</div>';
+    st.innerHTML = "";
     return;
   }
-  el.classList.remove("off"); off.classList.remove("on");
   var groups = {};
   lv.forEach(function (r) {
     var key = String(r.symbol);
     if (!groups[key]) groups[key] = { name: r.name || key, rows: [] };
     groups[key].rows.push(r);
   });
-  var css = getComputedStyle(document.documentElement);
-  var acc = css.getPropertyValue("--px-accent").trim() || "#f0b90b";
-  var acc2 = css.getPropertyValue("--px-accent-2").trim() || "#f9dd7d";
-  var sub = css.getPropertyValue("--px-sub").trim() || "#9aa4b2";
-  var border = css.getPropertyValue("--px-border").trim() || "#1f2937";
-  var keys = Object.keys(groups);
-  var maxLevel = 0;
-  lv.forEach(function (r) { maxLevel = Math.max(maxLevel, r.level); });
-  var xAxis = [];
-  for (var i = 1; i <= maxLevel; i++) xAxis.push("第" + i + "档");
-  var series = [];
-  keys.forEach(function (key, idx) {
+  st.innerHTML = '<span class="h-stat">标的 <b>' + Object.keys(groups).length + '</b></span>' +
+    '<span class="h-stat">每标 <b>' + Math.round(lv.length / Object.keys(groups).length) + '</b> 档</span>';
+  box.innerHTML = Object.keys(groups).map(function (key) {
     var g = groups[key];
-    var ups = [], lows = [], curs = [];
-    for (var i = 0; i < maxLevel; i++) {
-      var r = g.rows[i];
-      ups.push(r ? r.upper_sell : null);
-      lows.push(r ? r.lower_buy : null);
-      curs.push(i === 0 ? (r ? r.current_price : null) : null);
-    }
-    series.push({ name: g.name + "·卖", type: "line", data: ups, smooth: false,
-      connectNulls: true, lineStyle: { width: 2, color: acc2 },
-      itemStyle: { color: acc2 }, symbolSize: 6 });
-    series.push({ name: g.name + "·买", type: "line", data: lows, smooth: false,
-      connectNulls: true, lineStyle: { width: 2, color: acc },
-      itemStyle: { color: acc }, symbolSize: 6 });
-    series.push({ name: g.name + "·现价", type: "line", data: curs, smooth: false,
-      lineStyle: { width: 1.5, type: "dashed", color: sub },
-      itemStyle: { color: sub }, symbol: "none" });
-  });
-  var chart = echarts.getInstanceByDom(el) || echarts.init(el);
-  chart.setOption({
-    backgroundColor: "transparent",
-    grid: { left: 60, right: 24, top: 42, bottom: 34 },
-    legend: { textStyle: { color: sub }, top: 6 },
-    tooltip: { trigger: "axis" },
-    xAxis: { type: "category", data: xAxis, axisLine: { lineStyle: { color: border } },
-      axisLabel: { color: sub } },
-    yAxis: { type: "value", scale: true, splitLine: { lineStyle: { color: border } },
-      axisLabel: { color: sub } },
-    series: series
-  }, true);
-  window.addEventListener("resize", function () { chart.resize(); });
+    var rows = g.rows.slice().sort(function (a, b) { return a.level - b.level; });
+    var cur = rows[0] ? rows[0].current_price : "—";
+    var floor = rows[0] ? rows[0].floor_price : null;
+    var steps = rows.map(function (r) {
+      return '<div class="lv-step">' +
+        '<span class="lv-sell">' + esc(r.upper_sell) + '</span>' +
+        '<span class="lv-lv">第' + esc(r.level) + '档</span>' +
+        '<span class="lv-buy">' + esc(r.lower_buy) + '</span>' +
+        '</div>';
+    }).join("");
+    return '<div class="lv-card">' +
+      '<div class="lv-head"><span class="lv-name">' + esc(g.name) +
+      '<span class="lv-code">' + esc(key) + '</span></span>' +
+      '<span class="lv-cur">现价 ' + esc(cur) + '</span></div>' +
+      '<div class="lv-chart">' + levelChart(rows, cur) + '</div>' +
+      '<div class="lv-steps">' + steps + '</div>' +
+      (floor ? '<div class="lv-floor">下限价 ' + esc(floor) + '（跌破不买）</div>' : '') +
+      '</div>';
+  }).join("");
 }
 
 function renderCB() {
@@ -1316,7 +1688,21 @@ function renderHealth() {
   var s = state.sig;
   var h = s ? s.health : null;
   var body = document.getElementById("h-body");
-  if (!h) { body.innerHTML = '<span class="chip">暂无健康信息</span>'; return; }
+  var st = document.getElementById("h-stats");
+  if (!h) { body.innerHTML = '<span class="chip">暂无健康信息</span>'; st.innerHTML = ""; return; }
+  /* 健康统计：源级三态计数（正常 = 无告警不 stale；告警 = 有 warnings 或 stale） */
+  var okN = 0, warnN = 0, srcN = 0;
+  Object.keys(h.markets || {}).forEach(function (sym) {
+    var m = h.markets[sym]; srcN++;
+    if (m.stale || (m.warnings || []).length) warnN++; else okN++;
+  });
+  if (h.cb) { srcN++; (h.cb.warnings || []).length ? warnN++ : okN++; }
+  var gWarn = (h.global_warnings || []).length;
+  st.innerHTML =
+    '<span class="h-stat ok">✓ 正常 <b>' + okN + '</b></span>' +
+    '<span class="h-stat warn">⚠ 告警 <b>' + (warnN + gWarn) + '</b></span>' +
+    (h.ok === false ? '<span class="h-stat bad">✗ 服务降级</span>' : "") +
+    '<span class="h-stat">源 <b>' + srcN + '</b></span>';
   var chips = [];
   Object.keys(h.markets || {}).forEach(function (sym) {
     var m = h.markets[sym];
@@ -1475,6 +1861,17 @@ function openHold() {
 function getPresets() {
   return state.presets || freshPresets();
 }
+/* 头部方案下拉：与弹框方案匣同源（data/presets.json），选中即切换 */
+function syncPresetHead() {
+  var p = getPresets();
+  var sel = document.getElementById("presetHeadSel");
+  if (!sel) return;
+  var names = Object.keys(p.presets || {});
+  var cur = p.active || "default";
+  sel.innerHTML = names.length ? names.map(function (n) {
+    return '<option value="' + esc(n) + '"' + (n === cur ? " selected" : "") + '>' + esc(n) + "</option>";
+  }).join("") : '<option value="">default</option>';
+}
 function renderPresets() {
   var p = getPresets();
   document.getElementById("presetCur").textContent = p.active || "—";
@@ -1483,6 +1880,7 @@ function renderPresets() {
   sel.innerHTML = names.length ? names.map(function (n) {
     return '<option value="' + esc(n) + '"' + (n === p.active ? " selected" : "") + '>' + esc(n) + "</option>";
   }).join("") : '<option value="">（尚无方案，先「另存当前为方案」）</option>';
+  syncPresetHead();
 }
 function putPresets(p, okText, failText) {
   return fetch("data/presets.json", {
@@ -1490,16 +1888,13 @@ function putPresets(p, okText, failText) {
   }).then(function (r) {
     if (!r.ok) throw new Error("presets.json HTTP " + r.status);
     state.presets = p;
-    var cur = document.getElementById("st-preset");
-    if (cur) cur.textContent = "方案 " + (p.active || "default");
-    renderPresets();
+    renderPresets();  // 含头部下拉同步（syncPresetHead）
     toast(okText, true);
   }).catch(function (e) { toast(failText + "：" + e.message, false); });
 }
-document.getElementById("presetSwitch").addEventListener("click", function () {
+function applyPreset(name) {
   var p = getPresets();
-  var name = document.getElementById("presetSel").value;
-  if (!name || !(p.presets || {})[name]) { toast("请先选择有效方案", false); return; }
+  if (!name || !(p.presets || {})[name]) { toast("请先选择有效方案", false); syncPresetHead(); return; }
   var cfg = p.presets[name];
   fetch("data/config.json", {
     method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cfg)
@@ -1508,7 +1903,15 @@ document.getElementById("presetSwitch").addEventListener("click", function () {
     state.cfg = cfg;
     p.active = name;
     return putPresets(p, '已切换到方案「' + name + '」，参数已生效（需重新刷新信号）', "切换失败");
-  }).catch(function (e) { toast("切换失败：" + e.message, false); });
+  }).catch(function (e) { toast("切换失败：" + e.message, false); syncPresetHead(); });
+}
+document.getElementById("presetSwitch").addEventListener("click", function () {
+  applyPreset(document.getElementById("presetSel").value);
+});
+document.getElementById("presetHeadSel").addEventListener("change", function () {
+  var name = this.value;
+  if (!name || name === (getPresets().active || "default")) return;  // 未变不切
+  applyPreset(name);
 });
 document.getElementById("presetSave").addEventListener("click", function () {
   var p = getPresets();
